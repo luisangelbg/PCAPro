@@ -158,7 +158,7 @@ css/                  styles
 datos/                example data sets
 tests/                automated test suite
 curso/                teaching package (workshop materials, in Spanish)
-paper/                JOSS submission
+paper/jss/             manuscript for the Journal of Statistical Software
 ```
 
 ---
