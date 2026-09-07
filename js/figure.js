@@ -1,3 +1,14 @@
+/* PCAPro — análisis de componentes principales en el navegador.
+   Copyright (C) 2026  Luis Ángel Barrera-Guzmán
+
+   This program is free software: you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the Free
+   Software Foundation, either version 3 of the License, or (at your option)
+   any later version. This program is distributed WITHOUT ANY WARRANTY; see
+   the GNU General Public License for more details. You should have received
+   a copy of the License along with this program; if not, see
+   <https://www.gnu.org/licenses/>. */
+
 /* PCAPro — motor de figuras SVG.
    Todas las figuras de la app se dibujan como SVG "puro" (atributos de estilo
    en linea, sin CSS externo) para que la exportacion a PNG/JPG/WEBP/SVG sea
