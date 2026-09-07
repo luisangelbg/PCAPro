@@ -1,10 +1,10 @@
 {
   "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
   "@type": "SoftwareSourceCode",
-  "identifier": "PCAPro",
+  "identifier": "https://doi.org/10.5281/zenodo.22649709",
   "name": "PCAPro",
   "description": "A self-contained web application that performs a complete principal component analysis entirely in the browser, with no installation and no server-side computation: data preparation, verification of assumptions, extraction with eight retention criteria, seven rotations, factor maps, interpretation and a publication-ready report. Bilingual in Spanish and English.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dateCreated": "2026-09-05",
   "datePublished": "2026-09-07",
   "license": "https://spdx.org/licenses/GPL-3.0-or-later",

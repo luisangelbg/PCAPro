@@ -3,6 +3,7 @@
 **A complete principal component analysis, in your browser, with nothing to install.**
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22649709.svg)](https://doi.org/10.5281/zenodo.22649709)
 
 PCAPro is a self-contained web application dedicated to **principal component analysis (PCA)**:
 data preparation, verification of assumptions, extraction, rotation, factor maps and
@@ -139,24 +140,26 @@ manual has to be re-verified.
 If PCAPro is useful in your work, please cite it. Citing the software is what makes this kind of
 work visible, and it takes one line in your methods section:
 
-> The principal component analysis was carried out in PCAPro v1.0.0
-> (Barrera-Guzmán, 2026).
+> The principal component analysis was carried out in PCAPro
+> (Barrera-Guzmán, 2026; https://doi.org/10.5281/zenodo.22649709).
 
 BibTeX:
 
 ```bibtex
 @software{barreraguzman2026pcapro,
-  author  = {Barrera-Guzmán, Luis Ángel},
-  title   = {{PCAPro}: an offline, browser-based platform for guided
-             principal component analysis},
-  version = {1.0.0},
-  year    = {2026},
-  url     = {https://github.com/luisangelbg/PCAPro}
+  author    = {Barrera-Guzmán, Luis Ángel},
+  title     = {{PCAPro}: an offline, browser-based platform for guided
+               principal component analysis},
+  year      = {2026},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.22649709},
+  url       = {https://doi.org/10.5281/zenodo.22649709}
 }
 ```
 
-<!-- Cuando exista el depósito en Zenodo, añadir aquí el DOI de concepto y el campo
-     doi = {...} al BibTeX, y actualizar CITATION.cff. -->
+The DOI above is the **concept DOI**: it always resolves to the most recent version, and it is
+the one to cite. Each release also gets its own version DOI — cite that one instead if you need
+to point at the exact version you used.
 
 Machine-readable metadata is in [`CITATION.cff`](CITATION.cff) and
 [`codemeta.json`](codemeta.json).
