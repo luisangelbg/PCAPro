@@ -99,6 +99,18 @@ implementation is additionally checked against an exhaustive sweep of the rotati
 that the gradient projection algorithm reaches the global maximum of its own criterion rather than a
 local one.
 
+# AI usage disclosure
+
+The development of `PCAPro` was assisted by a large language model (Anthropic's Claude, used
+through Claude Code). The assistance covered code generation and refactoring across the
+application, the numerical engine and the test suite, and the drafting of the embedded
+methodological guidance, the repository documentation and this paper. The author framed the
+problem and the pedagogical approach, specified the scope and the block structure, selected the
+statistical methods and the retention and rotation criteria to implement, chose the reference
+values used as test expectations, and reviewed, edited and validated all AI-assisted output. All
+numerical results were checked against independent implementations in R. The author takes full
+responsibility for the accuracy, originality and licensing of the submitted materials.
+
 # Acknowledgements
 
 The teaching materials distributed with `PCAPro` were developed for the continuing-education

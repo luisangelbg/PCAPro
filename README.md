@@ -140,6 +140,22 @@ If PCAPro is useful in your work, please cite it. See [`CITATION.cff`](CITATION.
 
 ---
 
+## Support and governance
+
+PCAPro is maintained by its author. What you can expect:
+
+- **Bug reports** go in the [issue tracker](https://github.com/luisangelbg/PCAPro/issues), in
+  Spanish or English. Reports that affect a numerical result are treated as the highest priority.
+- **Response time** is usually within a week during the academic term, and can be longer outside it.
+- **Scope.** PCAPro is deliberately dedicated to PCA alone. Proposals that extend the PCA workflow
+  are welcome; other multivariate methods belong in separate software. See
+  [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- **Versioning** follows [Semantic Versioning](https://semver.org/). Changes are recorded in
+  [`CHANGELOG.md`](CHANGELOG.md). A change that alters a numerical result will never be a patch
+  release, and will always be documented explicitly.
+- **Decisions** on scope and design rest with the maintainer, taken in the open on the issue
+  tracker.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md). Bug reports and suggestions are welcome through the
