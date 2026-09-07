@@ -1,0 +1,48 @@
+name: Tests
+
+# Corre las 60 pruebas del motor numerico en cada cambio. La suite es una
+# pagina web, asi que hace falta servir el repositorio y abrirla con un
+# navegador sin interfaz.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  browser-tests:
+    runs-on: ubuntu-latest
+    name: Browser test suite
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Playwright and Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+
+      # El servidor y las pruebas van en el mismo paso: asi el proceso sigue
+      # vivo mientras se usa y se puede parar ordenadamente al terminar.
+      - name: Serve the repository and run the test suite
+        run: |
+          python3 -m http.server 8790 --bind 127.0.0.1 &
+          SERVER_PID=$!
+
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8790/tests/index.html > /dev/null && break
+            sleep 1
+          done
+
+          set +e
+          node tests/run-tests.mjs
+          STATUS=$?
+          set -e
+
+          kill $SERVER_PID 2>/dev/null || true
+          exit $STATUS
