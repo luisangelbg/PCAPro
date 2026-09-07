@@ -7,6 +7,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.1] — 2026-09-07
+
+### Added
+
+- `.zenodo.json`, so that the archived record carries the author's name, ORCID and affiliation
+  rather than the metadata inferred from the hosting account.
+- A "How to cite" section in the README, with the sentence for a methods section and a BibTeX entry.
+
 ## [1.0.0] — 2026-09-07
 
 First public release.
@@ -43,5 +51,6 @@ First public release.
 - **Teaching package** in `curso/`: participant manual, instructor guide and five simulated practice
   data sets with a deliberately planted latent structure.
 
-[Unreleased]: https://github.com/luisangelbg/PCAPro/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/luisangelbg/PCAPro/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/luisangelbg/PCAPro/releases/tag/v1.0.1
 [1.0.0]: https://github.com/luisangelbg/PCAPro/releases/tag/v1.0.0

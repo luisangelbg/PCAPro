@@ -9,9 +9,7 @@
       "orcid": "0000-0001-8057-2583"
     }
   ],
-  "license": {
-    "id": "GPL-3.0-or-later"
-  },
+  "license": "gpl-3.0-or-later",
   "access_right": "open",
   "language": "eng",
   "keywords": [
@@ -22,12 +20,5 @@
     "factor rotation",
     "parallel analysis",
     "agricultural sciences"
-  ],
-  "related_identifiers": [
-    {
-      "identifier": "https://github.com/luisangelbg/PCAPro",
-      "relation": "isSupplementTo",
-      "scheme": "url"
-    }
   ]
 }
