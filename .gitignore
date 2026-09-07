@@ -16,9 +16,20 @@ Desktop.ini
 *_ACP_completo.zip
 *_PCA_complete.zip
 
-# Construcción del artículo de JOSS (lo genera el bot, no se versiona)
-paper/paper.pdf
-paper/jats/
+# Artículo para JSS: subproductos de LaTeX y ficheros de estilo de la revista,
+# que se descargan de jstatsoft.org y no nos pertenecen.
+paper/jss/*.pdf
+paper/jss/*.aux
+paper/jss/*.log
+paper/jss/*.bbl
+paper/jss/*.blg
+paper/jss/*.out
+paper/jss/*.toc
+paper/jss/*.synctex.gz
+paper/jss/jss.cls
+paper/jss/jss.bst
+paper/jss/jsslogo.jpg
+paper/jss/jss.pdf
 
 # Material del instructor: confidencial, NO debe publicarse en el repositorio
 # junto con el material del participante.

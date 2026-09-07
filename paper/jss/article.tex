@@ -1,0 +1,258 @@
+\documentclass[article]{jss}
+
+%% Requiere los ficheros de estilo de JSS (jss.cls, jsslogo.jpg y demás),
+%% que se descargan de https://www.jstatsoft.org/pages/view/style
+%% en el paquete jss-article-tex.zip. No se versionan aquí porque son de JSS.
+
+\author{Luis \'Angel Barrera-Guzm\'an\\Universidad Aut\'onoma Chapingo}
+\Plainauthor{Luis Angel Barrera-Guzman}
+
+\title{\pkg{PCAPro}: Guided Principal Component Analysis in the Browser}
+\Plaintitle{PCAPro: Guided Principal Component Analysis in the Browser}
+\Shorttitle{\pkg{PCAPro}: Guided PCA in the Browser}
+
+\Abstract{
+  Principal component analysis is rarely limited by the eigendecomposition. What
+  determines whether an analysis is defensible are the decisions surrounding it:
+  how missing values are handled, whether the variables are standardised, whether
+  the correlation structure justifies the analysis at all, how many components are
+  retained, whether the solution is rotated, and which loadings may be interpreted.
+  General-purpose implementations compute these quantities but leave the decisions
+  entirely to the analyst.
+
+  This paper introduces \pkg{PCAPro}, an implementation of the principal component
+  analysis workflow written in \proglang{JavaScript} that runs entirely inside a web
+  browser, without installation, without a server, and without transmitting data.
+  The package implements eight retention criteria, seven factor rotations obtained
+  through the gradient projection algorithm, the usual adequacy diagnostics, and the
+  active/supplementary distinction of the French school of data analysis. Each
+  decision point is accompanied in the interface by the methodological argument
+  behind it, in Spanish and English.
+
+  The numerical core is independent of the interface and can be used from
+  \proglang{Node.js}, which makes every published result reproducible outside the
+  browser. We verify the implementation against \proglang{R}
+  (\code{prcomp()} and \pkg{psych}), compare its scope with existing packages, and
+  illustrate its use on [PENDIENTE: caso de estudio].
+}
+
+\Keywords{principal component analysis, factor rotation, parallel analysis,
+  reproducible research, statistical software, \proglang{JavaScript}}
+\Plainkeywords{principal component analysis, factor rotation, parallel analysis,
+  reproducible research, statistical software, JavaScript}
+
+\Address{
+  Luis \'Angel Barrera-Guzm\'an\\
+  Centro Acad\'emico Regional sede Huatusco-Veracruz\\
+  Universidad Aut\'onoma Chapingo\\
+  Carretera Federal Huatusco-Xalapa km 6\\
+  94100 Huatusco, Veracruz, Mexico\\
+  E-mail: \email{lbarrerag@chapingo.mx}\\
+  ORCID: \url{https://orcid.org/0000-0001-8057-2583}
+}
+
+\begin{document}
+
+%% -------------------------------------------------------------------------
+\section{Introduction} \label{sec:intro}
+
+Principal component analysis \citep{pearson1901, hotelling1933, jolliffe2002} is
+among the most widely used multivariate techniques in the biological and
+agricultural sciences, and it is often the first multivariate method a student
+encounters. It is also among the most frequently misapplied.
+
+The computation itself is not the difficulty. Every general-purpose statistical
+environment provides a reliable eigendecomposition, and the numerical problem has
+been settled for decades. What decides whether a published principal component
+analysis is defensible is a sequence of choices made before and after that
+computation: how missing values are treated, whether variables are standardised,
+whether the correlation structure justifies the analysis at all, how many
+components are retained, whether the solution is rotated and by which method, and
+which loadings are large enough to interpret. Each of these changes the result,
+and none of them is decided by a function call.
+
+Existing implementations compute the quantities needed to make those decisions and
+then stop. \pkg{FactoMineR} \citep{le2008} reports the eigenvalues; deciding how many
+to keep is left to the analyst. \pkg{psych} \citep{psych} reports the
+Kaiser--Meyer--Olkin index; deciding whether $0.62$ is acceptable is left to the
+analyst. This division of labour is entirely reasonable for a statistician. It is
+where non-specialist users go wrong.
+
+\pkg{PCAPro} takes a different position: the methodological argument belongs next to
+the number it justifies. The package reports eight retention criteria side by side
+rather than a single answer, because the criteria disagree and the disagreement is
+informative; it states which assumption is at risk and what to do about it rather
+than printing a diagnostic and moving on; and it declines to present a decision as
+more certain than it is.
+
+Two further constraints shaped the implementation and are not incidental to it.
+First, the software runs with no installation: it is a directory of static files
+served by any web server or opened directly from disk. This is a functional
+requirement rather than a convenience, because a substantial part of the intended
+audience works in shared university computer laboratories where nothing can be
+installed. Second, the interface, the embedded methodological guidance and the
+generated report exist in full in Spanish as well as English, because teaching
+material for multivariate statistics in Spanish is scarce and the language barrier
+compounds the tooling barrier.
+
+The rest of this paper is organised as follows.
+Section~\ref{sec:methods} reviews the decision points of the principal component
+analysis workflow and the criteria \pkg{PCAPro} implements at each one.
+Section~\ref{sec:implementation} describes the design of the software and the
+trade-offs behind it.
+Section~\ref{sec:comparison} compares \pkg{PCAPro} with existing implementations and
+verifies its numerical output against \proglang{R}.
+Section~\ref{sec:illustration} illustrates its use on a complete analysis.
+Section~\ref{sec:summary} concludes.
+
+%% -------------------------------------------------------------------------
+\section{The decision points of a principal component analysis} \label{sec:methods}
+
+%% PENDIENTE: esta seccion recorre las decisiones y los criterios implementados.
+%% El material ya esta escrito en las 34 secciones teoricas de la aplicacion
+%% (index.html) y hay que trasladarlo aqui, en registro de articulo y con las
+%% citas de paper/jss/ref.bib. Subsecciones previstas:
+
+\subsection{Adequacy of the data}
+%% Bartlett \citep{bartlett1950}, KMO y MSA \citep{kaiser1974}, determinante,
+%% multicolinealidad, atipicos de Mahalanobis, razon n:p.
+
+\subsection{Standardisation and the covariance/correlation choice}
+%% Las siete opciones de escalado y cuando aplica cada una.
+
+\subsection{How many components to retain}
+%% Los ocho criterios: analisis paralelo de Horn \citep{horn1965} con la regla del
+%% percentil 95 \citep{glorfeld1995}, Kaiser--Guttman, Jolliffe, baston roto
+%% \citep{frontier1976}, MAP de Velicer \citep{velicer1976}, codo del scree
+%% \citep{cattell1966} y umbrales de varianza acumulada. Discutir por que se
+%% presentan juntos y como se pondera el consenso.
+
+\subsection{Rotation}
+%% Familia ortomax y rotaciones oblicuas \citep{kaiser1958, hendrickson1964},
+%% obtenidas por el algoritmo de proyeccion de gradiente
+%% \citep{jennrich2001, jennrich2002}. Matrices de patron, estructura y Phi.
+
+\subsection{Interpretation}
+%% cos2, contribuciones, elementos suplementarios, valores test.
+
+%% -------------------------------------------------------------------------
+\section{Implementation} \label{sec:implementation}
+
+\subsection{Architecture}
+
+\pkg{PCAPro} is a directory of static files. It uses no framework, no module
+bundler and no build step, and every component is attached to the global object so
+that the application also runs from a \code{file://} URL. This is a deliberate
+trade-off. The cost is real: there is no module system, no tree shaking, and the
+interface is constructed by explicit DOM manipulation. The benefit is that the
+software has no toolchain that can rot, can be served from a memory stick or an
+intranet, and can be read file by file by a reviewer or a student without
+installing anything. For software whose purpose is to work where nothing can be
+installed, freedom from dependencies is a functional requirement rather than an
+aesthetic preference.
+
+The only third-party component is \pkg{SheetJS}, used exclusively to read
+\code{.xlsx} workbooks; it can be vendored locally for a fully offline
+installation.
+
+\subsection{The numerical core}
+
+The numerical engine was written rather than wrapped. No \proglang{JavaScript}
+library offered the combination of retention criteria and rotation algorithms
+required, and a self-contained implementation makes every step auditable in the
+same language as the interface.
+
+Three files constitute the core and are independent of the interface: linear
+algebra and distributions, the rotation algorithms, and the factor coordinates
+with their quality measures. They export themselves both as browser scripts and as
+\proglang{Node.js} modules, so there is a single implementation with two ways of
+being loaded rather than two implementations that can drift apart:
+
+\begin{Code}
+const { S, Rot, Fac } = require("./lib");
+
+const R = S.corrMatrix(columns);
+const eig = S.eigenSym(R);
+const kmo = S.kmo(R);
+const rot = Rot.rotate(loadings, "varimax", { normalize: true });
+\end{Code}
+
+This is what makes the results of the present paper reproducible without a browser;
+Section~\ref{sec:comparison} relies on it.
+
+The eigendecomposition uses cyclic Jacobi rotations on the symmetric dispersion
+matrix. The factor rotations use the gradient projection algorithm of
+\citet{jennrich2001, jennrich2002}, which handles the orthogonal and oblique cases
+within a single framework and admits the orthomax family, quartimin and oblimin
+through their respective criterion functions; \pkg{promax}
+\citep{hendrickson1964} is obtained from a varimax solution followed by a
+least-squares fit to the powered target.
+
+\subsection{Graphics}
+
+Figures are drawn by an in-house SVG generator rather than a charting library.
+Charting libraries optimise for rendering; publication figures require editability
+and vector export at arbitrary resolution, with the exported file corresponding
+exactly to what was edited on screen. Owning the SVG generation makes that
+correspondence exact and allows every figure to carry the same editing controls:
+titles, axis labels, palettes, themes, ellipse type, typeface and four independent
+font-size controls.
+
+\subsection{Verification}
+
+Correctness is checked by an automated suite of 60 tests. Every expectation is
+either a reference value published by an independent implementation or an
+algebraic invariant that must hold regardless of the data, such as the eigenvalues
+summing to the trace or communalities being preserved by an orthogonal rotation.
+No expectation was recorded from a previous run of \pkg{PCAPro} itself: comparing
+software against its own past output establishes stability, not correctness. The
+varimax implementation is additionally checked against an exhaustive sweep of the
+rotation angle, confirming that the gradient projection algorithm reaches the
+global maximum of its own criterion rather than a local one. The suite runs
+automatically in a headless browser on every change to the repository.
+
+%% -------------------------------------------------------------------------
+\section{Comparison with existing implementations} \label{sec:comparison}
+
+%% PENDIENTE: JSS pide explicitamente que la comparacion se apoye en
+%% "empirical illustrations". Hay que ampliar esta seccion con una tabla que
+%% compare, sobre los mismos datos, los valores que devuelven PCAPro, prcomp,
+%% FactoMineR y psych. El guion lib/reproduce-iris.js ya produce la mitad.
+
+\subsection{Scope}
+
+%% Trasladar aqui la comparacion ya escrita: FactoMineR + factoextra, psych,
+%% scikit-learn, JASP, jamovi, PAST y los paquetes comerciales; con la
+%% justificacion de construir en lugar de contribuir.
+
+\subsection{Numerical agreement}
+
+%% Tabla con los valores de referencia y los obtenidos, generada por
+%% lib/reproduce-iris.js.
+
+%% -------------------------------------------------------------------------
+\section{Illustration} \label{sec:illustration}
+
+%% PENDIENTE, y es lo que decide el articulo. JSS exige "an enlightening
+%% non-trivial case study". Iris no sirve: es trivial y todo el mundo lo usa.
+%% Hace falta un conjunto de datos real, del autor, con suficientes variables
+%% cuantitativas y una estructura que merezca interpretarse; y hay que poder
+%% distribuirlo con el material de replicacion.
+
+%% -------------------------------------------------------------------------
+\section{Summary and discussion} \label{sec:summary}
+
+%% PENDIENTE.
+
+%% -------------------------------------------------------------------------
+\section*{Computational details}
+
+The results in this paper were obtained using \pkg{PCAPro}~1.0.1
+\citep{pcapro}. Reference values were computed in \proglang{R} using
+\code{prcomp()} from \pkg{stats} \citep{R} and \pkg{psych} \citep{psych}.
+The replication script \code{lib/reproduce-iris.js} reproduces every numerical
+result reported here and is included with the software.
+
+\bibliography{ref}
+
+\end{document}
