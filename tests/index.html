@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCAPro tests</title>
+<style>
+  :root { --bg:#f5f6f9; --card:#fff; --fg:#1b1f2a; --muted:#667085; --line:#e1e5ec;
+          --pass:#2f9e44; --fail:#e03131; --accent:#5b3fd6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); line-height:1.5;
+         font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; }
+  main { max-width:880px; margin:0 auto; padding:28px 20px 60px; }
+  h1 { font-size:1.6rem; margin:0 0 4px; letter-spacing:-.4px; }
+  .lead { color:var(--muted); font-size:.92rem; margin:0 0 18px; }
+  .progress { height:5px; background:var(--line); border-radius:3px; overflow:hidden; margin-bottom:16px; }
+  .progress span { display:block; height:100%; width:0; background:var(--accent); transition:width .12s; }
+  .summary { padding:14px 18px; border-radius:10px; font-size:1.05rem; margin-bottom:22px;
+             background:#fff; border:1px solid var(--line); }
+  .summary.pass { background:rgba(47,158,68,.09); border-color:rgba(47,158,68,.35); color:var(--pass); }
+  .summary.fail { background:rgba(224,49,49,.09); border-color:rgba(224,49,49,.35); color:var(--fail); }
+  .suite { background:var(--card); border:1px solid var(--line); border-radius:11px;
+           padding:14px 18px; margin-bottom:14px; }
+  .suite h2 { font-size:1rem; margin:0 0 8px; }
+  .case { display:flex; align-items:flex-start; gap:9px; padding:3px 0; font-size:.89rem; flex-wrap:wrap; }
+  .dot { width:9px; height:9px; border-radius:50%; background:var(--line); margin-top:6px; flex-shrink:0; }
+  .case.pass .dot { background:var(--pass); }
+  .case.fail .dot { background:var(--fail); }
+  .case.fail .nm { color:var(--fail); font-weight:600; }
+  .case.running .nm { color:var(--muted); }
+  .err { flex-basis:100%; margin:2px 0 6px 18px; padding:7px 11px; border-radius:7px;
+         background:rgba(224,49,49,.08); color:var(--fail); font-size:.83rem;
+         font-family:Consolas,"Courier New",monospace; }
+  footer { color:var(--muted); font-size:.82rem; margin-top:26px; }
+  code { background:#eceef4; padding:1px 5px; border-radius:4px; font-size:.86em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>PCAPro — automated test suite</h1>
+  <p class="lead">
+    Every numerical expectation below is either a reference value published by an independent
+    implementation (R: <code>prcomp</code>, <code>psych</code>, <code>pchisq</code>, <code>pf</code>,
+    <code>pt</code>) or an algebraic invariant that must hold regardless of the data.
+    No expectation was recorded from a previous run of PCAPro itself.
+  </p>
+
+  <div class="progress"><span id="bar"></span></div>
+  <div class="summary" id="summary">Running…</div>
+  <div id="out"></div>
+
+  <footer>
+    Open this page from the local server (<code>servidor.ps1</code>), not with a double click:
+    the suite reads <code>datos/iris.csv</code> and browsers block local file reads from
+    <code>file://</code>.
+  </footer>
+</main>
+
+<script src="../js/core.js"></script>
+<script src="../js/stats.js"></script>
+<script src="../js/figure.js"></script>
+<script src="../js/rotate.js"></script>
+<script src="../js/factor.js"></script>
+<script src="../js/report.js"></script>
+<script src="../js/plots1.js"></script>
+<script src="../js/plots2.js"></script>
+<script src="../js/plots3.js"></script>
+<script src="../js/plots4.js"></script>
+<script src="../js/plots5.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/block2.js"></script>
+<script src="../js/block3.js"></script>
+<script src="../js/block4.js"></script>
+<script src="../js/block5.js"></script>
+<script src="../js/block6.js"></script>
+<script src="tests.js"></script>
+</body>
+</html>

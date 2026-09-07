@@ -1,0 +1,2417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCAPro — Análisis de Componentes Principales</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="lang-bar">
+  <label class="inline-label" for="langSelect">
+    <span aria-hidden="true">🌐</span>
+    <select id="langSelect" aria-label="Language / Idioma">
+      <option value="es" data-i18n="Español">Español</option>
+      <option value="en" data-i18n="English">English</option>
+    </select>
+  </label>
+</div>
+
+<header class="app-header">
+  <h1>PCAPro<span class="dot">.</span></h1>
+  <p class="subtitle" data-i18n-html="Plataforma dedicada al &lt;b&gt;Análisis de Componentes Principales&lt;/b&gt;: preparación de datos, verificación de supuestos, extracción, rotación e interpretación, con figuras editables y exportables a resolución de publicación.">Plataforma dedicada al <b>Análisis de Componentes Principales</b>: preparación de datos,
+    verificación de supuestos, extracción, rotación e interpretación, con figuras editables y exportables
+    a resolución de publicación.</p>
+  <div class="badge-row">
+    <span class="badge" data-i18n="Todo el cálculo ocurre en tu navegador">Todo el cálculo ocurre en tu navegador</span>
+    <span class="badge" data-i18n="Ningún dato sale de tu computadora">Ningún dato sale de tu computadora</span>
+    <span class="badge" data-i18n="Figuras SVG / PNG hasta 12×">Figuras SVG / PNG hasta 12×</span>
+  </div>
+</header>
+
+<nav class="stepper" id="stepper">
+  <button class="step-btn active" data-step="1"><span class="step-num">1</span> <span data-i18n="Datos y supuestos">Datos y supuestos</span></button>
+  <button class="step-btn" data-step="2" disabled><span class="step-num">2</span> <span data-i18n="Extracción">Extracción</span></button>
+  <button class="step-btn" data-step="3" disabled><span class="step-num">3</span> <span data-i18n="Rotación">Rotación</span></button>
+  <button class="step-btn" data-step="4" disabled><span class="step-num">4</span> <span data-i18n="Gráficos factoriales">Gráficos factoriales</span></button>
+  <button class="step-btn" data-step="5" disabled><span class="step-num">5</span> <span data-i18n="Interpretación">Interpretación</span></button>
+  <button class="step-btn" data-step="6" disabled><span class="step-num">6</span> <span data-i18n="Informe">Informe</span></button>
+</nav>
+
+<main>
+
+<!-- ==================== PASO 1 ==================== -->
+<section class="step-panel active" id="panel-1">
+
+  <!-- ---------- TEORÍA ---------- -->
+  <div class="card theory-card">
+    <div class="card-head">
+      <div>
+        <h2 data-i18n="Marco teórico del Análisis de Componentes Principales">Marco teórico del Análisis de Componentes Principales</h2>
+        <p class="hint" data-i18n-auto>Todo lo que conviene tener claro <i>antes</i> de tocar los datos. Despliega la sección que necesites;
+          las secciones marcadas con ▸ Bloque N se aplican más adelante en la plataforma.</p>
+      </div>
+    </div>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>1 · ¿Qué es el ACP y qué problema resuelve?</summary>
+      <div class="acc-body" data-lang="es">
+        <p>El <b>Análisis de Componentes Principales</b> (ACP; <i>PCA</i> en inglés) es una técnica de
+          <b>estadística multivariada descriptiva</b> que resume la información contenida en muchas variables
+          cuantitativas correlacionadas en un número pequeño de variables nuevas —los <b>componentes principales</b>—
+          construidas como combinaciones lineales de las originales, no correlacionadas entre sí y ordenadas por la
+          cantidad de varianza que retienen.</p>
+        <p>Fue formulado por <b>Karl Pearson (1901)</b> como el problema de encontrar la recta (o el plano) que mejor
+          se ajusta a una nube de puntos en el sentido de mínimos cuadrados ortogonales, y desarrollado
+          independientemente por <b>Harold Hotelling (1933)</b> desde el punto de vista de la maximización de la varianza.
+          Ambas formulaciones conducen al mismo resultado: los ejes principales son los <b>vectores propios</b>
+          de la matriz de covarianzas (o de correlaciones) de los datos.</p>
+        <p><b>Para qué se usa realmente:</b></p>
+        <ul>
+          <li><b>Reducción de dimensiones.</b> Pasar de 20 variables a 2 o 3 ejes que conserven el 70–90 % de la información.</li>
+          <li><b>Visualización.</b> Representar en un plano individuos y variables que viven en un espacio de <i>p</i> dimensiones.</li>
+          <li><b>Detección de estructura.</b> Descubrir grupos de variables que se comportan juntas (síndromes, gradientes, ejes ecológicos).</li>
+          <li><b>Depuración de la multicolinealidad.</b> Generar predictores ortogonales para regresión (<i>Principal Component Regression</i>).</li>
+          <li><b>Detección de atípicos</b> y control de calidad de una base de datos.</li>
+          <li><b>Construcción de índices</b> sintéticos (calidad, productividad, condición) a partir del primer componente.</li>
+        </ul>
+        <div class="callout"><b>Idea clave</b>
+          El ACP no <i>inventa</i> información: la <b>reorganiza</b>. La varianza total del conjunto no cambia; solo se
+          redistribuye en ejes ordenados de mayor a menor. Si las variables no están correlacionadas, no hay nada que
+          resumir y el ACP devuelve prácticamente las mismas variables rotadas.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p><b>Principal Component Analysis</b> (PCA) is a technique of
+          <b>descriptive multivariate statistics</b> that summarises the information contained in many correlated
+          quantitative variables into a small number of new variables —the <b>principal components</b>—
+          built as linear combinations of the original ones, uncorrelated with each other and ordered by the
+          amount of variance they retain.</p>
+        <p>It was formulated by <b>Karl Pearson (1901)</b> as the problem of finding the line (or the plane) that best
+          fits a cloud of points in the orthogonal least-squares sense, and developed
+          independently by <b>Harold Hotelling (1933)</b> from the point of view of variance maximisation.
+          Both formulations lead to the same result: the principal axes are the <b>eigenvectors</b>
+          of the covariance (or correlation) matrix of the data.</p>
+        <p><b>What it is actually used for:</b></p>
+        <ul>
+          <li><b>Dimension reduction.</b> Going from 20 variables to 2 or 3 axes that keep 70–90% of the information.</li>
+          <li><b>Visualisation.</b> Displaying on a plane the individuals and variables that live in a <i>p</i>-dimensional space.</li>
+          <li><b>Detecting structure.</b> Finding groups of variables that behave together (syndromes, gradients, ecological axes).</li>
+          <li><b>Cleaning up multicollinearity.</b> Generating orthogonal predictors for regression (<i>principal component regression</i>).</li>
+          <li><b>Outlier detection</b> and quality control of a data set.</li>
+          <li><b>Building composite indices</b> (quality, productivity, condition) from the first component.</li>
+        </ul>
+        <div class="callout"><b>Key idea</b>
+          PCA does not <i>invent</i> information: it <b>reorganises</b> it. The total variance of the set does not change; it is only
+          redistributed over axes ordered from largest to smallest. If the variables are uncorrelated there is nothing to
+          summarise, and PCA returns practically the same variables, merely rotated.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>2 · La matemática, en una página</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Partimos de una matriz de datos <b>X</b> con <i>n</i> filas (individuos) y <i>p</i> columnas (variables
+          cuantitativas). Se centra cada columna restando su media, y opcionalmente se divide entre su desviación estándar:</p>
+        <div class="formula">Z[i,j] = ( X[i,j] − media_j ) / s_j        (estandarización z)</div>
+        <p>Con los datos centrados se calcula la matriz de <b>covarianzas</b> (o de <b>correlaciones</b> si además se dividió entre s):</p>
+        <div class="formula">S = (1 / (n − 1)) · Xᶜᵀ · Xᶜ          (p × p, simétrica)</div>
+        <p>El ACP resuelve el <b>problema de valores propios</b>:</p>
+        <div class="formula">S · v_k = λ_k · v_k        con  v_kᵀ · v_k = 1  y  v_kᵀ · v_m = 0 (k ≠ m)</div>
+        <ul>
+          <li><b>λ_k</b> (valor propio o <i>eigenvalue</i>) = varianza que captura el componente <i>k</i>.
+            Se cumple <code>Σ λ_k = traza(S)</code>, es decir la varianza total. Con matriz de correlaciones,
+            <code>traza = p</code> y por eso el criterio de Kaiser es λ &gt; 1.</li>
+          <li><b>v_k</b> (vector propio o <i>eigenvector</i>) = dirección del componente en el espacio de las variables.
+            Sus elementos son los <b>coeficientes</b> o pesos de la combinación lineal.</li>
+          <li><b>Puntuaciones</b> (<i>scores</i>): coordenadas de los individuos sobre el nuevo eje,
+            <code>F_k = Xᶜ · v_k</code>.</li>
+          <li><b>Cargas</b> (<i>loadings</i>): correlación entre la variable original y el componente,
+            <code>carga_jk = v_jk · √λ_k</code>. Son lo que se interpreta y lo que se dibuja en el círculo de correlaciones.</li>
+        </ul>
+        <p>Numéricamente es preferible obtener lo mismo por <b>descomposición en valores singulares</b> (SVD) de la
+          matriz centrada, que evita construir S y es más estable:</p>
+        <div class="formula">Xᶜ = U · D · Vᵀ     →    λ_k = d_k² / (n − 1),   componentes = columnas de V</div>
+        <p>Propiedades que conviene recordar:</p>
+        <ul>
+          <li>Los componentes son <b>ortogonales</b> (no correlacionados) por construcción.</li>
+          <li>El primer componente es la dirección de <b>máxima varianza</b>; el segundo, la de máxima varianza
+            entre las direcciones perpendiculares al primero, y así sucesivamente.</li>
+          <li>El ACP es la mejor aproximación de rango <i>k</i> a la matriz de datos en el sentido de mínimos cuadrados
+            (teorema de Eckart–Young).</li>
+          <li>Los signos de los vectores propios son <b>arbitrarios</b>: un eje espejado no cambia la interpretación.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>We start from a data matrix <b>X</b> with <i>n</i> rows (individuals) and <i>p</i> columns (quantitative
+          variables). Each column is centred by subtracting its mean and, optionally, divided by its standard deviation:</p>
+        <div class="formula">Z[i,j] = ( X[i,j] − mean_j ) / s_j        (z standardisation)</div>
+        <p>With the centred data, the <b>covariance</b> matrix is computed (or the <b>correlation</b> matrix if the data were also divided by s):</p>
+        <div class="formula">S = (1 / (n − 1)) · Xᶜᵀ · Xᶜ          (p × p, symmetric)</div>
+        <p>PCA solves the <b>eigenvalue problem</b>:</p>
+        <div class="formula">S · v_k = λ_k · v_k        with  v_kᵀ · v_k = 1  and  v_kᵀ · v_m = 0 (k ≠ m)</div>
+        <ul>
+          <li><b>λ_k</b> (the <i>eigenvalue</i>) = variance captured by component <i>k</i>.
+            It holds that <code>Σ λ_k = trace(S)</code>, that is, the total variance. With a correlation matrix,
+            <code>trace = p</code>, and that is why Kaiser's criterion is λ &gt; 1.</li>
+          <li><b>v_k</b> (the <i>eigenvector</i>) = direction of the component in the space of the variables.
+            Its elements are the <b>coefficients</b> or weights of the linear combination.</li>
+          <li><b>Scores</b>: coordinates of the individuals on the new axis,
+            <code>F_k = Xᶜ · v_k</code>.</li>
+          <li><b>Loadings</b>: the correlation between the original variable and the component,
+            <code>loading_jk = v_jk · √λ_k</code>. They are what is interpreted and what is drawn in the correlation circle.</li>
+        </ul>
+        <p>Numerically it is preferable to obtain the same result by <b>singular value decomposition</b> (SVD) of the
+          centred matrix, which avoids building S and is more stable:</p>
+        <div class="formula">Xᶜ = U · D · Vᵀ     →    λ_k = d_k² / (n − 1),   components = columns of V</div>
+        <p>Properties worth remembering:</p>
+        <ul>
+          <li>The components are <b>orthogonal</b> (uncorrelated) by construction.</li>
+          <li>The first component is the direction of <b>maximum variance</b>; the second is the direction of maximum variance
+            among those perpendicular to the first, and so on.</li>
+          <li>PCA is the best rank-<i>k</i> approximation to the data matrix in the least-squares sense
+            (Eckart–Young theorem).</li>
+          <li>The signs of the eigenvectors are <b>arbitrary</b>: a mirrored axis does not change the interpretation.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>3 · Postulados y supuestos del ACP <span class="pill" style="margin-left:6px">esencial</span></summary>
+      <div class="acc-body" data-lang="es">
+        <p>El ACP es una técnica <b>descriptiva</b>: no plantea un modelo probabilístico ni contrasta hipótesis, así que
+          sus «supuestos» son menos rígidos que los de un ANOVA. Pero para que el resultado sea <i>interpretable</i> y
+          <i>reproducible</i> deben cumplirse las siguientes condiciones. La app verifica automáticamente las que están
+          marcadas con ✔.</p>
+        <ol>
+          <li><b>Variables cuantitativas continuas ✔.</b> El ACP clásico opera sobre variables de intervalo o de razón.
+            Con variables categóricas hay que usar otras técnicas: <b>AC</b> (análisis de correspondencias) para dos
+            variables cualitativas, <b>ACM</b> para varias, <b>AFDM</b> para datos mixtos. Las escalas Likert con 5 o más
+            niveles se aceptan en la práctica, pero conviene reportarlo.</li>
+          <li><b>Linealidad de las relaciones ✔ (parcial).</b> El ACP solo captura estructura <i>lineal</i>, porque parte de
+            covarianzas o correlaciones de Pearson. Si dos variables se relacionan en forma de U, el ACP no lo verá.
+            Revisa los diagramas de dispersión y, si hace falta, transforma (log, raíz) o usa ACP no lineal / kernel PCA.</li>
+          <li><b>Correlaciones suficientes entre variables ✔.</b> Es el requisito de fondo: si <b>R ≈ I</b> (matriz identidad)
+            no hay redundancia que resumir. Se comprueba con la <b>prueba de esfericidad de Bartlett</b>, el índice
+            <b>KMO</b> y la inspección de la matriz de correlaciones (debe haber varios |r| ≥ 0.30).</li>
+          <li><b>Tamaño de muestra adecuado ✔.</b> Reglas de uso común: n ≥ 100 (o al menos 50); razón de al menos
+            <b>5 individuos por variable</b>, preferiblemente <b>10:1</b>; y siempre <b>n &gt; p</b>. Muestras pequeñas
+            producen cargas inestables que no se replican.</li>
+          <li><b>Ausencia de multicolinealidad extrema y de singularidad ✔.</b> Correlaciones |r| &gt; 0.90 o determinante de
+            R ≈ 0 indican que hay variables que son combinación lineal casi exacta de otras (por ejemplo incluir
+            <i>largo</i>, <i>ancho</i> y <i>área = largo × ancho</i>). Infla el primer componente y hace inestable la rotación.</li>
+          <li><b>Escalas comparables o estandarización previa ✔.</b> El ACP sobre covarianzas está dominado por la variable
+            de mayor varianza. Si las unidades difieren (mm, g, µm, %), <b>hay que estandarizar</b> y trabajar sobre la
+            matriz de correlaciones.</li>
+          <li><b>Ausencia de valores atípicos influyentes ✔.</b> Como el método maximiza varianza, un solo caso extremo
+            puede generar un componente propio. Se detectan con la <b>distancia de Mahalanobis</b> y se reporta el análisis
+            con y sin ellos.</li>
+          <li><b>Tratamiento explícito de los datos faltantes ✔.</b> El ACP clásico necesita una matriz completa; hay que
+            decidir entre eliminar filas o imputar, y declararlo.</li>
+          <li><b>Normalidad multivariante: <i>no</i> es obligatoria.</b> El ACP descriptivo funciona sin ella. Se vuelve
+            necesaria si se van a usar pruebas inferenciales sobre los valores propios o si se interpreta la prueba de
+            Bartlett de forma estricta, ya que esta última la supone. Sí conviene evitar asimetrías extremas (|g₁| &gt; 2),
+            porque distorsionan las correlaciones de Pearson.</li>
+          <li><b>Homogeneidad de la muestra.</b> El ACP asume que todos los individuos provienen de la misma población.
+            Si mezclas poblaciones muy distintas, el primer eje solo reflejará esa separación; considera analizar por
+            separado o usar las variables de grupo como <i>suplementarias</i>.</li>
+          <li><b>Independencia de las observaciones.</b> Cada fila debe ser un individuo distinto. Con medidas repetidas
+            o datos espaciales/temporales la interpretación cambia y existen variantes específicas.</li>
+        </ol>
+        <div class="callout warn"><b>Lo que <i>no</i> es un supuesto</b>
+          No se requiere ni variable respuesta, ni grupos definidos, ni homocedasticidad, ni normalidad univariada de
+          cada variable. El ACP no «prueba» nada: describe.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>PCA is a <b>descriptive</b> technique: it poses no probability model and tests no hypotheses, so
+          its "assumptions" are less rigid than those of an ANOVA. But for the result to be <i>interpretable</i> and
+          <i>reproducible</i>, the following conditions must hold. The app automatically checks the ones
+          marked with ✔.</p>
+        <ol>
+          <li><b>Continuous quantitative variables ✔.</b> Classical PCA works on interval or ratio variables.
+            With categorical variables other techniques are needed: <b>CA</b> (correspondence analysis) for two
+            qualitative variables, <b>MCA</b> for several, <b>FAMD</b> for mixed data. Likert scales with 5 or more
+            levels are accepted in practice, but this should be reported.</li>
+          <li><b>Linear relationships ✔ (partly).</b> PCA only captures <i>linear</i> structure, because it starts from
+            Pearson covariances or correlations. If two variables are related in a U shape, PCA will not see it.
+            Check the scatterplots and, if necessary, transform (log, root) or use non-linear PCA / kernel PCA.</li>
+          <li><b>Enough correlation between variables ✔.</b> This is the underlying requirement: if <b>R ≈ I</b> (identity matrix)
+            there is no redundancy to summarise. It is checked with <b>Bartlett's test of sphericity</b>, the
+            <b>KMO</b> index and inspection of the correlation matrix (several |r| ≥ 0.30 should be present).</li>
+          <li><b>Adequate sample size ✔.</b> Rules in common use: n ≥ 100 (or at least 50); a ratio of at least
+            <b>5 individuals per variable</b>, preferably <b>10:1</b>; and always <b>n &gt; p</b>. Small samples
+            produce unstable loadings that do not replicate.</li>
+          <li><b>No extreme multicollinearity and no singularity ✔.</b> Correlations |r| &gt; 0.90 or a determinant of
+            R ≈ 0 mean that some variables are an almost exact linear combination of others (for instance including
+            <i>length</i>, <i>width</i> and <i>area = length × width</i>). This inflates the first component and makes the rotation unstable.</li>
+          <li><b>Comparable scales, or prior standardisation ✔.</b> PCA on covariances is dominated by the variable
+            with the largest variance. If the units differ (mm, g, µm, %), you <b>must standardise</b> and work on the
+            correlation matrix.</li>
+          <li><b>No influential outliers ✔.</b> Because the method maximises variance, a single extreme case
+            can generate a component of its own. They are detected with the <b>Mahalanobis distance</b> and the analysis
+            is reported with and without them.</li>
+          <li><b>Explicit handling of missing data ✔.</b> Classical PCA needs a complete matrix; you must
+            decide between deleting rows and imputing, and declare it.</li>
+          <li><b>Multivariate normality is <i>not</i> required.</b> Descriptive PCA works without it. It becomes
+            necessary if inferential tests on the eigenvalues are to be used, or if Bartlett's test is interpreted
+            strictly, since the latter assumes it. Extreme skewness (|g₁| &gt; 2) should still be avoided,
+            because it distorts Pearson correlations.</li>
+          <li><b>Homogeneity of the sample.</b> PCA assumes that all individuals come from the same population.
+            If you mix very different populations, the first axis will merely reflect that separation; consider analysing them
+            separately, or using the grouping variables as <i>supplementary</i>.</li>
+          <li><b>Independence of the observations.</b> Each row must be a distinct individual. With repeated measures
+            or spatial/temporal data the interpretation changes, and specific variants exist.</li>
+        </ol>
+        <div class="callout warn"><b>What is <i>not</i> an assumption</b>
+          No response variable is required, nor defined groups, nor homoscedasticity, nor univariate normality of
+          each variable. PCA does not "prove" anything: it describes.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>4 · Pruebas previas obligatorias: Bartlett, KMO, determinante</summary>
+      <div class="acc-body" data-lang="es">
+        <p><b>Prueba de esfericidad de Bartlett (1950).</b> Contrasta la hipótesis nula de que la matriz de
+          correlaciones poblacional es la identidad, es decir, que las variables no están correlacionadas:</p>
+        <div class="formula">χ² = − [ (n − 1) − (2p + 5)/6 ] · ln |R|        con gl = p(p − 1)/2</div>
+        <p>Se busca <b>rechazar H₀</b>: un valor <b>p &lt; 0.05</b> indica que existen correlaciones suficientes y que el ACP
+          tiene sentido. Cuidado: con n grande casi siempre resulta significativa, así que es una condición necesaria
+          pero no suficiente. Supone normalidad multivariante.</p>
+        <p><b>Índice de Kaiser–Meyer–Olkin (KMO) y MSA.</b> Compara la magnitud de las correlaciones observadas con la de
+          las correlaciones parciales. Si las variables comparten factores comunes, las correlaciones parciales serán
+          pequeñas y el KMO alto:</p>
+        <div class="formula">KMO = Σ Σ r²ᵢⱼ / ( Σ Σ r²ᵢⱼ + Σ Σ a²ᵢⱼ )     (i ≠ j; a = correlación parcial)</div>
+        <table>
+          <thead><tr><th>KMO</th><th>Calificación de Kaiser</th><th>Decisión</th></tr></thead>
+          <tbody>
+            <tr><td>≥ 0.90</td><td>Excelente («maravilloso»)</td><td>Adelante</td></tr>
+            <tr><td>0.80 – 0.89</td><td>Meritorio</td><td>Adelante</td></tr>
+            <tr><td>0.70 – 0.79</td><td>Aceptable («mediano»)</td><td>Adelante</td></tr>
+            <tr><td>0.60 – 0.69</td><td>Mediocre</td><td>Con reservas</td></tr>
+            <tr><td>0.50 – 0.59</td><td>Bajo</td><td>Revisar variables</td></tr>
+            <tr><td>&lt; 0.50</td><td>Inaceptable</td><td>No hacer ACP</td></tr>
+          </tbody>
+        </table>
+        <p>El mismo cálculo aplicado a cada variable da su <b>MSA</b> (<i>measure of sampling adequacy</i>). Las variables
+          con MSA &lt; 0.50 se eliminan <b>una a una</b>, recalculando después de cada eliminación.</p>
+        <p><b>Determinante de R.</b> Debe ser mayor que 0 pero no demasiado grande. Un valor cercano a 0 (&lt; 10⁻⁵)
+          señala multicolinealidad severa o singularidad; un valor cercano a 1 significa que R ≈ I y no hay nada que resumir.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p><b>Bartlett's test of sphericity (1950).</b> It tests the null hypothesis that the population
+          correlation matrix is the identity, that is, that the variables are uncorrelated:</p>
+        <div class="formula">χ² = − [ (n − 1) − (2p + 5)/6 ] · ln |R|        with df = p(p − 1)/2</div>
+        <p>The aim is to <b>reject H₀</b>: a value of <b>p &lt; 0.05</b> indicates that there are enough correlations and that PCA
+          makes sense. Careful: with a large n it is almost always significant, so it is a necessary but not
+          sufficient condition. It assumes multivariate normality.</p>
+        <p><b>Kaiser–Meyer–Olkin (KMO) index and MSA.</b> It compares the magnitude of the observed correlations with that of
+          the partial correlations. If the variables share common factors, the partial correlations will be
+          small and the KMO high:</p>
+        <div class="formula">KMO = Σ Σ r²ᵢⱼ / ( Σ Σ r²ᵢⱼ + Σ Σ a²ᵢⱼ )     (i ≠ j; a = partial correlation)</div>
+        <table>
+          <thead><tr><th>KMO</th><th>Kaiser's label</th><th>Decision</th></tr></thead>
+          <tbody>
+            <tr><td>≥ 0.90</td><td>Excellent ("marvellous")</td><td>Go ahead</td></tr>
+            <tr><td>0.80 – 0.89</td><td>Meritorious</td><td>Go ahead</td></tr>
+            <tr><td>0.70 – 0.79</td><td>Middling (acceptable)</td><td>Go ahead</td></tr>
+            <tr><td>0.60 – 0.69</td><td>Mediocre</td><td>With reservations</td></tr>
+            <tr><td>0.50 – 0.59</td><td>Low</td><td>Review the variables</td></tr>
+            <tr><td>&lt; 0.50</td><td>Unacceptable</td><td>Do not run a PCA</td></tr>
+          </tbody>
+        </table>
+        <p>The same computation applied to each variable gives its <b>MSA</b> (<i>measure of sampling adequacy</i>). Variables
+          with MSA &lt; 0.50 are removed <b>one at a time</b>, recomputing after each removal.</p>
+        <p><b>Determinant of R.</b> It must be greater than 0 but not too large. A value close to 0 (&lt; 10⁻⁵)
+          signals severe multicollinearity or singularity; a value close to 1 means R ≈ I and there is nothing to summarise.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>5 · Tamaño de muestra: cuánta gente / cuántas parcelas hacen falta</summary>
+      <div class="acc-body" data-lang="es">
+        <ul>
+          <li><b>Regla del número absoluto.</b> Comrey y Lee: 50 = muy deficiente, 100 = deficiente, 200 = aceptable,
+            300 = bueno, 500 = muy bueno, 1000 = excelente.</li>
+          <li><b>Regla de la razón n:p.</b> Entre 5:1 (mínimo) y 20:1 (ideal); 10:1 es el consenso habitual.</li>
+          <li><b>Regla de la comunalidad (más moderna, MacCallum et al. 1999).</b> Lo que importa no es tanto n como la
+            <b>fuerza de la estructura</b>: con comunalidades altas (&gt; 0.60) y 3–4 variables marcadoras por componente,
+            n = 60–100 puede bastar; con comunalidades bajas (&lt; 0.40) pueden hacer falta n &gt; 300.</li>
+          <li><b>Regla práctica de campo.</b> Si vas a interpretar cargas, exige al menos 3 variables con carga alta por
+            cada componente que quieras retener.</li>
+        </ul>
+        <p>Umbral de significación de una carga según el tamaño de muestra (Hair et al., α = 0.05, potencia 80 %):</p>
+        <table>
+          <thead><tr><th>n</th><th>50</th><th>60</th><th>70</th><th>85</th><th>100</th><th>120</th><th>150</th><th>200</th><th>250</th><th>350</th></tr></thead>
+          <tbody><tr><td>|carga| mínima</td><td>0.75</td><td>0.70</td><td>0.65</td><td>0.60</td><td>0.55</td><td>0.50</td><td>0.45</td><td>0.40</td><td>0.35</td><td>0.30</td></tr></tbody>
+        </table>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <ul>
+          <li><b>Absolute-number rule.</b> Comrey and Lee: 50 = very poor, 100 = poor, 200 = fair,
+            300 = good, 500 = very good, 1000 = excellent.</li>
+          <li><b>n:p ratio rule.</b> Between 5:1 (minimum) and 20:1 (ideal); 10:1 is the usual consensus.</li>
+          <li><b>Communality rule (more modern, MacCallum et al. 1999).</b> What matters is not so much n as the
+            <b>strength of the structure</b>: with high communalities (&gt; 0.60) and 3–4 marker variables per component,
+            n = 60–100 may be enough; with low communalities (&lt; 0.40) n &gt; 300 may be needed.</li>
+          <li><b>Practical field rule.</b> If you are going to interpret loadings, require at least 3 variables with a high loading for
+            every component you want to retain.</li>
+        </ul>
+        <p>Threshold for a loading to be significant given the sample size (Hair et al., α = 0.05, power 80%):</p>
+        <table>
+          <thead><tr><th>n</th><th>50</th><th>60</th><th>70</th><th>85</th><th>100</th><th>120</th><th>150</th><th>200</th><th>250</th><th>350</th></tr></thead>
+          <tbody><tr><td>minimum |loading|</td><td>0.75</td><td>0.70</td><td>0.65</td><td>0.60</td><td>0.55</td><td>0.50</td><td>0.45</td><td>0.40</td><td>0.35</td><td>0.30</td></tr></tbody>
+        </table>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>6 · Datos faltantes: qué hacer con los huecos</summary>
+      <div class="acc-body" data-lang="es">
+        <p>El ACP clásico exige una matriz completa. Las opciones, de menor a mayor sofisticación:</p>
+        <ol>
+          <li><b>Eliminación por lista</b> (<i>listwise</i>, la opción por defecto aquí). Se descartan las filas con algún
+            vacío. Es honesta y no distorsiona correlaciones, pero puede costar mucha muestra. Aceptable si se pierde
+            menos del 5–10 % de los individuos y los vacíos son aleatorios (MCAR).</li>
+          <li><b>Imputación por la media o la mediana.</b> Rápida y disponible en la app. Preserva el tamaño de muestra
+            pero <b>reduce artificialmente la varianza</b> y atenúa las correlaciones; la mediana es preferible si la
+            variable es asimétrica. Declara siempre cuántas celdas imputaste.</li>
+          <li><b>Imputación por regresión o por vecinos más cercanos (kNN).</b> Conserva mejor la estructura de
+            correlación.</li>
+          <li><b>ACP iterativo regularizado</b> (paquete <code>missMDA</code>, función <code>imputePCA</code> en R).
+            Es la opción recomendada en la literatura cuando hay más de un 10 % de vacíos: estima los valores faltantes
+            usando la propia estructura de componentes, de forma iterativa.</li>
+        </ol>
+        <div class="callout warn"><b>Antes de imputar, mira el patrón</b>
+          Si los vacíos se concentran en una variable o en un grupo de individuos, no son aleatorios y ninguna
+          imputación los arregla: probablemente convenga eliminar esa variable. Para eso sirve el <b>mapa de datos
+          faltantes</b> que genera esta app.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>Classical PCA requires a complete matrix. The options, from least to most sophisticated:</p>
+        <ol>
+          <li><b>Listwise deletion</b> (the default option here). Rows with any
+            gap are discarded. It is honest and does not distort correlations, but it can cost a lot of sample. Acceptable if
+            less than 5–10% of the individuals are lost and the gaps are random (MCAR).</li>
+          <li><b>Mean or median imputation.</b> Fast and available in the app. It preserves the sample size
+            but <b>artificially reduces the variance</b> and attenuates the correlations; the median is preferable if the
+            variable is skewed. Always report how many cells you imputed.</li>
+          <li><b>Regression or nearest-neighbour (kNN) imputation.</b> It preserves the correlation structure
+            better.</li>
+          <li><b>Regularised iterative PCA</b> (package <code>missMDA</code>, function <code>imputePCA</code> in R).
+            This is the option recommended in the literature when more than 10% of the values are missing: it estimates the missing values
+            iteratively, using the component structure itself.</li>
+        </ol>
+        <div class="callout warn"><b>Before imputing, look at the pattern</b>
+          If the gaps are concentrated in one variable or in one group of individuals, they are not random and no
+          imputation will fix them: it is probably better to drop that variable. That is what the <b>missing-data
+          map</b> generated by this app is for.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>7 · Estandarización, transformaciones y la elección covarianza / correlación</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Es <b>la decisión más importante</b> de la preparación, porque cambia por completo el resultado.</p>
+        <table>
+          <thead><tr><th>Opción</th><th>Fórmula</th><th>Cuándo usarla</th></tr></thead>
+          <tbody>
+            <tr><td><b>Sin escalar</b> (ACP sobre covarianzas)</td><td>x</td>
+              <td>Todas las variables en la misma unidad y con varianzas comparables. Conserva las unidades originales.</td></tr>
+            <tr><td><b>Solo centrar</b></td><td>x − x̄</td>
+              <td>Equivalente a la anterior; el centrado es obligatorio en cualquier caso.</td></tr>
+            <tr><td><b>Estandarización z</b> (ACP sobre correlaciones)</td><td>(x − x̄) / s</td>
+              <td><b>Opción por defecto.</b> Unidades distintas o varianzas muy dispares. Toda variable pesa lo mismo.</td></tr>
+            <tr><td><b>Pareto</b></td><td>(x − x̄) / √s</td>
+              <td>Metabolómica y espectros. Reduce la dominancia de las variables grandes sin igualarlas del todo;
+                conserva parte de la estructura de magnitud.</td></tr>
+            <tr><td><b>VAST</b></td><td>(x − x̄) · x̄ / s²</td>
+              <td>Cuando interesa dar más peso a las variables estables (con bajo coeficiente de variación).</td></tr>
+            <tr><td><b>Rango [0, 1]</b></td><td>(x − mín) / (máx − mín)</td>
+              <td>Índices y variables acotadas. Muy sensible a atípicos.</td></tr>
+            <tr><td><b>Robusta</b></td><td>(x − mediana) / MAD</td>
+              <td>Presencia de atípicos que no se quieren eliminar. Reduce su influencia sobre el escalado.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Transformaciones previas</b> (se aplican <i>antes</i> del escalado):</p>
+        <ul>
+          <li><b>Logarítmica</b> — variables con asimetría positiva fuerte, crecimiento multiplicativo, conteos grandes,
+            concentraciones. Linealiza relaciones de potencia y estabiliza la varianza.</li>
+          <li><b>Raíz cuadrada</b> — conteos y abundancias con asimetría moderada (varianza proporcional a la media).</li>
+          <li><b>Inversa (1/x)</b> — tasas y tiempos con colas muy largas.</li>
+          <li><b>Box–Cox / Yeo–Johnson</b> — familia general que estima el exponente óptimo; útil cuando ninguna de las
+            anteriores basta.</li>
+        </ul>
+        <div class="callout"><b>Regla práctica</b>
+          Si tus variables están en unidades distintas —y en biología casi siempre lo están— la respuesta es
+          <b>estandarización z</b>. Si además alguna variable tiene |g₁| &gt; 1, prueba primero una transformación
+          logarítmica y compara el diagnóstico.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>This is <b>the most important decision</b> of the preparation stage, because it completely changes the result.</p>
+        <table>
+          <thead><tr><th>Option</th><th>Formula</th><th>When to use it</th></tr></thead>
+          <tbody>
+            <tr><td><b>No scaling</b> (PCA on covariances)</td><td>x</td>
+              <td>All variables in the same unit and with comparable variances. It keeps the original units.</td></tr>
+            <tr><td><b>Centring only</b></td><td>x − x̄</td>
+              <td>Equivalent to the previous one; centring is mandatory in any case.</td></tr>
+            <tr><td><b>z standardisation</b> (PCA on correlations)</td><td>(x − x̄) / s</td>
+              <td><b>Default option.</b> Different units or very unequal variances. Every variable carries the same weight.</td></tr>
+            <tr><td><b>Pareto</b></td><td>(x − x̄) / √s</td>
+              <td>Metabolomics and spectra. It reduces the dominance of the large variables without fully equalising them;
+                it keeps part of the magnitude structure.</td></tr>
+            <tr><td><b>VAST</b></td><td>(x − x̄) · x̄ / s²</td>
+              <td>When you want to give more weight to stable variables (with a low coefficient of variation).</td></tr>
+            <tr><td><b>Range [0, 1]</b></td><td>(x − min) / (max − min)</td>
+              <td>Indices and bounded variables. Very sensitive to outliers.</td></tr>
+            <tr><td><b>Robust</b></td><td>(x − median) / MAD</td>
+              <td>Outliers present that you do not want to remove. It reduces their influence on the scaling.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Prior transformations</b> (applied <i>before</i> scaling):</p>
+        <ul>
+          <li><b>Logarithmic</b> — variables with strong positive skew, multiplicative growth, large counts,
+            concentrations. It linearises power relationships and stabilises the variance.</li>
+          <li><b>Square root</b> — counts and abundances with moderate skew (variance proportional to the mean).</li>
+          <li><b>Reciprocal (1/x)</b> — rates and times with very long tails.</li>
+          <li><b>Box–Cox / Yeo–Johnson</b> — a general family that estimates the optimal exponent; useful when none of the
+            above is enough.</li>
+        </ul>
+        <div class="callout"><b>Rule of thumb</b>
+          If your variables are in different units —and in biology they almost always are— the answer is
+          <b>z standardisation</b>. If, in addition, some variable has |g₁| &gt; 1, try a logarithmic
+          transformation first and compare the diagnosis.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>8 · Variables e individuos activos frente a suplementarios</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Distinción central en la escuela francesa de análisis de datos (Benzécri, Lebart, Escofier–Pagès), que es la
+          que implementan <code>FactoMineR</code> y <code>factoextra</code>:</p>
+        <ul>
+          <li><b>Variables activas.</b> Construyen los ejes. Son las que entran en el cálculo de los valores propios.</li>
+          <li><b>Variables cuantitativas suplementarias.</b> No participan en el cálculo, pero se proyectan después sobre
+            el círculo de correlaciones para ayudar a interpretar los ejes. Ideales para variables de resultado
+            (rendimiento, biomasa final) que no quieres que definan los componentes.</li>
+          <li><b>Variables cualitativas (grupos).</b> Se usan para colorear los individuos, dibujar elipses de confianza
+            por grupo y calcular los centroides de cada categoría sobre el plano factorial.</li>
+          <li><b>Individuos suplementarios.</b> Casos que se proyectan sin haber intervenido en la construcción de los
+            ejes (por ejemplo, una nueva campaña de muestreo o un testigo).</li>
+        </ul>
+        <p>En el Bloque 1 tú asignas ese papel a cada columna. La app propone una asignación automática, pero la decisión
+          es tuya y es una decisión <b>teórica</b>, no estadística: las variables activas deben responder a una misma
+          pregunta conceptual.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>A central distinction in the French school of data analysis (Benzécri, Lebart, Escofier–Pagès), the one
+          implemented by <code>FactoMineR</code> and <code>factoextra</code>:</p>
+        <ul>
+          <li><b>Active variables.</b> They build the axes. They are the ones entering the eigenvalue computation.</li>
+          <li><b>Supplementary quantitative variables.</b> They take no part in the computation, but are projected afterwards onto
+            the correlation circle to help interpret the axes. Ideal for outcome variables
+            (yield, final biomass) that you do not want to define the components.</li>
+          <li><b>Qualitative variables (groups).</b> Used to colour the individuals, draw confidence ellipses
+            per group and compute the centroid of each category on the factor plane.</li>
+          <li><b>Supplementary individuals.</b> Cases projected without having taken part in building the
+            axes (for example, a new sampling campaign or a control).</li>
+        </ul>
+        <p>In Block 1 you assign that role to each column. The app proposes an automatic assignment, but the decision
+          is yours, and it is a <b>theoretical</b> decision, not a statistical one: the active variables must answer one and
+          the same conceptual question.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>9 · ¿Cuántos componentes retener? <span class="pill" style="margin-left:6px">▸ Bloque 2</span></summary>
+      <div class="acc-body" data-lang="es">
+        <ul>
+          <li><b>Criterio de Kaiser (λ &gt; 1).</b> Solo válido sobre matriz de correlaciones: retiene los componentes que
+            explican más que una variable original. Es el más usado y el que más tiende a <b>sobreestimar</b> el número
+            de componentes, sobre todo con p &gt; 30.</li>
+          <li><b>Gráfico de sedimentación (<i>scree plot</i>, Cattell 1966).</b> Se retienen los componentes que quedan
+            <i>antes</i> del «codo». Es visual y algo subjetivo, pero muy informativo.</li>
+          <li><b>Porcentaje de varianza acumulada.</b> Retener hasta alcanzar un 70–80 % (ciencias naturales) o
+            un 60 % (ciencias sociales). Nunca como criterio único.</li>
+          <li><b>Análisis paralelo de Horn (1965).</b> El más recomendado hoy. Compara los valores propios observados con
+            los que se obtendrían de datos aleatorios del mismo tamaño; se retiene mientras λ_observado &gt; λ_aleatorio.</li>
+          <li><b>Bastón roto (<i>broken stick</i>).</b> Compara con el reparto esperado de un segmento partido al azar.
+            Muy usado en ecología; es conservador.</li>
+          <li><b>MAP de Velicer</b> y <b>validación cruzada</b> (predicción de celdas omitidas). Los más rigurosos.</li>
+          <li><b>Criterio de interpretabilidad.</b> Un componente que no se puede nombrar no sirve, aunque cumpla todos
+            los criterios numéricos.</li>
+        </ul>
+        <p>La buena práctica es <b>combinar al menos tres criterios</b> y reportarlos todos.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <ul>
+          <li><b>Kaiser's criterion (λ &gt; 1).</b> Valid only on a correlation matrix: it retains the components that
+            explain more than one original variable. It is the most widely used, and the one that most tends to <b>overestimate</b> the number
+            of components, especially with p &gt; 30.</li>
+          <li><b>Scree plot (Cattell 1966).</b> The components kept are those
+            <i>before</i> the "elbow". It is visual and somewhat subjective, but very informative.</li>
+          <li><b>Cumulative percentage of variance.</b> Retain until 70–80% is reached (natural sciences) or
+            60% (social sciences). Never as the sole criterion.</li>
+          <li><b>Horn's parallel analysis (1965).</b> The most recommended today. It compares the observed eigenvalues with
+            those that would be obtained from random data of the same size; components are retained while λ_observed &gt; λ_random.</li>
+          <li><b>Broken stick.</b> It compares against the expected split of a stick broken at random.
+            Widely used in ecology; it is conservative.</li>
+          <li><b>Velicer's MAP</b> and <b>cross-validation</b> (prediction of omitted cells). The most rigorous.</li>
+          <li><b>Interpretability criterion.</b> A component that cannot be named is useless, even if it meets every
+            numerical criterion.</li>
+        </ul>
+        <p>Good practice is to <b>combine at least three criteria</b> and report them all.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>10 · Rotaciones: varimax, quartimax, equamax, promax, oblimin <span class="pill" style="margin-left:6px">▸ Bloque 3</span></summary>
+      <div class="acc-body" data-lang="es">
+        <p>Los ejes que salen del ACP maximizan varianza, pero no tienen por qué ser fáciles de interpretar: es habitual
+          que todas las variables carguen sobre el primer componente. La <b>rotación</b> gira los ejes retenidos
+          —sin cambiar la varianza total explicada por el conjunto— buscando una <b>estructura simple</b> en el sentido
+          de Thurstone: que cada variable cargue fuerte en un solo componente y casi cero en los demás.</p>
+        <p><b>Rotaciones ortogonales</b> (los componentes siguen sin correlacionarse):</p>
+        <ul>
+          <li><b>Varimax (Kaiser, 1958).</b> La más usada. Maximiza la varianza de las cargas <i>al cuadrado</i> dentro de
+            cada componente, es decir, empuja las cargas hacia 0 o hacia ±1 columna por columna. Tiende a repartir las
+            variables entre varios componentes bien definidos.
+            <div class="formula">maximizar  Σ_k [ p·Σ_j (a²ⱼₖ)² − ( Σ_j a²ⱼₖ )² ] / p²</div></li>
+          <li><b>Quartimax.</b> Simplifica por <i>filas</i>: busca que cada variable cargue en el menor número posible de
+            componentes. Suele producir un primer factor general muy dominante.</li>
+          <li><b>Equamax.</b> Compromiso entre varimax y quartimax (simplifica filas y columnas a la vez). Menos estable.</li>
+          <li><b>Parsimax</b> y <b>Orthomax</b>: familia general que engloba a las anteriores según un parámetro γ
+            (γ = 0 quartimax, γ = 1 varimax, γ = p/2 equamax).</li>
+        </ul>
+        <p><b>Rotaciones oblicuas</b> (permiten que los componentes se correlacionen entre sí):</p>
+        <ul>
+          <li><b>Promax.</b> Parte de una solución varimax y la eleva a una potencia κ (habitualmente 4) para exagerar el
+            contraste entre cargas altas y bajas. Rápida y muy usada en muestras grandes.</li>
+          <li><b>Oblimin directo.</b> Controla el grado de oblicuidad con el parámetro δ (δ = 0 es el más usado).</li>
+          <li><b>Geomin</b> y <b>Quartimin.</b> Alternativas modernas, frecuentes en análisis factorial exploratorio.</li>
+        </ul>
+        <div class="callout"><b>¿Ortogonal u oblicua?</b>
+          Usa <b>ortogonal (varimax)</b> si necesitas componentes independientes —por ejemplo para usarlos como
+          predictores en una regresión— o si teóricamente esperas dimensiones no relacionadas. Usa <b>oblicua
+          (promax / oblimin)</b> si es razonable que las dimensiones estén correlacionadas, que es lo habitual en
+          fenómenos biológicos y sociales. Con rotación oblicua se reportan dos matrices: la de <b>patrón</b>
+          (coeficientes únicos, la que se interpreta) y la de <b>estructura</b> (correlaciones variable–componente).</div>
+        <div class="callout warn"><b>Advertencia</b>
+          La rotación pertenece propiamente al <b>análisis factorial</b>. Al rotar componentes principales dejan de
+          maximizar varianza individualmente y de estar ordenados por λ; lo que se conserva es la varianza total del
+          subconjunto retenido. Es una práctica aceptada y muy extendida, pero hay que declararla: «ACP con rotación
+          varimax sobre los k primeros componentes».</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The axes produced by PCA maximise variance, but they need not be easy to interpret: it is common
+          for every variable to load on the first component. <b>Rotation</b> turns the retained axes
+          —without changing the total variance explained by the set— seeking a <b>simple structure</b> in
+          Thurstone's sense: each variable loading strongly on a single component and near zero on the rest.</p>
+        <p><b>Orthogonal rotations</b> (the components remain uncorrelated):</p>
+        <ul>
+          <li><b>Varimax (Kaiser, 1958).</b> The most widely used. It maximises the variance of the <i>squared</i> loadings within
+            each component, that is, it pushes the loadings towards 0 or towards ±1 column by column. It tends to spread the
+            variables over several well-defined components.
+            <div class="formula">maximise  Σ_k [ p·Σ_j (a²ⱼₖ)² − ( Σ_j a²ⱼₖ )² ] / p²</div></li>
+          <li><b>Quartimax.</b> It simplifies by <i>rows</i>: it tries to make each variable load on as few
+            components as possible. It usually produces a very dominant first general factor.</li>
+          <li><b>Equamax.</b> A compromise between varimax and quartimax (simplifying rows and columns at once). Less stable.</li>
+          <li><b>Parsimax</b> and <b>orthomax</b>: a general family that encompasses the previous ones through a parameter γ
+            (γ = 0 quartimax, γ = 1 varimax, γ = p/2 equamax).</li>
+        </ul>
+        <p><b>Oblique rotations</b> (they let the components correlate with each other):</p>
+        <ul>
+          <li><b>Promax.</b> It starts from a varimax solution and raises it to a power κ (usually 4) to exaggerate the
+            contrast between high and low loadings. Fast and widely used with large samples.</li>
+          <li><b>Direct oblimin.</b> It controls the degree of obliqueness through the parameter δ (δ = 0 is the most used).</li>
+          <li><b>Geomin</b> and <b>quartimin.</b> Modern alternatives, frequent in exploratory factor analysis.</li>
+        </ul>
+        <div class="callout"><b>Orthogonal or oblique?</b>
+          Use an <b>orthogonal (varimax)</b> rotation if you need independent components —for example to use them as
+          predictors in a regression— or if you theoretically expect unrelated dimensions. Use an <b>oblique
+          (promax / oblimin)</b> rotation if it is reasonable for the dimensions to be correlated, which is the usual case in
+          biological and social phenomena. With an oblique rotation two matrices are reported: the <b>pattern</b> matrix
+          (unique coefficients, the one that is interpreted) and the <b>structure</b> matrix (variable–component correlations).</div>
+        <div class="callout warn"><b>Caveat</b>
+          Rotation properly belongs to <b>factor analysis</b>. Once principal components are rotated they no longer
+          maximise variance individually, nor are they ordered by λ; what is preserved is the total variance of the
+          retained subset. It is an accepted and very widespread practice, but it must be declared: "PCA with varimax
+          rotation on the first k components".</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>11 · ACP frente a Análisis Factorial (y otras confusiones frecuentes)</summary>
+      <div class="acc-body" data-lang="es">
+        <table>
+          <thead><tr><th></th><th>ACP</th><th>Análisis factorial exploratorio</th></tr></thead>
+          <tbody>
+            <tr><td>Objetivo</td><td>Resumir la varianza <b>total</b></td><td>Explicar la varianza <b>común</b> (covarianza)</td></tr>
+            <tr><td>Modelo</td><td>Sin modelo: transformación de los datos</td><td>Modelo latente con error específico</td></tr>
+            <tr><td>Diagonal de R</td><td>Unos (varianza total)</td><td>Comunalidades estimadas</td></tr>
+            <tr><td>Dirección</td><td>Componente = función de las variables</td><td>Variable = función de los factores</td></tr>
+            <tr><td>Uso típico</td><td>Reducción, índices, visualización</td><td>Identificar constructos latentes</td></tr>
+          </tbody>
+        </table>
+        <p>Otras técnicas emparentadas, por si tu pregunta no es de ACP:</p>
+        <ul>
+          <li><b>Análisis de correspondencias (AC / ACM)</b> — datos categóricos, tablas de contingencia.</li>
+          <li><b>Análisis factorial de datos mixtos (AFDM)</b> — cuantitativas y cualitativas juntas.</li>
+          <li><b>Análisis factorial múltiple (AFM)</b> — variables organizadas en grupos o bloques.</li>
+          <li><b>Análisis discriminante</b> — hay grupos conocidos y se quiere separarlos (el ACP no busca separar).</li>
+          <li><b>Escalamiento multidimensional (NMDS)</b> y <b>PCoA</b> — se parte de una matriz de distancias.</li>
+          <li><b>Regresión por componentes principales (RCP)</b> — los componentes se usan como predictores en regresión
+            para esquivar la multicolinealidad.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <table>
+          <thead><tr><th></th><th>PCA</th><th>Exploratory factor analysis</th></tr></thead>
+          <tbody>
+            <tr><td>Goal</td><td>Summarise the <b>total</b> variance</td><td>Explain the <b>common</b> variance (covariance)</td></tr>
+            <tr><td>Model</td><td>No model: a transformation of the data</td><td>Latent model with a specific error term</td></tr>
+            <tr><td>Diagonal of R</td><td>Ones (total variance)</td><td>Estimated communalities</td></tr>
+            <tr><td>Direction</td><td>Component = function of the variables</td><td>Variable = function of the factors</td></tr>
+            <tr><td>Typical use</td><td>Reduction, indices, visualisation</td><td>Identifying latent constructs</td></tr>
+          </tbody>
+        </table>
+        <p>Other related techniques, in case your question is not a PCA question:</p>
+        <ul>
+          <li><b>Correspondence analysis (CA / MCA)</b> — categorical data, contingency tables.</li>
+          <li><b>Factor analysis of mixed data (FAMD)</b> — quantitative and qualitative variables together.</li>
+          <li><b>Multiple factor analysis (MFA)</b> — variables organised in groups or blocks.</li>
+          <li><b>Discriminant analysis</b> — known groups exist and the goal is to separate them (PCA does not seek separation).</li>
+          <li><b>Multidimensional scaling (NMDS)</b> and <b>PCoA</b> — they start from a distance matrix.</li>
+          <li><b>Principal component regression (PCR)</b> — the components are used as predictors in a regression
+            to sidestep multicollinearity.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>12 · Errores frecuentes que arruinan un ACP</summary>
+      <div class="acc-body" data-lang="es">
+        <ul>
+          <li>Meter variables derivadas de otras (área = largo × ancho, porcentajes que suman 100). Genera dependencia
+            lineal exacta y ejes artificiales.</li>
+          <li>No estandarizar cuando las unidades difieren, y luego «descubrir» que el primer componente es simplemente
+            la variable con números más grandes.</li>
+          <li>Interpretar cargas pequeñas. Fija un umbral (0.30–0.40, o el de la tabla del punto 5) y respétalo.</li>
+          <li>Retener componentes solo por el criterio de Kaiser.</li>
+          <li>Interpretar el plano 1–2 cuando explica el 35 % de la varianza, sin advertirlo.</li>
+          <li>Olvidar que el signo de un componente es arbitrario.</li>
+          <li>Confundir la proximidad de dos <b>individuos</b> con la de dos <b>variables</b>: en el biplot se leen con
+            reglas distintas (distancias entre puntos, ángulos entre vectores).</li>
+          <li>Usar el ACP como si fuera una prueba de hipótesis o como sustituto de un análisis discriminante.</li>
+          <li>No reportar el preprocesamiento (transformación, escalado, tratamiento de faltantes y de atípicos).</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <ul>
+          <li>Including variables derived from others (area = length × width, percentages that add to 100). This creates exact
+            linear dependence and artificial axes.</li>
+          <li>Not standardising when the units differ, and then "discovering" that the first component is simply
+            the variable with the largest numbers.</li>
+          <li>Interpreting small loadings. Set a threshold (0.30–0.40, or the one in the table of point 5) and stick to it.</li>
+          <li>Retaining components on Kaiser's criterion alone.</li>
+          <li>Interpreting the 1–2 plane when it explains 35% of the variance, without saying so.</li>
+          <li>Forgetting that the sign of a component is arbitrary.</li>
+          <li>Confusing the proximity of two <b>individuals</b> with that of two <b>variables</b>: in the biplot they are read with
+            different rules (distances between points, angles between vectors).</li>
+          <li>Using PCA as if it were a hypothesis test, or as a substitute for discriminant analysis.</li>
+          <li>Not reporting the preprocessing (transformation, scaling, handling of missing data and of outliers).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>13 · Glosario y lecturas</summary>
+      <div class="acc-body" data-lang="es">
+        <table>
+          <thead><tr><th>Término</th><th>Significado</th></tr></thead>
+          <tbody>
+            <tr><td><b>Valor propio (λ)</b></td><td>Varianza capturada por un componente.</td></tr>
+            <tr><td><b>Vector propio</b></td><td>Dirección del componente; sus elementos son los coeficientes.</td></tr>
+            <tr><td><b>Carga (<i>loading</i>)</b></td><td>Correlación entre una variable y un componente.</td></tr>
+            <tr><td><b>Puntuación (<i>score</i>)</b></td><td>Coordenada de un individuo sobre un componente.</td></tr>
+            <tr><td><b>Comunalidad</b></td><td>Proporción de la varianza de una variable explicada por los componentes retenidos.</td></tr>
+            <tr><td><b>cos²</b></td><td>Calidad de representación de un punto sobre un eje o plano.</td></tr>
+            <tr><td><b>Contribución</b></td><td>Aporte porcentual de un individuo o variable a la construcción de un eje.</td></tr>
+            <tr><td><b>Círculo de correlaciones</b></td><td>Representación de las variables en el plano factorial; radio 1.</td></tr>
+            <tr><td><b>Biplot</b></td><td>Individuos y variables superpuestos en el mismo plano.</td></tr>
+            <tr><td><b>Estructura simple</b></td><td>Situación ideal tras la rotación: cada variable carga en un solo componente.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Referencias base de esta plataforma</b></p>
+        <ul>
+          <li>Kassambara, A. (2017). <i>Practical Guide to Principal Component Methods in R</i>. STHDA. — criterios de
+            visualización, cos², contribuciones, elementos suplementarios.</li>
+          <li>Gray, V. (ed.). <i>Principal Component Analysis: Methods, Applications and Technology</i>. Nova Science.</li>
+          <li>Suryanarayana, T.M.V. y Mistry, P.B. <i>Principal Component Regression for Crop Yield Estimation</i>. Springer.</li>
+          <li>Jolliffe, I.T. (2002). <i>Principal Component Analysis</i>, 2ª ed. Springer. — referencia canónica.</li>
+          <li>Hair, J.F. et al. <i>Multivariate Data Analysis</i>. — reglas prácticas de tamaño de muestra y cargas.</li>
+          <li>Lebart, Morineau y Piron. <i>Statistique exploratoire multidimensionnelle</i>. — escuela francesa,
+            elementos activos y suplementarios.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <table>
+          <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><b>Eigenvalue (λ)</b></td><td>Variance captured by a component.</td></tr>
+            <tr><td><b>Eigenvector</b></td><td>Direction of the component; its elements are the coefficients.</td></tr>
+            <tr><td><b>Loading</b></td><td>Correlation between a variable and a component.</td></tr>
+            <tr><td><b>Score</b></td><td>Coordinate of an individual on a component.</td></tr>
+            <tr><td><b>Communality</b></td><td>Share of a variable's variance explained by the retained components.</td></tr>
+            <tr><td><b>cos²</b></td><td>Quality of representation of a point on an axis or plane.</td></tr>
+            <tr><td><b>Contribution</b></td><td>Percentage share of an individual or variable in building an axis.</td></tr>
+            <tr><td><b>Correlation circle</b></td><td>Representation of the variables on the factor plane; radius 1.</td></tr>
+            <tr><td><b>Biplot</b></td><td>Individuals and variables superimposed on the same plane.</td></tr>
+            <tr><td><b>Simple structure</b></td><td>The ideal situation after rotation: each variable loads on a single component.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Reference works behind this platform</b></p>
+        <ul>
+          <li>Kassambara, A. (2017). <i>Practical Guide to Principal Component Methods in R</i>. STHDA. — visualisation
+            criteria, cos², contributions, supplementary elements.</li>
+          <li>Gray, V. (ed.). <i>Principal Component Analysis: Methods, Applications and Technology</i>. Nova Science.</li>
+          <li>Suryanarayana, T.M.V. and Mistry, P.B. <i>Principal Component Regression for Crop Yield Estimation</i>. Springer.</li>
+          <li>Jolliffe, I.T. (2002). <i>Principal Component Analysis</i>, 2nd ed. Springer. — the canonical reference.</li>
+          <li>Hair, J.F. et al. <i>Multivariate Data Analysis</i>. — practical rules for sample size and loadings.</li>
+          <li>Lebart, Morineau and Piron. <i>Statistique exploratoire multidimensionnelle</i>. — the French school,
+            active and supplementary elements.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------- CARGA ---------- -->
+  <div class="card">
+    <h2 data-i18n="1.1 · Sube tu base de datos">1.1 · Sube tu base de datos</h2>
+    <p class="hint" data-i18n-auto>Formato <b>.xlsx</b>, <b>.xls</b> o <b>.csv</b>. La <b>primera fila</b> debe contener los nombres de
+      las variables y cada fila siguiente una observación (una planta, una parcela, un individuo, una muestra…).
+      Una sola tabla por hoja, sin filas ni columnas en blanco intercaladas y sin celdas combinadas.</p>
+
+    <div class="drop-zone" id="dropZone">
+      <div class="dz-icon">⬆</div>
+      <p data-i18n-auto><b>Arrastra tu archivo aquí</b> o haz clic para elegirlo</p>
+      <p class="hint" data-i18n-auto>.xlsx · .xls · .csv · .tsv · .txt</p>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.xlsm,.csv,.tsv,.txt" hidden>
+    </div>
+
+    <div class="field-grid" style="margin-top:16px">
+      <div class="field">
+        <label data-i18n="Separador decimal">Separador decimal</label>
+        <select id="decimalSel">
+          <option value="auto" data-i18n="Detectar automáticamente">Detectar automáticamente</option>
+          <option value="dot" data-i18n="Punto (12.34)">Punto (12.34)</option>
+          <option value="comma" data-i18n="Coma (12,34)">Coma (12,34)</option>
+        </select>
+        <span class="field-help" data-i18n-auto>Importante si tu Excel está en configuración regional en español.</span>
+      </div>
+      <div class="field">
+        <label data-i18n="Separador de columnas (CSV)">Separador de columnas (CSV)</label>
+        <select id="delimSel">
+          <option value="" data-i18n="Detectar automáticamente">Detectar automáticamente</option>
+          <option value="," data-i18n="Coma ,">Coma ,</option>
+          <option value=";" data-i18n="Punto y coma ;">Punto y coma ;</option>
+          <option value="&#9;" data-i18n="Tabulador">Tabulador</option>
+          <option value="|" data-i18n="Barra vertical |">Barra vertical |</option>
+        </select>
+        <span class="field-help" data-i18n-auto>Solo aplica a archivos de texto plano.</span>
+      </div>
+      <div class="field" id="sheetPicker" style="display:none">
+        <label data-i18n="Hoja del libro">Hoja del libro</label>
+        <select id="sheetSelect"></select>
+        <span class="field-help" data-i18n-auto>Tu archivo tiene varias hojas.</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="exampleIris" data-i18n="Ejemplo real: iris (150 × 4)">Ejemplo real: iris (150 × 4)</button>
+      <button class="btn btn-secondary" id="exampleSim" data-i18n="Ejemplo simulado: morfometría foliar (120 × 9)">Ejemplo simulado: morfometría foliar (120 × 9)</button>
+    </div>
+    <div class="messages" id="dataMessages"></div>
+  </div>
+
+  <!-- ---------- VARIABLES ---------- -->
+  <div class="card" id="varCard" style="display:none">
+    <div class="card-head">
+      <div>
+        <h2 data-i18n="1.2 · Define el papel de cada variable">1.2 · Define el papel de cada variable</h2>
+        <p class="hint" data-i18n-auto>PCAPro detectó el tipo de cada columna. Revísalo: <b>solo las variables numéricas marcadas como
+          «Activa» construirán los componentes</b>. Una columna numérica con pocos valores enteros (un código de
+          tratamiento, un año, un identificador) casi siempre debe ser <b>cualitativa</b>, no activa.</p>
+      </div>
+    </div>
+
+    <div id="roleSummary" class="results-summary"></div>
+    <p class="hint" data-i18n-auto id="roleHint"></p>
+
+    <h3 data-i18n="Selección rápida de variables activas">Selección rápida de variables activas</h3>
+    <p class="hint" data-i18n-auto>Marca aquí las variables que quieres que entren al ACP. Es un atajo del desplegable
+      «Papel en el ACP» de la tabla de abajo: al desmarcar una variable numérica pasa a
+      <b>cuantitativa suplementaria</b> (se proyectará sin construir los ejes), no se elimina.</p>
+    <div class="checkbox-grid" id="quickVars"></div>
+    <div class="btn-row" style="margin-top:6px">
+      <button class="btn btn-ghost btn-sm" id="bulkActive" data-i18n="Marcar todas las numéricas como activas">Marcar todas las numéricas como activas</button>
+      <button class="btn btn-ghost btn-sm" id="bulkNone" data-i18n="Desmarcar todas">Desmarcar todas</button>
+      <button class="btn btn-ghost btn-sm" id="bulkReset" data-i18n="Restaurar detección automática">Restaurar detección automática</button>
+    </div>
+
+    <div class="table-scroll" style="margin-top:12px; max-height:520px; overflow-y:auto" id="varTable"></div>
+
+    <div class="callout" data-i18n-auto style="margin-top:16px"><b>Cómo decidir</b>
+      <b>Activa</b>: la variable responde a la pregunta que quieres resumir y está medida en escala cuantitativa.
+      <b>Cuantitativa suplementaria</b>: te interesa ver dónde cae en el plano, pero no quieres que defina los ejes
+      (típicamente una variable de respuesta, como el rendimiento). <b>Cualitativa / grupo</b>: define categorías que
+      servirán para colorear individuos y dibujar elipses. <b>Identificador</b>: etiqueta las filas en los gráficos.
+    </div>
+  </div>
+
+  <!-- ---------- PREPARACIÓN ---------- -->
+  <div class="card" id="prepCard" style="display:none">
+    <h2 data-i18n="1.3 · Preparación de la matriz">1.3 · Preparación de la matriz</h2>
+
+    <h3 data-i18n="Datos faltantes">Datos faltantes</h3>
+    <div class="field-grid">
+      <div class="field">
+        <label data-i18n="Tratamiento">Tratamiento</label>
+        <select id="missingSel">
+          <option value="listwise" data-i18n="Eliminar filas incompletas (listwise)">Eliminar filas incompletas (listwise)</option>
+          <option value="mean" data-i18n="Imputar con la media de la variable">Imputar con la media de la variable</option>
+          <option value="median" data-i18n="Imputar con la mediana de la variable">Imputar con la mediana de la variable</option>
+        </select>
+        <span class="field-help" data-i18n-auto>La eliminación es la opción más conservadora; la mediana es preferible a la media si la variable es asimétrica.</span>
+      </div>
+      <div class="field">
+        <label data-i18n="Transformación previa">Transformación previa</label>
+        <select id="transformSel">
+          <option value="none" data-i18n="Ninguna (datos originales)">Ninguna (datos originales)</option>
+          <option value="log" data-i18n="Logaritmo natural, ln(x)">Logaritmo natural, ln(x)</option>
+          <option value="log10" data-i18n="Logaritmo base 10">Logaritmo base 10</option>
+          <option value="sqrt" data-i18n="Raíz cuadrada">Raíz cuadrada</option>
+          <option value="inverse" data-i18n="Inversa, 1/x">Inversa, 1/x</option>
+        </select>
+        <span class="field-help" data-i18n-auto>Se aplica antes del escalado. Si hay ceros o negativos, la app suma automáticamente una constante.</span>
+      </div>
+    </div>
+
+    <h3>Estandarización <span class="pill" style="font-size:.68rem">decisión clave</span></h3>
+    <p class="hint" data-i18n-auto>Determina si el ACP se hace sobre la matriz de <b>covarianzas</b> (sin escalar) o sobre la de
+      <b>correlaciones</b> (estandarización z). Regla práctica: si tus variables están en unidades distintas, estandariza.</p>
+    <div class="opt-grid">
+      <label class="opt-card selected">
+        <input type="radio" name="scaling" value="z" data-label="Estandarización z (matriz de correlaciones)" checked>
+        <span class="opt-title" data-i18n-auto>Estandarización z — recomendada</span>
+        <span class="opt-desc" data-i18n-auto>(x − media) / desviación. Media 0 y varianza 1. Toda variable pesa igual. ACP sobre correlaciones.</span>
+      </label>
+      <label class="opt-card">
+        <input type="radio" name="scaling" value="none" data-label="Sin escalar (matriz de covarianzas)">
+        <span class="opt-title" data-i18n-auto>Sin escalar</span>
+        <span class="opt-desc" data-i18n-auto>ACP sobre covarianzas. Solo si todas las variables comparten unidad y escala. Conserva las unidades originales.</span>
+      </label>
+      <label class="opt-card">
+        <input type="radio" name="scaling" value="center" data-label="Solo centrado (matriz de covarianzas)">
+        <span class="opt-title" data-i18n-auto>Solo centrar</span>
+        <span class="opt-desc" data-i18n-auto>Resta la media sin dividir. Equivale al ACP sobre covarianzas.</span>
+      </label>
+      <label class="opt-card">
+        <input type="radio" name="scaling" value="pareto" data-label="Escalado de Pareto">
+        <span class="opt-title" data-i18n-auto>Pareto</span>
+        <span class="opt-desc" data-i18n-auto>Divide entre la raíz de la desviación. Atenúa las variables dominantes sin igualarlas. Típico en metabolómica y espectros.</span>
+      </label>
+      <label class="opt-card">
+        <input type="radio" name="scaling" value="vast" data-label="Escalado VAST">
+        <span class="opt-title" data-i18n-auto>VAST</span>
+        <span class="opt-desc" data-i18n-auto>Pondera por el inverso del coeficiente de variación: favorece las variables estables.</span>
+      </label>
+      <label class="opt-card">
+        <input type="radio" name="scaling" value="range" data-label="Escalado al rango [0, 1]">
+        <span class="opt-title" data-i18n-auto>Rango [0, 1]</span>
+        <span class="opt-desc" data-i18n-auto>Reescala al intervalo unitario. Cómodo para índices, pero muy sensible a valores extremos.</span>
+      </label>
+      <label class="opt-card">
+        <input type="radio" name="scaling" value="robust" data-label="Escalado robusto (mediana / MAD)">
+        <span class="opt-title" data-i18n-auto>Robusta (mediana / MAD)</span>
+        <span class="opt-desc" data-i18n-auto>Usa mediana y desviación absoluta mediana. Recomendada si hay atípicos que no quieres eliminar.</span>
+      </label>
+    </div>
+    <p class="hint" data-i18n-auto>Escalado seleccionado: <b id="scaleLabel">Estandarización z (matriz de correlaciones)</b></p>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="processBtn" disabled data-i18n="Preparar matriz y diagnosticar →">Preparar matriz y diagnosticar →</button>
+    </div>
+    <div class="messages" id="prepMessages"></div>
+  </div>
+
+  <!-- ---------- VISTA PREVIA ---------- -->
+  <div class="card" id="previewCard" style="display:none">
+    <h2 data-i18n="1.4 · Vista previa del archivo">1.4 · Vista previa del archivo</h2>
+    <p class="hint" data-i18n-auto id="previewNote"></p>
+    <div class="table-scroll" id="dataPreview"></div>
+  </div>
+
+  <!-- ---------- RESULTADOS ---------- -->
+  <div id="resultsWrap" style="display:none">
+
+    <div class="card">
+      <h2 data-i18n="1.5 · Diagnóstico de la base de datos">1.5 · Diagnóstico de la base de datos</h2>
+      <p class="hint" data-i18n-auto>Verificación automática de los supuestos del punto 3 del marco teórico, sobre la matriz ya preparada.</p>
+      <div class="verdict" id="verdict"></div>
+      <div id="diagTiles" class="results-summary"></div>
+
+      <h3 data-i18n="Adecuación muestral por variable (MSA)">Adecuación muestral por variable (MSA)</h3>
+      <p class="hint" data-i18n-auto>Ordenadas de menor a mayor. Las que estén por debajo de 0.50 son candidatas a eliminarse,
+        <b>una a la vez</b>, recalculando el diagnóstico después de cada eliminación.</p>
+      <div class="table-scroll" id="msaTable"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="1.6 · Exploración gráfica">1.6 · Exploración gráfica</h2>
+      <p class="hint" data-i18n-auto>Cada figura es editable (títulos, ejes, colores, paletas, tema, tipografía) y se descarga en
+        SVG vectorial o en mapa de bits hasta 12× la resolución base (~900 ppp).</p>
+
+      <div class="fig-block" id="figMissing"></div>
+      <div class="fig-block" id="figScales"></div>
+      <div class="fig-block" id="figHist"></div>
+      <div class="fig-block" id="figCorr"></div>
+      <div class="fig-block" id="figBox"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="1.7 · Recomendaciones sobre tu base de datos">1.7 · Recomendaciones sobre tu base de datos</h2>
+      <p class="hint" data-i18n-auto>Lectura automática del diagnóstico, punto por punto, con la acción sugerida en cada caso.</p>
+      <ul class="check-list" id="recList"></ul>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="1.8 · Matriz preparada y descargas">1.8 · Matriz preparada y descargas</h2>
+      <p class="hint" data-i18n-auto id="preparedNote"></p>
+      <div class="table-scroll" id="preparedPreview"></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary btn-sm" id="dlPrepared" data-i18n="⬇ Matriz preparada (CSV)">⬇ Matriz preparada (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlCorr" data-i18n="⬇ Matriz de correlaciones (CSV)">⬇ Matriz de correlaciones (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlSummary" data-i18n="⬇ Resumen de variables (CSV)">⬇ Resumen de variables (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlReport" data-i18n="⬇ Informe del Bloque 1 (TXT)">⬇ Informe del Bloque 1 (TXT)</button>
+      </div>
+      <hr class="divider">
+      <p class="hint" data-i18n-auto>Con la matriz validada, el <b>Bloque 2</b> extrae los componentes: valores propios, varianza
+        explicada, gráfico de sedimentación, análisis paralelo de Horn, bastón roto, MAP de Velicer y decisión del
+        número de ejes a retener.</p>
+      <button class="btn btn-primary btn-lg" id="goStep2" data-i18n="Ir al Bloque 2: extracción →">Ir al Bloque 2: extracción →</button>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PASOS SIGUIENTES ==================== -->
+<section class="step-panel" id="panel-2">
+
+  <!-- ---------- TEORÍA DEL BLOQUE 2 ---------- -->
+  <div class="card theory-card">
+    <h2 data-i18n="Extracción de componentes: teoría">Extracción de componentes: teoría</h2>
+    <p class="hint" data-i18n-auto>Qué se calcula exactamente en este paso y cómo se decide cuántos ejes conservar.</p>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>1 · Qué produce la extracción</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Sobre la matriz ya preparada en el Bloque 1 se calcula la matriz de dispersión —de <b>correlaciones</b> si
+          estandarizaste, de <b>covarianzas</b> si no— y se resuelve su descomposición espectral. De ahí salen cuatro
+          objetos que se usarán en todos los bloques siguientes:</p>
+        <ul>
+          <li><b>Valores propios λ₁ ≥ λ₂ ≥ … ≥ λ_p.</b> Cuánta varianza captura cada eje. Su suma es la varianza total
+            (igual a <i>p</i> si se trabaja con correlaciones, porque cada variable estandarizada aporta varianza 1).</li>
+          <li><b>Vectores propios.</b> Los coeficientes de la combinación lineal que define cada componente.</li>
+          <li><b>Puntuaciones</b> (<i>scores</i>). La coordenada de cada individuo sobre cada eje: es la nueva base de
+            datos reducida, y se puede descargar y usar en regresión, ANOVA o clasificación.</li>
+          <li><b>Cargas</b> (<i>loadings</i>). La correlación entre cada variable original y cada componente,
+            <code>carga_jk = v_jk · √λ_k / s_j</code>. Es lo que se interpreta y lo que dibuja el círculo de correlaciones.</li>
+        </ul>
+        <p>El <b>porcentaje de varianza</b> de un componente es <code>λ_k / Σλ</code>. El <b>acumulado</b> hasta <i>k</i>
+          es la fracción de información original que conservarías si te quedaras con esos <i>k</i> ejes.</p>
+        <div class="callout"><b>La comunalidad</b>
+          Para cada variable, la suma de sus cargas al cuadrado sobre los componentes retenidos indica qué proporción de
+          su varianza queda recogida. Una variable con comunalidad &lt; 0.50 está mal representada: o hacen falta más
+          ejes, o esa variable no comparte estructura con las demás.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>On the matrix already prepared in Block 1, the dispersion matrix is computed —the <b>correlation</b> matrix if
+          you standardised, the <b>covariance</b> matrix if you did not— and its spectral decomposition is solved. That yields four
+          objects that will be used in every following block:</p>
+        <ul>
+          <li><b>Eigenvalues λ₁ ≥ λ₂ ≥ … ≥ λ_p.</b> How much variance each axis captures. Their sum is the total variance
+            (equal to <i>p</i> when working with correlations, because each standardised variable contributes a variance of 1).</li>
+          <li><b>Eigenvectors.</b> The coefficients of the linear combination that defines each component.</li>
+          <li><b>Scores.</b> The coordinate of each individual on each axis: this is the new reduced
+            data set, and it can be downloaded and used in regression, ANOVA or classification.</li>
+          <li><b>Loadings.</b> The correlation between each original variable and each component,
+            <code>loading_jk = v_jk · √λ_k / s_j</code>. This is what is interpreted and what the correlation circle draws.</li>
+        </ul>
+        <p>The <b>percentage of variance</b> of a component is <code>λ_k / Σλ</code>. The <b>cumulative</b> value up to <i>k</i>
+          is the fraction of the original information you would keep if you retained those <i>k</i> axes.</p>
+        <div class="callout"><b>The communality</b>
+          For each variable, the sum of its squared loadings over the retained components indicates what share of
+          its variance is captured. A variable with a communality &lt; 0.50 is poorly represented: either more
+          axes are needed, or that variable shares no structure with the rest.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>2 · Los criterios de retención, uno por uno</summary>
+      <div class="acc-body" data-lang="es">
+        <p><b>Kaiser–Guttman (λ &gt; 1).</b> Retiene los componentes que explican más varianza que una variable original
+          estandarizada. Simple y universal, pero es el que más <b>sobreestima</b>: con p grande tiende a retener
+          aproximadamente p/3 componentes aunque los datos sean puro ruido. Solo tiene sentido sobre la matriz de
+          correlaciones; con covarianzas el equivalente es «λ mayor que el promedio de los λ».</p>
+
+        <p><b>Jolliffe (λ &gt; 0.7).</b> Versión relajada de Kaiser propuesta por Jolliffe al observar que el corte en 1
+          descartaba componentes útiles por variación muestral.</p>
+
+        <p><b>Gráfico de sedimentación / codo (Cattell, 1966).</b> Se grafican los λ en orden y se busca el punto donde
+          la caída se aplana: los componentes <i>anteriores</i> al codo son estructura, los posteriores son ruido.
+          La app estima el codo con la máxima segunda diferencia (aceleración) de la curva, pero conviene mirarlo a ojo:
+          es un criterio visual por naturaleza.</p>
+
+        <p><b>Varianza acumulada.</b> Retener hasta alcanzar un porcentaje objetivo: 70–80 % en ciencias naturales,
+          60 % en ciencias sociales, más del 90 % si el ACP es un paso previo a una compresión o a una regresión.
+          Nunca debe usarse como criterio único, porque siempre se puede alcanzar cualquier umbral añadiendo ejes.</p>
+
+        <p><b>Análisis paralelo de Horn (1965).</b> Es hoy <b>el criterio mejor evaluado</b> en los estudios de
+          simulación. La idea: generar muchas matrices de datos <i>sin estructura</i> del mismo tamaño (mismo n, mismo p),
+          calcular sus valores propios y quedarse solo con los componentes cuyo λ observado supera el λ que produciría
+          el azar. La app ofrece dos formas de generar esos datos:</p>
+        <ul>
+          <li><b>Permutación de tus propios datos</b> (opción por defecto): baraja cada columna por separado. Destruye
+            la correlación entre variables pero conserva las distribuciones marginales reales y las varianzas, así que
+            <b>no supone normalidad</b> y funciona igual con covarianzas que con correlaciones.</li>
+          <li><b>Datos normales aleatorios</b>: la versión clásica de Horn, sobre matrices de correlación simuladas.</li>
+        </ul>
+        <p>Se compara contra el <b>percentil 95</b> de los λ aleatorios (criterio de Glorfeld), más estricto y estable
+          que compararlos contra la media.</p>
+
+        <p><b>Bastón roto (<i>broken stick</i>, Frontier 1976).</b> Si se parte un bastón de longitud 1 en <i>p</i>
+          trozos al azar, la longitud esperada del trozo <i>k</i>-ésimo es
+          <code>b_k = (1/p) · Σ_{i=k..p} (1/i)</code>. Se retienen los componentes cuyo λ supere ese reparto aleatorio.
+          Es <b>conservador</b> —suele retener menos ejes que los demás criterios— y es muy usado en ecología numérica.</p>
+
+        <p><b>MAP de Velicer (1976, revisado en 2000).</b> Para cada número posible de componentes extraídos se calcula
+          el promedio de las <b>correlaciones parciales al cuadrado</b> entre las variables una vez removidos esos
+          componentes. Mientras se extrae varianza común, ese promedio baja; cuando se empieza a extraer varianza
+          específica, vuelve a subir. Se retiene el número que da el <b>mínimo</b>. La versión con cuarta potencia
+          (MAP4) es algo más precisa con muestras pequeñas.</p>
+
+        <p><b>Criterio de interpretabilidad.</b> El último y el más importante: un componente que no se puede nombrar
+          ni conectar con la teoría del problema no sirve para nada, cumpla o no los criterios numéricos.</p>
+
+        <div class="callout"><b>Cómo decidir en la práctica</b>
+          Corre todos los criterios, mira dónde coinciden y elige el número dentro de ese rango que dé la solución más
+          interpretable. En el artículo se reporta así: «se retuvieron k componentes con base en el análisis paralelo,
+          el gráfico de sedimentación y la interpretabilidad, que en conjunto explican X % de la varianza».</div>
+
+        <div class="callout warn"><b>Sobre el error estándar de λ</b>
+          La tabla incluye <code>EE(λ) ≈ λ·√(2/(n−1))</code>, la aproximación asintótica de Anderson. Solo es válida bajo
+          normalidad multivariante y con valores propios bien separados; tómala como una referencia del orden de
+          magnitud de la incertidumbre, no como un intervalo exacto. Si dos λ consecutivos difieren menos que su error
+          estándar, el plano que forman es inestable y su orientación no debe interpretarse.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p><b>Kaiser–Guttman (λ &gt; 1).</b> It retains the components explaining more variance than one standardised
+          original variable. Simple and universal, but it is the one that <b>overestimates</b> the most: with a large p it tends to retain
+          roughly p/3 components even when the data are pure noise. It only makes sense on the
+          correlation matrix; with covariances the equivalent is "λ greater than the average of the λ".</p>
+
+        <p><b>Jolliffe (λ &gt; 0.7).</b> A relaxed version of Kaiser's rule, proposed by Jolliffe after noting that a cut at 1
+          discarded useful components because of sampling variation.</p>
+
+        <p><b>Scree plot / elbow (Cattell, 1966).</b> The λ are plotted in order and one looks for the point where
+          the decline flattens out: the components <i>before</i> the elbow are structure, those after it are noise.
+          The app estimates the elbow with the maximum second difference (acceleration) of the curve, but it is worth looking at it
+          by eye: it is a visual criterion by nature.</p>
+
+        <p><b>Cumulative variance.</b> Retain until a target percentage is reached: 70–80% in the natural sciences,
+          60% in the social sciences, more than 90% if the PCA is a step before compression or regression.
+          It must never be used as the only criterion, because any threshold can always be reached by adding axes.</p>
+
+        <p><b>Horn's parallel analysis (1965).</b> Today this is <b>the best-evaluated criterion</b> in
+          simulation studies. The idea: generate many data matrices <i>without structure</i> of the same size (same n, same p),
+          compute their eigenvalues, and keep only the components whose observed λ exceeds the λ that chance
+          would produce. The app offers two ways of generating those data:</p>
+        <ul>
+          <li><b>Permutation of your own data</b> (default): it shuffles each column separately. This destroys
+            the correlation between variables but preserves the real marginal distributions and variances, so it
+            <b>assumes no normality</b> and works equally well with covariances and with correlations.</li>
+          <li><b>Random normal data</b>: Horn's classical version, on simulated correlation matrices.</li>
+        </ul>
+        <p>The comparison is against the <b>95th percentile</b> of the random λ (Glorfeld's criterion), stricter and more stable
+          than comparing against the mean.</p>
+
+        <p><b>Broken stick (Frontier 1976).</b> If a stick of length 1 is broken into <i>p</i>
+          pieces at random, the expected length of the <i>k</i>-th piece is
+          <code>b_k = (1/p) · Σ_{i=k..p} (1/i)</code>. The components whose λ exceeds that random share are retained.
+          It is <b>conservative</b> —it usually retains fewer axes than the other criteria— and it is widely used in numerical ecology.</p>
+
+        <p><b>Velicer's MAP (1976, revised in 2000).</b> For each possible number of extracted components, the average of the
+          <b>squared partial correlations</b> between the variables is computed once those
+          components have been removed. While common variance is being extracted, that average falls; when
+          specific variance starts to be extracted, it rises again. The number giving the <b>minimum</b> is retained. The fourth-power
+          version (MAP4) is somewhat more accurate with small samples.</p>
+
+        <p><b>Interpretability criterion.</b> The last and the most important: a component that cannot be named
+          or connected to the theory of the problem is of no use, whether or not it meets the numerical criteria.</p>
+
+        <div class="callout"><b>How to decide in practice</b>
+          Run every criterion, see where they agree, and pick the number within that range giving the most
+          interpretable solution. In the paper it is reported like this: "k components were retained on the basis of parallel analysis,
+          the scree plot and interpretability, which together explain X% of the variance".</div>
+
+        <div class="callout warn"><b>About the standard error of λ</b>
+          The table includes <code>SE(λ) ≈ λ·√(2/(n−1))</code>, Anderson's asymptotic approximation. It is valid only under
+          multivariate normality and with well-separated eigenvalues; take it as a guide to the order of
+          magnitude of the uncertainty, not as an exact interval. If two consecutive λ differ by less than their standard
+          error, the plane they form is unstable and its orientation should not be interpreted.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>3 · Errores frecuentes en este paso</summary>
+      <div class="acc-body" data-lang="es">
+        <ul>
+          <li>Usar solo el criterio de Kaiser y acabar con seis componentes de los cuales tres son ruido.</li>
+          <li>Retener tantos ejes que la varianza acumulada llegue al 95 % — eso ya no es reducir dimensiones.</li>
+          <li>Interpretar el plano 1–2 sin decir qué porcentaje explica.</li>
+          <li>Aplicar el corte λ &gt; 1 a un ACP hecho sobre covarianzas, donde la varianza total no es <i>p</i>
+            y el número 1 no significa nada.</li>
+          <li>Olvidar que el <b>signo</b> de cada componente es arbitrario: si tu CP1 sale invertido respecto a lo
+            esperado, puedes multiplicarlo por −1 sin cambiar nada, solo hay que declararlo.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <ul>
+          <li>Using Kaiser's criterion alone and ending up with six components, three of which are noise.</li>
+          <li>Retaining so many axes that the cumulative variance reaches 95% — that is no longer dimension reduction.</li>
+          <li>Interpreting the 1–2 plane without saying what percentage it explains.</li>
+          <li>Applying the λ &gt; 1 cut to a PCA run on covariances, where the total variance is not <i>p</i>
+            and the number 1 means nothing.</li>
+          <li>Forgetting that the <b>sign</b> of each component is arbitrary: if your PC1 comes out inverted with respect to what you
+            expected, you can multiply it by −1 without changing anything, as long as you declare it.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------- CONFIGURACIÓN ---------- -->
+  <div class="card">
+    <h2 data-i18n="2.1 · Extraer los componentes">2.1 · Extraer los componentes</h2>
+    <p class="hint" data-i18n-auto id="pcaSourceNote">Se usará la matriz preparada en el Bloque 1.</p>
+    <div class="field-grid">
+      <div class="field">
+        <label data-i18n="Análisis paralelo: generación">Análisis paralelo: generación</label>
+        <select id="paMethodSel">
+          <option value="perm" data-i18n="Permutación de tus datos (recomendada)">Permutación de tus datos (recomendada)</option>
+          <option value="norm" data-i18n="Datos normales aleatorios (Horn clásico)">Datos normales aleatorios (Horn clásico)</option>
+        </select>
+        <span class="field-help" data-i18n-auto>La permutación no supone normalidad y respeta tus distribuciones reales.</span>
+      </div>
+      <div class="field">
+        <label data-i18n="Repeticiones">Repeticiones</label>
+        <select id="paIterSel">
+          <option value="200" data-i18n="200 (rápido)">200 (rápido)</option>
+          <option value="500" selected data-i18n="500 (recomendado)">500 (recomendado)</option>
+          <option value="1000" data-i18n="1000 (más preciso, más lento)">1000 (más preciso, más lento)</option>
+        </select>
+        <span class="field-help" data-i18n-auto>Matrices aleatorias que se simulan para el percentil 95.</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="runPcaBtn" data-i18n="Extraer componentes →">Extraer componentes →</button>
+    </div>
+    <div class="messages" id="pcaMessages"></div>
+  </div>
+
+  <!-- ---------- RESULTADOS ---------- -->
+  <div id="pcaResults" style="display:none">
+
+    <div class="card">
+      <h2 data-i18n="2.2 · Valores propios y varianza explicada">2.2 · Valores propios y varianza explicada</h2>
+      <div id="pcaTiles" class="results-summary"></div>
+      <div class="table-scroll" id="eigenTable"></div>
+      <p class="hint" data-i18n-auto>EE aprox. = error estándar asintótico de λ bajo normalidad multivariante (Anderson).
+        Los criterios listados en la penúltima columna son los que retendrían ese componente.</p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="2.3 · ¿Cuántos componentes retener?">2.3 · ¿Cuántos componentes retener?</h2>
+      <ul class="check-list" id="critList"></ul>
+
+      <h3 data-i18n="Criterio de Velicer (MAP)">Criterio de Velicer (MAP)</h3>
+      <p class="hint" data-i18n-auto>Se retiene el número de componentes que <b>minimiza</b> el promedio de correlaciones parciales al
+        cuadrado. Antes del mínimo se está extrayendo varianza común; después, varianza específica de cada variable.</p>
+      <div class="table-scroll" id="mapTable" style="max-height:320px; overflow-y:auto"></div>
+
+      <hr class="divider">
+      <h3 data-i18n="Tu decisión">Tu decisión</h3>
+      <div class="btn-row" style="margin-top:4px">
+        <label class="inline-label"><span data-i18n="Componentes a retener:">Componentes a retener:</span>
+          <input type="number" id="kInput" min="1" value="2" step="1" style="width:80px"></label>
+        <button class="btn btn-secondary btn-sm" id="kUseRec" data-i18n="Usar la recomendación del consenso">Usar la recomendación del consenso</button>
+      </div>
+      <p class="hint" data-i18n-auto id="kSummary" style="margin-top:10px"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="2.4 · Figuras de extracción">2.4 · Figuras de extracción</h2>
+      <p class="hint" data-i18n-auto>Todas editables y exportables en SVG, PNG, JPG o WEBP hasta 12× de resolución.</p>
+      <div class="fig-block" id="figScree"></div>
+      <div class="fig-block" id="figParallel"></div>
+      <div class="fig-block" id="figCum"></div>
+      <div class="fig-block" id="figCriteria"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="2.5 · Matriz de componentes (cargas sin rotar)">2.5 · Matriz de componentes (cargas sin rotar)</h2>
+      <p class="hint" data-i18n-auto id="loadNote"></p>
+      <div class="btn-row" style="margin:0 0 12px">
+        <label class="inline-label"><span data-i18n="Resaltar cargas con |carga| ≥">Resaltar cargas con |carga| ≥</span>
+          <select id="loadThr">
+            <option value="0.3" data-i18n="0.30">0.30</option>
+            <option value="0.4" selected data-i18n="0.40">0.40</option>
+            <option value="0.5" data-i18n="0.50">0.50</option>
+            <option value="0.55" data-i18n="0.55">0.55</option>
+            <option value="0.7" data-i18n="0.70">0.70</option>
+          </select></label>
+      </div>
+      <div class="table-scroll" id="loadTable"></div>
+      <div class="callout" data-i18n-auto style="margin-top:14px"><b>Antes de interpretar</b>
+        Esta es la solución <b>sin rotar</b>. Si ves que casi todas las variables cargan fuerte en el CP1 y el resto de
+        componentes son difíciles de nombrar, es exactamente el caso para el que existe la rotación del Bloque 3.</div>
+      <div class="btn-row">
+        <button class="btn btn-secondary btn-sm" id="dlEigen" data-i18n="⬇ Valores propios (CSV)">⬇ Valores propios (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlLoadings" data-i18n="⬇ Cargas (CSV)">⬇ Cargas (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlScores" data-i18n="⬇ Puntuaciones de los individuos (CSV)">⬇ Puntuaciones de los individuos (CSV)</button>
+        <button class="btn btn-primary btn-sm" id="goStep3" data-i18n="Ir a rotación →">Ir a rotación →</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="step-panel" id="panel-3">
+
+  <!-- ---------- TEORÍA DEL BLOQUE 3 ---------- -->
+  <div class="card theory-card">
+    <h2 data-i18n="Rotación: teoría">Rotación: teoría</h2>
+    <p class="hint" data-i18n-auto>Por qué rotar, qué método elegir y cómo se reporta.</p>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>1 · El problema que resuelve la rotación</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Los ejes que salen del ACP maximizan varianza, no interpretabilidad. El resultado típico es que
+          <b>casi todas las variables cargan fuerte en el CP1</b> —porque ese eje recoge el «tamaño» o el nivel general
+          del fenómeno— y los componentes siguientes quedan como contrastes difíciles de nombrar.</p>
+        <p>La rotación aprovecha un hecho geométrico: el subespacio de los <i>k</i> componentes retenidos representa
+          la misma información sea cual sea la orientación de los ejes dentro de él. Se pueden <b>girar</b> esos ejes
+          buscando una posición más interpretable sin perder nada.</p>
+        <div class="callout"><b>Qué se conserva y qué cambia</b>
+          <b>Se conserva:</b> la varianza total explicada por el conjunto de los <i>k</i> componentes, y las
+          comunalidades de cada variable.<br>
+          <b>Cambia:</b> el reparto de la varianza entre los componentes, las cargas individuales, y el orden —tras
+          rotar los ejes <b>ya no van de mayor a menor λ</b>, por eso aquí se renombran CPR1, CPR2…</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The axes that come out of PCA maximise variance, not interpretability. The typical result is that
+          <b>almost every variable loads strongly on PC1</b> —because that axis picks up the "size" or the general level
+          of the phenomenon— and the following components are left as contrasts that are hard to name.</p>
+        <p>Rotation exploits a geometric fact: the subspace of the <i>k</i> retained components represents
+          the same information whatever the orientation of the axes inside it. Those axes can be <b>turned</b>
+          in search of a more interpretable position without losing anything.</p>
+        <div class="callout"><b>What is preserved and what changes</b>
+          <b>Preserved:</b> the total variance explained by the set of <i>k</i> components, and the
+          communalities of each variable.<br>
+          <b>Changed:</b> the split of the variance between the components, the individual loadings, and the order —after
+          rotating, the axes <b>no longer run from the largest λ to the smallest</b>, which is why they are renamed RPC1, RPC2… here.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>2 · Estructura simple: el objetivo de Thurstone</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Thurstone (1947) definió los criterios de la <b>estructura simple</b>, que siguen siendo el objetivo:</p>
+        <ol>
+          <li>Cada variable debe tener al menos una carga próxima a cero.</li>
+          <li>Cada componente debe tener varias variables con carga próxima a cero.</li>
+          <li>Para cada par de componentes, debe haber variables con carga alta en uno y nula en el otro.</li>
+          <li>Con cuatro o más componentes, la mayoría de las variables deben tener carga nula en la mayoría de ellos.</li>
+          <li>Los solapamientos (cargas altas en varios componentes) deben ser pocos.</li>
+        </ol>
+        <p>La app mide qué tan cerca estás de ese ideal con tres indicadores:</p>
+        <ul>
+          <li><b>Variables limpias</b>: superan el umbral en un solo componente.</li>
+          <li><b>Cargas cruzadas</b>: superan el umbral en dos o más. Son las que estropean la interpretación.</li>
+          <li><b>Complejidad de Hofmann</b>: <code>c = (Σa²)² / Σa⁴</code>. Vale 1 si la variable carga en un único
+            componente y crece hacia <i>k</i> si se reparte por igual entre todos. Una media por debajo de 1.3 indica
+            una solución muy limpia.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>Thurstone (1947) defined the criteria for <b>simple structure</b>, which are still the goal:</p>
+        <ol>
+          <li>Each variable must have at least one loading close to zero.</li>
+          <li>Each component must have several variables with a loading close to zero.</li>
+          <li>For each pair of components, there must be variables loading high on one and zero on the other.</li>
+          <li>With four or more components, most variables must have a zero loading on most of them.</li>
+          <li>Overlaps (high loadings on several components) must be few.</li>
+        </ol>
+        <p>The app measures how close you are to that ideal with three indicators:</p>
+        <ul>
+          <li><b>Clean variables</b>: they exceed the threshold on a single component.</li>
+          <li><b>Cross-loadings</b>: they exceed the threshold on two or more. These are what spoil the interpretation.</li>
+          <li><b>Hofmann complexity</b>: <code>c = (Σa²)² / Σa⁴</code>. It equals 1 if the variable loads on a single
+            component and grows towards <i>k</i> if it is spread equally over all of them. A mean below 1.3 indicates
+            a very clean solution.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>3 · Rotaciones ortogonales: la familia ortomax</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Mantienen los ejes perpendiculares, así que los componentes siguen sin correlacionarse. Todas maximizan
+          el mismo criterio general con distinto parámetro γ:</p>
+        <div class="formula">Q(γ) = Σ a⁴ᵢⱼ − (γ/p) · Σⱼ ( Σᵢ a²ᵢⱼ )²</div>
+        <table>
+          <thead><tr><th>Método</th><th>γ</th><th>Qué simplifica</th><th>Cuándo usarla</th></tr></thead>
+          <tbody>
+            <tr><td><b>Quartimax</b></td><td>0</td><td>Filas (variables)</td>
+              <td>Cuando esperas un factor general y quieres que cada variable cargue en pocos ejes.</td></tr>
+            <tr><td><b>Varimax</b></td><td>1</td><td>Columnas (componentes)</td>
+              <td><b>La opción por defecto.</b> Da componentes bien diferenciados, cada uno con su grupo de variables.</td></tr>
+            <tr><td><b>Equamax</b></td><td>k/2</td><td>Ambas</td>
+              <td>Compromiso. Puede ser inestable con pocas variables o pocos componentes.</td></tr>
+            <tr><td><b>Parsimax</b></td><td>p(k−1)/(p+k−2)</td><td>Ambas, con más peso</td>
+              <td>Busca la máxima parsimonia global; poco frecuente pero bien fundamentada.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Varimax</b> (Kaiser, 1958) maximiza la varianza de las cargas al cuadrado dentro de cada columna: empuja
+          cada carga hacia 0 o hacia ±1. Es, con diferencia, la rotación más reportada en la literatura.</p>
+        <p><b>Normalización de Kaiser.</b> Antes de rotar, cada fila de la matriz de cargas se divide entre su
+          comunalidad (se lleva a longitud 1) y después se restaura. Así las variables mal representadas no pesan menos
+          en la rotación. Es el comportamiento por defecto de SPSS y de <code>stats::varimax</code> en R, y aquí también.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>They keep the axes perpendicular, so the components remain uncorrelated. They all maximise
+          the same general criterion with a different parameter γ:</p>
+        <div class="formula">Q(γ) = Σ a⁴ᵢⱼ − (γ/p) · Σⱼ ( Σᵢ a²ᵢⱼ )²</div>
+        <table>
+          <thead><tr><th>Method</th><th>γ</th><th>What it simplifies</th><th>When to use it</th></tr></thead>
+          <tbody>
+            <tr><td><b>Quartimax</b></td><td>0</td><td>Rows (variables)</td>
+              <td>When you expect a general factor and want each variable to load on few axes.</td></tr>
+            <tr><td><b>Varimax</b></td><td>1</td><td>Columns (components)</td>
+              <td><b>The default option.</b> It gives well-differentiated components, each with its own group of variables.</td></tr>
+            <tr><td><b>Equamax</b></td><td>k/2</td><td>Both</td>
+              <td>A compromise. It can be unstable with few variables or few components.</td></tr>
+            <tr><td><b>Parsimax</b></td><td>p(k−1)/(p+k−2)</td><td>Both, with more weight</td>
+              <td>It seeks maximum overall parsimony; uncommon but well founded.</td></tr>
+          </tbody>
+        </table>
+        <p><b>Varimax</b> (Kaiser, 1958) maximises the variance of the squared loadings within each column: it pushes
+          each loading towards 0 or towards ±1. It is by far the most reported rotation in the literature.</p>
+        <p><b>Kaiser normalisation.</b> Before rotating, each row of the loading matrix is divided by its
+          communality (brought to length 1) and afterwards restored. That way poorly represented variables do not count for less
+          in the rotation. It is the default behaviour of SPSS and of <code>stats::varimax</code> in R, and here as well.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>4 · Rotaciones oblicuas: cuando los ejes pueden correlacionarse</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Renuncian a la perpendicularidad. En fenómenos biológicos, ecológicos y sociales las dimensiones reales
+          <b>suelen estar relacionadas</b>, así que forzar la ortogonalidad puede ser un artificio.</p>
+        <ul>
+          <li><b>Quartimin</b> — la oblicua más simple; oblimin con δ = 0.</li>
+          <li><b>Oblimin directo</b> — familia general con parámetro δ: valores negativos producen ejes más próximos a la
+            ortogonalidad, positivos los hacen más oblicuos. δ = 0 es el uso habitual y casi siempre suficiente.</li>
+          <li><b>Promax</b> (Hendrickson y White, 1964) — parte de una solución varimax y eleva las cargas a una potencia
+            κ (habitualmente 4) para exagerar el contraste entre altas y bajas; luego ajusta por mínimos cuadrados.
+            Es muy rápida y la preferida con muestras grandes.</li>
+        </ul>
+        <div class="callout"><b>Con rotación oblicua se leen tres matrices</b>
+          <b>Patrón</b>: el coeficiente único de cada variable sobre cada componente, controlando los demás.
+          <b>Es la que se interpreta y la que se reporta.</b><br>
+          <b>Estructura</b>: la correlación simple variable–componente. Incluye el efecto indirecto de los otros
+          componentes, así que sus valores son más altos y menos «limpios».<br>
+          <b>Φ (phi)</b>: la matriz de correlaciones entre los propios componentes. Si todas sus correlaciones fuera de
+          la diagonal son menores que ≈0.15, la oblicuidad no aportó nada y conviene volver a varimax; si superan 0.32
+          (10 % de varianza compartida), la rotación oblicua está claramente justificada.</div>
+        <p>Con rotación ortogonal patrón y estructura coinciden, y Φ es la identidad.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>They give up perpendicularity. In biological, ecological and social phenomena the real dimensions
+          <b>are usually related</b>, so forcing orthogonality can be an artefact.</p>
+        <ul>
+          <li><b>Quartimin</b> — the simplest oblique rotation; oblimin with δ = 0.</li>
+          <li><b>Direct oblimin</b> — a general family with a parameter δ: negative values produce axes closer to
+            orthogonality, positive ones make them more oblique. δ = 0 is the usual choice and almost always enough.</li>
+          <li><b>Promax</b> (Hendrickson and White, 1964) — it starts from a varimax solution and raises the loadings to a power
+            κ (usually 4) to exaggerate the contrast between high and low ones; it then fits by least squares.
+            It is very fast and the preferred choice with large samples.</li>
+        </ul>
+        <div class="callout"><b>With an oblique rotation, three matrices are read</b>
+          <b>Pattern</b>: the unique coefficient of each variable on each component, controlling for the others.
+          <b>This is the one that is interpreted and reported.</b><br>
+          <b>Structure</b>: the simple variable–component correlation. It includes the indirect effect of the other
+          components, so its values are higher and less "clean".<br>
+          <b>Φ (phi)</b>: the matrix of correlations between the components themselves. If all its off-diagonal
+          correlations are smaller than ≈0.15, obliqueness added nothing and it is better to go back to varimax; if they exceed 0.32
+          (10% shared variance), the oblique rotation is clearly justified.</div>
+        <p>With an orthogonal rotation, pattern and structure coincide, and Φ is the identity.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>5 · ¿Es legítimo rotar componentes principales?</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Es una pregunta razonable y conviene tenerla clara. La rotación nació en el <b>análisis factorial</b>, donde
+          la orientación de los ejes es indeterminada por definición del modelo. En ACP los ejes <i>sí</i> están
+          determinados: son las direcciones de máxima varianza.</p>
+        <p>Al rotar componentes principales se pierden dos propiedades: los componentes dejan de maximizar varianza
+          individualmente y dejan de estar ordenados por λ. Lo que <b>sí</b> se conserva es la varianza total del
+          subconjunto retenido y las comunalidades.</p>
+        <p>La práctica está muy extendida y es aceptada —SPSS, SAS y <code>psych::principal</code> la ofrecen por
+          defecto— siempre que se declare con claridad. Fórmula habitual en la sección de métodos:</p>
+        <div class="callout"><i>«Se realizó un análisis de componentes principales sobre la matriz de correlaciones.
+          Se retuvieron k componentes con base en el análisis paralelo y el gráfico de sedimentación, que explican
+          X % de la varianza. Sobre ellos se aplicó una rotación varimax con normalización de Kaiser. Se interpretaron
+          las cargas con |a| ≥ 0.40.»</i></div>
+        <div class="callout warn"><b>Si tu objetivo es reducir dimensiones para otro análisis</b>
+          (una regresión, un clustering) probablemente <b>no</b> debas rotar: los componentes sin rotar son ortogonales
+          y están ordenados, que es justo lo que necesita el análisis siguiente. Rota cuando el objetivo es
+          <b>interpretar</b> las dimensiones.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>It is a reasonable question and worth being clear about. Rotation was born in <b>factor analysis</b>, where
+          the orientation of the axes is undetermined by the very definition of the model. In PCA the axes <i>are</i>
+          determined: they are the directions of maximum variance.</p>
+        <p>When principal components are rotated, two properties are lost: the components no longer maximise variance
+          individually and they are no longer ordered by λ. What <b>is</b> preserved is the total variance of the
+          retained subset and the communalities.</p>
+        <p>The practice is very widespread and accepted —SPSS, SAS and <code>psych::principal</code> offer it by
+          default— provided it is clearly declared. The usual wording in the methods section:</p>
+        <div class="callout"><i>"A principal component analysis was carried out on the correlation matrix.
+          k components were retained on the basis of parallel analysis and the scree plot, explaining
+          X% of the variance. A varimax rotation with Kaiser normalisation was applied to them. Loadings
+          with |a| ≥ 0.40 were interpreted."</i></div>
+        <div class="callout warn"><b>If your goal is to reduce dimensions for another analysis</b>
+          (a regression, a clustering) you probably should <b>not</b> rotate: unrotated components are orthogonal
+          and ordered, which is exactly what the next analysis needs. Rotate when the goal is to
+          <b>interpret</b> the dimensions.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>6 · Cómo elegir el umbral de las cargas</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Una carga solo se interpreta si supera un umbral. Criterios de uso común:</p>
+        <ul>
+          <li><b>0.30</b> — mínimo para considerarla; explica un 9 % de la varianza de la variable.</li>
+          <li><b>0.40</b> — el más habitual; el que trae la app por defecto.</li>
+          <li><b>0.50</b> — prácticamente significativa; la variable comparte un 25 % con el componente.</li>
+          <li><b>0.55–0.75</b> — necesario con muestras pequeñas (ver la tabla de Hair del Bloque 1, sección 5).</li>
+        </ul>
+        <p>El umbral debe fijarse <b>antes</b> de mirar los resultados y declararse en el reporte. Cambiarlo hasta que
+          la solución «se vea bien» es una forma de sobreajuste.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>A loading is only interpreted if it exceeds a threshold. Criteria in common use:</p>
+        <ul>
+          <li><b>0.30</b> — the minimum for considering it; it explains 9% of the variable's variance.</li>
+          <li><b>0.40</b> — the most usual; the app's default.</li>
+          <li><b>0.50</b> — practically significant; the variable shares 25% with the component.</li>
+          <li><b>0.55–0.75</b> — needed with small samples (see Hair's table in Block 1, section 5).</li>
+        </ul>
+        <p>The threshold must be set <b>before</b> looking at the results and declared in the report. Changing it until
+          the solution "looks good" is a form of overfitting.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------- CONFIGURACIÓN ---------- -->
+  <div class="card">
+    <h2 data-i18n="3.1 · Elegir la rotación">3.1 · Elegir la rotación</h2>
+    <div class="field-grid">
+      <div class="field">
+        <label data-i18n="Método">Método</label>
+        <select id="rotMethod">
+          <option value="varimax" selected data-i18n="Varimax (ortogonal) — recomendada">Varimax (ortogonal) — recomendada</option>
+          <option value="quartimax" data-i18n="Quartimax (ortogonal)">Quartimax (ortogonal)</option>
+          <option value="equamax" data-i18n="Equamax (ortogonal)">Equamax (ortogonal)</option>
+          <option value="parsimax" data-i18n="Parsimax (ortogonal)">Parsimax (ortogonal)</option>
+          <option value="promax" data-i18n="Promax (oblicua)">Promax (oblicua)</option>
+          <option value="oblimin" data-i18n="Oblimin directo (oblicua)">Oblimin directo (oblicua)</option>
+          <option value="quartimin" data-i18n="Quartimin (oblicua)">Quartimin (oblicua)</option>
+          <option value="none" data-i18n="Sin rotar (comparación)">Sin rotar (comparación)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="Umbral de carga interpretable">Umbral de carga interpretable</label>
+        <select id="rotThr">
+          <option value="0.3" data-i18n="0.30 — mínimo">0.30 — mínimo</option>
+          <option value="0.4" selected data-i18n="0.40 — habitual">0.40 — habitual</option>
+          <option value="0.5" data-i18n="0.50 — prácticamente significativa">0.50 — prácticamente significativa</option>
+          <option value="0.55" data-i18n="0.55 — muestras pequeñas">0.55 — muestras pequeñas</option>
+          <option value="0.7" data-i18n="0.70 — muy exigente">0.70 — muy exigente</option>
+        </select>
+        <span class="field-help" data-i18n-auto>Fíjalo antes de mirar los resultados.</span>
+      </div>
+      <div class="field" id="deltaField" style="display:none">
+        <label data-i18n="δ (oblimin)">δ (oblimin)</label>
+        <input type="number" id="rotDelta" value="0" step="0.1" min="-5" max="0.8">
+        <span class="field-help" data-i18n-auto>0 = quartimin. Negativo → más ortogonal; positivo → más oblicuo.</span>
+      </div>
+      <div class="field" id="kappaField" style="display:none">
+        <label data-i18n="κ (promax)">κ (promax)</label>
+        <input type="number" id="rotKappa" value="4" step="1" min="2" max="10">
+        <span class="field-help" data-i18n-auto>4 es el valor estándar. Más alto = más oblicuo.</span>
+      </div>
+      <div class="field" id="normField">
+        <label data-i18n="Normalización">Normalización</label>
+        <label class="checkbox-label"><input type="checkbox" id="rotNormalize" checked> <span data-i18n="Normalización de Kaiser">Normalización de Kaiser</span></label>
+        <span class="field-help" data-i18n-auto>Iguala el peso de las variables durante la rotación. Es el comportamiento de SPSS y de R.</span>
+      </div>
+    </div>
+    <p class="hint" data-i18n-auto id="rotHint"></p>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="runRotBtn" data-i18n="Aplicar rotación →">Aplicar rotación →</button>
+    </div>
+    <div class="messages" id="rotMessages"></div>
+  </div>
+
+  <!-- ---------- RESULTADOS ---------- -->
+  <div id="rotResults" style="display:none">
+
+    <div class="card">
+      <h2 data-i18n="3.2 · Calidad de la estructura simple">3.2 · Calidad de la estructura simple</h2>
+      <div id="rotTiles" class="results-summary"></div>
+      <ul class="check-list"><li class="check-item info" id="rotCompare"></li></ul>
+
+      <h3 data-i18n="Varianza por componente">Varianza por componente</h3>
+      <div class="table-scroll" id="rotVarTable"></div>
+      <p class="hint" data-i18n-auto id="rotVarNote"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="3.3 · Matriz de cargas rotadas">3.3 · Matriz de cargas rotadas</h2>
+      <p class="hint" data-i18n-auto id="patternNote"></p>
+      <label class="checkbox-label"><input type="checkbox" id="rotSort" checked> <span data-i18n="Agrupar las variables por el componente en que cargan">Agrupar las variables por el componente en que cargan</span></label>
+      <div class="table-scroll" id="patternTable"></div>
+
+      <div id="obliqueBox" style="display:none">
+        <hr class="divider">
+        <h3 data-i18n="Matriz de estructura">Matriz de estructura</h3>
+        <p class="hint" data-i18n-auto>Correlación simple entre cada variable y cada componente. Con rotación oblicua es distinta de la
+          matriz de patrón: aquí sí influyen los demás componentes, por eso los valores son más altos.</p>
+        <div class="table-scroll" id="structTable"></div>
+
+        <h3 data-i18n="Correlación entre componentes (Φ)">Correlación entre componentes (Φ)</h3>
+        <div class="table-scroll" id="phiTable"></div>
+        <p class="hint" data-i18n-auto id="phiNote"></p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="3.4 · Lectura de cada componente">3.4 · Lectura de cada componente</h2>
+      <p class="hint" data-i18n-auto>Redacción automática a partir de las cargas que superan el umbral. Úsala como punto de partida:
+        el nombre final de cada eje lo pones tú, con la teoría de tu disciplina en la mano.</p>
+      <ul class="check-list" id="interpList"></ul>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="3.5 · Figuras de la rotación">3.5 · Figuras de la rotación</h2>
+      <div class="fig-block" id="figLoadHeat"></div>
+      <div class="fig-block" id="figLoadPlane"></div>
+      <div class="fig-block" id="figLoadBars"></div>
+      <div class="fig-block" id="figVarCompare"></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary btn-sm" id="dlPattern" data-i18n="⬇ Cargas rotadas (CSV)">⬇ Cargas rotadas (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlStructure" data-i18n="⬇ Matriz de estructura (CSV)">⬇ Matriz de estructura (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlPhi" data-i18n="⬇ Correlación entre componentes (CSV)">⬇ Correlación entre componentes (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlRotScores" data-i18n="⬇ Puntuaciones rotadas (CSV)">⬇ Puntuaciones rotadas (CSV)</button>
+        <button class="btn btn-primary btn-sm" id="goStep4" data-i18n="Ir a los mapas factoriales →">Ir a los mapas factoriales →</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="step-panel" id="panel-4">
+
+  <!-- ---------- TEORÍA DEL BLOQUE 4 ---------- -->
+  <div class="card theory-card">
+    <h2 data-i18n="Mapas factoriales: teoría">Mapas factoriales: teoría</h2>
+    <p class="hint" data-i18n-auto>Cómo se construye cada gráfico y, sobre todo, cómo se lee sin equivocarse.</p>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>1 · Las dos nubes: individuos y variables</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Un ACP produce <b>dos representaciones distintas</b> del mismo análisis, y se leen con reglas diferentes.
+          Confundirlas es el error más común al interpretar un ACP.</p>
+        <table>
+          <thead><tr><th></th><th>Nube de individuos</th><th>Nube de variables</th></tr></thead>
+          <tbody>
+            <tr><td>Qué se dibuja</td><td>Un punto por observación</td><td>Un vector por variable</td></tr>
+            <tr><td>Coordenada</td><td>Puntuación (<i>score</i>) sobre el eje</td><td>Carga = correlación con el eje</td></tr>
+            <tr><td>Qué se lee</td><td><b>Distancias</b> entre puntos: dos individuos próximos tienen perfiles parecidos</td>
+              <td><b>Ángulos</b> entre vectores respecto al origen</td></tr>
+            <tr><td>Escala</td><td>La de las puntuaciones (varía por eje)</td><td>Siempre entre −1 y 1</td></tr>
+          </tbody>
+        </table>
+        <p><b>Reglas de lectura del círculo de correlaciones:</b></p>
+        <ul>
+          <li>Vectores que apuntan en la <b>misma dirección</b> (ángulo pequeño): variables correlacionadas positivamente.</li>
+          <li>Vectores <b>opuestos</b> (ángulo de 180°): correlación negativa.</li>
+          <li>Vectores <b>perpendiculares</b> (90°): variables no correlacionadas <i>en ese plano</i>.</li>
+          <li>Vectores <b>largos</b>, cerca del círculo unitario: la variable está bien representada en el plano.
+            Un vector corto no significa que la variable sea poco importante, sino que su información está en
+            <b>otros ejes</b>; no interpretes su dirección.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>A PCA produces <b>two different representations</b> of the same analysis, and they are read with different rules.
+          Confusing them is the most common mistake when interpreting a PCA.</p>
+        <table>
+          <thead><tr><th></th><th>Cloud of individuals</th><th>Cloud of variables</th></tr></thead>
+          <tbody>
+            <tr><td>What is drawn</td><td>One point per observation</td><td>One vector per variable</td></tr>
+            <tr><td>Coordinate</td><td>Score on the axis</td><td>Loading = correlation with the axis</td></tr>
+            <tr><td>What is read</td><td><b>Distances</b> between points: two nearby individuals have similar profiles</td>
+              <td><b>Angles</b> between vectors from the origin</td></tr>
+            <tr><td>Scale</td><td>That of the scores (it varies by axis)</td><td>Always between −1 and 1</td></tr>
+          </tbody>
+        </table>
+        <p><b>Rules for reading the correlation circle:</b></p>
+        <ul>
+          <li>Vectors pointing in the <b>same direction</b> (small angle): positively correlated variables.</li>
+          <li><b>Opposite</b> vectors (180° angle): negative correlation.</li>
+          <li><b>Perpendicular</b> vectors (90°): variables uncorrelated <i>in that plane</i>.</li>
+          <li><b>Long</b> vectors, close to the unit circle: the variable is well represented in the plane.
+            A short vector does not mean the variable is unimportant, but that its information lies on
+            <b>other axes</b>; do not interpret its direction.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>2 · cos² y contribuciones: las dos medidas que evitan malinterpretar</summary>
+      <div class="acc-body" data-lang="es">
+        <p><b>cos² (coseno al cuadrado) — calidad de representación.</b> Es el cuadrado del coseno del ángulo entre el
+          punto y el eje; equivale a la proporción de la información de ese elemento que el eje recoge:</p>
+        <div class="formula">cos²(i, k) = coord²(i,k) / d²(i, centroide)</div>
+        <p>Para las variables, con ACP sobre correlaciones, <code>cos² = carga²</code>. Sumado sobre todos los ejes da 1.
+          <b>Interpretación:</b> cos² ≥ 0.7 muy buena, 0.5–0.7 aceptable, 0.3–0.5 pobre, &lt; 0.3 no interpretable en
+          ese plano. Un punto con cos² bajo <b>está mal proyectado</b>: aparece en el mapa donde no le corresponde.</p>
+
+        <p><b>Contribución — cuánto pesa el elemento en la construcción del eje.</b></p>
+        <div class="formula">contrib(i, k) = 100 · coord²(i,k) / Σᵢ coord²(i,k)</div>
+        <p>Suma 100 % por eje. La referencia es el <b>valor esperado si todos contribuyeran por igual</b>:
+          100/p para variables y 100/n para individuos (la línea roja de la figura de contribuciones). Los elementos
+          por encima de esa línea son los que <i>definen</i> el eje.</p>
+
+        <div class="callout"><b>No son lo mismo</b>
+          Una variable puede tener <b>cos² alto y contribución baja</b> (está bien representada, pero el eje lo definen
+          otras) o <b>contribución alta y cos² bajo</b> —caso raro y sospechoso, típico de un atípico que arrastra el eje—.
+          Reporta las dos.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p><b>cos² (squared cosine) — quality of representation.</b> It is the squared cosine of the angle between the
+          point and the axis; it equals the share of that element's information captured by the axis:</p>
+        <div class="formula">cos²(i, k) = coord²(i,k) / d²(i, centroid)</div>
+        <p>For variables, with PCA on correlations, <code>cos² = loading²</code>. Summed over all axes it gives 1.
+          <b>Interpretation:</b> cos² ≥ 0.7 very good, 0.5–0.7 acceptable, 0.3–0.5 poor, &lt; 0.3 not interpretable in
+          that plane. A point with a low cos² is <b>badly projected</b>: it appears on the map where it does not belong.</p>
+
+        <p><b>Contribution — how much the element weighs in building the axis.</b></p>
+        <div class="formula">contrib(i, k) = 100 · coord²(i,k) / Σᵢ coord²(i,k)</div>
+        <p>It adds up to 100% per axis. The benchmark is the <b>value expected if all contributed equally</b>:
+          100/p for variables and 100/n for individuals (the red line in the contributions figure). The elements
+          above that line are the ones that <i>define</i> the axis.</p>
+
+        <div class="callout"><b>They are not the same thing</b>
+          A variable can have a <b>high cos² and a low contribution</b> (it is well represented, but the axis is defined by
+          others) or a <b>high contribution and a low cos²</b> —a rare and suspicious case, typical of an outlier dragging the axis.
+          Report both.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>3 · El biplot y su escala</summary>
+      <div class="acc-body" data-lang="es">
+        <p>El <b>biplot</b> (Gabriel, 1971) superpone las dos nubes en un solo gráfico. Es el más informativo y el más
+          fácil de sobreinterpretar, porque individuos y variables viven en escalas distintas y hay que multiplicar los
+          vectores por un factor arbitrario para que se vean juntos. <b>Ese factor no tiene significado estadístico</b>:
+          por eso aquí es un control deslizante, no un número fijo.</p>
+        <p>Lo que <b>sí</b> se puede leer en un biplot:</p>
+        <ul>
+          <li>La <b>proyección</b> de un individuo sobre la dirección de una variable estima su valor en ella:
+            si un punto cae lejos, en el sentido de la flecha, ese individuo tiene valores altos en esa variable.</li>
+          <li>Los grupos de individuos que se sitúan en la dirección de un grupo de variables se caracterizan por ellas.</li>
+        </ul>
+        <p>Lo que <b>no</b> se debe leer: la longitud absoluta de las flechas comparada con la distancia entre puntos,
+          ni distancias entre un punto y una punta de flecha.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The <b>biplot</b> (Gabriel, 1971) superimposes the two clouds on a single plot. It is the most informative and the
+          easiest to over-read, because individuals and variables live on different scales and the vectors have to be multiplied
+          by an arbitrary factor for them to be seen together. <b>That factor has no statistical meaning</b>:
+          this is why it is a slider here, not a fixed number.</p>
+        <p>What <b>can</b> be read in a biplot:</p>
+        <ul>
+          <li>The <b>projection</b> of an individual onto the direction of a variable estimates its value on that variable:
+            if a point falls far along the direction of the arrow, that individual has high values on that variable.</li>
+          <li>Groups of individuals lying in the direction of a group of variables are characterised by them.</li>
+        </ul>
+        <p>What <b>must not</b> be read: the absolute length of the arrows compared with the distance between points,
+          nor distances between a point and an arrowhead.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>4 · Elipses: cuál dibujar y qué significa cada una</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Las elipses resumen dónde cae cada grupo, pero <b>responden a preguntas distintas</b> y confundirlas cambia
+          por completo la conclusión.</p>
+        <table>
+          <thead><tr><th>Tipo</th><th>Qué encierra</th><th>Cuándo usarla</th></tr></thead>
+          <tbody>
+            <tr><td><b>Elipse de concentración</b><br>(de los datos)</td>
+              <td>Aproximadamente el 95 % de las <b>observaciones</b> del grupo, bajo normalidad bivariante.
+                Su tamaño <b>no depende de n</b>.</td>
+              <td>Para describir la dispersión y el solapamiento real entre grupos. Es la opción por defecto aquí.</td></tr>
+            <tr><td><b>Elipse de confianza de la media</b></td>
+              <td>La región donde está el <b>centroide</b> del grupo con un 95 % de confianza. Es √n veces más
+                pequeña.</td>
+              <td>Para argumentar que dos grupos <b>difieren en promedio</b>. Con n grande se vuelve diminuta.</td></tr>
+            <tr><td><b>Envolvente convexa</b></td>
+              <td>El polígono mínimo que contiene <b>todos</b> los puntos del grupo. No supone ninguna distribución.</td>
+              <td>Cuando los grupos no son elípticos o hay pocos individuos.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><b>Cuidado con la conclusión</b>
+          Que dos <b>elipses de confianza de la media</b> no se solapen sugiere que los centroides difieren, pero
+          <b>no es una prueba estadística</b>: para eso hace falta un MANOVA, un PERMANOVA o un análisis discriminante.
+          Y que dos <b>elipses de concentración</b> se solapen mucho significa que los grupos no se separan bien en
+          ese plano, aunque sus medias difieran.</div>
+        <p>Recuerda además que el ACP <b>no busca separar grupos</b>: es una técnica no supervisada que ignora la
+          variable de agrupación. Si tu objetivo es discriminar, la herramienta es el análisis discriminante o el PLS-DA.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>Ellipses summarise where each group falls, but <b>they answer different questions</b>, and confusing them
+          completely changes the conclusion.</p>
+        <table>
+          <thead><tr><th>Type</th><th>What it encloses</th><th>When to use it</th></tr></thead>
+          <tbody>
+            <tr><td><b>Concentration ellipse</b><br>(of the data)</td>
+              <td>Roughly 95% of the group's <b>observations</b>, under bivariate normality.
+                Its size <b>does not depend on n</b>.</td>
+              <td>To describe the spread and the real overlap between groups. It is the default option here.</td></tr>
+            <tr><td><b>Confidence ellipse of the mean</b></td>
+              <td>The region where the group's <b>centroid</b> lies with 95% confidence. It is √n times
+                smaller.</td>
+              <td>To argue that two groups <b>differ on average</b>. With a large n it becomes tiny.</td></tr>
+            <tr><td><b>Convex hull</b></td>
+              <td>The smallest polygon containing <b>all</b> the group's points. It assumes no distribution.</td>
+              <td>When the groups are not elliptical or there are few individuals.</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn"><b>Careful with the conclusion</b>
+          Two <b>confidence ellipses of the mean</b> not overlapping suggests that the centroids differ, but
+          <b>it is not a statistical test</b>: that requires a MANOVA, a PERMANOVA or a discriminant analysis.
+          And two <b>concentration ellipses</b> overlapping a great deal means that the groups do not separate well in
+          that plane, even if their means differ.</div>
+        <p>Remember, too, that PCA <b>does not seek to separate groups</b>: it is an unsupervised technique that ignores the
+          grouping variable. If your goal is to discriminate, the tool is discriminant analysis or PLS-DA.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>5 · Elementos suplementarios</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Las variables que marcaste como <b>suplementarias</b> en el Bloque 1 no intervinieron en el cálculo de los
+          ejes, pero se proyectan ahora sobre ellos:</p>
+        <ul>
+          <li><b>Cuantitativas suplementarias</b>: su coordenada sobre cada eje es simplemente su <b>correlación</b> con
+            las puntuaciones de ese eje. Aparecen en el círculo con trazo discontinuo. Sirven para «etiquetar» los ejes
+            con variables de resultado sin dejar que los definan.</li>
+          <li><b>Categorías suplementarias</b>: cada nivel se sitúa en el <b>centroide</b> (la media) de los individuos
+            que lo comparten. Una categoría alejada del origen caracteriza esa zona del plano.</li>
+        </ul>
+        <p>Es la forma correcta de responder a «¿se separan mis tratamientos?» sin contaminar el análisis: los ejes se
+          construyen solo con las mediciones, y el factor se proyecta después.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The variables you marked as <b>supplementary</b> in Block 1 took no part in computing the
+          axes, but they are now projected onto them:</p>
+        <ul>
+          <li><b>Supplementary quantitative variables</b>: their coordinate on each axis is simply their <b>correlation</b> with
+            the scores of that axis. They appear in the circle with a dashed stroke. They serve to "label" the axes
+            with outcome variables without letting them define the axes.</li>
+          <li><b>Supplementary categories</b>: each level is placed at the <b>centroid</b> (the mean) of the individuals
+            sharing it. A category far from the origin characterises that region of the plane.</li>
+        </ul>
+        <p>This is the correct way to answer "do my treatments separate?" without contaminating the analysis: the axes are
+          built from the measurements alone, and the factor is projected afterwards.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>6 · Convenciones al publicar una figura de ACP</summary>
+      <div class="acc-body" data-lang="es">
+        <ul>
+          <li>Los rótulos de los ejes <b>siempre</b> con el porcentaje de varianza: «CP1 (41.2 %)».</li>
+          <li>Declara si la solución está rotada y con qué método.</li>
+          <li>Indica el tipo de elipse y su nivel de confianza en el pie de figura.</li>
+          <li>El <b>signo de un eje es arbitrario</b>: puedes invertirlo para que la lectura sea más natural,
+            pero decláralo.</li>
+          <li>Usa una paleta apta para daltónicos si la figura va a impresión (Okabe–Ito está disponible en el editor).</li>
+          <li>Exporta en <b>SVG</b> si la revista lo acepta; si pide mapa de bits, mínimo 300 ppp (opción 4×) y
+            preferiblemente 600 ppp (8×).</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <ul>
+          <li>Axis labels <b>always</b> with the percentage of variance: "PC1 (41.2%)".</li>
+          <li>State whether the solution is rotated and by which method.</li>
+          <li>Give the type of ellipse and its confidence level in the figure caption.</li>
+          <li>The <b>sign of an axis is arbitrary</b>: you may invert it to make the reading more natural,
+            but declare it.</li>
+          <li>Use a colour-blind-safe palette if the figure goes to print (Okabe–Ito is available in the editor).</li>
+          <li>Export in <b>SVG</b> if the journal accepts it; if it asks for a raster, use at least 300 dpi (the 4× option) and
+            preferably 600 dpi (8×).</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------- CONFIGURACIÓN ---------- -->
+  <div class="card">
+    <h2 data-i18n="4.1 · Construir los mapas">4.1 · Construir los mapas</h2>
+    <div class="field-grid">
+      <div class="field">
+        <label data-i18n="Solución a representar">Solución a representar</label>
+        <select id="facSolution">
+          <option value="sin" data-i18n="Sin rotar (componentes originales)">Sin rotar (componentes originales)</option>
+          <option value="rotada" data-i18n="Rotada (la del Bloque 3)">Rotada (la del Bloque 3)</option>
+        </select>
+        <span class="field-help" data-i18n-auto>Si no aplicaste rotación, se usa la solución original.</span>
+      </div>
+      <div class="field">
+        <label data-i18n="Variable de agrupación">Variable de agrupación</label>
+        <select id="facGroup"><option value="" data-i18n="Sin agrupar">Sin agrupar</option></select>
+        <span class="field-help" data-i18n-auto>Colorea individuos y dibuja elipses. Se toma de las columnas marcadas como cualitativas en el Bloque 1.</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="runFacBtn" data-i18n="Generar mapas factoriales →">Generar mapas factoriales →</button>
+    </div>
+    <div class="messages" id="facMessages"></div>
+  </div>
+
+  <!-- ---------- RESULTADOS ---------- -->
+  <div id="facResults" style="display:none">
+
+    <div class="card">
+      <h2 data-i18n="4.2 · Resumen del plano factorial">4.2 · Resumen del plano factorial</h2>
+      <div id="facTiles" class="results-summary"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="4.3 · Círculo de correlaciones">4.3 · Círculo de correlaciones</h2>
+      <p class="hint" data-i18n-auto>Variables activas en trazo continuo; suplementarias en discontinuo. El color indica la calidad de
+        representación: los vectores cortos y pálidos no deben interpretarse en este plano.</p>
+      <div class="fig-block" id="figCircle"></div>
+      <div class="table-scroll" id="facVarTable" style="max-height:420px; overflow-y:auto"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="4.4 · Mapa de individuos">4.4 · Mapa de individuos</h2>
+      <p class="hint" data-i18n-auto>Elige arriba la variable de agrupación para colorear y dibujar elipses. Puedes cambiar el tipo de
+        envoltura (concentración, confianza de la media o envolvente convexa) desde el editor de la figura.</p>
+      <div class="fig-block" id="figInd"></div>
+      <h3 data-i18n="Individuos más influyentes">Individuos más influyentes</h3>
+      <div class="table-scroll" id="facIndTable"></div>
+      <p class="hint" data-i18n-auto id="facIndNote"></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="4.5 · Biplot">4.5 · Biplot</h2>
+      <p class="hint" data-i18n-auto>Individuos y variables superpuestos. Recuerda que la escala de las flechas es arbitraria: ajústala
+        hasta que la figura se lea bien, pero no interpretes la longitud absoluta.</p>
+      <div class="fig-block" id="figBiplot"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="4.6 · Contribuciones y calidad">4.6 · Contribuciones y calidad</h2>
+      <p class="hint" data-i18n-auto>La figura de contribuciones sirve tanto para variables como para individuos, eje por eje o para el
+        plano completo. Cambia el objetivo desde el editor.</p>
+      <div class="fig-block" id="figContrib"></div>
+      <div class="fig-block" id="figCos2"></div>
+    </div>
+
+    <div class="card" id="suppBox" style="display:none">
+      <h2 data-i18n="4.7 · Elementos suplementarios">4.7 · Elementos suplementarios</h2>
+      <div id="suppQuantWrap" style="display:none">
+        <h3 data-i18n="Variables cuantitativas suplementarias">Variables cuantitativas suplementarias</h3>
+        <p class="hint" data-i18n-auto>Coordenada = correlación de la variable con las puntuaciones de cada eje.</p>
+        <div class="table-scroll" id="suppQuantTable"></div>
+      </div>
+      <div id="suppCatWrap" style="display:none">
+        <h3 data-i18n="Centroides de las categorías">Centroides de las categorías</h3>
+        <p class="hint" data-i18n-auto>Posición media de los individuos de cada categoría sobre cada eje.</p>
+        <div class="table-scroll" id="suppCatTable"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="4.8 · Descargas">4.8 · Descargas</h2>
+      <div class="btn-row" style="margin-top:0">
+        <button class="btn btn-secondary btn-sm" id="dlCoordInd" data-i18n="⬇ Individuos: coordenadas, cos² y contribuciones (CSV)">⬇ Individuos: coordenadas, cos² y contribuciones (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlCoordVar" data-i18n="⬇ Variables: coordenadas, cos² y contribuciones (CSV)">⬇ Variables: coordenadas, cos² y contribuciones (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlSupp" data-i18n="⬇ Elementos suplementarios (CSV)">⬇ Elementos suplementarios (CSV)</button>
+        <button class="btn btn-primary btn-sm" id="goStep5" data-i18n="Ir a la interpretación →">Ir a la interpretación →</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="step-panel" id="panel-5">
+
+  <!-- ---------- TEORÍA DEL BLOQUE 5 ---------- -->
+  <div class="card theory-card">
+    <h2 data-i18n="Interpretación: teoría">Interpretación: teoría</h2>
+    <p class="hint" data-i18n-auto>De los números a las frases: cómo se nombra un eje, cómo se caracteriza y hasta dónde se puede
+      llegar sin salirse de lo que el ACP permite afirmar.</p>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>1 · Qué significa «interpretar» un componente</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Un componente es una combinación lineal; por sí mismo no significa nada. Interpretarlo es
+          <b>encontrar el concepto de tu disciplina</b> que explica por qué esas variables varían juntas, y darle un
+          nombre. El procedimiento estándar:</p>
+        <ol>
+          <li>Mira las variables con <b>|carga| por encima del umbral</b> que fijaste (aquí, el mismo del Bloque 3).</li>
+          <li>Separa las de carga <b>positiva</b> de las de carga <b>negativa</b>. Si hay de ambos signos, el eje es un
+            <b>contraste</b>: opone dos conjuntos de características, no mide «más o menos» de una sola cosa.</li>
+          <li>Busca qué tienen en común: ¿tamaño?, ¿velocidad de crecimiento?, ¿estrategia adquisitiva frente a
+            conservativa?, ¿un gradiente ambiental?</li>
+          <li>Ponle un nombre <b>corto y sustantivo</b>. Si no consigues nombrarlo, ese componente probablemente no
+            deba retenerse, por muchos criterios numéricos que lo respalden.</li>
+          <li>Confirma el nombre con los <b>elementos suplementarios</b> y con los individuos extremos: ¿los que están
+            en el lado positivo son los que tu conocimiento del sistema esperaría?</li>
+        </ol>
+        <div class="callout"><b>El signo es arbitrario</b>
+          Puedes invertir un eje para que la lectura sea más natural (por ejemplo, que «grande» quede a la derecha).
+          Solo hay que declararlo. Lo que no puedes es invertirlo en una figura y no en otra.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>A component is a linear combination; on its own it means nothing. Interpreting it means
+          <b>finding the concept from your discipline</b> that explains why those variables vary together, and giving it a
+          name. The standard procedure:</p>
+        <ol>
+          <li>Look at the variables with a <b>|loading| above the threshold</b> you set (here, the same as in Block 3).</li>
+          <li>Separate those with a <b>positive</b> loading from those with a <b>negative</b> one. If there are both signs, the axis is a
+            <b>contrast</b>: it opposes two sets of characteristics, it does not measure "more or less" of a single thing.</li>
+          <li>Look for what they have in common: size? growth rate? an acquisitive versus a
+            conservative strategy? an environmental gradient?</li>
+          <li>Give it a <b>short, substantive</b> name. If you cannot name it, that component probably
+            should not be retained, however many numerical criteria support it.</li>
+          <li>Confirm the name with the <b>supplementary elements</b> and with the extreme individuals: are those on
+            the positive side the ones your knowledge of the system would expect?</li>
+        </ol>
+        <div class="callout"><b>The sign is arbitrary</b>
+          You may invert an axis to make the reading more natural (for instance, so that "large" ends up on the right).
+          You just have to declare it. What you cannot do is invert it in one figure and not in another.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>2 · El valor test (v.test): cómo se caracteriza un eje con categorías</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Es el estadístico de la escuela francesa de análisis de datos, el que usa <code>dimdesc()</code> de
+          FactoMineR. Responde a: <i>¿el centroide de esta categoría está más lejos del origen de lo que cabría
+          esperar por azar?</i></p>
+        <div class="formula">v = ( x̄_categoría − x̄_global ) / √[ (s² / n_q) · (N − n_q)/(N − 1) ]</div>
+        <p>Bajo la hipótesis nula de que los <i>n_q</i> individuos de la categoría son una muestra al azar del total,
+          <b>v se distribuye aproximadamente como una normal estándar</b>. Por tanto:</p>
+        <ul>
+          <li><b>|v| ≥ 1.96</b> → la categoría se sitúa significativamente a un lado del eje (p &lt; 0.05).</li>
+          <li><b>|v| ≥ 2.58</b> → p &lt; 0.01.</li>
+          <li>El <b>signo</b> indica de qué lado del eje cae la categoría.</li>
+        </ul>
+        <p>Es especialmente útil porque convierte «el Sitio C está a la derecha» en una afirmación cuantificada, y
+          porque se puede ordenar: las categorías con |v| más alto son las que mejor caracterizan el eje.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>This is the statistic of the French school of data analysis, the one used by <code>dimdesc()</code> in
+          FactoMineR. It answers: <i>is the centroid of this category further from the origin than one would
+          expect by chance?</i></p>
+        <div class="formula">v = ( x̄_category − x̄_overall ) / √[ (s² / n_q) · (N − n_q)/(N − 1) ]</div>
+        <p>Under the null hypothesis that the <i>n_q</i> individuals of the category are a random sample of the whole,
+          <b>v is approximately standard normal</b>. Therefore:</p>
+        <ul>
+          <li><b>|v| ≥ 1.96</b> → the category lies significantly on one side of the axis (p &lt; 0.05).</li>
+          <li><b>|v| ≥ 2.58</b> → p &lt; 0.01.</li>
+          <li>The <b>sign</b> indicates which side of the axis the category falls on.</li>
+        </ul>
+        <p>It is especially useful because it turns "Site C is on the right" into a quantified statement, and
+          because it can be ordered: the categories with the highest |v| are the ones that best characterise the axis.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>3 · ¿Los grupos difieren en los componentes? — y la trampa de la circularidad</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Una vez tienes las puntuaciones, es natural comparar los grupos sobre cada eje con un ANOVA de una vía.
+          La app lo hace y añade el <b>tamaño del efecto</b>, que importa más que el valor p:</p>
+        <ul>
+          <li><b>η²</b> (eta cuadrada) = proporción de la varianza del componente explicada por el factor.
+            Referencias de Cohen: 0.01 pequeño, 0.06 medio, 0.14 grande.</li>
+          <li><b>ω²</b> (omega cuadrada) es una versión menos sesgada de lo mismo; con n pequeña conviene reportarla.</li>
+          <li>Se incluye además el <b>Kruskal–Wallis</b>, que no supone normalidad, por si las puntuaciones son
+            asimétricas o hay grupos muy desiguales.</li>
+        </ul>
+        <div class="callout warn"><b>La advertencia importante</b>
+          Estos contrastes son <b>legítimos</b> porque el ACP <i>no usó</i> la variable de agrupación para construir los
+          ejes: los componentes se calcularon solo con las variables activas. Pero sí hay dos límites que declarar:
+          <br>• Estás haciendo <b>k pruebas</b> (una por componente) sin corrección por comparaciones múltiples.
+          <br>• Los ejes fueron elegidos <i>a posteriori</i> por maximizar varianza, así que el p-valor es optimista.
+          <br>Úsalos como <b>descripción</b>. Si tu pregunta de investigación es «¿difieren los grupos?», la respuesta
+          correcta es un MANOVA, un PERMANOVA o un análisis discriminante sobre las variables originales.</div>
+        <p>Lo mismo vale para los valores p de las correlaciones variable–eje: los ejes se construyeron con esas
+          variables, así que esas pruebas son <b>circulares</b>. Están ahí como ayuda de lectura, no como evidencia.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>Once you have the scores, it is natural to compare the groups on each axis with a one-way ANOVA.
+          The app does this and adds the <b>effect size</b>, which matters more than the p value:</p>
+        <ul>
+          <li><b>η²</b> (eta squared) = share of the component's variance explained by the factor.
+            Cohen's benchmarks: 0.01 small, 0.06 medium, 0.14 large.</li>
+          <li><b>ω²</b> (omega squared) is a less biased version of the same thing; with a small n it is worth reporting.</li>
+          <li>The <b>Kruskal–Wallis</b> test is also included, which assumes no normality, in case the scores are
+            skewed or the groups are very unequal.</li>
+        </ul>
+        <div class="callout warn"><b>The important caveat</b>
+          These tests are <b>legitimate</b> because the PCA <i>did not use</i> the grouping variable to build the
+          axes: the components were computed from the active variables alone. But there are two limits to declare:
+          <br>• You are running <b>k tests</b> (one per component) without correction for multiple comparisons.
+          <br>• The axes were chosen <i>a posteriori</i> by maximising variance, so the p value is optimistic.
+          <br>Use them as <b>description</b>. If your research question is "do the groups differ?", the correct
+          answer is a MANOVA, a PERMANOVA or a discriminant analysis on the original variables.</div>
+        <p>The same holds for the p values of the variable–axis correlations: the axes were built from those
+          variables, so those tests are <b>circular</b>. They are there as a reading aid, not as evidence.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>4 · Calidad del ajuste: matriz reproducida y RMSR</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Los <i>k</i> componentes retenidos permiten <b>reconstruir</b> la matriz de correlaciones original:</p>
+        <div class="formula">R̂ = A · Aᵀ          (rotación ortogonal o sin rotar)
+R̂ = P · Φ · Pᵀ      (rotación oblicua)</div>
+        <p>La diferencia entre lo observado y lo reproducido son los <b>residuos</b>. Su resumen es el
+          <b>RMSR</b> (residuo cuadrático medio, sobre los elementos fuera de la diagonal):</p>
+        <div class="formula">RMSR = √( Σ residuo²ᵢⱼ / [p(p−1)/2] )     (i &lt; j)</div>
+        <ul>
+          <li><b>RMSR &lt; 0.05</b> — ajuste bueno; los componentes retenidos reproducen bien la estructura.</li>
+          <li><b>0.05 – 0.08</b> — aceptable.</li>
+          <li><b>&gt; 0.08</b> — se está perdiendo estructura: considera retener un componente más.</li>
+        </ul>
+        <p>Regla complementaria muy usada: que <b>menos del 10 % de los residuos</b> superen 0.05 en valor absoluto.
+          Un par concreto con residuo grande señala dos variables cuya relación no queda recogida por ningún eje.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The <i>k</i> retained components allow the original correlation matrix to be <b>reconstructed</b>:</p>
+        <div class="formula">R̂ = A · Aᵀ          (orthogonal rotation, or none)
+R̂ = P · Φ · Pᵀ      (oblique rotation)</div>
+        <p>The difference between what is observed and what is reproduced gives the <b>residuals</b>. Their summary is the
+          <b>RMSR</b> (root mean square residual, over the off-diagonal elements):</p>
+        <div class="formula">RMSR = √( Σ residual²ᵢⱼ / [p(p−1)/2] )     (i &lt; j)</div>
+        <ul>
+          <li><b>RMSR &lt; 0.05</b> — good fit; the retained components reproduce the structure well.</li>
+          <li><b>0.05 – 0.08</b> — acceptable.</li>
+          <li><b>&gt; 0.08</b> — structure is being lost: consider retaining one more component.</li>
+        </ul>
+        <p>A widely used complementary rule: <b>fewer than 10% of the residuals</b> should exceed 0.05 in absolute value.
+          A particular pair with a large residual points to two variables whose relationship is captured by no axis.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>5 · Cómo se escriben los resultados</summary>
+      <div class="acc-body" data-lang="es">
+        <p>La sección de resultados de un ACP suele tener esta estructura, y la app te genera un borrador con tus
+          propios números al final del bloque:</p>
+        <ol>
+          <li><b>Adecuación</b>: n, p, KMO, Bartlett, tratamiento de faltantes y escalado.</li>
+          <li><b>Extracción</b>: cuántos componentes, con qué criterio, y qué porcentaje explican.</li>
+          <li><b>Rotación</b>: método y normalización, si se usó.</li>
+          <li><b>Interpretación</b>: cada componente con su porcentaje, sus variables marcadoras y su nombre.</li>
+          <li><b>Ajuste</b>: RMSR o comunalidades.</li>
+          <li><b>Figuras</b>: círculo de correlaciones y mapa de individuos, con el porcentaje en los rótulos de eje.</li>
+        </ol>
+        <p>Errores frecuentes al redactar: llamar «factores» a los componentes (son cosas distintas), decir que un
+          componente «explica» una variable cuando la relación es descriptiva, afirmar que el ACP «demostró» que los
+          grupos difieren, y omitir el preprocesamiento.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The results section of a PCA usually has this structure, and the app generates a draft with your
+          own numbers at the end of the block:</p>
+        <ol>
+          <li><b>Adequacy</b>: n, p, KMO, Bartlett, handling of missing data and scaling.</li>
+          <li><b>Extraction</b>: how many components, by which criterion, and what percentage they explain.</li>
+          <li><b>Rotation</b>: method and normalisation, if used.</li>
+          <li><b>Interpretation</b>: each component with its percentage, its marker variables and its name.</li>
+          <li><b>Fit</b>: RMSR or communalities.</li>
+          <li><b>Figures</b>: correlation circle and map of individuals, with the percentage in the axis labels.</li>
+        </ol>
+        <p>Common mistakes in the write-up: calling the components "factors" (they are different things), saying that a
+          component "explains" a variable when the relationship is descriptive, claiming that the PCA "proved" that the
+          groups differ, and omitting the preprocessing.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ---------- CONFIGURACIÓN ---------- -->
+  <div class="card">
+    <h2 data-i18n="5.1 · Configuración">5.1 · Configuración</h2>
+    <div class="field-grid">
+      <div class="field">
+        <label data-i18n="Umbral de carga interpretable">Umbral de carga interpretable</label>
+        <select id="intThr">
+          <option value="0.3" data-i18n="0.30">0.30</option>
+          <option value="0.4" selected data-i18n="0.40">0.40</option>
+          <option value="0.5" data-i18n="0.50">0.50</option>
+          <option value="0.55" data-i18n="0.55">0.55</option>
+          <option value="0.7" data-i18n="0.70">0.70</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="Comparar grupos sobre los componentes">Comparar grupos sobre los componentes</label>
+        <select id="intGroup"><option value="" data-i18n="No comparar grupos">No comparar grupos</option></select>
+        <span class="field-help" data-i18n-auto>Ejecuta un ANOVA y un Kruskal–Wallis por componente.</span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="runIntBtn" data-i18n="Interpretar componentes →">Interpretar componentes →</button>
+    </div>
+    <div class="messages" id="intMessages"></div>
+  </div>
+
+  <!-- ---------- RESULTADOS ---------- -->
+  <div id="intResults" style="display:none">
+
+    <div class="card">
+      <h2 data-i18n="5.2 · Resumen">5.2 · Resumen</h2>
+      <div id="intTiles" class="results-summary"></div>
+      <h3 data-i18n="Nombra cada componente">Nombra cada componente</h3>
+      <p class="hint" data-i18n-auto>La app propone un nombre a partir de las cargas dominantes. Cámbialo por el término de tu
+        disciplina: es lo que aparecerá en la lectura automática y en el informe del Bloque 6.</p>
+      <div class="field-grid" id="nameBox"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="5.3 · Descripción de cada dimensión">5.3 · Descripción de cada dimensión</h2>
+      <label class="inline-label"><span data-i18n="Eje a describir:">Eje a describir:</span> <select id="dimSelect"></select></label>
+      <div class="fig-block" id="figDimDesc"></div>
+      <div class="table-scroll" id="dimTable" style="max-height:420px; overflow-y:auto"></div>
+      <p class="hint" data-i18n-auto id="dimTableNote"></p>
+    </div>
+
+    <div class="card" id="catBox" style="display:none">
+      <h2 data-i18n="5.4 · Caracterización por categorías (valores test)">5.4 · Caracterización por categorías (valores test)</h2>
+      <p class="hint" data-i18n-auto>Cada categoría se sitúa en el centroide de sus individuos. El valor test mide cuán lejos está
+        del origen respecto a lo esperado por azar: <b>|v| ≥ 1.96</b> equivale a p &lt; 0.05 y <b>|v| ≥ 2.58</b> a p &lt; 0.01.</p>
+      <div class="fig-block" id="figVtestWrap"><div id="figVtest"></div></div>
+      <div class="table-scroll" id="vtestTable"></div>
+    </div>
+
+    <div class="card" id="cmpBox" style="display:none">
+      <h2 data-i18n="5.5 · Comparación de grupos sobre los componentes">5.5 · Comparación de grupos sobre los componentes</h2>
+      <div class="table-scroll" id="cmpTable"></div>
+      <p class="hint" data-i18n-auto>η² de Cohen: 0.01 pequeño · 0.06 medio · 0.14 grande. El Kruskal–Wallis no supone normalidad.
+        Recuerda que son <b>contrastes descriptivos</b>: no hay corrección por comparaciones múltiples y los ejes se
+        eligieron por maximizar varianza.</p>
+      <div id="figProfileWrap" class="fig-block"><div id="figProfile"></div></div>
+      <h3 data-i18n="Medias por grupo">Medias por grupo</h3>
+      <div class="table-scroll" id="cmpMeansTable" style="max-height:380px; overflow-y:auto"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="5.6 · Individuos característicos de cada eje">5.6 · Individuos característicos de cada eje</h2>
+      <p class="hint" data-i18n-auto>Los cinco individuos más extremos a cada lado. Sirven para comprobar que el nombre que le
+        pusiste al eje concuerda con lo que sabes de esos casos.</p>
+      <div class="table-scroll" id="extremeTable"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="5.7 · Calidad del ajuste">5.7 · Calidad del ajuste</h2>
+      <p class="hint" data-i18n-auto>Diferencia entre la matriz de correlaciones observada y la que reproducen los componentes
+        retenidos. Los residuos por encima de 0.05 en valor absoluto aparecen en negrita.</p>
+      <div class="fig-block" id="figResid"></div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="5.8 · Lectura de los componentes">5.8 · Lectura de los componentes</h2>
+      <ul class="check-list" id="narrList"></ul>
+      <h3 data-i18n="Borrador para la sección de resultados">Borrador para la sección de resultados</h3>
+      <p class="hint" data-i18n-auto>Redacción automática con tus propios números. Revísala y adáptala antes de usarla.</p>
+      <div class="callout" data-i18n-auto id="narrParagraph" style="font-size:.9rem"></div>
+      <div class="btn-row" style="margin-top:8px">
+        <button class="btn btn-secondary btn-sm" id="copyParagraph" data-i18n="⧉ Copiar párrafo">⧉ Copiar párrafo</button>
+        <button class="btn btn-secondary btn-sm" id="dlDimDesc" data-i18n="⬇ Descripción de dimensiones (CSV)">⬇ Descripción de dimensiones (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlVtest" data-i18n="⬇ Valores test (CSV)">⬇ Valores test (CSV)</button>
+        <button class="btn btn-secondary btn-sm" id="dlResid" data-i18n="⬇ Matriz de residuos (CSV)">⬇ Matriz de residuos (CSV)</button>
+        <button class="btn btn-primary btn-sm" id="goStep6" data-i18n="Ir al informe →">Ir al informe →</button>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="step-panel" id="panel-6">
+
+  <div class="card theory-card">
+    <h2 data-i18n="Informe y exportación">Informe y exportación</h2>
+    <p class="hint" data-i18n-auto>Reúne todo lo hecho en los cinco bloques anteriores en un documento único y en un paquete
+      de archivos listo para archivar o compartir.</p>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>Qué produce este bloque</summary>
+      <div class="acc-body" data-lang="es">
+        <ul>
+          <li><b>Informe en HTML autocontenido</b>: portada, métodos redactados automáticamente con tus propios
+            parámetros, tablas con formato de publicación, las figuras <b>tal como las editaste</b> (vectoriales,
+            incrustadas en el propio archivo), interpretación, limitaciones y referencias. Un solo archivo, sin
+            dependencias: se abre en cualquier navegador y se puede enviar por correo.</li>
+          <li><b>PDF</b>: el informe trae hoja de estilo de impresión (evita cortar tablas y figuras a mitad de
+            página). Usa el botón de imprimir y elige «Guardar como PDF» en el diálogo del navegador.</li>
+          <li><b>Paquete ZIP completo</b>: el informe, todas las figuras en el formato y la resolución que elijas,
+            y hasta 14 tablas de resultados en CSV, organizados en carpetas.</li>
+        </ul>
+        <div class="callout"><b>Las figuras van como las dejaste</b>
+          El informe no regenera las figuras con los valores por defecto: toma el estado actual de cada una, con los
+          colores, títulos, paletas y opciones que hayas cambiado en el editor de cada bloque. Si quieres cambiar
+          algo, vuelve al bloque correspondiente, ajústalo y regenera el informe.</div>
+        <div class="callout warn"><b>Antes de enviarlo a una revista</b>
+          El borrador de métodos y resultados es un punto de partida, no un texto final: revísalo, ajusta la
+          terminología a tu disciplina y comprueba que las afirmaciones se correspondan con lo que quieres sostener.
+          Y recuerda las limitaciones del Bloque 5: el ACP describe, no contrasta hipótesis.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <ul>
+          <li><b>A self-contained HTML report</b>: cover page, methods drafted automatically with your own
+            parameters, publication-formatted tables, the figures <b>exactly as you edited them</b> (vector graphics,
+            embedded in the file itself), interpretation, limitations and references. A single file, with no
+            dependencies: it opens in any browser and can be sent by e-mail.</li>
+          <li><b>PDF</b>: the report carries a print stylesheet (it avoids splitting tables and figures across
+            pages). Use the print button and choose "Save as PDF" in the browser dialog.</li>
+          <li><b>A complete ZIP package</b>: the report, every figure in the format and resolution you choose,
+            and up to 14 result tables as CSV, organised in folders.</li>
+        </ul>
+        <div class="callout"><b>The figures go in as you left them</b>
+          The report does not regenerate the figures with default values: it takes the current state of each one, with the
+          colours, titles, palettes and options you changed in each block's editor. If you want to change
+          something, go back to the corresponding block, adjust it and regenerate the report.</div>
+        <div class="callout warn"><b>Before sending it to a journal</b>
+          The draft of the methods and results is a starting point, not a final text: review it, adjust the
+          terminology to your discipline and check that the statements match what you want to argue.
+          And remember the limitations from Block 5: PCA describes, it does not test hypotheses.</div>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="6.1 · Estado del análisis">6.1 · Estado del análisis</h2>
+    <p class="hint" data-i18n-auto>Solo se incluirán en el informe los bloques que hayas ejecutado.</p>
+    <ul class="check-list" id="repStatus"></ul>
+    <p class="hint" data-i18n-auto id="repFigCount"></p>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn btn-ghost btn-sm" id="repRefresh" data-i18n="↻ Actualizar estado">↻ Actualizar estado</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="6.2 · Configuración del informe">6.2 · Configuración del informe</h2>
+    <div class="field-grid">
+      <div class="field">
+        <label data-i18n="Título">Título</label>
+        <input type="text" id="repTitle" data-i18n-ph="Análisis de Componentes Principales" placeholder="Análisis de Componentes Principales">
+      </div>
+      <div class="field">
+        <label data-i18n="Autor o autores">Autor o autores</label>
+        <input type="text" id="repAuthor" data-i18n-ph="Opcional" placeholder="Opcional">
+      </div>
+    </div>
+
+    <h3 data-i18n="Secciones a incluir">Secciones a incluir</h3>
+    <div class="checkbox-grid" id="sectionBox"></div>
+
+    <h3 data-i18n="Figuras">Figuras</h3>
+    <label class="checkbox-label"><input type="checkbox" id="repFigures" checked> <span data-i18n="Incrustar las figuras en el informe (vectoriales, tal como las editaste)">Incrustar las figuras en el informe (vectoriales, tal como las editaste)</span></label>
+    <div class="field-grid" style="margin-top:10px">
+      <div class="field">
+        <label data-i18n="Formato de las figuras en el ZIP">Formato de las figuras en el ZIP</label>
+        <select id="repFigFormat">
+          <option value="png" data-i18n="PNG (mapa de bits)">PNG (mapa de bits)</option>
+          <option value="svg" data-i18n="SVG (vectorial, editable)">SVG (vectorial, editable)</option>
+          <option value="ambos" selected data-i18n="Ambos: SVG y PNG">Ambos: SVG y PNG</option>
+          <option value="jpg" data-i18n="JPG">JPG</option>
+          <option value="webp" data-i18n="WEBP">WEBP</option>
+        </select>
+      </div>
+      <div class="field">
+        <label data-i18n="Resolución del mapa de bits">Resolución del mapa de bits</label>
+        <select id="repFigScale">
+          <option value="2" data-i18n="Pantalla · 2× (~150 ppp)">Pantalla · 2× (~150 ppp)</option>
+          <option value="4" selected data-i18n="Alta · 4× (~300 ppp)">Alta · 4× (~300 ppp)</option>
+          <option value="6" data-i18n="Muy alta · 6× (~450 ppp)">Muy alta · 6× (~450 ppp)</option>
+          <option value="8" data-i18n="Publicación · 8× (~600 ppp)">Publicación · 8× (~600 ppp)</option>
+          <option value="12" data-i18n="Máxima · 12× (~900 ppp)">Máxima · 12× (~900 ppp)</option>
+        </select>
+        <span class="field-help" data-i18n-auto>A 8× o 12× el paquete puede pesar varios cientos de MB si hay muchas figuras.</span>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-lg" id="repPreview" data-i18n="Generar vista previa">Generar vista previa</button>
+      <button class="btn btn-secondary" id="repHtml" data-i18n="⬇ Informe HTML">⬇ Informe HTML</button>
+      <button class="btn btn-secondary" id="repPrint" data-i18n="🖨 Imprimir / guardar como PDF">🖨 Imprimir / guardar como PDF</button>
+      <button class="btn btn-secondary" id="repZip" data-i18n="⬇ Descargar paquete completo (ZIP)">⬇ Descargar paquete completo (ZIP)</button>
+    </div>
+    <div class="messages" id="repMessages"></div>
+  </div>
+
+  <div class="card" id="repPreviewWrap" style="display:none">
+    <h2 data-i18n="6.3 · Vista previa">6.3 · Vista previa</h2>
+    <p class="hint" data-i18n-auto>Es el documento real. Si algo no te convence, vuelve al bloque correspondiente, ajústalo y
+      genera la vista previa otra vez.</p>
+    <iframe id="repFrame" style="width:100%; height:760px; border:1px solid var(--border); border-radius:10px; background:#fff"></iframe>
+  </div>
+</section>
+
+</main>
+
+<p class="footer-note" data-i18n-auto>PCAPro · Plataforma local de Análisis de Componentes Principales · LABG Apps</p>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/core.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/figure.js"></script>
+<script src="js/plots1.js"></script>
+<script src="js/plots2.js"></script>
+<script src="js/rotate.js"></script>
+<script src="js/plots3.js"></script>
+<script src="js/factor.js"></script>
+<script src="js/plots4.js"></script>
+<script src="js/data.js"></script>
+<script src="js/block2.js"></script>
+<script src="js/block3.js"></script>
+<script src="js/plots5.js"></script>
+<script src="js/block4.js"></script>
+<script src="js/report.js"></script>
+<script src="js/block5.js"></script>
+<script src="js/block6.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "PCAPro: an offline, browser-based platform for guided principal component analysis"
+abstract: >-
+  PCAPro is a self-contained web application that performs a complete principal component
+  analysis entirely in the browser, with no installation and no server-side computation. It
+  covers data preparation, verification of assumptions, extraction with eight retention
+  criteria, seven rotations, factor maps, interpretation and a publication-ready report.
+  The interface, the embedded methodological guidance and the report are bilingual
+  (Spanish and English).
+type: software
+authors:
+  - given-names: "Luis Ángel"
+    family-names: "Barrera-Guzmán"
+    email: lbarrerag@chapingo.mx
+    affiliation: "Centro Académico Regional sede Huatusco-Veracruz, Universidad Autónoma Chapingo"
+    orcid: "https://orcid.org/0000-0001-8057-2583"
+    address: "Carretera Federal Huatusco-Xalapa km 6"
+    city: "Huatusco"
+    region: "Veracruz"
+    post-code: "94100"
+    country: MX
+version: 1.0.0
+date-released: "2026-09-07"
+license: GPL-3.0-or-later
+repository-code: "https://github.com/luisangelbg/PCAPro"
+keywords:
+  - principal component analysis
+  - multivariate statistics
+  - statistics education
+  - reproducible research
+  - JavaScript

@@ -1,0 +1,29 @@
+# Sistema operativo
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*~
+
+# Salidas locales de la propia app (informes y paquetes que genera el usuario)
+*_informe_ACP.html
+*_PCA_report.html
+*_ACP_completo.zip
+*_PCA_complete.zip
+
+# Construcción del artículo de JOSS (lo genera el bot, no se versiona)
+paper/paper.pdf
+paper/jats/
+
+# Material del instructor: confidencial, NO debe publicarse en el repositorio
+# junto con el material del participante.
+curso/CLAVES_instructor.md
+curso/evaluacion.html
+
+# Documento de trabajo interno del envío a JOSS
+paper/LISTA_DE_ENVIO.md

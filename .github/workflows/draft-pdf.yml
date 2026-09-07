@@ -1,0 +1,33 @@
+name: Draft PDF
+
+# Compila paper/paper.md con el motor de Open Journals y deja el PDF como
+# artefacto de la ejecucion. Es el Action que menciona el formulario de envio
+# de JOSS: sirve para comprobar que el articulo compila ANTES de enviarlo.
+on:
+  push:
+    paths:
+      - 'paper/**'
+      - '.github/workflows/draft-pdf.yml'
+  workflow_dispatch:
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    name: Paper Draft
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build draft PDF
+        uses: openjournals/openjournals-draft-action@master
+        with:
+          journal: joss
+          # Ruta del articulo dentro del repositorio.
+          paper-path: paper/paper.md
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          # Pandoc escribe el PDF junto al paper.md.
+          path: paper/paper.pdf

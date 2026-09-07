@@ -1,0 +1,165 @@
+/* PCAPro — material didáctico del taller. Hoja de estilo compartida.
+   Pensada para leerse en pantalla y para imprimirse o guardarse como PDF. */
+
+:root {
+  --fg: #1b1f2a; --muted: #5d6675; --line: #d8dde5; --linea-suave: #eceff4;
+  --acento: #5b3fd6; --acento-suave: #f3f0fd;
+  --ok: #2f9e44; --aviso: #d97706; --alto: #dc2626; --dato: #0d9488;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: #f2f3f7; color: var(--fg);
+  font-family: Georgia, "Times New Roman", serif; line-height: 1.62;
+}
+.pagina {
+  max-width: 940px; margin: 0 auto; background: #fff;
+  padding: 54px 66px 80px; box-shadow: 0 2px 24px rgba(20,25,40,.09);
+}
+
+/* ---------- portada ---------- */
+.portada { border-bottom: 3px double var(--line); padding-bottom: 26px; margin-bottom: 10px; }
+.portada .institucion {
+  font-family: system-ui, sans-serif; font-size: .82rem; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted);
+}
+.portada h1 { font-size: 2.05rem; margin: 12px 0 4px; letter-spacing: -.5px; line-height: 1.2; }
+.portada .subtitulo { font-size: 1.05rem; color: var(--muted); margin: 0 0 16px; }
+.portada .ficha {
+  font-family: system-ui, sans-serif; font-size: .86rem; color: var(--muted);
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px 22px;
+}
+.portada .ficha b { color: var(--fg); }
+
+/* ---------- jerarquía ---------- */
+h2 {
+  font-size: 1.42rem; margin: 46px 0 12px; padding-bottom: 7px;
+  border-bottom: 2px solid var(--acento); page-break-after: avoid;
+}
+h3 { font-size: 1.12rem; margin: 28px 0 8px; page-break-after: avoid; }
+h4 {
+  font-size: .82rem; margin: 20px 0 6px; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--muted); font-family: system-ui, sans-serif;
+}
+p { margin: 0 0 12px; text-align: justify; }
+ul, ol { margin: 0 0 14px; padding-left: 22px; }
+li { margin-bottom: 6px; }
+code {
+  font-family: Consolas, "Courier New", monospace; background: #f2f3f7;
+  padding: 1px 5px; border-radius: 4px; font-size: .87em;
+}
+
+/* ---------- sesión ---------- */
+.sesion {
+  background: var(--acento-suave); border-left: 5px solid var(--acento);
+  border-radius: 0 10px 10px 0; padding: 16px 22px; margin: 40px 0 20px;
+  page-break-inside: avoid;
+}
+.sesion .etiqueta {
+  font-family: system-ui, sans-serif; font-size: .74rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--acento); font-weight: 700;
+}
+.sesion h2 { border: none; margin: 4px 0 6px; padding: 0; font-size: 1.5rem; }
+.sesion .duracion { font-family: system-ui, sans-serif; font-size: .84rem; color: var(--muted); }
+
+/* ---------- bloques especiales ---------- */
+.caja {
+  border-left: 4px solid var(--dato); background: #f6fbfa;
+  padding: 13px 18px; border-radius: 0 8px 8px 0; margin: 16px 0;
+  font-size: .93rem; page-break-inside: avoid;
+}
+.caja.aviso { border-left-color: var(--aviso); background: #fffaf2; }
+.caja.alto  { border-left-color: var(--alto);  background: #fef4f4; }
+.caja.clave { border-left-color: var(--acento); background: var(--acento-suave); }
+.caja > b:first-child { display: block; margin-bottom: 3px; }
+
+.verifica {
+  border: 2px solid var(--ok); border-radius: 10px; background: #f4fbf5;
+  padding: 15px 20px; margin: 18px 0; page-break-inside: avoid;
+}
+.verifica h4 { color: var(--ok); margin-top: 0; }
+.verifica table { margin-bottom: 0; }
+
+.pasos { counter-reset: paso; list-style: none; padding-left: 0; }
+.pasos > li {
+  counter-increment: paso; position: relative;
+  padding: 0 0 12px 40px; margin-bottom: 4px;
+}
+.pasos > li::before {
+  content: counter(paso); position: absolute; left: 0; top: 1px;
+  width: 26px; height: 26px; border-radius: 50%; background: var(--acento); color: #fff;
+  font-family: system-ui, sans-serif; font-size: .82rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.ui {
+  font-family: system-ui, sans-serif; font-size: .88em; font-weight: 600;
+  background: #eef0f6; border: 1px solid #d5dae4; border-radius: 5px; padding: 1px 6px;
+  white-space: nowrap;
+}
+
+.captura {
+  border: 2px dashed var(--line); border-radius: 10px; background: #fafbfd;
+  padding: 22px; margin: 16px 0; text-align: center; color: var(--muted);
+  font-family: system-ui, sans-serif; font-size: .85rem; page-break-inside: avoid;
+}
+.captura b { display: block; color: var(--fg); margin-bottom: 4px; }
+
+/* ---------- tablas ---------- */
+.tabla-envoltura { overflow-x: auto; margin: 12px 0 22px; }
+table { border-collapse: collapse; width: 100%; font-size: .84rem; font-family: system-ui, sans-serif; }
+caption { caption-side: top; text-align: left; font-size: .84rem; padding: 0 0 6px; font-style: italic; }
+th {
+  border-top: 1.5px solid var(--fg); border-bottom: 1px solid var(--fg);
+  padding: 7px 10px; text-align: left; font-weight: 600;
+}
+td { padding: 6px 10px; border-bottom: 1px solid var(--linea-suave); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 1.5px solid var(--fg); }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.total td { font-weight: 700; background: #f7f8fb; }
+
+/* ---------- evaluación ---------- */
+.reactivo { margin: 0 0 18px; page-break-inside: avoid; }
+.reactivo .enunciado { font-weight: 600; }
+.reactivo ol { list-style: lower-alpha; margin-top: 6px; }
+.respuesta {
+  font-family: system-ui, sans-serif; font-size: .82rem; color: var(--ok);
+  background: #f4fbf5; border-radius: 6px; padding: 4px 10px; display: inline-block; margin-top: 4px;
+}
+.rubrica td:first-child { font-weight: 600; width: 22%; }
+
+/* ---------- constancia ---------- */
+.constancia {
+  border: 3px double var(--acento); padding: 54px 60px; margin: 0;
+  text-align: center; min-height: 640px; display: flex;
+  flex-direction: column; justify-content: space-between;
+}
+.constancia .otorga { font-size: 1.05rem; color: var(--muted); margin: 26px 0 6px; }
+.constancia .nombre {
+  font-size: 2.1rem; font-weight: 700; border-bottom: 1px solid var(--line);
+  display: inline-block; padding: 0 40px 6px; margin: 4px 0 22px;
+}
+.constancia .firmas {
+  display: flex; justify-content: space-around; gap: 40px; margin-top: 60px;
+  font-family: system-ui, sans-serif; font-size: .86rem;
+}
+.constancia .firma { flex: 1; }
+.constancia .firma .linea { border-top: 1px solid var(--fg); margin-bottom: 6px; }
+.marcador { color: var(--alto); font-weight: 600; }
+
+/* ---------- navegación e impresión ---------- */
+.nav-curso {
+  font-family: system-ui, sans-serif; font-size: .86rem; background: #fff;
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px 18px; margin-bottom: 26px;
+}
+.nav-curso a { color: var(--acento); text-decoration: none; margin-right: 16px; }
+.nav-curso a:hover { text-decoration: underline; }
+.pie {
+  margin-top: 52px; padding-top: 14px; border-top: 1px solid var(--line);
+  font-size: .78rem; color: var(--muted); font-family: system-ui, sans-serif;
+}
+@media print {
+  body { background: #fff; }
+  .pagina { box-shadow: none; max-width: none; padding: 0; }
+  .nav-curso, .no-imprimir { display: none; }
+  .sesion, .verifica, .caja, table, .captura { page-break-inside: avoid; }
+  h2, h3 { page-break-after: avoid; }
+}

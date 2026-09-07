@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual del participante — Taller de Análisis de Componentes Principales con PCAPro</title>
+<link rel="stylesheet" href="css/curso.css">
+</head>
+<body>
+<div class="pagina">
+
+<nav class="nav-curso no-imprimir">
+  <a href="index.html">← Índice del taller</a>
+  <a href="#s1">Sesión 1</a><a href="#s2">Sesión 2</a><a href="#s3">Sesión 3</a>
+  <a href="#s4">Sesión 4</a><a href="#s5">Sesión 5</a><a href="#glosario">Glosario</a>
+</nav>
+
+<header class="portada">
+  <div class="institucion">Universidad Autónoma Chapingo · Educación Continua</div>
+  <h1>Análisis de Componentes Principales aplicado a las ciencias biológicas</h1>
+  <p class="subtitulo">Manual del participante · Taller práctico con la plataforma PCAPro</p>
+  <div class="ficha">
+    <div><b>Duración:</b> 20 horas (5 sesiones de 4 h)</div>
+    <div><b>Modalidad:</b> Práctica en computadora</div>
+    <div><b>Requisitos:</b> Estadística básica; no se requiere programar</div>
+    <div><b>Instructor:</b> <span class="marcador">[nombre]</span></div>
+    <div><b>Periodo:</b> <span class="marcador">[fechas]</span></div>
+    <div><b>Sede:</b> <span class="marcador">[aula / laboratorio]</span></div>
+  </div>
+</header>
+
+<h2>Antes de empezar</h2>
+
+<h3>Qué vas a poder hacer al terminar</h3>
+<ol>
+  <li>Decidir <b>si tus datos son aptos</b> para un análisis de componentes principales, con criterios verificables y no por intuición.</li>
+  <li>Preparar una matriz de datos: tipificar variables, tratar faltantes y elegir el escalado correcto.</li>
+  <li>Decidir <b>cuántos componentes retener</b> combinando varios criterios, y justificar la decisión.</li>
+  <li>Aplicar y elegir una <b>rotación</b> cuando la solución no sea interpretable.</li>
+  <li>Leer correctamente un círculo de correlaciones, un mapa de individuos y un biplot.</li>
+  <li>Nombrar los ejes y redactar métodos y resultados con el vocabulario correcto.</li>
+  <li>Producir figuras de calidad de publicación y un informe reproducible.</li>
+</ol>
+
+<h3>Instalación</h3>
+<ol class="pasos">
+  <li>Copia la carpeta <code>PCAPro</code> completa a tu computadora (no la dejes en una memoria USB: irá lenta).</li>
+  <li>Entra a la carpeta, haz <b>clic derecho</b> sobre <code>servidor.ps1</code> y elige
+      <span class="ui">Ejecutar con PowerShell</span>.</li>
+  <li>Se abrirá solo tu navegador en <code>http://localhost:8790</code>. Si no se abre, escribe
+      esa dirección a mano en Chrome o Edge.</li>
+  <li>Deja la ventana negra de PowerShell abierta mientras trabajas: es el servidor. Al cerrarla se apaga la aplicación.</li>
+</ol>
+
+<div class="caja"><b>Tus datos no salen de tu computadora</b>
+  PCAPro calcula todo dentro del navegador. No hay servidor remoto, no se sube nada a internet y funciona
+  sin conexión. Puedes usarla con datos no publicados o confidenciales sin ningún riesgo.</div>
+
+<div class="caja aviso"><b>Si el puerto está ocupado</b>
+  Abre PowerShell en la carpeta y escribe:
+  <code>powershell -ExecutionPolicy Bypass -File servidor.ps1 -Port 9001</code>, y luego entra a
+  <code>http://localhost:9001</code>.</div>
+
+<h3>Los datos del taller</h3>
+<p>Todas las prácticas usan conjuntos <b>simulados</b>: no son mediciones reales, pero están construidos
+con una estructura conocida que el instructor sembró a propósito. Eso te permite algo que casi nunca
+tienes con datos reales: <b>comprobar que llegaste al resultado correcto</b>. Al final de cada práctica
+encontrarás un recuadro verde «Verifica tu resultado» con las cifras que deben salirte.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Conjuntos de práctica del taller. Todos están en la carpeta <code>curso/datos</code>.</caption>
+  <thead><tr><th>Archivo</th><th class="num">n</th><th class="num">Variables</th><th>Para qué sirve</th></tr></thead>
+  <tbody>
+    <tr><td><code>practica1_suelos.csv</code></td><td class="num">90</td><td class="num">6 + sitio</td>
+      <td>Primer análisis completo. Todo sale limpio.</td></tr>
+    <tr><td><code>practica2_semillas.csv</code></td><td class="num">120</td><td class="num">9 + especie</td>
+      <td>Tiene problemas sembrados: redundancia, ruido y atípicos.</td></tr>
+    <tr><td><code>practica3_escalas.csv</code></td><td class="num">100</td><td class="num">7 + parcela</td>
+      <td>Unidades muy dispares: enseña por qué hay que estandarizar.</td></tr>
+    <tr><td><code>practica4_sin_estructura.csv</code></td><td class="num">80</td><td class="num">6 + lote</td>
+      <td>No tiene estructura. Enseña cuándo <i>no</i> hacer ACP.</td></tr>
+    <tr><td><code>proyecto_integrador_agronomia.csv</code></td><td class="num">150</td><td class="num">12 + 2 grupos + 1 suplementaria</td>
+      <td>Proyecto final: análisis completo de principio a fin.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s1">
+  <div class="etiqueta">Sesión 1</div>
+  <h2>Fundamentos y carga de datos</h2>
+  <div class="duracion">4 horas · Bloque 1 de PCAPro (primera parte)</div>
+</div>
+
+<h3>1.1 · Qué es y qué no es el ACP</h3>
+<p>El análisis de componentes principales resume la información de muchas variables cuantitativas
+correlacionadas en unas pocas variables nuevas —los <b>componentes principales</b>— que son
+combinaciones lineales de las originales, no están correlacionadas entre sí y están ordenadas por la
+cantidad de varianza que retienen.</p>
+
+<p>Lo formuló <b>Karl Pearson en 1901</b> como el problema de encontrar la recta que mejor se ajusta a
+una nube de puntos, y lo redescubrió <b>Harold Hotelling en 1933</b> desde la maximización de la
+varianza. Ambos caminos llevan al mismo sitio: los ejes principales son los <b>vectores propios</b> de
+la matriz de covarianzas o de correlaciones.</p>
+
+<div class="caja clave"><b>La idea en una frase</b>
+  El ACP no inventa información: la <b>reorganiza</b>. La varianza total no cambia, solo se
+  redistribuye en ejes ordenados de mayor a menor. Si las variables no están correlacionadas, no hay
+  nada que resumir.</div>
+
+<p><b>Para qué se usa:</b> reducir dimensiones, visualizar en un plano lo que vive en muchas
+dimensiones, descubrir grupos de variables que se comportan juntas, construir índices sintéticos,
+detectar atípicos y generar predictores ortogonales para regresión.</p>
+
+<p><b>Para qué NO se usa:</b> el ACP <b>no es una prueba de hipótesis</b> y <b>no busca separar
+grupos</b>. Es una técnica no supervisada: ignora por completo cualquier variable de tratamiento. Si tu
+pregunta es «¿difieren mis tratamientos?», la herramienta es un análisis discriminante, un MANOVA o un
+PERMANOVA, no un ACP.</p>
+
+<h3>1.2 · La matemática mínima que necesitas</h3>
+<p>Partimos de una matriz <b>X</b> con <i>n</i> filas (individuos) y <i>p</i> columnas (variables). Se
+centra cada columna restando su media y, casi siempre, se divide entre su desviación estándar. Con eso
+se calcula la matriz de covarianzas (o de correlaciones) <b>S</b>, y se resuelve:</p>
+<p style="text-align:center"><code>S · v<sub>k</sub> = λ<sub>k</sub> · v<sub>k</sub></code></p>
+<ul>
+  <li><b>λ<sub>k</sub></b> (valor propio): la varianza que captura el componente <i>k</i>. La suma de
+    todos es la varianza total; con matriz de correlaciones vale exactamente <i>p</i>.</li>
+  <li><b>v<sub>k</sub></b> (vector propio): la dirección del componente.</li>
+  <li><b>Puntuación</b> de un individuo: su coordenada sobre el nuevo eje.</li>
+  <li><b>Carga</b> de una variable: su correlación con el componente. <b>Es lo que se interpreta.</b></li>
+</ul>
+
+<h3>1.3 · Cómo deben estar tus datos</h3>
+<ul>
+  <li>Primera fila: los <b>nombres</b> de las variables. Sin espacios al inicio, sin celdas combinadas.</li>
+  <li>Cada fila siguiente: <b>una observación</b> (una planta, una parcela, una muestra).</li>
+  <li>Una sola tabla por hoja. Sin filas ni columnas en blanco intercaladas, sin totales al pie.</li>
+  <li>Los vacíos, vacíos de verdad o marcados como <code>NA</code>. Nunca con ceros.</li>
+</ul>
+
+<h3>Práctica 1 · Tu primer análisis: suelos</h3>
+<p>Un estudio de fertilidad en tres posiciones de una ladera. Se midieron seis propiedades del suelo en
+90 sitios de muestreo.</p>
+
+<ol class="pasos">
+  <li>Abre PCAPro. Estás en el <span class="ui">1 Datos y supuestos</span>.</li>
+  <li>Antes de cargar nada, despliega la sección <b>3 · Postulados y supuestos del ACP</b> del marco
+      teórico y léela completa. Es la referencia que usarás toda la semana.</li>
+  <li>Arrastra <code>practica1_suelos.csv</code> a la zona de carga, o haz clic para elegirlo.</li>
+  <li>Revisa el apartado <span class="ui">1.2 Define el papel de cada variable</span>. Comprueba que
+      PCAPro detectó <b>6 variables numéricas activas</b> y que <code>Sitio</code> quedó como
+      <b>Cualitativa / grupo</b> y <code>ID</code> como <b>Identificador de fila</b>.</li>
+  <li>Fíjate en la fila de casillas de <b>selección rápida</b>: las seis numéricas deben estar marcadas.</li>
+  <li>En <span class="ui">1.3 Preparación</span> deja los faltantes en «Eliminar filas incompletas»,
+      sin transformación, y el escalado en <b>Estandarización z</b>.</li>
+  <li>Pulsa <span class="ui">Preparar matriz y diagnosticar →</span>.</li>
+  <li>Lee el <b>veredicto</b> y recorre la sección <span class="ui">1.7 Recomendaciones</span> punto por punto.</li>
+</ol>
+
+<div class="captura"><b>[CAPTURA 1.1]</b>
+  Pantalla completa del apartado 1.2 con la tabla de variables y los papeles ya asignados.</div>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Práctica 1</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Indicador</th><th class="num">Debe salirte</th><th>Lectura</th></tr></thead>
+    <tbody>
+      <tr><td>Observaciones × variables activas</td><td class="num">90 × 6</td><td>Sin filas perdidas: no hay faltantes</td></tr>
+      <tr><td>Razón n:p</td><td class="num">15.0 : 1</td><td>Muy por encima del mínimo de 5:1</td></tr>
+      <tr><td>KMO global</td><td class="num">0.752</td><td>Aceptable</td></tr>
+      <tr><td>Bartlett</td><td class="num">p &lt; 0.0001</td><td>Hay correlaciones que resumir</td></tr>
+      <tr><td>Determinante de R</td><td class="num">5.79 × 10⁻³</td><td>Sin problemas de singularidad</td></tr>
+      <tr><td>MSA más bajo</td><td class="num">0.695 (Arcilla_pct)</td><td>Ninguna variable por debajo de 0.5</td></tr>
+      <tr><td>Par más correlacionado</td><td class="num">MO – N_total: r = 0.891</td><td>Alto pero por debajo de 0.90</td></tr>
+      <tr class="total"><td>Veredicto</td><td class="num">A o B</td><td>La base es apta</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<h4>Preguntas de autoevaluación</h4>
+<ol>
+  <li>¿Por qué <code>ID</code> no debe entrar como variable activa, si son números?</li>
+  <li>El KMO salió 0.752. ¿Qué significa exactamente ese número? ¿Qué pasaría si fuera 0.45?</li>
+  <li>Si el par MO–N_total hubiera dado r = 0.97, ¿qué te habría advertido la aplicación y por qué es un problema?</li>
+</ol>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s2">
+  <div class="etiqueta">Sesión 2</div>
+  <h2>Supuestos, escalado y diagnóstico</h2>
+  <div class="duracion">4 horas · Bloque 1 de PCAPro (segunda parte)</div>
+</div>
+
+<h3>2.1 · Los supuestos que sí importan</h3>
+<p>El ACP es descriptivo: no plantea un modelo probabilístico. Pero para que el resultado sea
+interpretable y reproducible deben cumplirse estas condiciones:</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Supuestos del ACP y cómo los verifica PCAPro.</caption>
+  <thead><tr><th>Supuesto</th><th>Cómo se comprueba</th><th>Criterio</th></tr></thead>
+  <tbody>
+    <tr><td>Variables cuantitativas</td><td>Tipificación en 1.2</td><td>Intervalo o razón</td></tr>
+    <tr><td>Relaciones lineales</td><td>Matriz de correlaciones, asimetría</td><td>|g₁| &lt; 1 idealmente</td></tr>
+    <tr><td>Correlaciones suficientes</td><td>Bartlett, KMO, |r| media</td><td>p &lt; 0.05; KMO ≥ 0.60</td></tr>
+    <tr><td>Muestra adecuada</td><td>Razón n:p y n absoluto</td><td>≥ 5:1, mejor 10:1; n ≥ 100</td></tr>
+    <tr><td>Sin multicolinealidad extrema</td><td>Pares con |r| ≥ 0.90; determinante</td><td>det &gt; 10⁻⁵</td></tr>
+    <tr><td>Escalas comparables</td><td>Razón entre la mayor y menor DE</td><td>Si no, estandarizar</td></tr>
+    <tr><td>Sin atípicos influyentes</td><td>Distancia de Mahalanobis</td><td>D² &lt; χ²₀.₉₉₉</td></tr>
+    <tr><td>Faltantes tratados</td><td>Mapa de datos faltantes</td><td>Declarar el método</td></tr>
+    <tr><td>Normalidad multivariante</td><td>—</td><td><b>No es obligatoria</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>2.2 · Las dos pruebas de adecuación</h3>
+<p><b>Esfericidad de Bartlett.</b> Contrasta que la matriz de correlaciones sea la identidad, es decir,
+que las variables no estén correlacionadas. Buscas <b>rechazar</b>: p &lt; 0.05. Ojo: con n grande casi
+siempre sale significativa, así que es necesaria pero no suficiente.</p>
+
+<p><b>Índice KMO.</b> Compara las correlaciones observadas con las parciales. Si las variables comparten
+factores comunes, las parciales son pequeñas y el KMO alto.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Escala de Kaiser para el KMO.</caption>
+  <thead><tr><th class="num">KMO</th><th>Calificación</th><th>Decisión</th></tr></thead>
+  <tbody>
+    <tr><td class="num">≥ 0.90</td><td>Excelente</td><td>Adelante</td></tr>
+    <tr><td class="num">0.80 – 0.89</td><td>Meritorio</td><td>Adelante</td></tr>
+    <tr><td class="num">0.70 – 0.79</td><td>Aceptable</td><td>Adelante</td></tr>
+    <tr><td class="num">0.60 – 0.69</td><td>Mediocre</td><td>Con reservas</td></tr>
+    <tr><td class="num">0.50 – 0.59</td><td>Bajo</td><td>Revisar variables</td></tr>
+    <tr><td class="num">&lt; 0.50</td><td>Inaceptable</td><td><b>No hacer ACP</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>El mismo cálculo por variable da su <b>MSA</b>. Las variables con MSA &lt; 0.50 se eliminan
+<b>una a la vez</b>, recalculando después de cada eliminación.</p>
+
+<h3>2.3 · Escalado: la decisión más importante</h3>
+<div class="caja clave"><b>Regla práctica</b>
+  Si tus variables están en unidades distintas —y en biología casi siempre lo están— la respuesta es
+  <b>estandarización z</b>, que equivale a hacer el ACP sobre la matriz de correlaciones. Solo se
+  trabaja sin escalar cuando todas las variables comparten unidad y sus varianzas son comparables.</div>
+
+<h3>Práctica 2 · Escalas dispares</h3>
+<p>Este conjunto tiene siete variables en unidades que van desde el pH (valores alrededor de 6.5) hasta
+un volumen en mm³ (cientos de miles). Vas a correr el mismo análisis dos veces.</p>
+
+<ol class="pasos">
+  <li>Carga <code>practica3_escalas.csv</code>.</li>
+  <li>Marca las 7 numéricas como activas y <code>Parcela</code> como cualitativa.</li>
+  <li><b>Primera corrida:</b> en el escalado elige <span class="ui">Sin escalar</span> y procesa.
+      Anota el porcentaje de varianza del CP1 en la sección 1.5.</li>
+  <li>Mira la figura <b>Perfil de escalas</b>: observa la razón entre la mayor y la menor desviación estándar.</li>
+  <li><b>Segunda corrida:</b> cambia a <span class="ui">Estandarización z</span> y vuelve a procesar.</li>
+  <li>Compara los dos resultados y explica la diferencia.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Práctica 2</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Escalado</th><th class="num">CP1</th><th class="num">CP2</th><th>Qué está pasando</th></tr></thead>
+    <tbody>
+      <tr><td>Sin escalar</td><td class="num">100.0 %</td><td class="num">0.0 %</td>
+        <td><code>Volumen_mm3</code> tiene una DE de ~55 000 y acapara <b>toda</b> la varianza. El ACP no describe los datos: describe la unidad de medida.</td></tr>
+      <tr><td>Estandarización z</td><td class="num">41.9 %</td><td class="num">35.0 %</td>
+        <td>Aparecen los dos factores reales: tamaño (altura, peso, volumen) y química (conductividad, pH, clorofila). KMO = 0.757.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0"><b>Análisis paralelo con z:</b> 2 componentes. <b>Densidad</b> queda casi
+  sin representar: es independiente de los dos factores, y así fue construida.</p>
+</div>
+
+<h3>Práctica 3 · Un conjunto con problemas: semillas</h3>
+<p>120 semillas de dos especies, con nueve variables. Este conjunto tiene <b>tres problemas sembrados a
+propósito</b>. Tu tarea es encontrarlos.</p>
+
+<ol class="pasos">
+  <li>Carga <code>practica2_semillas.csv</code>, marca las 9 numéricas como activas,
+      <code>Especie</code> como cualitativa, y procesa con estandarización z.</li>
+  <li>Lee todas las recomendaciones de la sección 1.7. <b>Tres</b> de ellas señalan problemas.</li>
+  <li>En la tabla de MSA por variable, identifica cuál está por debajo de 0.50.</li>
+  <li>Abre la figura <b>Matriz de correlaciones</b> y activa <span class="ui">Reordenar por similitud</span>.</li>
+  <li>Anota qué individuos aparecen como atípicos multivariantes.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Práctica 3</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Problema sembrado</th><th class="num">Evidencia</th><th>Qué hacer</th></tr></thead>
+    <tbody>
+      <tr><td><b>Variable redundante.</b> <code>Area_mm2</code> se calculó como π/4 × Largo × Ancho: no aporta información nueva</td>
+        <td class="num">Ancho–Área: r = 0.934<br>det R = 2.84 × 10⁻⁴</td>
+        <td>Eliminarla, o quedarse con ella y quitar Largo y Ancho</td></tr>
+      <tr><td><b>Variable sin estructura.</b> <code>Humedad_pct</code> es ruido puro</td>
+        <td class="num">MSA = 0.388</td>
+        <td>Eliminarla: por debajo de 0.50</td></tr>
+      <tr><td><b>Atípicos multivariantes</b> sembrados</td>
+        <td class="num">G017, G058, G101<br>(D² = 75.5, 58.7, 58.4; corte 27.9)</td>
+        <td>Revisar si son errores; correr con y sin ellos</td></tr>
+      <tr class="total"><td>KMO global</td><td class="num">0.556</td><td>Bajo, precisamente por los dos primeros problemas</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0">La app detecta un cuarto atípico, <b>G106</b>, que no fue sembrado.
+  Es un caso extremo que apareció por azar: buen recordatorio de que el criterio marca el 0.1 % más
+  alejado, exista o no una razón real detrás.</p>
+</div>
+
+<h4>Preguntas de autoevaluación</h4>
+<ol>
+  <li>Incluir <code>Area_mm2</code> junto a <code>Largo</code> y <code>Ancho</code> es un error clásico.
+      ¿Qué le hace al primer componente y por qué?</li>
+  <li>Elimina <code>Humedad_pct</code> y vuelve a procesar. ¿Cuánto sube el KMO?</li>
+  <li>¿Por qué el determinante de R baja tanto cuando hay variables redundantes?</li>
+</ol>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s3">
+  <div class="etiqueta">Sesión 3</div>
+  <h2>Extracción y número de componentes</h2>
+  <div class="duracion">4 horas · Bloque 2 de PCAPro</div>
+</div>
+
+<h3>3.1 · Qué produce la extracción</h3>
+<ul>
+  <li><b>Valores propios</b>: cuánta varianza captura cada eje.</li>
+  <li><b>Puntuaciones</b>: la nueva base de datos reducida, que puedes descargar y usar en otro análisis.</li>
+  <li><b>Cargas</b>: la correlación de cada variable con cada componente.</li>
+  <li><b>Comunalidad</b>: qué proporción de la varianza de una variable recogen los componentes retenidos.
+    Por debajo de 0.50, esa variable está mal representada.</li>
+</ul>
+
+<h3>3.2 · Los ocho criterios de retención</h3>
+<div class="tabla-envoltura">
+<table>
+  <caption>Criterios que calcula PCAPro, ordenados por confiabilidad.</caption>
+  <thead><tr><th>Criterio</th><th>Cómo funciona</th><th>Comportamiento</th></tr></thead>
+  <tbody>
+    <tr><td><b>Análisis paralelo (Horn)</b></td>
+      <td>Compara tus λ con los de cientos de matrices sin estructura del mismo tamaño</td>
+      <td><b>El mejor evaluado.</b> Muy fiable</td></tr>
+    <tr><td><b>MAP de Velicer</b></td>
+      <td>Mínimo del promedio de correlaciones parciales al cuadrado</td><td>Muy bueno</td></tr>
+    <tr><td><b>Bastón roto</b></td>
+      <td>Compara con el reparto aleatorio de un segmento partido al azar</td><td>Conservador</td></tr>
+    <tr><td><b>Kaiser–Guttman (λ &gt; 1)</b></td>
+      <td>Retiene los que explican más que una variable</td><td><b>Sobreestima</b>, sobre todo con p grande</td></tr>
+    <tr><td><b>Jolliffe (λ &gt; 0.7)</b></td><td>Versión relajada de Kaiser</td><td>Sobreestima más</td></tr>
+    <tr><td><b>Codo del scree</b></td><td>Punto donde la caída se aplana</td><td>Visual, algo subjetivo</td></tr>
+    <tr><td><b>Varianza acumulada</b></td><td>Hasta 70 % u 80 %</td><td>Nunca como criterio único</td></tr>
+    <tr><td><b>Interpretabilidad</b></td><td>Tu criterio</td><td><b>El decisivo</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="caja clave"><b>Cómo se decide en la práctica</b>
+  Corre todos los criterios, mira dónde coinciden y elige dentro de ese rango el número que dé la
+  solución <b>más interpretable</b>. En el artículo se escribe así: «se retuvieron k componentes con
+  base en el análisis paralelo, el gráfico de sedimentación y la interpretabilidad, que explican X % de
+  la varianza».</div>
+
+<h3>Práctica 4 · Cuándo NO hacer un ACP</h3>
+<p>Este es el conjunto más importante del taller, aunque parezca el más aburrido.</p>
+
+<ol class="pasos">
+  <li>Carga <code>practica4_sin_estructura.csv</code> y procesa con estandarización z.</li>
+  <li>Lee el veredicto y las recomendaciones. <b>No sigas adelante todavía.</b></li>
+  <li>Aun así, ve al Bloque 2 y extrae los componentes con 500 repeticiones.</li>
+  <li>Compara lo que dice <b>Kaiser</b> con lo que dice el <b>análisis paralelo</b> en la figura de criterios.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Práctica 4</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <tbody>
+      <tr><td>KMO global</td><td class="num">0.465</td><td>Inaceptable (&lt; 0.50)</td></tr>
+      <tr><td>Bartlett</td><td class="num">p = 0.86</td><td><b>No significativa:</b> R no difiere de la identidad</td></tr>
+      <tr><td>Determinante de R</td><td class="num">0.885</td><td>Cercano a 1: no hay nada que resumir</td></tr>
+      <tr><td>|r| máxima entre pares</td><td class="num">0.169</td><td>Ninguna correlación aprovechable</td></tr>
+      <tr class="total"><td><b>Kaiser (λ &gt; 1)</b></td><td class="num"><b>3 componentes</b></td>
+        <td><b>¡De datos sin ninguna estructura!</b></td></tr>
+      <tr class="total"><td><b>Análisis paralelo</b></td><td class="num"><b>0 componentes</b></td>
+        <td>La respuesta correcta</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0"><b>Esta es la lección de la sesión:</b> el criterio de Kaiser, que es el que
+  más se usa y el que traen por defecto muchos programas, extrae tres componentes de puro ruido. Si tu
+  único criterio hubiera sido λ &gt; 1, habrías publicado una interpretación de nada.</p>
+</div>
+
+<h3>Práctica 5 · Extracción sobre suelos y semillas</h3>
+<ol class="pasos">
+  <li>Vuelve a <code>practica1_suelos.csv</code>, procesa y extrae los componentes.</li>
+  <li>Estudia el gráfico de sedimentación: activa las líneas de Kaiser, análisis paralelo y bastón roto.</li>
+  <li>Repite con <code>practica2_semillas.csv</code> y compara qué dice cada criterio.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Práctica 5</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Conjunto</th><th class="num">λ₁, λ₂, λ₃</th><th class="num">Kaiser</th><th class="num">Horn</th><th class="num">Varianza CP1+CP2</th></tr></thead>
+    <tbody>
+      <tr><td>Suelos</td><td class="num">3.298 · 1.934 · 0.295</td><td class="num">2</td><td class="num">2</td><td class="num">87.2 %</td></tr>
+      <tr><td>Semillas</td><td class="num">3.478 · 1.738 · 1.492</td><td class="num">4</td><td class="num">3</td><td class="num">57.9 %</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0">En suelos todos los criterios coinciden en 2: la caída entre λ₂ = 1.93 y
+  λ₃ = 0.30 es enorme y el codo es inconfundible. En semillas Kaiser retiene 4 y el análisis paralelo 3:
+  hay tres factores reales, y el cuarto λ = 1.005 apenas roza el umbral de 1.</p>
+</div>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s4">
+  <div class="etiqueta">Sesión 4</div>
+  <h2>Rotación y mapas factoriales</h2>
+  <div class="duracion">4 horas · Bloques 3 y 4 de PCAPro</div>
+</div>
+
+<h3>4.1 · Por qué rotar</h3>
+<p>Los ejes que salen del ACP maximizan varianza, no interpretabilidad. El resultado típico es que casi
+todas las variables cargan fuerte en el CP1 y los demás componentes quedan como contrastes difíciles de
+nombrar. La <b>rotación</b> gira los ejes retenidos dentro del mismo subespacio buscando la
+<b>estructura simple</b> de Thurstone: que cada variable cargue fuerte en un solo componente.</p>
+
+<div class="caja"><b>Qué se conserva y qué cambia</b>
+  <b>Se conserva:</b> la varianza total del conjunto de componentes retenidos y las comunalidades.<br>
+  <b>Cambia:</b> el reparto de varianza entre ejes, las cargas, y el orden. Tras rotar los ejes ya no van
+  de mayor a menor λ; por eso PCAPro los renombra CPR1, CPR2…</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Las rotaciones disponibles en PCAPro.</caption>
+  <thead><tr><th>Método</th><th>Tipo</th><th>Cuándo usarla</th></tr></thead>
+  <tbody>
+    <tr><td><b>Varimax</b></td><td>Ortogonal</td><td><b>La opción por defecto.</b> Componentes bien diferenciados e independientes</td></tr>
+    <tr><td>Quartimax</td><td>Ortogonal</td><td>Cuando esperas un factor general dominante</td></tr>
+    <tr><td>Equamax / Parsimax</td><td>Ortogonal</td><td>Compromisos; menos estables</td></tr>
+    <tr><td><b>Promax</b></td><td>Oblicua</td><td>Rápida; muestras grandes</td></tr>
+    <tr><td>Oblimin / Quartimin</td><td>Oblicua</td><td>Cuando es razonable que las dimensiones se correlacionen</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="caja aviso"><b>¿Ortogonal u oblicua?</b>
+  Usa <b>ortogonal</b> si necesitas componentes independientes o si teóricamente esperas dimensiones no
+  relacionadas. Usa <b>oblicua</b> si es razonable que estén correlacionadas, que es lo habitual en
+  fenómenos biológicos. Con oblicua se interpreta la matriz de <b>patrón</b>, y hay que mirar Φ: si la
+  correlación máxima entre componentes es menor que 0.15, la oblicuidad no aportó nada y conviene
+  volver a varimax.</div>
+
+<h3>4.2 · Cómo se leen los mapas</h3>
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th></th><th>Nube de individuos</th><th>Nube de variables</th></tr></thead>
+  <tbody>
+    <tr><td>Qué se dibuja</td><td>Un punto por observación</td><td>Un vector por variable</td></tr>
+    <tr><td>Qué se lee</td><td><b>Distancias</b>: puntos próximos, perfiles parecidos</td><td><b>Ángulos</b> respecto al origen</td></tr>
+    <tr><td>Escala</td><td>La de las puntuaciones</td><td>Siempre entre −1 y 1</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><b>Reglas del círculo de correlaciones:</b> vectores en la misma dirección, variables correlacionadas
+positivamente; opuestos, correlación negativa; perpendiculares, no correlacionadas <i>en ese plano</i>.
+Un vector <b>corto</b> no significa que la variable sea poco importante, sino que su información está en
+otros ejes: <b>no interpretes su dirección</b>.</p>
+
+<p><b>cos²</b> mide la calidad de representación de un punto (≥ 0.7 muy buena, 0.5–0.7 aceptable,
+&lt; 0.3 no interpretable). La <b>contribución</b> mide cuánto pesa ese elemento en construir el eje; su
+referencia es 100/p para variables y 100/n para individuos.</p>
+
+<h3>Práctica 6 · Rotación y mapas en semillas</h3>
+<ol class="pasos">
+  <li>Carga <code>practica2_semillas.csv</code>. Esta vez <b>elimina las trampas</b>: desmarca
+      <code>Area_mm2</code> y <code>Humedad_pct</code> con las casillas de selección rápida (pasan a
+      suplementarias, no se pierden).</li>
+  <li>Procesa con estandarización z y extrae los componentes. Retén <b>3</b>.</li>
+  <li>Ve al Bloque 3, aplica <b>varimax</b> con normalización de Kaiser y umbral 0.40.</li>
+  <li>Compara la tarjeta «¿Mejoró la estructura simple?» antes y después.</li>
+  <li>Prueba también <b>promax</b> y revisa la matriz Φ: ¿estaba justificada la oblicuidad?</li>
+  <li>Ve al Bloque 4, genera los mapas con la solución <b>rotada</b> y agrupa por <code>Especie</code>.</li>
+  <li>En el mapa de individuos prueba los tres tipos de envoltura y explica qué dice cada uno.</li>
+</ol>
+
+<div class="captura"><b>[CAPTURA 4.1]</b>
+  Círculo de correlaciones de semillas con la solución rotada, coloreado por cos².</div>
+<div class="captura"><b>[CAPTURA 4.2]</b>
+  Mapa de individuos agrupado por especie, con elipses de concentración al 95 %.</div>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Práctica 6</h4>
+  <p>Tras eliminar <code>Area_mm2</code> y <code>Humedad_pct</code>, varimax con 3 componentes debe
+  agrupar las variables así:</p>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Componente</th><th>Variables con carga alta</th><th>Nombre razonable</th></tr></thead>
+    <tbody>
+      <tr><td>CPR1</td><td>Largo, Ancho, Peso</td><td>Tamaño de la semilla</td></tr>
+      <tr><td>CPR2</td><td>Grosor, Dureza</td><td>Robustez / dureza</td></tr>
+      <tr><td>CPR3</td><td>Aceite (+), Proteína (−)</td><td>Composición: eje de contraste</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0">El KMO debe <b>subir</b> respecto a los 0.556 de la práctica 3. CPR3 es un
+  <b>eje de contraste</b>: las semillas con más aceite tienen menos proteína, y así se construyeron.</p>
+</div>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s5">
+  <div class="etiqueta">Sesión 5</div>
+  <h2>Interpretación, informe y proyecto</h2>
+  <div class="duracion">4 horas · Bloques 5 y 6 de PCAPro</div>
+</div>
+
+<h3>5.1 · Nombrar un eje</h3>
+<ol>
+  <li>Mira las variables con |carga| por encima de tu umbral.</li>
+  <li>Separa las positivas de las negativas. Si hay de ambos signos, es un <b>eje de contraste</b>.</li>
+  <li>Busca qué tienen en común: ¿tamaño?, ¿estrategia adquisitiva frente a conservativa?, ¿un gradiente ambiental?</li>
+  <li>Ponle un nombre corto y sustantivo. <b>Si no consigues nombrarlo, probablemente no debas retenerlo.</b></li>
+  <li>Confírmalo con los elementos suplementarios y los individuos extremos.</li>
+</ol>
+
+<h3>5.2 · El valor test</h3>
+<p>Responde a: ¿el centroide de esta categoría está más lejos del origen de lo que cabría esperar por
+azar? Bajo la hipótesis nula se distribuye como una normal estándar, así que <b>|v| ≥ 1.96</b> equivale a
+p &lt; 0.05 y <b>|v| ≥ 2.58</b> a p &lt; 0.01. El signo dice de qué lado del eje cae la categoría.</p>
+
+<div class="caja alto"><b>La advertencia que no puedes olvidar</b>
+  PCAPro te permite comparar grupos sobre los componentes con un ANOVA. Es legítimo porque el ACP no usó
+  la variable de agrupación para construir los ejes. Pero: estás haciendo <i>k</i> pruebas sin corregir
+  por comparaciones múltiples, y los ejes se eligieron <i>a posteriori</i> por maximizar varianza, así que
+  el valor p es optimista. <b>Úsalo como descripción, no como prueba confirmatoria.</b> Si tu pregunta de
+  investigación es si los grupos difieren, la respuesta correcta es un MANOVA, un PERMANOVA o un
+  análisis discriminante sobre las variables originales.</div>
+
+<h3>5.3 · Calidad del ajuste</h3>
+<p>Los componentes retenidos permiten reconstruir la matriz de correlaciones. La diferencia con la
+observada son los <b>residuos</b>, resumidos en el <b>RMSR</b>: menor que 0.05 es buen ajuste, entre 0.05
+y 0.08 aceptable, y por encima de 0.08 se está perdiendo estructura.</p>
+
+<h3>Proyecto integrador</h3>
+<p>Un experimento agronómico: 150 parcelas, cuatro tratamientos (testigo, riego, fertilización y ambos),
+tres bloques, doce variables de respuesta y el rendimiento final.</p>
+
+<ol class="pasos">
+  <li>Carga <code>proyecto_integrador_agronomia.csv</code>.</li>
+  <li><b>Atención:</b> PCAPro marcará <code>Rendimiento_kg_ha</code> como activa porque es numérica.
+      Cámbiala a <b>Cuantitativa suplementaria</b>: es la variable de resultado y no debe construir los ejes.</li>
+  <li>Comprueba que <code>Tratamiento</code> y <code>Bloque</code> quedan como cualitativas y
+      <code>Parcela</code> como identificador.</li>
+  <li>Revisa el mapa de datos faltantes: hay seis celdas vacías. Decide y justifica cómo tratarlas.</li>
+  <li>Procesa con estandarización z y recorre todo el diagnóstico.</li>
+  <li>Extrae los componentes, decide cuántos retener y justifícalo con al menos tres criterios.</li>
+  <li>Aplica varimax y nombra cada componente.</li>
+  <li>Genera los mapas agrupando por <code>Tratamiento</code>. Observa dónde cae el Rendimiento en el círculo.</li>
+  <li>En el Bloque 5 compara los tratamientos sobre cada componente y lee los valores test.</li>
+  <li>Genera el informe completo en el Bloque 6 y descarga el paquete ZIP.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Verifica tu resultado — Proyecto integrador</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <tbody>
+      <tr><td>Observaciones tras eliminar filas incompletas</td><td class="num">144 de 150</td></tr>
+      <tr><td>Variables activas</td><td class="num">12</td></tr>
+      <tr><td>KMO global</td><td class="num">0.783</td></tr>
+      <tr><td>Kaiser y análisis paralelo</td><td class="num">Ambos: 4 componentes</td></tr>
+      <tr><td>Varianza acumulada con 4 componentes</td><td class="num">87.2 %</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:12px 0 6px"><b>Varimax debe recuperar exactamente estos cuatro grupos</b>
+  (todas las cargas dominantes entre 0.91 y 0.95):</p>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Componente</th><th class="num">% varianza</th><th>Variables</th><th>Nombre esperado</th></tr></thead>
+    <tbody>
+      <tr><td>CPR1</td><td class="num">35.0</td><td>Altura, Biomasa, Área foliar, Diámetro de tallo</td><td>Vigor vegetativo</td></tr>
+      <tr><td>CPR2</td><td class="num">21.9</td><td>N foliar, Clorofila, P foliar</td><td>Estado nutricional</td></tr>
+      <tr><td>CPR3</td><td class="num">16.7</td><td>Conductancia (+), Potencial hídrico (+), Temperatura de hoja (−)</td><td>Estado hídrico</td></tr>
+      <tr><td>CPR4</td><td class="num">13.5</td><td>Días a floración, Días a madurez</td><td>Fenología</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:10px 0 0"><b>El Rendimiento (suplementario)</b> debe correlacionar
+  <b>0.81 con CPR1</b> y <b>0.65 con CPR2</b>, y prácticamente cero con CPR3 (0.16) y CPR4 (−0.11).
+  Es decir: el rendimiento se explica por el vigor y la nutrición, no por la fenología. En el círculo de
+  correlaciones su vector debe caer entre los ejes 1 y 2.</p>
+</div>
+
+<h3>Entregable del taller</h3>
+<p>Un informe con tu propio análisis del proyecto integrador que incluya: verificación de supuestos,
+justificación del número de componentes con al menos tres criterios, solución rotada con los ejes
+nombrados, el círculo de correlaciones y el mapa de individuos con sus porcentajes en los rótulos, la
+lectura de la posición del rendimiento, y un párrafo de métodos y otro de resultados redactados por ti
+—no los generados automáticamente, aunque puedes partir de ellos—.</p>
+
+<!-- ================================================================= -->
+<h2 id="glosario">Glosario</h2>
+<div class="tabla-envoltura">
+<table>
+  <tbody>
+    <tr><td><b>Valor propio (λ)</b></td><td>Varianza capturada por un componente.</td></tr>
+    <tr><td><b>Vector propio</b></td><td>Dirección del componente en el espacio de las variables.</td></tr>
+    <tr><td><b>Carga</b> (<i>loading</i>)</td><td>Correlación entre una variable y un componente. Es lo que se interpreta.</td></tr>
+    <tr><td><b>Puntuación</b> (<i>score</i>)</td><td>Coordenada de un individuo sobre un componente.</td></tr>
+    <tr><td><b>Comunalidad</b></td><td>Proporción de la varianza de una variable explicada por los componentes retenidos.</td></tr>
+    <tr><td><b>cos²</b></td><td>Calidad de representación de un punto sobre un eje o plano.</td></tr>
+    <tr><td><b>Contribución</b></td><td>Aporte porcentual de un elemento a la construcción de un eje.</td></tr>
+    <tr><td><b>Estructura simple</b></td><td>Situación ideal tras rotar: cada variable carga en un solo componente.</td></tr>
+    <tr><td><b>KMO / MSA</b></td><td>Adecuación muestral, global y por variable.</td></tr>
+    <tr><td><b>RMSR</b></td><td>Residuo cuadrático medio entre la matriz observada y la reproducida.</td></tr>
+    <tr><td><b>Valor test</b></td><td>Desviación del centroide de una categoría respecto al origen, en unidades normales.</td></tr>
+    <tr><td><b>Elemento suplementario</b></td><td>Variable o individuo que se proyecta sin haber construido los ejes.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Para seguir leyendo</h2>
+<ul>
+  <li>Jolliffe, I. T. (2002). <i>Principal Component Analysis</i> (2.ª ed.). Springer. — La referencia canónica.</li>
+  <li>Kassambara, A. (2017). <i>Practical Guide to Principal Component Methods in R</i>. STHDA. — Muy visual; cos², contribuciones y elementos suplementarios.</li>
+  <li>Lebart, L., Morineau, A. y Piron, M. <i>Statistique exploratoire multidimensionnelle</i>. Dunod. — Escuela francesa; valores test.</li>
+  <li>Hair, J. F. et al. <i>Multivariate Data Analysis</i>. — Reglas prácticas de tamaño de muestra y umbrales de cargas.</li>
+  <li>Horn, J. L. (1965). A rationale and test for the number of factors in factor analysis. <i>Psychometrika</i>, 30, 179–185.</li>
+  <li>Kaiser, H. F. (1958). The varimax criterion for analytic rotation in factor analysis. <i>Psychometrika</i>, 23, 187–200.</li>
+</ul>
+
+<p class="pie">Manual del participante · Taller de Análisis de Componentes Principales con PCAPro ·
+Universidad Autónoma Chapingo. Los conjuntos de datos son simulados y de uso exclusivamente didáctico.</p>
+
+</div>
+</body>
+</html>

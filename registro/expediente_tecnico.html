@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expediente técnico de la obra — PCAPro</title>
+<link rel="stylesheet" href="curso.css">
+<style>
+  .campo { background:#fffaf2; border:1px solid #f0d9b5; border-radius:5px; padding:1px 7px;
+           font-family:system-ui,sans-serif; font-size:.86em; color:#a15c00; }
+  .checklist { list-style:none; padding-left:0; }
+  .checklist li { padding-left:30px; position:relative; margin-bottom:10px; }
+  .checklist li::before { content:"☐"; position:absolute; left:4px; top:-1px; font-size:1.15rem; color:var(--acento); }
+</style>
+</head>
+<body>
+<div class="pagina">
+
+<header class="portada">
+  <div class="institucion">Expediente técnico para el registro de obra</div>
+  <h1>PCAPro — Plataforma de Análisis de Componentes Principales</h1>
+  <p class="subtitulo">Documentación de soporte para el trámite ante el Instituto Nacional del Derecho de Autor</p>
+  <div class="ficha">
+    <div><b>Preparado para:</b> Universidad Autónoma Chapingo</div>
+    <div><b>Autor:</b> <span class="campo">[nombre completo]</span></div>
+    <div><b>Versión documentada:</b> 1.0.0</div>
+    <div><b>Fecha del expediente:</b> <span class="campo">[fecha]</span></div>
+  </div>
+</header>
+
+<div class="caja aviso"><b>Cómo usar este documento</b>
+  Reúne la información técnica que suele solicitarse para el registro de un programa de cómputo.
+  Los campos en <span class="campo">[corchetes]</span> los completa el autor o la instancia
+  universitaria. <b>No sustituye la asesoría jurídica</b>: los requisitos, formatos y tarifas
+  vigentes los determina INDAUTOR y los verifica la oficina que lleve el trámite.</div>
+
+<!-- ================================================================ -->
+<h2>1 · Datos generales de la obra</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <tbody>
+    <tr><td style="width:32%"><b>Título de la obra</b></td>
+        <td>PCAPro — Plataforma de Análisis de Componentes Principales</td></tr>
+    <tr><td><b>Tipo de obra</b></td>
+        <td>Programa de computación (obra protegida conforme al Título IV, Capítulo IV de la Ley Federal del Derecho de Autor)</td></tr>
+    <tr><td><b>Rama</b></td><td>Programa de cómputo</td></tr>
+    <tr><td><b>Versión</b></td><td>1.0.0</td></tr>
+    <tr><td><b>Fecha de creación</b></td><td><span class="campo">[fecha de inicio del desarrollo]</span></td></tr>
+    <tr><td><b>Fecha de conclusión de esta versión</b></td><td><span class="campo">[fecha]</span></td></tr>
+    <tr><td><b>Autor</b></td><td><span class="campo">[nombre completo, nacionalidad, domicilio]</span></td></tr>
+    <tr><td><b>Titularidad de los derechos patrimoniales</b></td>
+        <td><span class="campo">[a definir: autor / UACh / cotitularidad — ver sección 8]</span></td></tr>
+    <tr><td><b>¿Obra divulgada?</b></td>
+        <td><span class="campo">[No, si aún no se publica el repositorio]</span></td></tr>
+    <tr><td><b>Lenguaje de programación</b></td>
+        <td>JavaScript (ECMAScript 2020), HTML5, CSS3 y PowerShell</td></tr>
+    <tr><td><b>Plataforma de ejecución</b></td>
+        <td>Navegador web (Chrome, Edge, Firefox). No requiere instalación ni conexión a internet</td></tr>
+    <tr><td><b>Extensión</b></td><td>9 158 líneas de código propio en 21 archivos</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ================================================================ -->
+<h2>2 · Descripción del programa</h2>
+
+<p><b>Resumen.</b> PCAPro es una aplicación web de escritorio que realiza el Análisis de Componentes
+Principales completo —desde la verificación de los supuestos estadísticos hasta la generación del
+informe— sin requerir conocimientos de programación, instalación de software ni conexión a internet.
+Está dirigida a investigadores, docentes y estudiantes de ciencias biológicas, agrícolas, forestales y
+ambientales de habla hispana.</p>
+
+<p><b>Función.</b> El programa recibe una matriz de datos en formato de hoja de cálculo o texto
+delimitado y ejecuta, de forma guiada en seis etapas: (1) tipificación de variables, tratamiento de
+datos faltantes, transformación y escalado, con verificación automatizada de los supuestos del método;
+(2) extracción de componentes y determinación del número a retener mediante ocho criterios;
+(3) rotación factorial; (4) construcción de mapas factoriales; (5) interpretación asistida; y
+(6) generación de un informe reproducible.</p>
+
+<p><b>Originalidad.</b> Los métodos estadísticos implementados son de dominio público y no se reclama
+autoría sobre ellos. Lo que constituye la obra es la <b>expresión concreta</b>: la implementación
+íntegramente original de los algoritmos numéricos, la arquitectura del programa, el motor gráfico, la
+lógica de diagnóstico automatizado, la interfaz y los textos explicativos.</p>
+
+<h3>Elementos distintivos frente a las alternativas existentes</h3>
+<ul>
+  <li><b>Cálculo local.</b> La totalidad del procesamiento ocurre en el navegador del usuario. El
+      programa no transmite datos a ningún servidor y no realiza ninguna llamada de red durante el
+      análisis (verificable en el código: no existen invocaciones de red fuera de la carga inicial).</li>
+  <li><b>Verificación automatizada de supuestos</b> con calificación global de aptitud de la base de
+      datos en escala A–D y recomendaciones redactadas en lenguaje natural.</li>
+  <li><b>Consenso ponderado de ocho criterios</b> para decidir el número de componentes a retener,
+      incluyendo análisis paralelo por permutación de los datos observados.</li>
+  <li><b>Motor gráfico propio</b> en SVG, sin bibliotecas de terceros, con edición interactiva de la
+      figura y exportación vectorial o de mapa de bits hasta doce veces la resolución base.</li>
+  <li><b>Marco teórico integrado</b>: aproximadamente 34 secciones explicativas escritas
+      originalmente para este programa.</li>
+  <li><b>Idioma español</b> en la totalidad de la interfaz, la documentación y los resultados.</li>
+</ul>
+
+<h3>Verificación de correcto funcionamiento</h3>
+<p>Los resultados numéricos fueron contrastados contra implementaciones de referencia del lenguaje R
+(<code>prcomp</code>, <code>psych::KMO</code>, <code>cortest.bartlett</code>) usando el conjunto de
+datos <i>iris</i>, con coincidencia en todas las cifras significativas:</p>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Estadístico</th><th>PCAPro</th><th>R (referencia)</th></tr></thead>
+  <tbody>
+    <tr><td>Valores propios</td><td>2.9185 · 0.9140 · 0.1468 · 0.0207</td><td>idénticos</td></tr>
+    <tr><td>Cargas del primer componente</td><td>0.8902 · −0.4601 · 0.9916 · 0.9650</td><td>idénticas</td></tr>
+    <tr><td>Índice KMO global</td><td>0.540</td><td>0.540</td></tr>
+    <tr><td>Esfericidad de Bartlett</td><td>χ² = 706.96 (gl 6)</td><td>706.96</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Las rotaciones factoriales se validaron por recuperación exacta de una estructura simple conocida
+sometida a un giro previo, y por conservación de los invariantes algebraicos del método
+(comunalidades, ortogonalidad de la matriz de transformación e identidad entre la matriz de estructura
+y el producto del patrón por la matriz de correlaciones entre factores).</p>
+
+<!-- ================================================================ -->
+<h2>3 · Inventario del código fuente</h2>
+
+<p>La obra se compone de <b>21 archivos</b> con <b>9 158 líneas</b> de código original.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Inventario de archivos, función y extensión.</caption>
+  <thead><tr><th>Archivo</th><th>Función</th><th class="num">Líneas</th></tr></thead>
+  <tbody>
+    <tr><td colspan="3"><b>Motor numérico y utilidades</b></td></tr>
+    <tr><td><code>js/core.js</code></td><td>Estado global de la aplicación y utilidades comunes</td><td class="num">179</td></tr>
+    <tr><td><code>js/stats.js</code></td><td>Álgebra lineal (descomposición espectral por rotaciones de Jacobi, inversión, determinante), estadística descriptiva, distribuciones (χ², t, F, beta incompleta), KMO, Bartlett, Mahalanobis, ANOVA y Kruskal–Wallis</td><td class="num">447</td></tr>
+    <tr><td><code>js/rotate.js</code></td><td>Rotaciones factoriales por el algoritmo de proyección de gradiente: familia ortomax, oblimin y promax</td><td class="num">263</td></tr>
+    <tr><td><code>js/factor.js</code></td><td>Coordenadas factoriales, calidades de representación, contribuciones, elementos suplementarios y geometría de elipses</td><td class="num">169</td></tr>
+
+    <tr><td colspan="3"><b>Motor gráfico</b></td></tr>
+    <tr><td><code>js/figure.js</code></td><td>Construcción de figuras SVG, paletas de color, escalas tipográficas y exportación multiformato</td><td class="num">460</td></tr>
+    <tr><td><code>js/plots1.js</code></td><td>Figuras de exploración de datos</td><td class="num">350</td></tr>
+    <tr><td><code>js/plots2.js</code></td><td>Figuras de extracción y retención</td><td class="num">324</td></tr>
+    <tr><td><code>js/plots3.js</code></td><td>Figuras de rotación</td><td class="num">333</td></tr>
+    <tr><td><code>js/plots4.js</code></td><td>Mapas factoriales</td><td class="num">535</td></tr>
+    <tr><td><code>js/plots5.js</code></td><td>Figuras de interpretación</td><td class="num">277</td></tr>
+
+    <tr><td colspan="3"><b>Lógica de los seis módulos</b></td></tr>
+    <tr><td><code>js/data.js</code></td><td>Carga de archivos, tipificación de variables, preparación de la matriz y diagnóstico de supuestos</td><td class="num">1 075</td></tr>
+    <tr><td><code>js/block2.js</code></td><td>Extracción de componentes y criterios de retención</td><td class="num">555</td></tr>
+    <tr><td><code>js/block3.js</code></td><td>Rotación factorial y estructura simple</td><td class="num">444</td></tr>
+    <tr><td><code>js/block4.js</code></td><td>Mapas factoriales</td><td class="num">424</td></tr>
+    <tr><td><code>js/block5.js</code></td><td>Interpretación y descripción de dimensiones</td><td class="num">534</td></tr>
+    <tr><td><code>js/block6.js</code></td><td>Informe y exportación</td><td class="num">273</td></tr>
+    <tr><td><code>js/report.js</code></td><td>Generación del informe y escritor de archivos comprimidos</td><td class="num">427</td></tr>
+
+    <tr><td colspan="3"><b>Interfaz y soporte</b></td></tr>
+    <tr><td><code>index.html</code></td><td>Interfaz completa y marco teórico integrado</td><td class="num">1 667</td></tr>
+    <tr><td><code>css/style.css</code></td><td>Hoja de estilo</td><td class="num">303</td></tr>
+    <tr><td><code>servidor.ps1</code></td><td>Servidor web local para uso sin conexión</td><td class="num">119</td></tr>
+    <tr><td><code>datos/iris.csv</code></td><td>Conjunto de ejemplo de dominio público (Anderson 1935; Fisher 1936)</td><td class="num">—</td></tr>
+    <tr class="total"><td>Total</td><td></td><td class="num">9 158</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ================================================================ -->
+<h2>4 · Componentes de terceros</h2>
+
+<div class="caja"><b>Declaración</b>
+  El programa incorpora <b>una sola</b> biblioteca de terceros, que se carga externamente y no forma
+  parte del código fuente que se somete a registro. Todo lo demás es desarrollo original.</div>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Componente</th><th>Versión</th><th>Licencia</th><th>Función</th><th>Origen</th></tr></thead>
+  <tbody>
+    <tr><td>SheetJS (<code>xlsx</code>)</td><td>0.18.5</td><td>Apache License 2.0</td>
+        <td>Lectura de archivos <code>.xlsx</code> y <code>.xls</code></td>
+        <td>Carga desde red de distribución de contenidos</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>La licencia Apache 2.0 permite el uso, la modificación y la distribución con fines comerciales,
+sujeto a la conservación del aviso de licencia. <b>No se reclama autoría sobre este componente.</b></p>
+
+<p>Se hace constar además que el programa <b>no incorpora ninguna otra biblioteca externa</b>: el motor
+estadístico, el motor gráfico, el generador de informes y el escritor de archivos comprimidos fueron
+desarrollados íntegramente para esta obra.</p>
+
+<h3>Métodos estadísticos implementados</h3>
+<p>Los procedimientos se basan en literatura científica de dominio público. Se citan como referencia
+metodológica, sin que ello implique reclamo de derechos sobre los métodos:</p>
+<ul style="font-size:.9rem">
+  <li>Pearson, K. (1901) y Hotelling, H. (1933) — formulación del análisis de componentes principales.</li>
+  <li>Bartlett, M. S. (1950) — prueba de esfericidad.</li>
+  <li>Kaiser, H. F. (1958, 1970) — criterio varimax e índice de adecuación muestral.</li>
+  <li>Horn, J. L. (1965) — análisis paralelo.</li>
+  <li>Cattell, R. B. (1966) — gráfico de sedimentación.</li>
+  <li>Hendrickson, A. E. y White, P. O. (1964) — rotación promax.</li>
+  <li>Velicer, W. F. (1976) — criterio MAP.</li>
+  <li>Jennrich, R. I. (2001, 2002) — algoritmo de proyección de gradiente para rotaciones.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2>5 · Obras derivadas registrables por separado</h2>
+
+<p>El material didáctico constituye <b>obra literaria independiente</b> y puede registrarse en trámite
+distinto. Suma <b>2 267 líneas</b> de contenido original.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Documento</th><th>Contenido</th><th class="num">Líneas</th></tr></thead>
+  <tbody>
+    <tr><td>Manual del participante</td><td>Marco teórico, seis prácticas guiadas, autoevaluación y glosario</td><td class="num">650</td></tr>
+    <tr><td>Guía del instructor</td><td>Distribución de sesiones, errores típicos y preguntas de discusión</td><td class="num">275</td></tr>
+    <tr><td>Instrumentos de evaluación</td><td>Diagnóstica, examen de 20 reactivos y rúbrica analítica</td><td class="num">277</td></tr>
+    <tr><td>Claves del instructor</td><td>Documentación de la estructura de los conjuntos de práctica</td><td class="num">204</td></tr>
+    <tr><td>Plantilla de constancia y temario</td><td>Formato y contenido temático desglosado</td><td class="num">202</td></tr>
+    <tr><td>Índice y catálogo de datos</td><td>Navegación del material</td><td class="num">244</td></tr>
+    <tr><td>Generador de conjuntos de práctica</td><td>Programa auxiliar que produce los datos didácticos</td><td class="num">250</td></tr>
+    <tr><td>Hoja de estilo del material</td><td>Diseño editorial</td><td class="num">165</td></tr>
+    <tr class="total"><td>Total</td><td></td><td class="num">2 267</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Los cinco conjuntos de datos de práctica son <b>generados por computadora</b> mediante el programa
+auxiliar incluido. No proceden de mediciones reales ni de fuentes de terceros, por lo que no existe
+sobre ellos derecho de tercero alguno.</p>
+
+<!-- ================================================================ -->
+<h2>6 · Documentación que suele solicitarse</h2>
+
+<ul class="checklist">
+  <li><b>Código fuente</b> de la versión que se registra. Verificar con la instancia que lleva el
+      trámite si se entrega completo o solo una porción, y en qué soporte.</li>
+  <li><b>Formato de solicitud</b> vigente de INDAUTOR, firmado.</li>
+  <li><b>Comprobante de pago</b> de derechos.</li>
+  <li><b>Identificación oficial</b> del autor y, en su caso, del representante de la institución.</li>
+  <li><b>Documento que acredite la titularidad</b> si el registro lo hace la universidad
+      (contrato, convenio o constancia de relación laboral).</li>
+  <li><b>Este expediente técnico</b> como anexo descriptivo.</li>
+</ul>
+
+<div class="caja aviso"><b>Congelar la versión</b>
+  El registro ampara <b>una versión específica</b>. Antes de entregar el código conviene marcar la
+  versión <b>1.0.0</b> y no modificarla más: esa misma versión debe ser la que se deposite después en
+  el repositorio de datos con identificador permanente, para que el código registrado y el código
+  citable sean idénticos. Las versiones posteriores se registran como obra derivada si el cambio es
+  sustancial.</div>
+
+<!-- ================================================================ -->
+<h2>7 · Declaración del autor</h2>
+
+<p style="text-align:justify">El que suscribe declara que la obra descrita en este expediente es de su
+autoría; que los métodos estadísticos implementados son de dominio público y no se reclama derecho
+alguno sobre ellos; que el único componente de terceros incorporado es el señalado en la sección 4,
+utilizado conforme a los términos de su licencia; que los conjuntos de datos incluidos son de dominio
+público o generados por computadora para esta obra; y que la obra <span class="campo">[ha sido / no ha
+sido]</span> divulgada previamente.</p>
+
+<div class="constancia" style="border:none; min-height:auto; padding:30px 0 0">
+  <div class="firmas" style="margin-top:34px">
+    <div class="firma">
+      <div class="linea"></div>
+      <div class="campo">[Nombre completo del autor]</div>
+      <div style="color:var(--muted)">Autor</div>
+    </div>
+    <div class="firma">
+      <div class="linea"></div>
+      <div class="campo">[Lugar y fecha]</div>
+      <div style="color:var(--muted)">&nbsp;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<h2>8 · Puntos a resolver con la universidad</h2>
+
+<div class="caja alto"><b>Resolver antes de entregar el código</b>
+  De estas respuestas depende quién registra, bajo qué licencia puede publicarse el repositorio y
+  qué puedes hacer comercialmente con la obra. Conviene que queden por escrito.</div>
+
+<ul class="checklist">
+  <li><b>¿Titularidad exclusiva de la universidad, del autor, o cotitularidad?</b>
+      Si la obra se desarrolló en el ejercicio de funciones académicas, el artículo 103 de la Ley
+      Federal del Derecho de Autor atribuye los derechos patrimoniales al empleador salvo pacto en
+      contrario. La cotitularidad con convenio de explotación suele ser la salida practicable.</li>
+
+  <li><b>¿Qué licencia se autoriza para la publicación abierta?</b>
+      Publicar en un repositorio con identificador permanente y en una revista de software exige
+      licencia de código abierto. Las habituales son MIT y GPL-3.0. Si la universidad es titular,
+      la elección le corresponde a ella.</li>
+
+  <li><b>¿Se autoriza el uso comercial en cursos y diplomados?</b>
+      Y en su caso, ¿solo dentro de la oferta institucional o también en cursos impartidos a otras
+      instituciones?</li>
+
+  <li><b>¿Cómo se manejan las versiones futuras?</b>
+      ¿Cada versión mayor se registra de nuevo? ¿Bajo qué titularidad?</li>
+
+  <li><b>¿Se registra solo PCAPro o la suite completa?</b>
+      Existen además AnalizaR, BioSDM, ClusterApp y LABG Stat. Registrarlas en conjunto puede reducir
+      trámites y costos, y da una figura institucional más sólida.</li>
+
+  <li><b>¿Cómo se reconoce la autoría en la publicación científica?</b>
+      Filiación institucional, orden de autores y aval para someter el artículo de software.</li>
+</ul>
+
+<p class="pie">Expediente técnico de la obra PCAPro · Documento de soporte para trámite de registro ·
+Universidad Autónoma Chapingo. Este documento no constituye asesoría jurídica.</p>
+
+</div>
+</body>
+</html>

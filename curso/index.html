@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taller de Análisis de Componentes Principales con PCAPro — Material didáctico</title>
+<link rel="stylesheet" href="css/curso.css">
+<style>
+  .tarjetas { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0 8px; }
+  .tarjeta {
+    border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px;
+    text-decoration: none; color: inherit; display: block; background: #fff;
+    transition: border-color .15s, transform .15s;
+  }
+  .tarjeta:hover { border-color: var(--acento); transform: translateY(-2px); }
+  .tarjeta .icono { font-size: 1.5rem; }
+  .tarjeta h3 { margin: 6px 0 4px; font-size: 1.06rem; }
+  .tarjeta p { font-family: system-ui, sans-serif; font-size: .85rem; color: var(--muted); margin: 0; text-align: left; }
+  .tarjeta.privada { border-left: 4px solid var(--alto); }
+</style>
+</head>
+<body>
+<div class="pagina">
+
+<header class="portada">
+  <div class="institucion">Universidad Autónoma Chapingo · Educación Continua</div>
+  <h1>Análisis de Componentes Principales aplicado a las ciencias biológicas</h1>
+  <p class="subtitulo">Material didáctico completo del taller · 20 horas · Plataforma PCAPro</p>
+  <div class="ficha">
+    <div><b>Sesiones:</b> 5 de 4 horas</div>
+    <div><b>Modalidad:</b> Práctica en computadora</div>
+    <div><b>Conjuntos de práctica:</b> 5, con estructura verificada</div>
+    <div><b>Software:</b> PCAPro, sin licencias ni instalación</div>
+  </div>
+</header>
+
+<h2>Material para el participante</h2>
+<div class="tarjetas">
+  <a class="tarjeta" href="manual_participante.html">
+    <div class="icono">📘</div>
+    <h3>Manual del participante</h3>
+    <p>Teoría, seis prácticas guiadas paso a paso, recuadros de verificación con los resultados
+       esperados, autoevaluación y glosario.</p>
+  </a>
+  <a class="tarjeta" href="datos.html">
+    <div class="icono">📊</div>
+    <h3>Conjuntos de datos</h3>
+    <p>Cinco archivos CSV simulados con estructura conocida: suelos, semillas, escalas dispares,
+       sin estructura y el proyecto integrador.</p>
+  </a>
+  <a class="tarjeta" href="../index.html">
+    <div class="icono">🧭</div>
+    <h3>Abrir PCAPro</h3>
+    <p>La plataforma. Requiere que el servidor local esté corriendo
+       (<code>servidor.ps1</code>).</p>
+  </a>
+</div>
+
+<h2>Material del instructor</h2>
+<div class="tarjetas">
+  <a class="tarjeta privada" href="guia_instructor.html">
+    <div class="icono">🗂</div>
+    <h3>Guía del instructor</h3>
+    <p>Preparación previa, distribución minuto a minuto de las cinco sesiones, errores típicos
+       de los participantes, preguntas de discusión y adaptaciones del formato.</p>
+  </a>
+  <div class="tarjeta privada">
+    <div class="icono">🔑</div>
+    <h3>Claves de los datos</h3>
+    <p>Qué estructura y qué trampas se sembraron en cada conjunto, con todos los valores
+       verificados en PCAPro.</p>
+    <p><b>Solo en tu copia local:</b> <code>curso/CLAVES_instructor.md</code>. No se distribuye
+       con el repositorio público.</p>
+  </div>
+  <div class="tarjeta privada">
+    <div class="icono">✅</div>
+    <h3>Evaluación</h3>
+    <p>Diagnóstica, lista de cotejo de prácticas, examen de 20 reactivos con respuestas,
+       rúbrica del proyecto y encuesta de satisfacción.</p>
+    <p><b>Solo en tu copia local:</b> <code>curso/evaluacion.html</code>. No se distribuye
+       con el repositorio público porque incluye el solucionario del examen.</p>
+  </div>
+  <a class="tarjeta privada" href="constancia.html">
+    <div class="icono">🎓</div>
+    <h3>Constancia y registro</h3>
+    <p>Plantilla de constancia en dos versiones y el contenido temático desglosado por horas,
+       listo para el formato de registro del curso.</p>
+  </a>
+</div>
+
+<div class="caja alto"><b>Los cuatro documentos del instructor son confidenciales</b>
+  Contienen las respuestas de todas las prácticas y del examen. No los subas a la misma carpeta
+  compartida que entregues a los participantes.</div>
+
+<h2>Cómo está organizado el taller</h2>
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th class="num">Sesión</th><th>Contenido</th><th>Bloques de PCAPro</th><th>Prácticas</th></tr></thead>
+  <tbody>
+    <tr><td class="num">1</td><td>Fundamentos y carga de datos</td><td>Bloque 1 (primera parte)</td><td>Suelos</td></tr>
+    <tr><td class="num">2</td><td>Supuestos, escalado y diagnóstico</td><td>Bloque 1 (segunda parte)</td><td>Escalas · Semillas</td></tr>
+    <tr><td class="num">3</td><td>Extracción y número de componentes</td><td>Bloque 2</td><td>Sin estructura · Suelos y semillas</td></tr>
+    <tr><td class="num">4</td><td>Rotación y mapas factoriales</td><td>Bloques 3 y 4</td><td>Rotación en semillas</td></tr>
+    <tr><td class="num">5</td><td>Interpretación, informe y proyecto</td><td>Bloques 5 y 6</td><td>Proyecto integrador</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Antes de la primera sesión</h2>
+<ol class="pasos">
+  <li>Corre <code>generar_datos.ps1</code> para producir los cinco conjuntos de práctica.
+      Ya están generados en <code>curso/datos</code>; solo hace falta volver a correrlo si quieres
+      una variante con otra semilla.</li>
+  <li>Los cinco CSV ya están copiados también en <code>PCAPro/datos/</code>, así que se pueden
+      cargar desde la propia interfaz sin salir de la aplicación.</li>
+  <li>Verifica tú mismo las cinco prácticas en PCAPro y contrasta con las claves.</li>
+  <li>Imprime o exporta a PDF el manual del participante
+      (<b>Archivo → Imprimir → Guardar como PDF</b>).</li>
+  <li>Toma las capturas marcadas en el manual con la resolución del proyector del aula.</li>
+</ol>
+
+<div class="caja"><b>Sobre los datos</b>
+  Los cinco conjuntos son <b>simulados</b>. No representan mediciones reales y no deben usarse para
+  reportar resultados científicos. Sus rangos sí están calibrados para ser físicamente plausibles, y
+  su estructura latente es conocida: por eso el participante puede comprobar si llegó al resultado
+  correcto, algo que con datos reales nunca se puede.</div>
+
+<p class="pie">Material didáctico del taller de Análisis de Componentes Principales con PCAPro ·
+Universidad Autónoma Chapingo.</p>
+
+</div>
+</body>
+</html>

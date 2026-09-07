@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía del instructor — Taller de ACP con PCAPro</title>
+<link rel="stylesheet" href="css/curso.css">
+</head>
+<body>
+<div class="pagina">
+
+<nav class="nav-curso no-imprimir">
+  <a href="index.html">← Índice del taller</a>
+  <a href="manual_participante.html">Manual del participante</a>
+  <a href="evaluacion.html">Evaluación</a>
+  <a href="CLAVES_instructor.md">Claves de los datos</a>
+</nav>
+
+<header class="portada">
+  <div class="institucion">Universidad Autónoma Chapingo · Educación Continua</div>
+  <h1>Guía del instructor</h1>
+  <p class="subtitulo">Taller de Análisis de Componentes Principales con PCAPro · 20 horas</p>
+  <div class="ficha">
+    <div><b>Uso:</b> Documento interno, no repartir</div>
+    <div><b>Complemento:</b> <code>CLAVES_instructor.md</code></div>
+    <div><b>Grupo sugerido:</b> 12 a 20 participantes</div>
+  </div>
+</header>
+
+<div class="caja alto"><b>Documento confidencial</b>
+  Contiene las respuestas de todas las prácticas y los criterios de evaluación. Junto con
+  <code>CLAVES_instructor.md</code> y la sección de respuestas de <code>evaluacion.html</code>,
+  no debe entregarse a los participantes.</div>
+
+<h2>Preparación previa</h2>
+
+<h3>Una semana antes</h3>
+<ol>
+  <li>Corre <code>curso/generar_datos.ps1</code> y <b>verifica tú mismo</b> las cinco prácticas en PCAPro
+      antes de darlas. Contrasta con <code>CLAVES_instructor.md</code>.</li>
+  <li>Confirma que las computadoras del laboratorio permiten ejecutar scripts de PowerShell.
+      Si la política de la institución lo bloquea, prueba antes esta alternativa:
+      abrir <code>index.html</code> con doble clic funciona para todo <b>menos</b> para cargar los
+      archivos de ejemplo desde <code>datos/</code>; en ese caso reparte los CSV y que los arrastren.</li>
+  <li>Prepara una memoria USB o una carpeta compartida con: la carpeta <code>PCAPro</code> completa,
+      el manual en PDF y los cinco CSV sueltos.</li>
+  <li>Toma las capturas marcadas en el manual con la resolución del proyector del aula.</li>
+</ol>
+
+<h3>El día del taller</h3>
+<ul>
+  <li>Llega 30 minutos antes: la instalación en 20 computadoras siempre toma más de lo previsto.</li>
+  <li>Ten a mano una computadora de repuesto ya configurada.</li>
+  <li>Escribe en el pizarrón la dirección <code>http://localhost:8790</code>: la preguntarán varias veces.</li>
+</ul>
+
+<div class="caja aviso"><b>Sobre la ventana negra de PowerShell</b>
+  Es lo que más confunde el primer día. Deja claro desde el minuto uno: <b>esa ventana es el
+  programa</b>. Si la cierran, la página deja de funcionar. Varios la cerrarán «para limpiar la
+  pantalla» y no entenderán por qué se cayó todo.</div>
+
+<h2>Distribución del tiempo</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Sesión 1 · Fundamentos y carga de datos (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Actividad</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–20</td><td>Presentación y expectativas</td><td>Pregunta con qué datos trabaja cada uno: lo usarás toda la semana para poner ejemplos</td></tr>
+    <tr><td class="num">20–45</td><td>Instalación asistida</td><td>Presupuesta el doble de lo que crees</td></tr>
+    <tr><td class="num">45–90</td><td>Qué es y qué no es el ACP</td><td>Insiste en «no es una prueba de hipótesis» y «no busca separar grupos»</td></tr>
+    <tr><td class="num">90–105</td><td><b>Receso</b></td><td></td></tr>
+    <tr><td class="num">105–140</td><td>La matemática mínima</td><td>Sin demostraciones. Que entiendan qué es un λ y qué es una carga</td></tr>
+    <tr><td class="num">140–160</td><td>Cómo deben estar los datos</td><td>Muestra una hoja de Excel mal armada; siempre reconocen la suya</td></tr>
+    <tr><td class="num">160–220</td><td><b>Práctica 1 · Suelos</b></td><td>Que todos lleguen al veredicto antes de seguir</td></tr>
+    <tr><td class="num">220–240</td><td>Puesta en común y autoevaluación</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Sesión 2 · Supuestos, escalado y diagnóstico (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Actividad</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–15</td><td>Repaso y dudas</td><td></td></tr>
+    <tr><td class="num">15–55</td><td>Los supuestos, uno por uno</td><td>Usa la tabla del manual como guion</td></tr>
+    <tr><td class="num">55–85</td><td>Bartlett y KMO</td><td>Explica el KMO con la idea de correlación parcial, sin fórmula</td></tr>
+    <tr><td class="num">85–100</td><td><b>Receso</b></td><td></td></tr>
+    <tr><td class="num">100–150</td><td><b>Práctica 2 · Escalas dispares</b></td><td>El «100 %» del CP1 sin escalar es el momento pedagógico de la sesión</td></tr>
+    <tr><td class="num">150–215</td><td><b>Práctica 3 · Semillas</b></td><td>Trabajo en parejas: que <b>ellos</b> encuentren las tres trampas</td></tr>
+    <tr><td class="num">215–240</td><td>Discusión de las trampas</td><td>Ver preguntas de discusión abajo</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Sesión 3 · Extracción y retención (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Actividad</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–15</td><td>Repaso</td><td></td></tr>
+    <tr><td class="num">15–50</td><td>Qué produce la extracción</td><td>Distingue bien carga de puntuación: es la confusión número uno</td></tr>
+    <tr><td class="num">50–100</td><td>Los ocho criterios</td><td>Dedica tiempo real al análisis paralelo: es el que deben usar</td></tr>
+    <tr><td class="num">100–115</td><td><b>Receso</b></td><td></td></tr>
+    <tr><td class="num">115–165</td><td><b>Práctica 4 · Sin estructura</b></td><td><b>La sesión gira alrededor de esto.</b> No la recortes</td></tr>
+    <tr><td class="num">165–215</td><td><b>Práctica 5 · Suelos y semillas</b></td><td></td></tr>
+    <tr><td class="num">215–240</td><td>Cómo se justifica la decisión en un artículo</td><td>Redacta con ellos la frase completa en el pizarrón</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Sesión 4 · Rotación y mapas factoriales (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Actividad</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–15</td><td>Repaso</td><td></td></tr>
+    <tr><td class="num">15–60</td><td>Por qué rotar; estructura simple</td><td>Muestra el plano de cargas con «mostrar sin rotar» activado: se <b>ve</b> el giro</td></tr>
+    <tr><td class="num">60–90</td><td>Ortogonal frente a oblicua</td><td>Patrón, estructura y Φ. Solo lo esencial</td></tr>
+    <tr><td class="num">90–105</td><td><b>Receso</b></td><td></td></tr>
+    <tr><td class="num">105–140</td><td>Cómo se leen los dos mapas</td><td>Distancias frente a ángulos. Insiste en los vectores cortos</td></tr>
+    <tr><td class="num">140–160</td><td>cos² y contribuciones</td><td>Que no son lo mismo</td></tr>
+    <tr><td class="num">160–225</td><td><b>Práctica 6 · Rotación y mapas en semillas</b></td><td>Que prueben las tres envolturas</td></tr>
+    <tr><td class="num">225–240</td><td>Convenciones al publicar una figura</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Sesión 5 · Interpretación, informe y proyecto (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Actividad</th><th>Notas</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–35</td><td>Nombrar un eje</td><td>Ejercicio en pizarrón con las cargas de semillas</td></tr>
+    <tr><td class="num">35–60</td><td>Valores test y elementos suplementarios</td><td></td></tr>
+    <tr><td class="num">60–85</td><td>Comparar grupos y la trampa de la circularidad</td><td><b>No omitas esta parte.</b> Es la diferencia entre usar bien o mal la herramienta</td></tr>
+    <tr><td class="num">85–100</td><td><b>Receso</b></td><td></td></tr>
+    <tr><td class="num">100–120</td><td>Ajuste: residuos y RMSR</td><td></td></tr>
+    <tr><td class="num">120–200</td><td><b>Proyecto integrador</b></td><td>Individual. Circula por el aula: aquí se ve quién entendió</td></tr>
+    <tr><td class="num">200–225</td><td>Generación del informe y del paquete</td><td></td></tr>
+    <tr><td class="num">225–240</td><td>Cierre, entrega y evaluación del taller</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Errores típicos de los participantes</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Error</th><th>Cómo se manifiesta</th><th>Cómo corregirlo</th></tr></thead>
+  <tbody>
+    <tr><td><b>Dejar el ID como variable activa</b></td>
+      <td>Aparece un componente rarísimo dominado por el número de folio</td>
+      <td>Anticípalo en la sesión 1. Pregunta siempre «¿esto es una medición o una etiqueta?»</td></tr>
+
+    <tr><td><b>Dejar códigos de tratamiento numéricos como activos</b></td>
+      <td>1, 2, 3 entran como si fueran una escala continua</td>
+      <td>PCAPro los marca con «¿grupo?». Enséñales a buscar esa señal</td></tr>
+
+    <tr><td><b>No estandarizar</b></td>
+      <td>El CP1 explica el 95 % y lo domina la variable con números más grandes</td>
+      <td>Para eso está la práctica 2. Vuelve a ella cuando ocurra</td></tr>
+
+    <tr><td><b>Confundir carga con puntuación</b></td>
+      <td>Intentan interpretar la tabla de puntuaciones variable por variable</td>
+      <td>Regla mnemotécnica: <b>cargas = variables, puntuaciones = individuos</b></td></tr>
+
+    <tr><td><b>Interpretar vectores cortos</b></td>
+      <td>«Esta variable se relaciona con aquella» señalando dos flechas diminutas</td>
+      <td>Colorea el círculo por cos² y establece la regla: si es pálido, no se interpreta</td></tr>
+
+    <tr><td><b>Leer distancias en el biplot entre puntos y flechas</b></td>
+      <td>«Este individuo está cerca de esta variable»</td>
+      <td>Recuerda que la escala de las flechas es arbitraria; lo que se lee es la <b>proyección</b></td></tr>
+
+    <tr><td><b>Retener demasiados componentes</b></td>
+      <td>Se quedan con lo que dice Kaiser</td>
+      <td>La práctica 4 es la vacuna. Refiérete a ella cada vez</td></tr>
+
+    <tr><td><b>Interpretar un componente sin poder nombrarlo</b></td>
+      <td>«El CP3 es… pues las variables 4 y 7»</td>
+      <td>Si no tiene nombre, no se retiene. Sé estricto con esto</td></tr>
+
+    <tr><td><b>Olvidar que el signo es arbitrario</b></td>
+      <td>Se alarman porque su eje salió «al revés» que el del compañero</td>
+      <td>Muestra que multiplicar por −1 no cambia nada; solo hay que declararlo</td></tr>
+
+    <tr><td><b>Concluir que el ACP «demostró» diferencias entre tratamientos</b></td>
+      <td>En el informe final</td>
+      <td>Sesión 5. Es el error conceptual más grave y el más frecuente</td></tr>
+
+    <tr><td><b>Dejar la variable de respuesta como activa</b></td>
+      <td>En el proyecto integrador, con el Rendimiento</td>
+      <td>Explica la circularidad: si el rendimiento construye el eje, no puedes decir que el eje explica el rendimiento</td></tr>
+
+    <tr><td><b>Cerrar la ventana de PowerShell</b></td>
+      <td>«Se me cayó la página»</td>
+      <td>Adviértelo el primer día y repítelo el segundo</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Preguntas de discusión</h2>
+
+<h3>Sesión 1</h3>
+<ul>
+  <li>Si el ACP no prueba hipótesis, ¿para qué sirve en una tesis? ¿En qué sección del artículo va?</li>
+  <li>¿Puede un ACP «salir mal»? ¿Cómo se vería?</li>
+  <li>Alguien mide 40 variables en 25 individuos. ¿Qué le dirías?</li>
+</ul>
+
+<h3>Sesión 2</h3>
+<ul>
+  <li>El KMO de semillas es 0.556 y el de suelos 0.752. Ambos tienen n suficiente. ¿De dónde viene la diferencia?</li>
+  <li>¿Por qué incluir el área calculada a partir del largo y el ancho es un problema, si es una variable que sí se mide en la práctica?</li>
+  <li>Si eliminas <code>Humedad_pct</code> porque su MSA es bajo, ¿estás perdiendo información real? ¿Qué le dirías a un revisor que te lo cuestione?</li>
+  <li>Los tres atípicos de semillas son valores posibles, no errores de captura. ¿Los eliminarías?</li>
+</ul>
+
+<h3>Sesión 3</h3>
+<ul>
+  <li>Kaiser extrajo tres componentes de ruido puro. ¿Por qué sigue siendo el criterio más usado?</li>
+  <li>¿Qué harías si el análisis paralelo dice 2, el bastón roto 1 y Kaiser 4?</li>
+  <li>¿Es legítimo retener un componente más de los que indican los criterios solo para poder hacer un gráfico en el plano?</li>
+</ul>
+
+<h3>Sesión 4</h3>
+<ul>
+  <li>Si la rotación conserva la varianza total, ¿qué ganamos exactamente al rotar?</li>
+  <li>¿Cuándo NO deberías rotar?</li>
+  <li>En tu disciplina, ¿es razonable que las dimensiones estén correlacionadas? ¿Eso sugiere rotación oblicua?</li>
+</ul>
+
+<h3>Sesión 5</h3>
+<ul>
+  <li>Dos elipses de confianza de la media no se solapan. ¿Puedes concluir que los grupos difieren? ¿Y si fueran de concentración?</li>
+  <li>Si el ACP no usó el tratamiento para construir los ejes, ¿por qué el ANOVA sobre las puntuaciones sigue siendo optimista?</li>
+  <li>¿En qué se diferencia lo que puedes afirmar con un ACP de lo que puedes afirmar con un análisis discriminante?</li>
+</ul>
+
+<h2>Adaptaciones del taller</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Formato</th><th>Qué conservar</th><th>Qué recortar</th></tr></thead>
+  <tbody>
+    <tr><td><b>Taller corto de 8 h</b></td>
+      <td>Sesiones 1 y 3 completas; práctica 4 íntegra; una versión reducida de la 4 (rotación básica)</td>
+      <td>Prácticas 2 y 6; rotaciones oblicuas; Bloque 5 completo</td></tr>
+    <tr><td><b>Curso de 30 h</b></td>
+      <td>Todo lo anterior, con más tiempo de práctica</td>
+      <td>—</td></tr>
+    <tr><td><b>Módulo de un diplomado</b></td>
+      <td>Todo, y se añade una sesión con datos propios de cada participante</td>
+      <td>—</td></tr>
+    <tr><td><b>En línea sincrónico</b></td>
+      <td>Todo, en sesiones de 2 h</td>
+      <td>Alarga la instalación a una sesión previa de soporte</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="caja clave"><b>Si los participantes traen sus propios datos</b>
+  Es lo que más valoran, pero puede descarrilar el taller: aparecen problemas de formato que
+  consumen horas. Recomendación: dedícale <b>solo</b> la última hora de la sesión 5, después de
+  que todos hayan terminado el proyecto integrador, y avisa desde el inicio que el análisis de
+  datos propios es orientativo, no exhaustivo.</div>
+
+<p class="pie">Guía del instructor · Taller de ACP con PCAPro · Universidad Autónoma Chapingo.
+Documento interno.</p>
+
+</div>
+</body>
+</html>

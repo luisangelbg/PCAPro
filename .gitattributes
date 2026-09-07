@@ -1,0 +1,15 @@
+# Normaliza los finales de linea: LF en el repositorio, nativo en el disco.
+# Sin esto, un revisor en Linux o Mac ve diferencias falsas en todo el codigo.
+* text=auto eol=lf
+
+# Los scripts de PowerShell se quedan con CRLF: es lo que espera Windows.
+*.ps1 text eol=crlf
+
+# Binarios: que git no los toque.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.pdf binary
+*.xlsx binary
+*.zip binary

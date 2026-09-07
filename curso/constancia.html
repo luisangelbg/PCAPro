@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plantilla de constancia — Taller de ACP con PCAPro</title>
+<link rel="stylesheet" href="css/curso.css">
+<style>
+  @page { size: letter landscape; margin: 12mm; }
+  .pagina { padding: 30px 34px; }
+  @media print { .instrucciones { display: none; } }
+</style>
+</head>
+<body>
+<div class="pagina">
+
+<nav class="nav-curso no-imprimir">
+  <a href="index.html">← Índice del taller</a>
+  <a href="evaluacion.html">Evaluación</a>
+</nav>
+
+<div class="instrucciones">
+  <h2 style="margin-top:0">Plantilla de constancia</h2>
+  <div class="caja alto"><b>Esta es una plantilla, no un documento oficial</b>
+    El formato válido, el escudo institucional, los folios y las firmas autorizadas los proporciona
+    <b>la Dirección de Educación Continua de la UACh</b>. Antes de emitir cualquier constancia,
+    solicita el formato oficial y el número de registro del curso. Usa esta plantilla solo como
+    borrador para acordar el texto y los datos que deben aparecer.</div>
+
+  <h3>Qué debe verificarse antes de emitir</h3>
+  <ul>
+    <li>Registro del curso ante Educación Continua y número de folio asignado.</li>
+    <li>Asistencia mínima del <b>80 %</b> (4 de 5 sesiones) documentada en lista firmada.</li>
+    <li>Calificación final <b>≥ 70</b> para constancia con acreditación; por debajo, constancia de participación.</li>
+    <li>Nombre completo del participante <b>tal como aparece en su identificación oficial</b>.</li>
+    <li>Firmas autorizadas según el procedimiento vigente de la universidad.</li>
+  </ul>
+
+  <h3>Dos versiones</h3>
+  <p>Abajo están las dos redacciones. Elimina la que no uses antes de imprimir.
+  Para imprimir: <b>Archivo → Imprimir → Guardar como PDF</b>, orientación horizontal, tamaño carta.</p>
+  <hr style="margin:26px 0; border:none; border-top:1px solid var(--line)">
+</div>
+
+<!-- ==================== CON ACREDITACIÓN ==================== -->
+<div class="constancia">
+  <div>
+    <div class="institucion" style="font-family:system-ui,sans-serif;letter-spacing:.12em;font-size:.86rem;color:var(--muted);text-transform:uppercase">
+      Universidad Autónoma Chapingo
+    </div>
+    <div style="font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted);margin-top:4px">
+      <span class="marcador">[Dirección de Educación Continua / Departamento]</span>
+    </div>
+    <div style="margin-top:26px;font-size:1.15rem;letter-spacing:.22em;text-transform:uppercase;color:var(--acento)">
+      Constancia
+    </div>
+  </div>
+
+  <div>
+    <p class="otorga" style="text-align:center">Otorga la presente constancia a</p>
+    <div class="nombre marcador">[NOMBRE COMPLETO DEL PARTICIPANTE]</div>
+    <p style="text-align:center;font-size:1.02rem;max-width:640px;margin:0 auto">
+      por haber <b>acreditado</b> el taller
+    </p>
+    <p style="text-align:center;font-size:1.35rem;font-weight:700;margin:14px auto 10px;max-width:700px;line-height:1.35">
+      Análisis de Componentes Principales aplicado a las ciencias biológicas
+    </p>
+    <p style="text-align:center;font-size:.98rem;color:var(--muted);max-width:640px;margin:0 auto">
+      con una duración de <b>20 horas</b>, impartido del
+      <span class="marcador">[fecha inicial]</span> al <span class="marcador">[fecha final]</span>
+      de <span class="marcador">[año]</span> en <span class="marcador">[sede]</span>.
+    </p>
+  </div>
+
+  <div>
+    <div class="firmas">
+      <div class="firma">
+        <div class="linea"></div>
+        <div class="marcador">[Nombre del instructor]</div>
+        <div style="color:var(--muted)">Instructor</div>
+      </div>
+      <div class="firma">
+        <div class="linea"></div>
+        <div class="marcador">[Nombre del responsable]</div>
+        <div style="color:var(--muted)">Educación Continua</div>
+      </div>
+    </div>
+    <div style="font-family:system-ui,sans-serif;font-size:.74rem;color:var(--muted);margin-top:22px">
+      Chapingo, Estado de México · <span class="marcador">[fecha de expedición]</span> ·
+      Folio <span class="marcador">[folio]</span>
+    </div>
+  </div>
+</div>
+
+<div style="page-break-after:always"></div>
+
+<!-- ==================== DE PARTICIPACIÓN ==================== -->
+<div class="constancia" style="border-color:var(--muted)">
+  <div>
+    <div style="font-family:system-ui,sans-serif;letter-spacing:.12em;font-size:.86rem;color:var(--muted);text-transform:uppercase">
+      Universidad Autónoma Chapingo
+    </div>
+    <div style="font-family:system-ui,sans-serif;font-size:.82rem;color:var(--muted);margin-top:4px">
+      <span class="marcador">[Dirección de Educación Continua / Departamento]</span>
+    </div>
+    <div style="margin-top:26px;font-size:1.15rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)">
+      Constancia de participación
+    </div>
+  </div>
+
+  <div>
+    <p class="otorga" style="text-align:center">Otorga la presente constancia a</p>
+    <div class="nombre marcador">[NOMBRE COMPLETO DEL PARTICIPANTE]</div>
+    <p style="text-align:center;font-size:1.02rem;max-width:640px;margin:0 auto">
+      por su <b>participación</b> en el taller
+    </p>
+    <p style="text-align:center;font-size:1.35rem;font-weight:700;margin:14px auto 10px;max-width:700px;line-height:1.35">
+      Análisis de Componentes Principales aplicado a las ciencias biológicas
+    </p>
+    <p style="text-align:center;font-size:.98rem;color:var(--muted);max-width:640px;margin:0 auto">
+      con una duración de <b>20 horas</b>, impartido del
+      <span class="marcador">[fecha inicial]</span> al <span class="marcador">[fecha final]</span>
+      de <span class="marcador">[año]</span> en <span class="marcador">[sede]</span>.
+    </p>
+  </div>
+
+  <div>
+    <div class="firmas">
+      <div class="firma">
+        <div class="linea"></div>
+        <div class="marcador">[Nombre del instructor]</div>
+        <div style="color:var(--muted)">Instructor</div>
+      </div>
+      <div class="firma">
+        <div class="linea"></div>
+        <div class="marcador">[Nombre del responsable]</div>
+        <div style="color:var(--muted)">Educación Continua</div>
+      </div>
+    </div>
+    <div style="font-family:system-ui,sans-serif;font-size:.74rem;color:var(--muted);margin-top:22px">
+      Chapingo, Estado de México · <span class="marcador">[fecha de expedición]</span> ·
+      Folio <span class="marcador">[folio]</span>
+    </div>
+  </div>
+</div>
+
+<div class="instrucciones">
+  <h2>Contenido temático para el registro del curso</h2>
+  <p>Educación Continua suele pedir el temario desglosado con horas. Este es el texto listo para pegar
+  en el formato de registro:</p>
+
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th class="num">Unidad</th><th>Contenido</th><th class="num">Horas</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>Fundamentos del análisis de componentes principales. Origen y objetivos.
+        Álgebra del método: valores y vectores propios, puntuaciones y cargas. Estructura de una matriz de datos.
+        Carga y tipificación de variables.</td><td class="num">4</td></tr>
+      <tr><td class="num">2</td><td>Supuestos del ACP. Pruebas de adecuación muestral: esfericidad de Bartlett,
+        índice KMO y MSA. Multicolinealidad y determinante. Tratamiento de datos faltantes.
+        Transformaciones y escalado: covarianzas frente a correlaciones. Detección de atípicos multivariantes.</td><td class="num">4</td></tr>
+      <tr><td class="num">3</td><td>Extracción de componentes. Varianza explicada y acumulada.
+        Criterios de retención: Kaiser–Guttman, Jolliffe, gráfico de sedimentación, análisis paralelo de Horn,
+        bastón roto y MAP de Velicer. Justificación de la decisión.</td><td class="num">4</td></tr>
+      <tr><td class="num">4</td><td>Rotación factorial. Estructura simple de Thurstone. Rotaciones ortogonales
+        (varimax, quartimax, equamax) y oblicuas (promax, oblimin). Mapas factoriales: círculo de correlaciones,
+        mapa de individuos y biplot. Calidad de representación (cos²) y contribuciones. Elipses.</td><td class="num">4</td></tr>
+      <tr><td class="num">5</td><td>Interpretación y nombramiento de los ejes. Elementos suplementarios y
+        valores test. Comparación de grupos sobre los componentes y sus límites. Calidad del ajuste y residuos.
+        Redacción de métodos y resultados. Generación del informe. Proyecto integrador.</td><td class="num">4</td></tr>
+      <tr class="total"><td></td><td>Total</td><td class="num">20</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Datos complementarios que suelen pedirse</h3>
+  <div class="tabla-envoltura">
+  <table>
+    <tbody>
+      <tr><td><b>Modalidad</b></td><td>Presencial, práctica en laboratorio de cómputo</td></tr>
+      <tr><td><b>Dirigido a</b></td><td>Estudiantes de posgrado, investigadores y profesionistas de ciencias
+        agrícolas, forestales, biológicas y ambientales que trabajen con datos multivariados</td></tr>
+      <tr><td><b>Requisitos</b></td><td>Conocimientos de estadística descriptiva e inferencial básica.
+        No se requiere experiencia en programación</td></tr>
+      <tr><td><b>Cupo sugerido</b></td><td>12 a 20 participantes</td></tr>
+      <tr><td><b>Requerimientos</b></td><td>Laboratorio de cómputo con Windows y navegador Chrome o Edge;
+        proyector. No se requiere internet ni instalar programas con licencia</td></tr>
+      <tr><td><b>Material que se entrega</b></td><td>Manual del participante, cinco conjuntos de datos de
+        práctica y la plataforma PCAPro con licencia de uso para el participante</td></tr>
+      <tr><td><b>Evaluación</b></td><td>Prácticas verificadas 30 %, examen 25 %, proyecto integrador 45 %.
+        Acreditación con 80 % de asistencia y calificación ≥ 70</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="pie">Plantilla de constancia y contenido temático · Taller de ACP con PCAPro ·
+  Universidad Autónoma Chapingo.</p>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conjuntos de datos del taller — PCAPro</title>
+<link rel="stylesheet" href="css/curso.css">
+</head>
+<body>
+<div class="pagina">
+
+<nav class="nav-curso no-imprimir">
+  <a href="index.html">← Índice del taller</a>
+  <a href="manual_participante.html">Manual del participante</a>
+</nav>
+
+<header class="portada">
+  <div class="institucion">Universidad Autónoma Chapingo · Educación Continua</div>
+  <h1>Conjuntos de datos de práctica</h1>
+  <p class="subtitulo">Taller de Análisis de Componentes Principales con PCAPro</p>
+</header>
+
+<div class="caja aviso"><b>Datos simulados</b>
+  Los cinco conjuntos fueron generados por computadora para este taller. <b>No son mediciones
+  reales</b> y no deben usarse para reportar resultados científicos. Sus rangos sí están calibrados
+  para ser físicamente plausibles, y su estructura interna es conocida: por eso puedes comprobar si
+  llegaste al resultado correcto.</div>
+
+<h2>Descarga</h2>
+<p>Haz clic derecho sobre el nombre del archivo y elige <b>Guardar enlace como…</b>, o simplemente
+arrástralo desde la carpeta <code>curso/datos</code> a la zona de carga de PCAPro.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Archivo</th><th class="num">n</th><th class="num">Vars.</th><th>Contexto</th><th>Se usa en</th></tr></thead>
+  <tbody>
+    <tr>
+      <td><a href="datos/practica1_suelos.csv" download><b>practica1_suelos.csv</b></a></td>
+      <td class="num">90</td><td class="num">6 + sitio</td>
+      <td>Fertilidad de suelos en tres posiciones de una ladera</td>
+      <td>Sesión 1 · Práctica 1<br>Sesión 3 · Práctica 5</td>
+    </tr>
+    <tr>
+      <td><a href="datos/practica2_semillas.csv" download><b>practica2_semillas.csv</b></a></td>
+      <td class="num">120</td><td class="num">9 + especie</td>
+      <td>Morfometría y composición de semillas de dos especies</td>
+      <td>Sesión 2 · Práctica 3<br>Sesión 3 · Práctica 5<br>Sesión 4 · Práctica 6</td>
+    </tr>
+    <tr>
+      <td><a href="datos/practica3_escalas.csv" download><b>practica3_escalas.csv</b></a></td>
+      <td class="num">100</td><td class="num">7 + parcela</td>
+      <td>Variables en unidades muy dispares (mm³, µS/cm, pH…)</td>
+      <td>Sesión 2 · Práctica 2</td>
+    </tr>
+    <tr>
+      <td><a href="datos/practica4_sin_estructura.csv" download><b>practica4_sin_estructura.csv</b></a></td>
+      <td class="num">80</td><td class="num">6 + lote</td>
+      <td>Variables ambientales sin relación entre sí</td>
+      <td>Sesión 3 · Práctica 4</td>
+    </tr>
+    <tr>
+      <td><a href="datos/proyecto_integrador_agronomia.csv" download><b>proyecto_integrador_agronomia.csv</b></a></td>
+      <td class="num">150</td><td class="num">12 + 2 grupos + 1 supl.</td>
+      <td>Experimento agronómico con cuatro tratamientos y tres bloques</td>
+      <td>Sesión 5 · Proyecto integrador</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Qué contiene cada uno</h2>
+
+<h3>1 · Suelos</h3>
+<p>Noventa sitios de muestreo repartidos en tres posiciones de una ladera (alta, media y vega). Se
+midieron tres propiedades químicas —materia orgánica, nitrógeno total y fósforo disponible— y tres
+físicas —arena, arcilla y densidad aparente—. Es el conjunto «que sale bien»: te sirve como referencia
+de cómo se ve un análisis sin problemas.</p>
+
+<h3>2 · Semillas</h3>
+<p>Ciento veinte semillas de una especie silvestre y una cultivada, con nueve variables morfométricas y
+de composición. <b>Este conjunto tiene tres problemas escondidos.</b> Encontrarlos es el ejercicio.</p>
+
+<h3>3 · Escalas dispares</h3>
+<p>Cien unidades experimentales con siete variables cuyas magnitudes van desde el pH (alrededor de 6.5)
+hasta un volumen en milímetros cúbicos (cientos de miles). Se analiza <b>dos veces</b>: sin escalar y
+con estandarización z.</p>
+
+<h3>4 · Sin estructura</h3>
+<p>Ochenta parcelas con seis variables ambientales que no guardan relación entre sí. Sirve para
+reconocer cuándo un ACP <b>no</b> procede, y para ver cómo un criterio muy usado puede engañarte.</p>
+
+<h3>5 · Proyecto integrador</h3>
+<p>Un experimento agronómico completo: 150 parcelas, cuatro tratamientos (testigo, riego,
+fertilización y ambos), tres bloques, doce variables de respuesta medidas en planta y hoja, y el
+rendimiento final. Tiene además unas pocas celdas faltantes que tendrás que decidir cómo tratar.</p>
+
+<div class="caja"><b>El rendimiento no es una variable activa</b>
+  En el proyecto integrador, <code>Rendimiento_kg_ha</code> es la variable de resultado. Debes marcarla
+  como <b>cuantitativa suplementaria</b>: así se proyecta sobre los ejes sin haber ayudado a
+  construirlos, que es lo que te permite afirmar después con qué dimensiones se relaciona.</div>
+
+<h2>Formato de los archivos</h2>
+<ul>
+  <li>CSV separado por <b>comas</b>, codificación UTF-8 con BOM (Excel en español los abre bien).</li>
+  <li>Separador decimal: <b>punto</b>. En PCAPro deja la detección automática.</li>
+  <li>Primera fila: nombres de las variables. Primera columna: identificador de la observación.</li>
+  <li>Los datos faltantes aparecen como celda vacía o como <code>NA</code>.</li>
+</ul>
+
+<p class="pie">Conjuntos de datos del taller de ACP con PCAPro · Universidad Autónoma Chapingo ·
+Datos simulados con fines exclusivamente didácticos.</p>
+
+</div>
+</body>
+</html>
