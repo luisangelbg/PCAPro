@@ -30,6 +30,10 @@ jobs:
       # El servidor y las pruebas van en el mismo paso: asi el proceso sigue
       # vivo mientras se usa y se puede parar ordenadamente al terminar.
       - name: Serve the repository and run the test suite
+        env:
+          # La suite tiene 60 pruebas. Si corren menos, algo se rompio
+          # antes de empezar y el verde seria falso.
+          PCAPRO_MIN_TESTS: 60
         run: |
           python3 -m http.server 8790 --bind 127.0.0.1 &
           SERVER_PID=$!

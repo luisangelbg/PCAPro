@@ -2,6 +2,7 @@
 
 **A complete principal component analysis, in your browser, with nothing to install.**
 
+[![Tests](https://github.com/luisangelbg/PCAPro/actions/workflows/tests.yml/badge.svg)](https://github.com/luisangelbg/PCAPro/actions/workflows/tests.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22649709.svg)](https://doi.org/10.5281/zenodo.22649709)
 
@@ -94,6 +95,17 @@ It runs 60 tests in 11 groups and takes about 40 seconds. The page title becomes
 Every expectation is either a reference value published by an independent implementation
 (R: `prcomp`, `psych::KMO`, `pchisq`, `pf`, `pt`) or an algebraic invariant that must hold
 regardless of the data. **No expectation was recorded from a previous run of PCAPro itself.**
+
+The same suite runs automatically on every push, in a headless browser, through the
+[Tests workflow](.github/workflows/tests.yml) — see the badge at the top. To run it that way
+locally you need Node:
+
+```bash
+npm install --no-save playwright && npx playwright install chromium
+node tests/run-tests.mjs
+```
+
+Node is needed **only** for that runner. PCAPro itself has no build step and no package manager.
 
 Run the suite after any change to the numerical engine (`js/stats.js`, `js/rotate.js`,
 `js/factor.js`).

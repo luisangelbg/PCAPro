@@ -61,6 +61,16 @@ if (problems.length) {
   for (const p of problems.slice(0, 20)) console.log('  · ' + p);
 }
 
+/* Una suite que no ejecuta nada tambien pasa en verde, y esa es la forma
+   clasica en que una integracion continua engaña. Si no corrio el numero
+   esperado de pruebas, es un fallo aunque ninguna haya reventado. */
+const MIN = Number(process.env.PCAPRO_MIN_TESTS || 1);
+if (!result.total || result.total < MIN) {
+  console.error(`\nSe esperaban al menos ${MIN} pruebas y se ejecutaron ${result.total}.`);
+  console.error('La suite no corrio como deberia; en verde no significa nada.');
+  process.exit(1);
+}
+
 if (result.fail > 0) {
   console.error(`\n${result.fail} prueba(s) fallaron:\n`);
   for (const f of failures) console.error(`  ✖ ${f.name}\n    ${f.error}\n`);
