@@ -12,15 +12,30 @@
 /* PCAPro — coordenadas factoriales, calidades (cos²), contribuciones,
    elementos suplementarios y geometría de elipses. */
 
+/* En Node no hay etiquetas <script> previas: se cargan las dependencias
+   del sistema de modulos. En el navegador require no existe y esto no hace nada. */
+if (typeof require === 'function' && typeof S === 'undefined') global.S = require('./stats.js');
+
 const Fac = {};
+
+/* Etiqueta de un componente. En la aplicacion la aporta core.js, que sabe el
+   idioma elegido; como libreria en Node se cae a la forma inglesa. Se resuelve
+   en cada llamada, no al cargar, para que el cambio de idioma siga surtiendo
+   efecto en la interfaz. */
+Fac.label = n => (typeof cp === 'function') ? cp(n) : 'PC' + n;
 
 /* ============================================================
    Construcción del objeto factorial
    ============================================================ */
 /* useRot: usar la solución rotada del Bloque 3 (si existe) */
-Fac.build = function (useRot) {
-  const P = state.pca, k = P.k, n = P.n, p = P.p;
-  const R = state.rot;
+Fac.build = function (useRot, data) {
+  /* En la aplicacion los datos vienen del estado global; usado como libreria
+     se reciben explicitamente, que es lo que permite reproducir resultados
+     fuera del navegador. */
+  const D = data || (typeof state !== 'undefined' ? state : null);
+  if (!D) throw new Error('Fac.build necesita {pca, rot, activeVars, X, suppNum, suppCat}');
+  const P = D.pca, k = P.k, n = P.n, p = P.p;
+  const R = D.rot;
   const rotated = !!(useRot && R && R.method !== 'none');
 
   /* --- coordenadas de las variables --- */
@@ -30,8 +45,8 @@ Fac.build = function (useRot) {
     labels = R.labels.slice();
     axisVar = R.diag.ss.slice();                    // "varianza" de cada eje rotado
   } else {
-    coordVar = state.activeVars.map((_, j) => P.loadings[j].slice(0, k));
-    labels = Array.from({ length: k }, (_, j) => cp(j + 1));
+    coordVar = D.activeVars.map((_, j) => P.loadings[j].slice(0, k));
+    labels = Array.from({ length: k }, (_, j) => Fac.label(j + 1));
     axisVar = P.values.slice(0, k);
   }
 
@@ -50,7 +65,7 @@ Fac.build = function (useRot) {
   } else {
     /* rotación oblicua: puntuaciones por regresión de Thurstone, reescaladas
        para que su dispersión sea comparable a la de los ejes originales */
-    const Z = state.X.map(c => { const m = S.mean(c), sd = S.sd(c) || 1; return c.map(v => (v - m) / sd); });
+    const Z = D.X.map(c => { const m = S.mean(c), sd = S.sd(c) || 1; return c.map(v => (v - m) / sd); });
     const Rinv = S.inverse(S.corrMatrix(Z));
     const B = Rinv ? S.matMul(Rinv, R.structure) : null;
     coordInd = Array.from({ length: k }, (_, j) => {
@@ -78,17 +93,17 @@ Fac.build = function (useRot) {
   });
 
   /* --- cos² y contribuciones de las variables --- */
-  const commTotal = state.activeVars.map((_, j) => {
+  const commTotal = D.activeVars.map((_, j) => {
     let s = 0;
     for (let d = 0; d < p; d++) s += P.loadings[j][d] * P.loadings[j][d];
     return s;                                       // ≈ 1 con ACP sobre correlaciones
   });
   const cos2Var = coordVar.map(r => r.map(v => v * v));
-  const contribVar = state.activeVars.map((_, j) =>
+  const contribVar = D.activeVars.map((_, j) =>
     Array.from({ length: k }, (_, d) => cos2Var[j][d] / (axisVar[d] || 1) * 100));
 
   /* --- variables cuantitativas suplementarias: correlación con cada eje --- */
-  const suppQuant = state.suppNum.map(sv => {
+  const suppQuant = D.suppNum.map(sv => {
     const coord = Array.from({ length: k }, (_, d) => {
       const pairs = [];
       sv.values.forEach((v, i) => { if (v != null && isFinite(v)) pairs.push([v, coordInd[d][i]]); });
@@ -100,7 +115,7 @@ Fac.build = function (useRot) {
   });
 
   /* --- categorías suplementarias: centroide de cada nivel --- */
-  const suppCat = state.suppCat.map(sc => ({
+  const suppCat = D.suppCat.map(sc => ({
     name: sc.name,
     levels: sc.levels.map(lv => {
       const idx = [];
@@ -177,4 +192,7 @@ Fac.hull = function (xs, ys) {
   return lower.concat(upper);
 };
 
-window.Fac = Fac;
+/* Doble salida: como <script> en el navegador (incluido file://) y como
+   modulo en Node, para poder reproducir resultados sin interfaz. */
+if (typeof module !== 'undefined' && module.exports) module.exports = Fac;
+if (typeof window !== 'undefined') window.Fac = Fac;

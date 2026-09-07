@@ -14,6 +14,10 @@
    oblicuas (quartimin, oblimin, promax) mediante el algoritmo de proyección de
    gradiente de Jennrich (2001, 2002), el mismo que usa GPArotation en R. */
 
+/* En Node no hay etiquetas <script> previas: se cargan las dependencias
+   del sistema de modulos. En el navegador require no existe y esto no hace nada. */
+if (typeof require === 'function' && typeof S === 'undefined') global.S = require('./stats.js');
+
 const Rot = {};
 
 /* ---------- utilidades de matrices ---------- */
@@ -271,4 +275,7 @@ Rot.diagnostics = function (pattern, Phi, oblique, thr) {
   };
 };
 
-window.Rot = Rot;
+/* Doble salida: como <script> en el navegador (incluido file://) y como
+   modulo en Node, para poder reproducir resultados sin interfaz. */
+if (typeof module !== 'undefined' && module.exports) module.exports = Rot;
+if (typeof window !== 'undefined') window.Rot = Rot;

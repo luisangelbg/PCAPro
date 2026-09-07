@@ -112,11 +112,42 @@ Run the suite after any change to the numerical engine (`js/stats.js`, `js/rotat
 
 ---
 
+## Using the numerical core without the browser
+
+The numerical engine is independent of the interface and can be used from Node, which is what
+makes any result reproducible outside the application:
+
+```js
+const { S, Rot, Fac } = require('./lib');
+
+const R = S.corrMatrix(columns);      // columns: array of variables, each an array of values
+const eig = S.eigenSym(R);            // { values, vectors } — vectors in columns
+const kmo = S.kmo(R);                 // { overall, msa, partial }
+const rot = Rot.rotate(loadings, 'varimax', { normalize: true });
+const fac = Fac.build(useRotated, { pca, rot, activeVars, X, suppNum, suppCat });
+```
+
+The same three files serve both roles — there is one implementation, not two that could drift
+apart: `js/stats.js`, `js/rotate.js` and `js/factor.js` are loaded by `<script>` tags in the
+browser and by `require` in Node.
+
+A worked example is included. It recomputes the PCA of Fisher's iris data from the command line
+and checks every value against R (`prcomp`, `psych::KMO`), exiting non-zero on any disagreement:
+
+```bash
+node lib/reproduce-iris.js
+```
+
+It runs on every push as part of the [Tests workflow](.github/workflows/tests.yml).
+
 ## Repository layout
 
 ```
 index.html            the application
-js/                   engine and interface (8,400 lines)
+lib/                  the numerical core, usable from Node
+  index.js            entry point: { S, Rot, Fac }
+  reproduce-iris.js   reproduces published results and checks them against R
+js/                   engine and interface
   stats.js            linear algebra and distributions
   rotate.js           Jennrich gradient projection rotations
   factor.js           coordinates, cos², contributions

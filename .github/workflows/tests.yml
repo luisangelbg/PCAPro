@@ -50,3 +50,10 @@ jobs:
 
           kill $SERVER_PID 2>/dev/null || true
           exit $STATUS
+
+      # El motor numerico tambien tiene que dar los mismos numeros fuera del
+      # navegador: es lo que permite acompaniar un articulo con un guion
+      # ejecutable. Compara contra R (prcomp, psych::KMO) y sale con error
+      # si algun valor se aparta de la referencia.
+      - name: Reproduce published results without a browser
+        run: node lib/reproduce-iris.js

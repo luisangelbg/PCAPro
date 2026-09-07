@@ -455,4 +455,7 @@ S.histogram = (v, bins) => {
   return { counts, min: mn, max: mx, width: w, k };
 };
 
-window.S = S;
+/* Doble salida: como <script> en el navegador (incluido file://) y como
+   modulo en Node, para poder reproducir resultados sin interfaz. */
+if (typeof module !== 'undefined' && module.exports) module.exports = S;
+if (typeof window !== 'undefined') window.S = S;
