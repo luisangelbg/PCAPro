@@ -1,0 +1,33 @@
+{
+  "title": "PCAPro: an offline, browser-based platform for guided principal component analysis",
+  "description": "PCAPro is a self-contained web application that performs a complete principal component analysis entirely in the browser, with no installation and no server-side computation. It covers data import and variable roles, verification of assumptions (Bartlett's test of sphericity, KMO with per-variable MSA, determinant, multicollinearity, Mahalanobis outliers, missing-data pattern, skewness and the n:p ratio), extraction with eight retention criteria, seven factor rotations through Jennrich's gradient projection algorithm, factor maps, interpretation, and a publication-ready report. Figures are drawn by an in-house SVG engine, are editable in place and export at up to 12x resolution. The interface, the embedded methodological guidance and the generated report are bilingual (Spanish and English). Correctness is checked by 60 automated tests whose expectations are reference values from independent implementations or algebraic invariants.",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Barrera-Guzmán, Luis Ángel",
+      "affiliation": "Centro Académico Regional sede Huatusco-Veracruz, Universidad Autónoma Chapingo, Huatusco, Veracruz, Mexico",
+      "orcid": "0000-0001-8057-2583"
+    }
+  ],
+  "license": {
+    "id": "GPL-3.0-or-later"
+  },
+  "access_right": "open",
+  "language": "eng",
+  "keywords": [
+    "principal component analysis",
+    "multivariate statistics",
+    "statistics education",
+    "reproducible research",
+    "factor rotation",
+    "parallel analysis",
+    "agricultural sciences"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/luisangelbg/PCAPro",
+      "relation": "isSupplementTo",
+      "scheme": "url"
+    }
+  ]
+}

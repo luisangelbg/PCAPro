@@ -134,9 +134,32 @@ manual has to be re-verified.
 
 ---
 
-## Citation
+## How to cite
 
-If PCAPro is useful in your work, please cite it. See [`CITATION.cff`](CITATION.cff).
+If PCAPro is useful in your work, please cite it. Citing the software is what makes this kind of
+work visible, and it takes one line in your methods section:
+
+> The principal component analysis was carried out in PCAPro v1.0.0
+> (Barrera-Guzmán, 2026).
+
+BibTeX:
+
+```bibtex
+@software{barreraguzman2026pcapro,
+  author  = {Barrera-Guzmán, Luis Ángel},
+  title   = {{PCAPro}: an offline, browser-based platform for guided
+             principal component analysis},
+  version = {1.0.0},
+  year    = {2026},
+  url     = {https://github.com/luisangelbg/PCAPro}
+}
+```
+
+<!-- Cuando exista el depósito en Zenodo, añadir aquí el DOI de concepto y el campo
+     doi = {...} al BibTeX, y actualizar CITATION.cff. -->
+
+Machine-readable metadata is in [`CITATION.cff`](CITATION.cff) and
+[`codemeta.json`](codemeta.json).
 
 ---
 
