@@ -97,10 +97,45 @@ statistician, who brings the missing judgement. It is precisely where students
 and researchers from other disciplines go wrong, and it is invisible to them:
 the software returns a result either way.
 
-%% TODO: literature review on teaching PCA and on educational software for
-%% statistics. JSDSE is an education journal and expects the work to be situated
-%% in that literature, not only in the literature of the method. Without this
-%% the manuscript reads as a user manual, and reviewers will say so.
+Computing tools have long been used to teach statistical concepts, and
+\citet{zavez2025} review that literature. Within it, browser-delivered
+applications have become a common vehicle: \citet{lu2022} describes web-based
+applets for simulation and randomised data generation, \citet{wang2023} report
+Shiny applications and accompanying activities for teaching support vector
+classifiers, and \citet{berkmann2025} examine whether psychology students in
+distance education benefit from interactive statistics applications. The
+motivation for delivering tools through a browser is partly one of access:
+\citet{kim2021} argue for cloud-based environments precisely because
+installation and configuration are obstacles for students, and
+\citet{dogucu2022} treat the reproducibility of the teaching environment itself
+as a design concern.
+
+The closest precedent to the present work is the Regressinator
+\citep{reinhart2025}, a tool built to teach regression assumptions and
+diagnostics rather than regression coefficients. It shares the premise of
+PCAPro: what students need help with is not the estimate but the reasoning that
+decides whether the estimate means anything. The two differ in delivery and in
+the point at which the guidance appears. The Regressinator is an R package used
+alongside instruction, and simulation is its pedagogical device. PCAPro requires
+no installation of any kind, and rather than simulating alternative worlds it
+presents the competing criteria and the assumption checks in the interface at
+the moment the corresponding decision is made.
+
+Multivariate methods themselves have received less attention than introductory
+inference. \citet{diiorio2021} address the difficulty directly through
+gamification, on the premise that the abstraction of multivariate techniques is
+what makes them hard to teach. We are not aware of published work on tools for
+teaching principal component analysis in particular, despite its place as the
+multivariate method students meet first.
+
+%% TODO: two things to settle before submission.
+%%   1. Verify the claim that no published tool for teaching PCA exists. The
+%%      searches so far covered this journal only. Widen to Teaching Statistics,
+%%      Statistics Education Research Journal and Computers & Education before
+%%      leaving the sentence as it stands; if something turns up, cite it and
+%%      soften the claim.
+%%   2. Find work on language barriers in statistics learning to support the
+%%      bilingual argument, outside this journal.
 
 Two further constraints shaped the design and are not incidental to it. First,
 the software runs with no installation: it is a directory of static files served
