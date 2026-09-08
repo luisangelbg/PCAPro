@@ -128,21 +128,32 @@ Multivariate methods themselves have received less attention than introductory
 inference. \citet{diiorio2021} address the difficulty directly through
 gamification, on the premise that the abstraction of multivariate techniques is
 what makes them hard to teach. Principal component analysis specifically has
-attracted recent interest: \citet{saccenti2024} builds intuition for it through
-concrete analogies, and \citet{paolino2024} introduces it through summary tables
-and descriptive statistics in an elementary course.
+been the subject of sustained pedagogical attention.
+\citet{westfall2017} approach it through correlations,
+\citet{saccenti2024} builds intuition through concrete analogies, and
+\citet{paolino2024} introduces it through summary tables and descriptive
+statistics in an elementary course. Closest to the present work,
+\citet{sidou2020} pair a free and open-source program with a set of exercises
+applying the method to real data.
 
-Both of those contributions address the same stage of learning, which is how to
-make the idea of a component comprehensible in the first place. That is the
-right problem for an introductory course. It is not, however, the problem a
-student faces when running an analysis on their own data, where the concept is
-no longer the obstacle and the decisions are. We are not aware of a tool
-designed for that second stage: one that accompanies the full workflow and
-supports the choices it requires rather than the intuition behind the method.
+These contributions share a stage of learning: they address how to make the idea
+of a component comprehensible, which is the right problem for an introductory
+course. The approach of \citet{sidou2020} goes further, in that students carry
+out analyses themselves; there the software and the pedagogy remain separate,
+with a general-purpose program supplying the computation and the accompanying
+exercises supplying the reasoning.
 
-%% TODO: find work on language barriers in statistics learning to support the
-%% bilingual argument. Searched Teaching Statistics, SERJ and TISE for PCA and
-%% multivariate teaching; the language question was not covered there.
+The stage that remains unaddressed is the one a student reaches when analysing
+their own data, without an exercise sheet, where the concept is no longer the
+obstacle and the decisions are. Our contribution is to move the reasoning inside
+the software, so that the argument for a choice is present at the moment the
+choice is made rather than in material that has to be consulted alongside it.
+
+%% TODO: no citation supports the bilingual argument. Searches in Teaching
+%% Statistics, SERJ and TISE did not cover language barriers in statistics
+%% learning. It is written below as a design rationale grounded in the teaching
+%% context rather than as a claim about the literature, which is defensible
+%% without a citation. If a source turns up, cite it there.
 
 Two further constraints shaped the design and are not incidental to it. First,
 the software runs with no installation: it is a directory of static files served
