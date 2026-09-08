@@ -308,3 +308,8 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
   display: flex; justify-content: flex-end;
 }
 .lang-bar select { padding: 4px 8px; font-size: 0.82rem; }
+
+.cite-ref {
+  background: var(--bg-soft, #f5f6fa); border-radius: 8px; padding: 10px 14px;
+  font-size: .9rem; line-height: 1.5; text-indent: -1.6em; margin-left: 1.6em;
+}

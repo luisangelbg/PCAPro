@@ -66,6 +66,13 @@ I18N.en = {
   'Restaurar detección automática': 'Restore automatic detection',
   '↻ Actualizar estado': '↻ Refresh status',
   '⧉ Copiar párrafo': '⧉ Copy paragraph',
+  '⧉ Copiar referencia': '⧉ Copy the reference',
+  '⧉ Copiar BibTeX': '⧉ Copy the BibTeX',
+  '6.4 · Cómo citar PCAPro': '6.4 · How to cite PCAPro',
+  'Si publicas resultados obtenidos con esta plataforma, cita el software. La misma referencia va en el informe generado y en el archivo CITATION.bib del paquete ZIP.':
+    'If you publish results obtained with this platform, please cite the software. The same reference is in the generated report and in the CITATION.bib file of the ZIP package.',
+  'No se pudo copiar automáticamente. Selecciona el texto y cópialo a mano.':
+    'Could not copy automatically. Select the text and copy it by hand.',
   '✔ Copiado': '✔ Copied',
   '⬇ Descargar figura': '⬇ Download figure',
   'Formato': 'Format',

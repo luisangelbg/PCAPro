@@ -291,7 +291,26 @@ function refreshStatus() {
 }
 
 /* ---------- eventos ---------- */
+/* La referencia se toma de Rep.CITATION: un solo sitio para la interfaz, el
+   informe y el CITATION.bib del paquete. */
+function copyCite(btnId, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const b = el(btnId), antes = b.textContent;
+    b.textContent = tt('✔ Copiado');
+    setTimeout(() => { b.textContent = antes; }, 1800);
+  }, () => alert(tt('No se pudo copiar automáticamente. Selecciona el texto y cópialo a mano.')));
+}
+
+function initCite() {
+  const box = el('citeRef');
+  if (!box) return;
+  box.innerHTML = Rep.CITATION.apa;
+  el('copyCite').addEventListener('click', () => copyCite('copyCite', box.textContent));
+  el('copyBibtex').addEventListener('click', () => copyCite('copyBibtex', Rep.CITATION.bibtex));
+}
+
 function init() {
+  initCite();
   if (!el('sectionBox')) return;
   const box = el('sectionBox');
   SECTIONS.forEach(([id, label]) => {
