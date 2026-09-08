@@ -28,16 +28,26 @@ Revista elegida el 2026-09-07. Publicada por la **American Statistical Associati
 
 ## Revisión doble ciego: hay que entregar DOS versiones
 
-JSDSE pide en el mismo envío una versión con autoría y otra anónima. En la anónima:
+JSDSE pide en el mismo envío una versión con autoría y otra anónima. La anónima **no se
+escribe a mano**: se genera desde `article.tex` con
 
-- fuera el nombre, la adscripción y el correo;
-- fuera cualquier cita propia que delate la autoría;
-- **y aquí está el problema particular de un artículo de software:** el repositorio, el DOI de
-  Zenodo y la URL del demo llevan tu nombre. Hay que sustituirlos por enlaces anonimizados —
-  servicios como `anonymous.4open.science` sirven para eso— o por marcadores del tipo
-  *"[repository, anonymized for review]"*.
+```bash
+cd paper/jsdse && perl anonymise.pl
+```
 
-En `article.tex` esos tres sitios están marcados.
+que produce `article-anon.tex` vaciando la autoría, eliminando los agradecimientos,
+sustituyendo las tres URL que llevan el nombre de usuario y el DOI, y comprobando después
+que no sobreviva ninguna cadena identificadora. **Hay que volver a ejecutarlo cada vez que
+cambie `article.tex`**, y nunca editar `article-anon.tex` directamente: se sobrescribe.
+
+Queda un límite que el script no puede resolver y conviene tener presente: el nombre
+PCAPro está en el título y en todo el texto, y buscarlo lleva al repositorio público y de
+ahí al autor. Renombrar el software haría ilegible el artículo. Es la situación habitual de
+un artículo sobre software ya publicado; lo honesto es declararlo en la carta al editor.
+
+Para el demo se puede ofrecer acceso a través de la revista, o desplegar una copia en un
+host neutral. `anonymous.4open.science` sirve para el código fuente, no para una
+instalación en funcionamiento.
 
 ## Cómo compilar
 
