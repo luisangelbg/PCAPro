@@ -320,14 +320,78 @@ against R.
 %% ---------------------------------------------------------------------------
 \section{Discussion}
 
-%% TODO: must state frankly:
-%%   - PCAPro does not replace R and does not try to;
-%%   - guiding is not assessing: whether it improves learning has not been
-%%     measured, and saying so before a reviewer does;
-%%   - the pedagogical risk of a tool that gives recommendations, namely that it
-%%     may replace judgement instead of building it, and how showing the
-%%     disagreement between criteria rather than a single answer tries to
-%%     mitigate that.
+What this paper establishes is that a tool of this kind can be built and that
+its output agrees with established implementations. What it does not establish
+is that the tool teaches anything.
+
+\subsection{Guiding is not assessing}
+
+No evaluation of learning has been carried out. We have not measured whether
+students who use PCAPro make better decisions than students who use a
+general-purpose package, whether they retain the reasoning after the software is
+taken away, or whether they would recognise a poorly specified analysis in
+someone else's work. The design rests on an argument about where reasoning
+should appear, and arguments of that kind are testable. Until such a test is
+run, the claims here are claims about design, not about effect.
+
+The instruments for that evaluation would not be elaborate. A pre- and
+post-instrument on the decisions themselves --- given a correlation matrix and
+an adequacy index, how many components would you retain and why --- administered
+across groups using different tools, would answer the first question. Whether
+the reasoning survives the removal of the tool is harder and more important, and
+would require following the same students into an analysis carried out
+elsewhere.
+
+\subsection{The risk of replacing judgement rather than building it}
+
+The principal objection to software of this kind is that it may substitute for
+the judgement it intends to develop. A student told that a sampling adequacy
+index of 0.54 falls in the range where the analysis is discouraged has been
+given the conclusion. Whether they have acquired the reasoning behind it, or
+merely learned to read a verdict off a screen, is precisely what has not been
+measured.
+
+Three design decisions attempt to work against that failure mode. The retention
+step shows eight criteria in disagreement rather than a recommendation, so that
+the absence of a single answer is itself part of what is displayed. The number
+of components must be set by the user, and the consensus figure is offered as
+one row among the criteria rather than as a default that can be accepted without
+looking. And the software qualifies its own output where that output is weakest,
+most conspicuously by marking its group-comparison tests as circular. These are
+design intentions, and it should be said plainly that intending an effect is not
+the same as producing one.
+
+\subsection{Conventions made to look like facts}
+
+A related risk is subtler and follows from putting guidance in software at all.
+The thresholds PCAPro reports --- 0.50 for a variable's measure of sampling
+adequacy, 0.40 for an interpretable loading, 0.70 for retained variance --- are
+conventions that accumulated in the applied literature, not results. Printing
+them in an interface, next to a computed value and a verdict, lends them an
+authority they do not have. Where the methodological literature is itself
+divided, as it is on the number of components to retain
+\citep{jolliffe2016, greenacre2022}, the software necessarily takes positions:
+the weights behind its consensus figure are a judgement, and a defensible
+alternative weighting would sometimes give a different number. The interface
+states that these are conventions, but a stated caveat competes poorly with a
+number displayed in bold.
+
+\subsection{Scope, and the question of transfer}
+
+PCAPro performs one analysis. It has no scripting layer, cannot be extended by
+its users, and does not participate in a reproducible pipeline in the way an R
+script does; the numerical core can be driven programmatically, but the
+interface cannot. It is not a replacement for a general-purpose statistical
+environment and is not intended to become one. A researcher who outgrows it
+should outgrow it.
+
+That raises the question the present work cannot answer. A student who learns
+the decisions of a principal component analysis inside a guided interface will
+eventually have to make the same decisions in an environment that offers no
+guidance at all. Whether the guided experience builds a bridge to that
+environment or a dependence on the absent scaffolding is an empirical question,
+and the same question applies to comparable tools \citep{reinhart2025,
+sidou2020}. It is the one we would most want answered.
 
 %% ---------------------------------------------------------------------------
 \section*{Acknowledgments}

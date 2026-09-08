@@ -75,7 +75,7 @@ de trabajo en otro idioma.
 | Materials and Methods — implementación | **escrita** |
 | Materials and Methods — verificación | **escrita** |
 | Results | pendiente — **es la sección delicada** |
-| Discussion | esqueleto con los puntos que hay que reconocer |
+| Discussion | **escrita** (676 palabras, 4 subsecciones) |
 
 ## Los dos riesgos de este envío
 
