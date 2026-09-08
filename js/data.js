@@ -987,7 +987,22 @@ function downloadReport() {
 /* ============================================================
    Eventos
    ============================================================ */
+/* Boton «Como citar» del bloque 1. La referencia sale de Rep.CITATION, igual que
+   el apartado 6.4 y el informe; report.js ya esta cargado cuando corre esto. */
+function initCiteDialog() {
+  const dlg = el('citeDialog'), btn = el('citeBtn');
+  if (!dlg || !btn || typeof Rep === 'undefined') return;
+  el('citeDialogRef').innerHTML = Rep.CITATION.apa;
+  btn.addEventListener('click', () => dlg.showModal());
+  el('closeCiteDlg').addEventListener('click', () => dlg.close());
+  el('copyCiteDlg').addEventListener('click',
+    () => copyToClipboard('copyCiteDlg', el('citeDialogRef').textContent));
+  el('copyBibtexDlg').addEventListener('click',
+    () => copyToClipboard('copyBibtexDlg', Rep.CITATION.bibtex));
+}
+
 function init() {
+  initCiteDialog();
   /* los módulos deben poder cargarse fuera de index.html (por ejemplo en las pruebas):
      si la interfaz no está presente, no se enlaza nada */
   if (!el('dropZone')) return;

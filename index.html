@@ -52,6 +52,7 @@
         <p class="hint" data-i18n-auto>Todo lo que conviene tener claro <i>antes</i> de tocar los datos. Despliega la sección que necesites;
           las secciones marcadas con ▸ Bloque N se aplican más adelante en la plataforma.</p>
       </div>
+          <button class="btn btn-secondary btn-sm" id="citeBtn" data-i18n="Cómo citar">Cómo citar</button>
     </div>
 
     <details class="acc" open>
@@ -2405,6 +2406,17 @@ R̂ = P · Φ · Pᵀ      (oblique rotation)</div>
 
 <p class="footer-note" data-i18n-auto>PCAPro · Plataforma local de Análisis de Componentes Principales · LABG Apps</p>
 <p class="footer-note"><a href="https://doi.org/10.5281/zenodo.22649709" target="_blank" rel="noopener">doi.org/10.5281/zenodo.22649709</a></p>
+
+<dialog id="citeDialog">
+  <h3 data-i18n="Cómo citar PCAPro">Cómo citar PCAPro</h3>
+  <p class="hint" data-i18n-auto>Si publicas resultados obtenidos con esta plataforma, cita el software.</p>
+  <p class="cite-ref" id="citeDialogRef"></p>
+  <div class="btn-row">
+    <button class="btn btn-secondary btn-sm" id="copyCiteDlg" data-i18n="⧉ Copiar referencia">⧉ Copiar referencia</button>
+    <button class="btn btn-secondary btn-sm" id="copyBibtexDlg" data-i18n="⧉ Copiar BibTeX">⧉ Copiar BibTeX</button>
+    <button class="btn btn-secondary btn-sm" id="closeCiteDlg" data-i18n="Cerrar">Cerrar</button>
+  </div>
+</dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="js/i18n.js"></script>

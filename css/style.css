@@ -313,3 +313,15 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
   background: var(--bg-soft, #f5f6fa); border-radius: 8px; padding: 10px 14px;
   font-size: .9rem; line-height: 1.5; text-indent: -1.6em; margin-left: 1.6em;
 }
+
+#citeDialog {
+  max-width: 620px; border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 22px 24px; background: var(--card-bg); color: var(--text); box-shadow: var(--shadow);
+}
+#citeDialog h3 { margin: 0 0 6px; }
+#citeDialog::backdrop { background: rgba(0, 0, 0, .38); }
+
+/* El botón «Cómo citar» del bloque 1 va a la derecha del título cuando cabe, y
+   baja debajo en pantallas estrechas (card-head ya trae flex-wrap). */
+.theory-card .card-head > div { flex: 1 1 320px; }
+.theory-card .card-head > #citeBtn { margin-left: auto; flex: 0 0 auto; }
