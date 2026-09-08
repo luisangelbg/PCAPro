@@ -51,6 +51,19 @@ pdflatex article && bibtex article && pdflatex article && pdflatex article
 Esta plantilla usa solo paquetes estándar (`geometry`, `setspace`, `natbib`, `graphicx`, `url`),
 así que no hay que descargar ficheros de estilo de la revista.
 
+## Antes de enviar
+
+Todo lo pendiente está marcado en el fuente con la etiqueta `TODO`:
+
+```bash
+grep -n "TODO" article.tex
+```
+
+Si no devuelve nada salvo las dos líneas de la cabecera que explican la convención, el
+manuscrito está completo. **Los comentarios del `.tex` están en inglés a propósito**: Taylor &
+Francis acepta envíos en LaTeX, así que el fuente llega a la revista y no debe llevar notas
+de trabajo en otro idioma.
+
 ## Estado de las secciones
 
 | Sección | Estado |

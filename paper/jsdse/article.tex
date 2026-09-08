@@ -1,8 +1,12 @@
-%% Manuscrito para el Journal of Statistics and Data Science Education.
+%% Manuscript for the Journal of Statistics and Data Science Education.
 %%
-%% JSDSE exige la clase "article" estandar, sin macros especiales, margenes de
-%% 1 pulgada, texto a doble espacio y natbib con plain.bst o apalike.bst.
-%% Compilar con pdfLaTeX. Vease README.md en esta carpeta.
+%% JSDSE requires the standard "article" class with no special macros, 1-inch
+%% margins, double-spaced text, and natbib with plain.bst or apalike.bst.
+%% Compile with pdfLaTeX. See README.md in this folder.
+%%
+%% Every unfinished item below is tagged "% TODO:". Before submitting, run
+%%     grep -n "TODO" article.tex
+%% and make sure nothing is left.
 
 \documentclass[12pt]{article}
 
@@ -18,12 +22,12 @@
 \doublespacing
 
 %% ---------------------------------------------------------------------------
-%% VERSION NO ANONIMA. Para la version anonima hay que:
-%%   - borrar \author y la nota al pie de la afiliacion,
-%%   - sustituir la URL del repositorio y la autocita por un enlace anonimizado,
-%%     porque identifican al autor,
-%%   - revisar que ninguna cita propia delate la autoria.
-%% JSDSE pide las dos versiones en el mismo envio.
+%% NON-ANONYMOUS VERSION. For the anonymous version required by JSDSE:
+%%   - delete \author and the affiliation,
+%%   - replace the repository, DOI and demo URLs with anonymised links, since
+%%     they identify the author,
+%%   - check that no self-citation reveals authorship.
+%% Both versions must be submitted together.
 %% ---------------------------------------------------------------------------
 
 \title{\textbf{PCAPro: A Browser-Based Platform for Teaching Principal
@@ -41,9 +45,8 @@ Universidad Autónoma Chapingo, Huatusco, Veracruz, Mexico\\
 \maketitle
 
 %% ---------------------------------------------------------------------------
+%% JSDSE: unstructured abstract of 200 words. Currently 193; recount if edited.
 \begin{abstract}
-%% JSDSE: resumen no estructurado de 200 palabras. El actual tiene ~200;
-%% recontar antes de enviar.
 Principal component analysis is rarely misapplied at the eigendecomposition.
 It goes wrong at the decisions surrounding it: how missing values are handled,
 whether variables are standardised, whether the correlation structure justifies
@@ -94,10 +97,10 @@ statistician, who brings the missing judgement. It is precisely where students
 and researchers from other disciplines go wrong, and it is invisible to them:
 the software returns a result either way.
 
-%% PENDIENTE: aqui va la revision de literatura sobre la ensenanza del ACP y
-%% sobre software educativo en estadistica. JSDSE es una revista de educacion y
-%% esperan que el trabajo se situe en esa literatura, no solo en la del metodo.
-%% Sin esto el articulo parece un manual de software.
+%% TODO: literature review on teaching PCA and on educational software for
+%% statistics. JSDSE is an education journal and expects the work to be situated
+%% in that literature, not only in the literature of the method. Without this
+%% the manuscript reads as a user manual, and reviewers will say so.
 
 Two further constraints shaped the design and are not incidental to it. First,
 the software runs with no installation: it is a directory of static files served
@@ -115,22 +118,22 @@ barrier for Latin American students.
 
 \subsection{Pedagogical design}
 
-%% PENDIENTE de desarrollo. Esta es la seccion central del articulo para JSDSE:
-%% no describe funciones, sino decisiones de diseno docente y su justificacion.
-%% Tres principios que ya estan implementados y hay que argumentar aqui:
-%%
-%%  1. La guia vive junto al calculo, no en un manual aparte. 34 secciones
-%%     desplegables cubren postulados, pruebas previas, reglas de tamano de
-%%     muestra, criterios de retencion, rotaciones, lectura de cos2 y
-%%     contribuciones, y los tres tipos de elipse.
-%%  2. Se muestran ocho criterios de retencion a la vez en lugar de una
-%%     respuesta unica, porque discrepan y la discrepancia informa.
-%%  3. El diagnostico no da un numero: dice que supuesto esta en riesgo y que
-%%     hacer, y se niega a presentar una decision como mas segura de lo que es.
+%% TODO: this is the core section for JSDSE. It must argue teaching design
+%% decisions and their rationale, not describe functions. Three principles are
+%% already implemented and need to be argued here:
+%%   1. Guidance lives next to the computation, not in a separate manual.
+%%      Thirty-four expandable sections cover the postulates, the preliminary
+%%      tests, sample-size rules, the retention criteria, the rotations, the
+%%      reading of cos-squared and contributions, and the three kinds of ellipse.
+%%   2. Eight retention criteria are shown at once instead of a single answer,
+%%      because they disagree and the disagreement is informative.
+%%   3. Diagnostics do not return a bare number: they state which assumption is
+%%      at risk and what to do, and refuse to present a decision as more certain
+%%      than it is.
 
 \subsection{The analysis workflow}
 
-%% PENDIENTE: los seis bloques y que decision se toma en cada uno.
+%% TODO: the six blocks and the decision taken at each one.
 
 \subsection{Implementation}
 
@@ -165,30 +168,30 @@ against R.
 %% ---------------------------------------------------------------------------
 \section{Results}
 
-%% PENDIENTE, y es la seccion mas delicada del envio. Sin evaluacion de
-%% aprendizaje, "resultados" no puede ser un estudio. Lo defendible es:
-%%   - que hace el software en cada punto de decision, con un recorrido
-%%     ilustrado por capturas;
-%%   - la concordancia numerica con R (tabla del guion de replicacion);
-%%   - disponibilidad: demo en linea, codigo abierto, DOI, material docente.
-%% Conviene decidir con el editor si esto encaja como "Results" o si el
-%% articulo va mejor como Brief Communication.
+%% TODO: the most delicate section of this submission. Without a learning
+%% evaluation, "results" cannot be a study. What is defensible:
+%%   - what the software does at each decision point, illustrated with screenshots;
+%%   - numerical agreement with R (table from the replication script);
+%%   - availability: online demo, open source, DOI, teaching materials.
+%% Worth asking the editor whether this fits as "Results" or whether the paper
+%% belongs as a Brief Communication.
 
 %% ---------------------------------------------------------------------------
 \section{Discussion}
 
-%% PENDIENTE. Debe incluir, con franqueza:
-%%   - que PCAPro no sustituye a R ni pretende hacerlo;
-%%   - que guiar no es evaluar: no se ha medido si mejora el aprendizaje, y
-%%     decirlo antes de que lo diga un revisor;
-%%   - el riesgo pedagogico de una herramienta que da recomendaciones: puede
-%%     sustituir el criterio en vez de formarlo, y como se intenta mitigar
-%%     mostrando el desacuerdo entre criterios en lugar de una respuesta.
+%% TODO: must state frankly:
+%%   - PCAPro does not replace R and does not try to;
+%%   - guiding is not assessing: whether it improves learning has not been
+%%     measured, and saying so before a reviewer does;
+%%   - the pedagogical risk of a tool that gives recommendations, namely that it
+%%     may replace judgement instead of building it, and how showing the
+%%     disagreement between criteria rather than a single answer tries to
+%%     mitigate that.
 
 %% ---------------------------------------------------------------------------
 \section*{Acknowledgments}
 
-%% PENDIENTE. Quitar en la version anonima.
+%% TODO: write. Remove in the anonymous version.
 
 \section*{Declaration of Interest Statement}
 
@@ -199,9 +202,14 @@ The author declares no competing interests.
 
 PCAPro is free software distributed under the GNU General Public License,
 version 3 or later. The source code, documentation and teaching materials are
-available at [REPOSITORIO — anonimizar en la version ciega] and archived with a
-persistent identifier at [DOI — anonimizar en la version ciega]. A working
-installation requiring no download is available at [DEMO — anonimizar].
+available at \url{https://github.com/luisangelbg/PCAPro} and archived with a
+persistent identifier at \url{https://doi.org/10.5281/zenodo.22649709}. A
+working installation requiring no download is available at
+\url{https://luisangelbg.github.io/PCAPro/}.
+
+%% TODO: in the anonymous version, replace the three URLs above with anonymised
+%% links (for example through anonymous.4open.science) or with the placeholder
+%% "[repository, anonymised for review]". As written they identify the author.
 
 \bibliography{ref}
 
