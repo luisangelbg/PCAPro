@@ -99,7 +99,7 @@ Rep.blobBytes = blob => blob.arrayBuffer().then(b => new Uint8Array(b));
    actualizar las dos. El DOI de concepto apunta siempre a la última versión. */
 Rep.CITATION = {
   apa: 'Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided ' +
-       'principal component analysis</i> (Version 1.0.1) [Computer software]. Zenodo. ' +
+       'principal component analysis</i> (versión 1.0.1) [software]. Zenodo. ' +
        'https://doi.org/10.5281/zenodo.22649709',
   bibtex: [
     '@software{pcapro,',
