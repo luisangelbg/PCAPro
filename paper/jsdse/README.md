@@ -71,7 +71,7 @@ de trabajo en otro idioma.
 | Título, autoría, resumen, palabras clave | escritos |
 | Introduction | **escrita**, con literatura educativa y comparación de herramientas |
 | Materials and Methods — diseño pedagógico | **escrita** (878 palabras, 4 subsecciones) |
-| Materials and Methods — flujo de trabajo | pendiente |
+| Materials and Methods — flujo de trabajo | **escrita** (~510 palabras, los seis bloques) |
 | Materials and Methods — implementación | **escrita** |
 | Materials and Methods — verificación | **escrita** |
 | Results | **escrita** (~700 palabras) + Tabla 1 de concordancia numérica |

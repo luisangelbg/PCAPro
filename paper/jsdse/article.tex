@@ -312,7 +312,62 @@ the cost is rarely optional.
 
 \subsection{The analysis workflow}
 
-%% TODO: the six blocks and the decision taken at each one.
+The platform is organised as six blocks. Each ends in a decision that belongs to
+the analyst, and each presents the material for that decision at the point where
+it is made rather than in documentation to be consulted alongside it.
+
+The first block reads the data file and prepares the matrix. Column types are
+detected automatically and then returned to the user for review, because the
+detection is a guess: each column is assigned one of five roles --- active,
+supplementary quantitative, qualitative group, row identifier, or excluded ---
+and only active numerical columns build the components. A numerical column
+holding a treatment code or a year is detected as numerical and has to be
+reclassified by hand, and the interface says so at that point rather than in a
+manual. Missing values are then handled by listwise deletion or by imputation
+with the mean or the median; a transformation may be applied; and the matrix is
+scaled. That last choice is the one students most often make without knowing
+they are making it, so it is presented explicitly: z-standardisation gives the
+analysis on correlations, centring alone gives it on covariances, and four
+further options --- Pareto, VAST, unit range, and a robust median and median
+absolute deviation --- exist for the literatures in which they are conventional.
+The block closes with the adequacy diagnostics and a point-by-point reading of
+them.
+
+The second block extracts the components and puts the retention question. It
+reports the eigenvalues with their approximate standard errors, the explained
+and cumulative variance, and the eight criteria, each accompanied by the
+quantity that decides it and by a consensus across them. The number retained is
+then set by the user, who may accept the consensus or override it.
+
+The third block rotates, and opens by arguing against itself: rotation belongs
+properly to factor analysis, and rotated components no longer maximise variance
+individually nor stay ordered by eigenvalue, so the practice --- accepted and
+widespread as it is --- has to be declared as such when the analysis is written
+up. Four orthogonal rotations (varimax, quartimax, equamax, parsimax) and three
+oblique ones (promax, direct oblimin, quartimin) are offered alongside the
+unrotated solution for comparison, with the pattern and structure matrices and,
+for oblique solutions, the correlations among the components.
+
+The fourth block builds the factor maps: the correlation circle, the map of
+individuals and the biplot, with contributions and squared cosines reported so
+that the user can see which points the plane represents well enough to be worth
+reading. Supplementary variables and categories, which took no part in building
+the axes, are projected onto them.
+
+The fifth block turns the solution into a statement. The user sets the threshold
+above which a loading is treated as defining a component, between 0.30 and 0.70;
+the platform then describes each dimension, computes test values for the
+supplementary categories, compares groups along the components and lists the
+individuals most characteristic of each axis. It also drafts a paragraph of
+prose from the user's own numbers, under the instruction to review and adapt it
+before use.
+
+The sixth block assembles the report: the state of the analysis, the sections
+and figures to include, and export to HTML, to print, or to a package holding
+the figures and the intermediate tables.
+
+Defaults exist at each of these points and are labelled as recommendations. What
+the platform avoids is letting a default pass for a result.
 
 \subsection{Implementation}
 
