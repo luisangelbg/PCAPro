@@ -1,0 +1,208 @@
+%% Manuscrito para el Journal of Statistics and Data Science Education.
+%%
+%% JSDSE exige la clase "article" estandar, sin macros especiales, margenes de
+%% 1 pulgada, texto a doble espacio y natbib con plain.bst o apalike.bst.
+%% Compilar con pdfLaTeX. Vease README.md en esta carpeta.
+
+\documentclass[12pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{setspace}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{url}
+
+\bibliographystyle{apalike}
+\doublespacing
+
+%% ---------------------------------------------------------------------------
+%% VERSION NO ANONIMA. Para la version anonima hay que:
+%%   - borrar \author y la nota al pie de la afiliacion,
+%%   - sustituir la URL del repositorio y la autocita por un enlace anonimizado,
+%%     porque identifican al autor,
+%%   - revisar que ninguna cita propia delate la autoria.
+%% JSDSE pide las dos versiones en el mismo envio.
+%% ---------------------------------------------------------------------------
+
+\title{\textbf{PCAPro: A Browser-Based Platform for Teaching Principal
+Component Analysis with Embedded Methodological Guidance}}
+
+\author{Luis Ángel Barrera-Guzmán\\
+Centro Académico Regional sede Huatusco-Veracruz\\
+Universidad Autónoma Chapingo, Huatusco, Veracruz, Mexico\\
+\texttt{lbarrerag@chapingo.mx}}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+%% ---------------------------------------------------------------------------
+\begin{abstract}
+%% JSDSE: resumen no estructurado de 200 palabras. El actual tiene ~200;
+%% recontar antes de enviar.
+Principal component analysis is rarely misapplied at the eigendecomposition.
+It goes wrong at the decisions surrounding it: how missing values are handled,
+whether variables are standardised, whether the correlation structure justifies
+the analysis at all, how many components to retain, and which loadings may be
+interpreted. General-purpose statistical software computes the quantities needed
+to make those decisions and then stops, which is reasonable for a statistician
+and is where students and non-specialist researchers go wrong. We describe
+PCAPro, a platform that places the methodological argument next to the number
+that justifies it. It reports eight retention criteria side by side rather than
+a single answer, states which assumption is at risk and what to do about it, and
+declines to present a decision as more certain than it is. PCAPro runs entirely
+in a web browser with no installation, which makes it usable in shared computer
+laboratories where students cannot install software, and its interface, embedded
+guidance and generated report exist in full in Spanish as well as English. We
+describe the pedagogical design, the implementation and its verification against
+established software, and discuss the limitations of an approach that guides
+without assessing.
+\end{abstract}
+
+\noindent\textbf{Keywords:} principal component analysis; statistics education;
+multivariate statistics; educational software; data literacy; Spanish-language
+resources
+
+%% ---------------------------------------------------------------------------
+\section{Introduction}
+
+Principal component analysis \citep{pearson1901, hotelling1933, jolliffe2002}
+is among the most widely used multivariate techniques in the biological and
+agricultural sciences, and it is often the first multivariate method a student
+meets. It is also among the most frequently misapplied.
+
+The computation is not the difficulty. Every general-purpose statistical
+environment provides a reliable eigendecomposition, and the numerical problem
+has been settled for decades. What decides whether a principal component
+analysis is defensible is a sequence of choices made before and after that
+computation: how missing values are treated, whether variables are standardised,
+whether the correlation structure justifies the analysis at all, how many
+components are retained, whether the solution is rotated and by which method,
+and which loadings are large enough to interpret. Each of these changes the
+result, and none of them is decided by a function call.
+
+Existing software computes the quantities needed to make those decisions and
+then stops. FactoMineR \citep{le2008} reports the eigenvalues; deciding how many
+to keep is left to the analyst. The psych package \citep{psych} reports the
+Kaiser--Meyer--Olkin index; deciding whether a value of 0.62 is acceptable is
+left to the analyst. This division of labour is entirely appropriate for a
+statistician, who brings the missing judgement. It is precisely where students
+and researchers from other disciplines go wrong, and it is invisible to them:
+the software returns a result either way.
+
+%% PENDIENTE: aqui va la revision de literatura sobre la ensenanza del ACP y
+%% sobre software educativo en estadistica. JSDSE es una revista de educacion y
+%% esperan que el trabajo se situe en esa literatura, no solo en la del metodo.
+%% Sin esto el articulo parece un manual de software.
+
+Two further constraints shaped the design and are not incidental to it. First,
+the software runs with no installation: it is a directory of static files served
+by any web server or opened directly from disk. This is a pedagogical
+requirement rather than a convenience, because a substantial part of the
+intended audience works in shared university computer laboratories where nothing
+can be installed and where students have no administrative rights. Second, the
+interface, the embedded guidance and the generated report exist in full in
+Spanish as well as English, because teaching material for multivariate
+statistics in Spanish is scarce and the language barrier compounds the tooling
+barrier for Latin American students.
+
+%% ---------------------------------------------------------------------------
+\section{Materials and Methods}
+
+\subsection{Pedagogical design}
+
+%% PENDIENTE de desarrollo. Esta es la seccion central del articulo para JSDSE:
+%% no describe funciones, sino decisiones de diseno docente y su justificacion.
+%% Tres principios que ya estan implementados y hay que argumentar aqui:
+%%
+%%  1. La guia vive junto al calculo, no en un manual aparte. 34 secciones
+%%     desplegables cubren postulados, pruebas previas, reglas de tamano de
+%%     muestra, criterios de retencion, rotaciones, lectura de cos2 y
+%%     contribuciones, y los tres tipos de elipse.
+%%  2. Se muestran ocho criterios de retencion a la vez en lugar de una
+%%     respuesta unica, porque discrepan y la discrepancia informa.
+%%  3. El diagnostico no da un numero: dice que supuesto esta en riesgo y que
+%%     hacer, y se niega a presentar una decision como mas segura de lo que es.
+
+\subsection{The analysis workflow}
+
+%% PENDIENTE: los seis bloques y que decision se toma en cada uno.
+
+\subsection{Implementation}
+
+PCAPro is a directory of static files that runs entirely in the browser, with
+no server-side computation and no installation. All computation happens in the
+user's own machine and no data are transmitted, which matters for unpublished
+research data and for institutional data-protection rules.
+
+The numerical engine was written from scratch rather than wrapped around an
+existing library, because no browser-side library offered the combination of
+retention criteria and rotation algorithms required. The eigendecomposition uses
+cyclic Jacobi rotations. Eight retention criteria are implemented, including
+Horn's parallel analysis \citep{horn1965} with the 95th-percentile rule
+\citep{glorfeld1995}, Velicer's minimum average partial \citep{velicer1976},
+the broken stick \citep{frontier1976} and the scree elbow \citep{cattell1966}.
+Seven rotations \citep{kaiser1958, hendrickson1964} are obtained through the
+gradient projection algorithm of \citet{jennrich2001, jennrich2002}. Sampling
+adequacy is assessed with the Kaiser--Meyer--Olkin index \citep{kaiser1974} and
+Bartlett's test of sphericity \citep{bartlett1950}.
+
+\subsection{Verification}
+
+Correctness is checked by an automated suite of 60 tests. Every expectation is
+either a reference value published by an independent implementation or an
+algebraic invariant that must hold regardless of the data. No expectation was
+recorded from a previous run of PCAPro itself: comparing software against its
+own past output establishes stability, not correctness. The suite runs
+automatically on every change to the software, and a separate replication
+script reproduces the reported results outside the browser and compares them
+against R.
+
+%% ---------------------------------------------------------------------------
+\section{Results}
+
+%% PENDIENTE, y es la seccion mas delicada del envio. Sin evaluacion de
+%% aprendizaje, "resultados" no puede ser un estudio. Lo defendible es:
+%%   - que hace el software en cada punto de decision, con un recorrido
+%%     ilustrado por capturas;
+%%   - la concordancia numerica con R (tabla del guion de replicacion);
+%%   - disponibilidad: demo en linea, codigo abierto, DOI, material docente.
+%% Conviene decidir con el editor si esto encaja como "Results" o si el
+%% articulo va mejor como Brief Communication.
+
+%% ---------------------------------------------------------------------------
+\section{Discussion}
+
+%% PENDIENTE. Debe incluir, con franqueza:
+%%   - que PCAPro no sustituye a R ni pretende hacerlo;
+%%   - que guiar no es evaluar: no se ha medido si mejora el aprendizaje, y
+%%     decirlo antes de que lo diga un revisor;
+%%   - el riesgo pedagogico de una herramienta que da recomendaciones: puede
+%%     sustituir el criterio en vez de formarlo, y como se intenta mitigar
+%%     mostrando el desacuerdo entre criterios en lugar de una respuesta.
+
+%% ---------------------------------------------------------------------------
+\section*{Acknowledgments}
+
+%% PENDIENTE. Quitar en la version anonima.
+
+\section*{Declaration of Interest Statement}
+
+The author declares no competing interests.
+
+%% ---------------------------------------------------------------------------
+\section*{Software Availability}
+
+PCAPro is free software distributed under the GNU General Public License,
+version 3 or later. The source code, documentation and teaching materials are
+available at [REPOSITORIO — anonimizar en la version ciega] and archived with a
+persistent identifier at [DOI — anonimizar en la version ciega]. A working
+installation requiring no download is available at [DEMO — anonimizar].
+
+\bibliography{ref}
+
+\end{document}
