@@ -73,10 +73,13 @@ resources
 %% ---------------------------------------------------------------------------
 \section{Introduction}
 
-Principal component analysis \citep{pearson1901, hotelling1933, jolliffe2002}
-is among the most widely used multivariate techniques in the biological and
-agricultural sciences, and it is often the first multivariate method a student
-meets. It is also among the most frequently misapplied.
+Principal component analysis \citep{pearson1901, hotelling1933, jolliffe2002,
+jolliffe2016, greenacre2022} is among the most widely used multivariate
+techniques in the biological and agricultural sciences, and it is often the
+first multivariate method a student meets. It is also among the most frequently
+misapplied: the concern is sufficiently established that individual disciplines
+have published guidance on how the method goes wrong in their own literature
+\citep{allee2022}.
 
 The computation is not the difficulty. Every general-purpose statistical
 environment provides a reliable eigendecomposition, and the numerical problem
@@ -173,7 +176,9 @@ ellipse that can be drawn around a group of individuals.
 The placement is the design decision, not the content. A student deciding
 whether to standardise sees, in the same view, why the covariance solution is
 dominated by the variable with the largest variance, and why that matters when
-lengths in millimetres are analysed together with weights in grams. The material
+lengths in millimetres are analysed together with weights in grams --- a choice
+whose consequences are substantial enough to have been given a treatment of its
+own \citep{brereton2025}. The material
 is collapsed by default so that it does not obstruct the user who already knows,
 and expanded by one click for the user who does not. Nothing has to be
 remembered from a previous session or looked up elsewhere.
