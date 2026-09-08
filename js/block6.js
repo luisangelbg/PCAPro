@@ -186,6 +186,7 @@ async function downloadPackage() {
     setLabel('<span class="loading"></span> ' + tt('Tablas e informe…'));
     tableEntries().forEach(e => entries.push(e));
     entries.push({ name: TT('informe_ACP.html', 'PCA_report.html'), data: Rep.text(Rep.build(opts())) });
+    entries.push({ name: 'CITATION.bib', data: Rep.text(Rep.CITATION.bibtex + '\n') });
     entries.push({ name: TT('LEEME.txt', 'README.txt'), data: Rep.text(readme(figs, entries.length)) });
 
     setLabel('<span class="loading"></span> ' + tt('Comprimiendo…'));
@@ -221,6 +222,7 @@ function readme(figs) {
     L.push('                      For PDF: open it and print with "Save as PDF".');
     L.push('  figures/ ......... ' + figs.length + ' figure(s) in the chosen format and resolution.');
     L.push('  tables/ .......... result tables as CSV (UTF-8 with BOM, comma separated).');
+    L.push('  CITATION.bib ..... how to cite PCAPro if you publish these results.');
     L.push('');
     L.push('SUMMARY OF THE ANALYSIS');
     L.push('  Observations: ' + P.n + ' · Active variables: ' + P.p);
@@ -241,6 +243,7 @@ function readme(figs) {
     L.push('                       Para PDF: abrir e imprimir con "Guardar como PDF".');
     L.push('  figuras/ .......... ' + figs.length + ' figura(s) en el formato y resolución elegidos.');
     L.push('  tablas/ ........... tablas de resultados en CSV (UTF-8 con BOM, separador coma).');
+    L.push('  CITATION.bib ...... cómo citar PCAPro si publicas estos resultados.');
     L.push('');
     L.push('RESUMEN DEL ANÁLISIS');
     L.push('  Observaciones: ' + P.n + ' · Variables activas: ' + P.p);
