@@ -23,7 +23,8 @@ Revista elegida el 2026-09-07. Publicada por la **American Statistical Associati
 - `natbib` con `plain.bst` o `apalike.bst`. Aquí se usa `apalike`.
 - Orden obligatorio de las secciones: portada · resumen · palabras clave ·
   *introduction, materials and methods, results, discussion* · agradecimientos ·
-  declaración de intereses · referencias · apéndices · tablas · figuras.
+  declaración de intereses · referencias · apéndices · tablas · figuras. Los
+  agradecimientos son opcionales y este manuscrito no los lleva.
 - Resumen **no estructurado de 200 palabras**. Entre **3 y 6 palabras clave**.
 
 ## Revisión doble ciego: hay que entregar DOS versiones
@@ -86,6 +87,7 @@ de trabajo en otro idioma.
 | Materials and Methods — verificación | **escrita** |
 | Results | **escrita** (~700 palabras) + Tabla 1 de concordancia numérica |
 | Discussion | **escrita** (676 palabras, 4 subsecciones) |
+| Agradecimientos | eliminados: no hay a quién agradecer |
 
 ## Los dos riesgos de este envío
 

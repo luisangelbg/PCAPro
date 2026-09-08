@@ -18,7 +18,9 @@ my @hecho;
 $d =~ s/\x5cauthor\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/\x5cauthor{}/s
   and push @hecho, 'bloque de autor vaciado';
 
-# 2. Agradecimientos: fuera por completo, delatan la institucion.
+# 2. Agradecimientos: el manuscrito no los lleva, asi que esta regla no hace
+#    nada hoy. Se queda como red: si alguna vez se anaden, delatarian la
+#    institucion y la version anonima saldria con ellos.
 $d =~ s/%% -{10,}\n\x5csection\*\{Acknowledgments\}\n.*?(?=\x5csection\*\{Declaration of Interest)//s
   and push @hecho, 'agradecimientos eliminados';
 
