@@ -74,14 +74,14 @@ de trabajo en otro idioma.
 | Materials and Methods — flujo de trabajo | pendiente |
 | Materials and Methods — implementación | **escrita** |
 | Materials and Methods — verificación | **escrita** |
-| Results | pendiente — **es la sección delicada** |
+| Results | **escrita** (~700 palabras) + Tabla 1 de concordancia numérica |
 | Discussion | **escrita** (676 palabras, 4 subsecciones) |
 
 ## Los dos riesgos de este envío
 
-**1. La sección de resultados.** Sin evaluación de aprendizaje no hay un estudio que reportar.
-Lo defendible es el recorrido por el software, la concordancia numérica con R y la
-disponibilidad. Puede que encaje mejor como **Brief Communication** que como Article completo:
+**1. La sección de resultados.** Ya está escrita: el recorrido por iris, el desacuerdo entre
+los ocho criterios de retención y la Tabla 1 de concordancia con R. Aun así, sin evaluación
+de aprendizaje no hay un estudio que reportar, y puede que encaje mejor como **Brief Communication** que como Article completo:
 vale la pena preguntárselo al editor antes de enviar.
 
 **2. Falta la literatura educativa.** JSDSE es una revista de educación. Esperan que el trabajo

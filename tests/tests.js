@@ -183,7 +183,7 @@ suite('Extraction (iris)', () => {
   test('eigenvalues match prcomp', async () => {
     const Z = zscore(await loadIris());
     const e = S.eigenSym(S.covMatrix(centre(Z)));
-    const expected = [2.918498, 0.914030, 0.146755, 0.020715];
+    const expected = [2.918498, 0.914030, 0.146757, 0.020715];
     expected.forEach((v, i) => near(e.values[i], v, 1e-5, `eigenvalue ${i + 1}`));
   });
 

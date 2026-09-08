@@ -309,13 +309,81 @@ against R.
 %% ---------------------------------------------------------------------------
 \section{Results}
 
-%% TODO: the most delicate section of this submission. Without a learning
-%% evaluation, "results" cannot be a study. What is defensible:
-%%   - what the software does at each decision point, illustrated with screenshots;
-%%   - numerical agreement with R (table from the replication script);
-%%   - availability: online demo, open source, DOI, teaching materials.
-%% Worth asking the editor whether this fits as "Results" or whether the paper
-%% belongs as a Brief Communication.
+%% Open question for the editor: without a learning evaluation this section
+%% reports software behaviour and numerical correctness, not a study. It may
+%% fit better as a Brief Communication. Ask before submitting.
+
+This section reports what the platform produces and whether it produces it
+correctly. It does not report an evaluation of learning; that limitation is
+taken up in the Discussion.
+
+\subsection{A worked analysis}
+
+Fisher's iris measurements \citep{fisher1936} are loaded from the opening
+screen, and are used here because their principal components are already
+familiar to most readers. The file holds 150 flowers, four measurements and the
+species name. The platform classifies the four measurements as active variables
+and the species as a supplementary categorical variable, and reports before any
+component is extracted that \emph{Petal.Length} and \emph{Petal.Width} are
+nearly redundant ($r = 0.963$), adding that this does not invalidate the
+analysis.
+
+The diagnostic screen returns $n = 150$ and $p = 4$; a mean absolute
+correlation of $0.594$, with five of the six pairs above $0.30$; a determinant
+of $8.11 \times 10^{-3}$, so the matrix is far from singular; no observation
+beyond the $0.999$ quantile of the Mahalanobis distance; Bartlett's test
+rejecting sphericity, $\chi^2 = 706.96$ on $6$ degrees of freedom,
+$p < 0.0001$; and an overall KMO of $0.540$. The summary verdict is that the
+data are suitable for principal component analysis.
+
+The same screen makes visible a tension that a single verdict would hide. The
+reference table shown beside the index places a KMO of $0.540$ in the band
+labelled \emph{low}, and the per-variable measures of sampling adequacy read
+$0.270$ for \emph{Sepal.Width}, $0.531$ for \emph{Petal.Length}, $0.584$ for
+\emph{Sepal.Length} and $0.634$ for \emph{Petal.Width}. Applied
+mechanically, the rule that variables below $0.50$ are candidates for removal
+would delete \emph{Sepal.Width}, and doing so works: the overall index rises to
+$0.681$ and every remaining variable clears the threshold. It also deletes the
+only measurement that is not part of the general size gradient.
+\emph{Sepal.Width} loads $-0.460$ on the first component and $0.883$ on the
+second; removing it raises the adequacy index by discarding the contrast that
+the second component describes. The platform reports the rule, the value that
+triggers it and the summary verdict on the same screen, rather than choosing
+between them, because that choice belongs to the analyst.
+
+
+Extraction returns eigenvalues of $2.9185$, $0.9140$, $0.1468$ and $0.0207$,
+which is $72.96\,\%$ of the variance on the first component and $95.81\,\%$ on
+the plane of the first two. Of the eight retention criteria, five return one
+component --- parallel analysis against the 95th percentile of 500 random
+matrices, Kaiser--Guttman, the broken stick, Velicer's MAP and the $70\,\%$
+threshold --- and three return two: the scree elbow, the $80\,\%$ threshold and
+Jolliffe's relaxed bound. The consensus recommendation is one component, and
+all eight verdicts are displayed together with the quantity that decides each.
+The disagreement is not an artefact of a badly behaved data set. The second
+eigenvalue is $0.914$, below the Kaiser threshold of $1$ and below the
+simulated 95th percentile of $1.122$, but it still carries $22.85\,\%$ of the
+variance; whether that is signal or noise is not settled by any of the eight
+rules, and the interface does not pretend otherwise.
+
+\subsection{Agreement with independent implementations}
+
+Table~\ref{tab:agreement} compares fifteen quantities computed by PCAPro with
+the values returned by independent implementations: \texttt{prcomp} in R for
+the eigenvalues and loadings \citep{R}, \texttt{psych::KMO} for sampling
+adequacy \citep{psych}, and Bartlett's formula for the test statistic. No
+expectation was recorded from a previous run of PCAPro; comparing software
+against its own past output establishes stability, not correctness.
+
+Each tolerance is set by the precision at which its reference is published
+rather than by the precision of the computation --- $10^{-5}$ for the
+eigenvalues, $10^{-6}$ for the determinant and $10^{-3}$ for the adequacy
+indices and the loadings --- because requiring agreement beyond the last
+published digit would be requiring agreement with a rounding artefact. All
+fifteen quantities agree within tolerance. The comparison is a script that runs
+without a browser, so it executes in continuous integration on every change to
+the software, alongside the 60-test suite that runs in the browser; a
+divergence from any reference value fails the build.
 
 %% ---------------------------------------------------------------------------
 \section{Discussion}
@@ -435,5 +503,49 @@ working installation requiring no download is available at
 %% "[repository, anonymised for review]". As written they identify the author.
 
 \bibliography{ref}
+
+%% ---------------------------------------------------------------------------
+%% JSDSE requires tables after the references, one per page, each with its
+%% caption above it.
+\clearpage
+\section*{Tables}
+
+\begin{table}[htbp]
+\centering
+\caption{Agreement between PCAPro and independent implementations on Fisher's
+iris data ($n = 150$, four active variables, correlation matrix). Reference
+values come from \texttt{prcomp} and \texttt{psych::KMO} in R and from
+Bartlett's formula, never from a previous run of PCAPro. The tolerance of each
+row is the precision at which its reference is published.}
+\label{tab:agreement}
+\begin{tabular}{llrrr}
+\hline
+Quantity & Reference & PCAPro & Reference value & Tolerance \\
+\hline
+$\lambda_1$                  & \texttt{prcomp}     & 2.918498 & 2.918498 & $10^{-5}$ \\
+$\lambda_2$                  & \texttt{prcomp}     & 0.914030 & 0.914030 & $10^{-5}$ \\
+$\lambda_3$                  & \texttt{prcomp}     & 0.146757 & 0.146757 & $10^{-5}$ \\
+$\lambda_4$                  & \texttt{prcomp}     & 0.020715 & 0.020715 & $10^{-5}$ \\
+Overall KMO                  & \texttt{psych::KMO} & 0.540    & 0.540    & $10^{-3}$ \\
+MSA \emph{Sepal.Length}      & \texttt{psych::KMO} & 0.584    & 0.584    & $10^{-3}$ \\
+MSA \emph{Sepal.Width}       & \texttt{psych::KMO} & 0.270    & 0.270    & $10^{-3}$ \\
+MSA \emph{Petal.Length}      & \texttt{psych::KMO} & 0.531    & 0.531    & $10^{-3}$ \\
+MSA \emph{Petal.Width}       & \texttt{psych::KMO} & 0.634    & 0.634    & $10^{-3}$ \\
+Bartlett $\chi^2$            & Bartlett's formula  & 706.959  & 706.959  & $10^{-3}$ \\
+$\det \mathbf{R}$            & \texttt{det}        & 0.008110 & 0.008110 & $10^{-6}$ \\
+$|a_{1}|$ \emph{Sepal.Length}& \texttt{prcomp}     & 0.8902   & 0.8902   & $10^{-3}$ \\
+$|a_{1}|$ \emph{Sepal.Width} & \texttt{prcomp}     & 0.4601   & 0.4601   & $10^{-3}$ \\
+$|a_{1}|$ \emph{Petal.Length}& \texttt{prcomp}     & 0.9916   & 0.9916   & $10^{-3}$ \\
+$|a_{1}|$ \emph{Petal.Width} & \texttt{prcomp}     & 0.9650   & 0.9650   & $10^{-3}$ \\
+\hline
+\end{tabular}
+
+\vspace{0.5em}
+\begin{minipage}{\textwidth}
+\footnotesize $a_{1}$ denotes the loading of a variable on the first principal
+component, $a_{jk} = v_{jk}\sqrt{\lambda_k}$; absolute values are reported
+because the sign of an eigenvector is arbitrary.
+\end{minipage}
+\end{table}
 
 \end{document}
