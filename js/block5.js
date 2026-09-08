@@ -541,10 +541,7 @@ function dlResid() {
   download(matrixToCSV(hdr, rows), slug(state.fileName) + '_residuos.csv', 'text/csv;charset=utf-8');
 }
 function copyParagraph() {
-  const txt = el('narrParagraph').textContent;
-  navigator.clipboard.writeText(txt).then(
-    () => { const b = el('copyParagraph'); b.textContent = '✔ Copiado'; setTimeout(() => b.textContent = '⧉ Copiar párrafo', 1800); },
-    () => alert('No se pudo copiar automáticamente. Selecciona el texto y cópialo a mano.'));
+  copyToClipboard('copyParagraph', el('narrParagraph').textContent);
 }
 
 /* ============================================================

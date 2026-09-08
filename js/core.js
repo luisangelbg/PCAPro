@@ -195,8 +195,21 @@ function enableStep(n, on) {
   if (b) b.disabled = (on === false);
 }
 
+/* Copia al portapapeles y confirma en el propio boton. Guarda el rotulo previo
+   en lugar de reescribirlo: con una cadena fija, el boton se quedaba en el
+   idioma en que estaba escrita. */
+function copyToClipboard(btnId, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const b = el(btnId);
+    if (!b) return;
+    const antes = b.textContent;
+    b.textContent = tt('✔ Copiado');
+    setTimeout(() => { b.textContent = antes; }, 1800);
+  }, () => alert(tt('No se pudo copiar automáticamente. Selecciona el texto y cópialo a mano.')));
+}
+
 Object.assign(window, {
   el, els, mk, showMessage, clearMessages, statTiles, buildTable,
   fmtNum, fmtP, fmtPLabel, fmtPct, csvEscape, matrixToCSV, download, slug, goStep, enableStep,
-  tt, TT, cp, cpr,
+  tt, TT, cp, cpr, copyToClipboard,
 });
