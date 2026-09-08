@@ -149,6 +149,44 @@ obstacle and the decisions are. Our contribution is to move the reasoning inside
 the software, so that the argument for a choice is present at the moment the
 choice is made rather than in material that has to be consulted alongside it.
 
+It is worth being specific about what existing tools already do, because the
+contribution claimed here is not a capability they lack. In R, FactoMineR
+\citep{le2008} with factoextra \citep{factoextra} implements active and
+supplementary elements, squared cosines and contributions, and psych
+\citep{psych} supplies rotations and adequacy indices; factoextra is a
+visualisation layer over results computed elsewhere. In Python, scikit-learn
+\citep{pedregosa2011} supplies the decomposition. All of them are more capable
+than PCAPro and will remain so; what they require is the ability to program.
+
+Among graphical programs, JASP \citep{jasp} and jamovi \citep{jamovi} are the
+closest comparison, and they are not deficient. Both compute the
+Kaiser--Meyer--Olkin index with a measure of sampling adequacy for each
+variable, and Bartlett's test of sphericity; JASP adds Mardia's test of
+multivariate normality and the anti-image correlation matrix, and both offer a
+wider set of rotations than PCAPro. Both are translated into Spanish, and since
+version 0.98.1 JASP translates its help files as well.
+
+The difference lies in how the retention decision is put to the user. In both
+programs the number of components is fixed by selecting one method from a list
+of three --- parallel analysis, an eigenvalue threshold, or a number entered by
+hand --- so that one criterion is in force at a time and any disagreement
+between them becomes visible only if the user thinks to change the setting and
+compare. PCAPro computes eight criteria at once and displays them side by side
+with the quantity that decides each, so that agreement or disagreement among
+them is part of the output rather than a property of an option chosen
+beforehand. Where the criteria agree, little is at stake; where they disagree,
+which is the case that matters, the disagreement is in front of the student
+without their having to know to look for it.
+
+Delivery differs as well, and for the intended audience it is not incidental.
+JASP is a desktop application requiring roughly four gigabytes of disk space and
+at least four gigabytes of memory; jamovi is distributed the same way, with a
+browser-hosted version whose free tier requires an account and limits session
+length and data set size. PAST \citep{hammer2001}, long established in ecology
+and palaeontology, is likewise installed. Commercial packages such as SPSS,
+XLSTAT and Minitab remove the programming barrier and add a licence cost that a
+public university in Latin America frequently cannot meet.
+
 %% TODO: no citation supports the bilingual argument. Searches in Teaching
 %% Statistics, SERJ and TISE did not cover language barriers in statistics
 %% learning. It is written below as a design rationale grounded in the teaching

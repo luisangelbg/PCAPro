@@ -69,7 +69,7 @@ de trabajo en otro idioma.
 | Sección | Estado |
 |---|---|
 | Título, autoría, resumen, palabras clave | escritos |
-| Introduction | **escrita**, falta la revisión de literatura educativa |
+| Introduction | **escrita**, con literatura educativa y comparación de herramientas |
 | Materials and Methods — diseño pedagógico | **escrita** (878 palabras, 4 subsecciones) |
 | Materials and Methods — flujo de trabajo | pendiente |
 | Materials and Methods — implementación | **escrita** |
