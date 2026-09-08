@@ -70,7 +70,7 @@ de trabajo en otro idioma.
 |---|---|
 | Título, autoría, resumen, palabras clave | escritos |
 | Introduction | **escrita**, falta la revisión de literatura educativa |
-| Materials and Methods — diseño pedagógico | esqueleto con los tres principios a argumentar |
+| Materials and Methods — diseño pedagógico | **escrita** (878 palabras, 4 subsecciones) |
 | Materials and Methods — flujo de trabajo | pendiente |
 | Materials and Methods — implementación | **escrita** |
 | Materials and Methods — verificación | **escrita** |

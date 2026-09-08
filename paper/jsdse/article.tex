@@ -118,18 +118,104 @@ barrier for Latin American students.
 
 \subsection{Pedagogical design}
 
-%% TODO: this is the core section for JSDSE. It must argue teaching design
-%% decisions and their rationale, not describe functions. Three principles are
-%% already implemented and need to be argued here:
-%%   1. Guidance lives next to the computation, not in a separate manual.
-%%      Thirty-four expandable sections cover the postulates, the preliminary
-%%      tests, sample-size rules, the retention criteria, the rotations, the
-%%      reading of cos-squared and contributions, and the three kinds of ellipse.
-%%   2. Eight retention criteria are shown at once instead of a single answer,
-%%      because they disagree and the disagreement is informative.
-%%   3. Diagnostics do not return a bare number: they state which assumption is
-%%      at risk and what to do, and refuse to present a decision as more certain
-%%      than it is.
+The design problem is not how to compute a principal component analysis but
+where to put the reasoning that makes one defensible. Textbooks contain that
+reasoning, and students read it before the practical session and forget it
+during. Software manuals contain it, and nobody reads manuals. The wager behind
+PCAPro is that the argument has to appear at the moment the decision is taken,
+in the same screen, or it will not be consulted at all. Three design principles
+follow from that wager.
+
+\subsubsection{Guidance at the point of decision}
+
+The workflow is divided into six steps, and each carries an expandable section
+of methodological exposition immediately above the controls that act on it.
+Thirty-four such sections cover the postulates of the method, the preliminary
+tests, sample-size rules, the retention criteria, the rotations, the reading of
+squared cosines and contributions, and the difference between the three kinds of
+ellipse that can be drawn around a group of individuals.
+
+The placement is the design decision, not the content. A student deciding
+whether to standardise sees, in the same view, why the covariance solution is
+dominated by the variable with the largest variance, and why that matters when
+lengths in millimetres are analysed together with weights in grams. The material
+is collapsed by default so that it does not obstruct the user who already knows,
+and expanded by one click for the user who does not. Nothing has to be
+remembered from a previous session or looked up elsewhere.
+
+%% TODO: connect this to the literature on just-in-time or embedded instruction
+%% once the education literature review is written.
+
+\subsubsection{Showing disagreement instead of an answer}
+
+The number of components to retain is the decision that most often goes wrong,
+and it is the one where software is least helpful: most packages report the
+eigenvalues and leave the rest implicit, with the consequence that the
+Kaiser--Guttman rule becomes the default by inertia rather than by argument,
+even though it is known to overestimate.
+
+PCAPro computes eight criteria and displays them together: Horn's parallel
+analysis \citep{horn1965} against the 95th percentile of the random eigenvalues
+\citep{glorfeld1995}, Kaiser--Guttman, the relaxed variant of
+\citet{jolliffe2002}, the broken stick \citep{frontier1976}, Velicer's minimum
+average partial \citep{velicer1976}, the scree elbow \citep{cattell1966} and two
+cumulative-variance thresholds. Each is shown with the number of components it
+supports and the variance that number would retain.
+
+The criteria disagree, and the disagreement is the point. On Fisher's iris data,
+the most familiar example in introductory teaching, five of the eight criteria
+support a single component --- parallel analysis, Kaiser--Guttman, the broken
+stick, the minimum average partial and the 70\% variance threshold --- while the
+scree elbow, the 80\% threshold and Jolliffe's relaxed rule support two. The
+disagreement is not a defect of the criteria: the second component accounts for
+22.9\% of the variance, which is enough to be arguable and not enough to be
+obvious.
+
+A student who is shown one recommended number learns that the question has an
+answer. A student who is shown this spread learns that it does not, and that the
+choice has to be argued rather than looked up. A weighted consensus is offered
+as a starting point, but it appears as one more row in the table, and the number
+of components must be set deliberately by the user.
+
+\subsubsection{Naming the risk and the remedy}
+
+Diagnostics are reported as arguments rather than as numbers. Where conventional
+output states that the Kaiser--Meyer--Olkin index \citep{kaiser1974} is 0.54,
+PCAPro states that the value falls in the range where the analysis is
+discouraged, identifies which individual variables fall below the threshold of
+0.50, and recommends removing them one at a time with recomputation between
+removals. A significant test of sphericity \citep{bartlett1950} is reported with
+the reminder that it is almost always significant when the sample is large, so
+that it is a necessary and not a sufficient condition.
+
+The same principle governs what the software refuses to do. It will not rotate a
+single retained component, and instead explains that rotation requires a plane.
+It states that a short vector in the correlation circle does not mean the
+variable is unimportant but that its information lies on other axes, and that
+its direction should therefore not be read. It warns that non-overlapping
+confidence ellipses of the group means are not a statistical test of difference,
+and that a principal component analysis does not seek to separate groups at all.
+It flags the tests it offers for group comparison as circular, because the axes
+were constructed from the same variables.
+
+That last case is the clearest illustration of the principle. The circularity
+warning reduces the apparent strength of the software's own output. It is
+included because a tool that reports a $p$ value without it teaches the student
+to trust the wrong thing.
+
+\subsubsection{Language as an access condition}
+
+The interface, the thirty-four expository sections, the automatically drafted
+interpretation and the generated report exist in full in Spanish and English,
+and the language can be changed at any point without losing work. This is
+treated as part of the pedagogical design rather than as localisation. A student
+who must read the methodological argument in a second language while also
+learning the method pays a cost that has nothing to do with statistics, and
+introductory material on multivariate methods in Spanish is scarce enough that
+the cost is rarely optional.
+
+%% TODO: if the education literature review turns up work on language barriers
+%% in statistics learning, cite it here.
 
 \subsection{The analysis workflow}
 
