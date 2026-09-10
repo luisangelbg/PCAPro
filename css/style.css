@@ -422,3 +422,26 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
   .hero h1 { font-size: 2.1rem; }
   .closing { grid-template-columns: 1fr; }
 }
+
+/* ============================================================
+   Card 1.9 · elección del método
+   ============================================================ */
+.met-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin: 10px 0 14px; }
+.met {
+  display: flex; flex-direction: column; gap: 6px; text-align: left; cursor: pointer;
+  padding: 14px 16px; border-radius: var(--radius); font: inherit; color: inherit;
+  background: var(--card-bg); border: 1.5px solid var(--border); transition: border-color .15s, transform .15s;
+}
+.met:hover:not([disabled]) { border-color: var(--primary); transform: translateY(-1px); }
+.met.sel { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 3px var(--primary-soft); }
+.met[disabled] { opacity: .55; cursor: not-allowed; }
+.met-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.met-sigla { font-weight: 800; letter-spacing: .04em; color: var(--primary); }
+.met-nombre { font-weight: 600; font-size: .92rem; }
+.met-razon { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
+.pill.mut { background: var(--bg-soft); color: var(--text-muted); border-color: var(--border); }
+.chk-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 6px 14px; margin: 8px 0; }
+.chk-grid .mut { color: var(--text-muted); font-size: .82rem; }
+table.mini { font-size: .86rem; }
+table.mini input[type=text] { width: 140px; padding: 3px 8px; }
+#metodoConfig { margin-top: 12px; }

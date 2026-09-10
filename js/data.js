@@ -747,6 +747,8 @@ function renderResults() {
 
   el('resultsWrap').style.display = '';
   enableStep(2, true);
+  /* con la matriz preparada, el recomendador ya puede dictaminar */
+  if (typeof Metodo !== 'undefined') Metodo.renderRecomendador();
 }
 
 /* ============================================================

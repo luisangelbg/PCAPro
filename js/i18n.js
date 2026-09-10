@@ -139,6 +139,138 @@ I18N.en = {
     'Adjustable loading threshold, description of each dimension, test values by category, group comparison and characteristic individuals. It drafts a paragraph from your own numbers, for you to review.',
   'Informe HTML autocontenido, impresión a PDF y paquete ZIP con las figuras tal como las editaste, las tablas en CSV y la referencia para citar la plataforma.':
     'Self-contained HTML report, printing to PDF and a ZIP package with the figures as you edited them, the tables in CSV and the reference for citing the platform.',
+
+  /* ---- Eleccion y ejecucion del metodo (metodo.js) ---- */
+  '1.9 · Qué método corresponde':
+    '1.9 · Which method fits',
+  'El tipo de variables decide el método, pero eso es la parte fácil. Lo que sigue comprueba además si el método tiene algo que encontrar en <i>estos</i> datos. Cada aviso lleva la cifra que lo motiva.':
+    'The type of variables decides the method, but that is the easy part. What follows also checks whether the method has anything to find in <i>these</i> data. Every warning carries the figure behind it.',
+  'recomendado':
+    'recommended',
+  'posible':
+    'possible',
+  'no aplica':
+    'not applicable',
+  'El AC cruza dos variables cualitativas. Elige cuáles: las filas de la tabla serán las categorías de la primera y las columnas, las de la segunda.':
+    'CA cross-tabulates two qualitative variables. Choose which: the rows of the table will be the categories of the first and the columns those of the second.',
+  'Filas':
+    'Rows',
+  'Variables cualitativas que entran en el ACM. Desmarca las que quieras dejar como suplementarias.':
+    'Qualitative variables entering the MCA. Untick the ones you want to keep supplementary.',
+  'Variables cualitativas que entran en los ejes junto a las cuantitativas activas. Desmarca las que sean un factor de diseño: irán como suplementarias.':
+    'Qualitative variables entering the axes alongside the active quantitative ones. Untick those that are a design factor: they will go supplementary.',
+  'Asigna cada variable activa a un bloque. Escribe el mismo nombre para las variables que van juntas; cada bloque necesita al menos dos.':
+    'Assign each active variable to a block. Type the same name for variables that belong together; each block needs at least two.',
+  'Bloque':
+    'Block',
+  'El ACP no necesita más configuración: usará las variables activas con el escalado elegido arriba, y las cualitativas quedarán como suplementarias para colorear los mapas.':
+    'PCA needs no further configuration: it will use the active variables with the scaling chosen above, and the qualitative ones will stay supplementary to colour the maps.',
+  'Elige dos variables distintas para filas y columnas.':
+    'Choose two different variables for rows and columns.',
+  'El ACM necesita al menos dos variables cualitativas.':
+    'MCA needs at least two qualitative variables.',
+  'El AFDM necesita al menos una variable cualitativa; si no hay, el método es el ACP.':
+    'FAMD needs at least one qualitative variable; if there is none, the method is PCA.',
+  'El AFM necesita al menos dos bloques.':
+    'MFA needs at least two blocks.',
+  'Ejes por encima de 1/Q (Benzécri)':
+    'Axes above 1/Q (Benzécri)',
+  'Inercia ajustada acumulada ≥ 70 %':
+    'Adjusted cumulative inertia ≥ 70 %',
+  'Inercia ajustada acumulada ≥ 80 %':
+    'Adjusted cumulative inertia ≥ 80 %',
+  'con la corrección de Greenacre':
+    'with the Greenacre correction',
+  'Ejes por encima de la inercia media':
+    'Axes above the mean inertia',
+  'Inercia acumulada ≥ 70 %':
+    'Cumulative inertia ≥ 70 %',
+  'Inercia acumulada ≥ 80 %':
+    'Cumulative inertia ≥ 80 %',
+  'umbral habitual':
+    'usual threshold',
+  '2.3 · ¿Cuántos ejes retener?':
+    '2.3 · How many axes to retain?',
+  'Horn y el MAP de Velicer están pensados para matrices de correlaciones; aquí lo que se compara son inercias, así que los criterios son otros. Igual que en el ACP, se muestran todos y decides tú.':
+    'Horn and Velicer\'s MAP are meant for correlation matrices; here what is compared are inertias, so the criteria are different. As in PCA, all of them are shown and you decide.',
+  'Ejes a retener':
+    'Axes to retain',
+  'Siguiente entrega':
+    'Next release',
+  'Los mapas factoriales, la interpretación y el informe para este método están en construcción; por ahora el recorrido termina en este bloque. El ACP conserva su recorrido completo.':
+    'The factor maps, the interpretation and the report for this method are under construction; for now the workflow ends at this block. PCA keeps its full workflow.',
+  'Individuos / filas':
+    'Individuals / rows',
+  'Ejes posibles':
+    'Possible axes',
+  'Inercia total':
+    'Total inertia',
+  'Ejes retenidos':
+    'Axes retained',
+  'de la inercia':
+    'of the inertia',
+  'χ² de independencia':
+    'χ² of independence',
+  'Filas sin dato':
+    'Rows without data',
+  'excluidas por vacíos en las cualitativas':
+    'excluded for gaps in the qualitative variables',
+  '% inercia':
+    '% inertia',
+  '% ajustado (Greenacre)':
+    '% adjusted (Greenacre)',
+  'eje':
+    'axis',
+  'ejes':
+    'axes',
+  'Consenso':
+    'Consensus',
+  'todos los criterios coinciden':
+    'all the criteria agree',
+  'los criterios discrepan; la decisión es tuya':
+    'the criteria disagree; the decision is yours',
+  'Columna':
+    'Column',
+  'cos² (plano 1–2)':
+    'cos² (plane 1–2)',
+  'contrib. % (Dim1)':
+    'contrib. % (Dim1)',
+  'Las cuantitativas aparecen con su correlación con cada eje; las categorías, con el baricentro de sus individuos. Ambas en la misma escala de cos² y contribuciones.':
+    'Quantitative variables appear with their correlation with each axis; categories, with the barycentre of their individuals. Both on the same scale of cos² and contributions.',
+  'Coordenadas principales: las que se dibujan. cos² dice cuán bien está representado cada punto en el plano; la contribución, cuánto pesó en construir el eje.':
+    'Principal coordinates: the ones that get drawn. cos² says how well each point is represented in the plane; the contribution, how much it weighed in building the axis.',
+  'Qué asociaciones sostienen el mapa':
+    'Which associations hold up the map',
+  'Cada celda de la tabla contribuye a la χ². Las de arriba son las asociaciones concretas que el mapa va a mostrar: un residuo positivo es atracción entre fila y columna; negativo, repulsión.':
+    'Each cell of the table contributes to the χ². The top ones are the concrete associations the map is going to show: a positive residual is attraction between row and column; negative, repulsion.',
+  'Fila':
+    'Row',
+  'Observado':
+    'Observed',
+  'Esperado':
+    'Expected',
+  'Residuo':
+    'Residual',
+  '% de la χ²':
+    '% of the χ²',
+  'Asociación entre las variables (v de Cramér)':
+    'Association between the variables (Cramér\'s V)',
+  'El ACM solo encuentra estructura si las variables están asociadas entre sí. Valores cerca de 0 entre todas ellas significan que el mapa reparte a los individuos casi al azar.':
+    'MCA only finds structure if the variables are associated with one another. Values near 0 among all of them mean the map scatters the individuals almost at random.',
+  'Qué variable explica cada eje':
+    'Which variable explains each axis',
+  'Para las cuantitativas, la correlación al cuadrado con el eje; para las cualitativas, la razón de correlación η². Las dos están en [0, 1] y se pueden comparar: es lo que permite leer un eje que mezcla ambos tipos.':
+    'For quantitative variables, the squared correlation with the axis; for qualitative ones, the correlation ratio η². Both lie in [0, 1] and can be compared: that is what makes an axis mixing both types readable.',
+  'cuantitativa':
+    'quantitative',
+  'cualitativa':
+    'qualitative',
+  'Los bloques':
+    'The blocks',
+  'Inercia de cada bloque en cada eje (ninguna pasa de 1) y coeficiente RV entre bloques: cuánta estructura comparten. RV = 0 significa que dos bloques no tienen nada en común.':
+    'Inertia of each block on each axis (none exceeds 1) and RV coefficient between blocks: how much structure they share. RV = 0 means two blocks have nothing in common.',
+  'propio':
+    'own',
   '⧉ Copiar párrafo': '⧉ Copy paragraph',
   'Cómo citar': 'How to cite',
   'Cómo citar PCAPro': 'How to cite PCAPro',

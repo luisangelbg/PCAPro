@@ -178,6 +178,14 @@ function consensus(criteria) {
    Interfaz
    ============================================================ */
 function run() {
+  /* Si en el bloque 1 se eligió otro método, lo ejecuta metodo.js; el ACP
+     conserva la ruta de abajo sin cambios. */
+  if (typeof Metodo !== 'undefined' && state.metodo && state.metodo !== 'pca') {
+    Metodo.ejecutarYRenderizar();
+    return;
+  }
+  const mr = el('metodoResults');
+  if (mr) mr.style.display = 'none';
   const btn = el('runPcaBtn');
   btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Extrayendo componentes…');
   clearMessages('pcaMessages');
