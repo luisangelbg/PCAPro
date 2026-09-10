@@ -206,8 +206,9 @@ function run() {
         k: state.pca && state.pca.kUserSet ? state.pca.k : kRec,
         kUserSet: state.pca ? state.pca.kUserSet : false,
       });
-      /* una nueva extracción invalida la rotación anterior */
-      state.rot = null; state.fac = null;
+      /* una nueva extracción invalida la rotación y el agrupamiento anteriores */
+      state.rot = null; state.fac = null; state.hcpc = null;
+      if (el('cluResults')) el('cluResults').style.display = 'none';
       el('facResults').style.display = 'none';
       el('rotResults').style.display = 'none';
 

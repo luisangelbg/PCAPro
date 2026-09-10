@@ -153,7 +153,11 @@ Interp.render = function (P) {
       <h2>${tt('5.4 · Borrador para la sección de resultados')}</h2>
       <p class="hint">${tt('Redacción automática con tus propios números. Revísala y adáptala antes de usarla.')}</p>
       <blockquote id="interpNarr" class="cite-ref"></blockquote>
-      <div class="btn-row"><button class="btn btn-secondary btn-sm" id="copyInterpNarr" data-i18n="⧉ Copiar párrafo">⧉ Copiar párrafo</button></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary btn-sm" id="copyInterpNarr" data-i18n="⧉ Copiar párrafo">⧉ Copiar párrafo</button>
+        <button class="btn btn-secondary btn-sm" id="goClusterI">${tt('Agrupar los individuos (HCPC) →')}</button>
+        <button class="btn btn-primary btn-sm" id="goStep6i">${tt('Ir al informe →')}</button>
+      </div>
     </div>`;
 
   /* --- lectura de cada eje, con el nombre editable --- */
@@ -192,6 +196,8 @@ Interp.render = function (P) {
 
   Interp.narrativa(P);
   el('copyInterpNarr').addEventListener('click', () => copyToClipboard('copyInterpNarr', el('interpNarr').textContent));
+  el('goClusterI').addEventListener('click', Clu.abrir);
+  el('goStep6i').addEventListener('click', () => goStep(6));
 };
 
 /* Borrador redactado con los números del análisis. */
@@ -228,7 +234,7 @@ Interp.narrativa = function (P) {
     if (!pos.length && !neg.length) return;
     partes.push(TT(
       `El eje ${d + 1} (${fmtPct(P.pct[d], 1)}) opone ${pos.map(x => x.name).join(', ') || tt('nada en el lado positivo')} frente a ${neg.map(x => x.name).join(', ') || tt('nada en el lado negativo')}${I.names[d] ? `, y puede leerse como «${I.names[d]}»` : ''}.`,
-      `Axis ${d + 1} (${fmtPct(P.pct[d], 1)}) opposes ${pos.map(x => x.name).join(', ') || tt('nothing on the positive side')} against ${neg.map(x => x.name).join(', ') || tt('nothing on the negative side')}${I.names[d] ? `, and can be read as “${I.names[d]}”` : ''}.`));
+      `Axis ${d + 1} (${fmtPct(P.pct[d], 1)}) opposes ${pos.map(x => x.name).join(', ') || 'nothing on the positive side'} against ${neg.map(x => x.name).join(', ') || 'nothing on the negative side'}${I.names[d] ? `, and can be read as “${I.names[d]}”` : ''}.`));
   });
 
   const sig = I.cat.filter(r => r.vtest.some(v => Math.abs(v) >= 1.96));

@@ -1455,6 +1455,254 @@ I18N.en = {
     '4 · Goodness of fit: reproduced matrix and RMSR',
   '5 · Cómo se escriben los resultados': '5 · How the results are written up',
   'Qué produce este bloque': 'What this block produces',
+
+  /* ---- Bloque 5b: agrupamiento jerarquico (HCPC) ---- */
+  'Agrupamiento jerárquico de Ward sobre las coordenadas factoriales, con tres reglas para el número de grupos, consolidación por k-medias, dendrograma editable y la descripción de cada grupo por valores test.':
+    'Ward hierarchical clustering on the factor coordinates, with three rules for the number of clusters, k-means consolidation, an editable dendrogram and a description of each cluster by test values.',
+  'En el AC lo que describe a una fila es su propio perfil: cómo reparte su total entre las columnas. El valor test trata las filas por igual, así que con masas muy desiguales conviene leerlo como orden de importancia y no como una probabilidad.':
+    'In CA what describes a row is its own profile: how it splits its total across the columns. The test value treats the rows as equally weighted, so with very unequal masses it should be read as a ranking of importance rather than as a probability.',
+  'Grupos': 'Clusters',
+  'Nota': 'Note',
+  'Valor test': 'Test value',
+  'los tres criterios coinciden': 'the three criteria agree',
+  'Agrupamiento':
+    'Clustering',
+  'Agrupamiento sobre los componentes: teoría':
+    'Clustering on the components: theory',
+  'El análisis factorial ordena a los individuos en un espacio continuo. Agruparlos es una operación distinta y opcional: convierte esa nube en un pequeño número de clases con nombre.':
+    'Factor analysis orders the individuals in a continuous space. Clustering them is a separate, optional operation: it turns that cloud into a small number of named classes.',
+  '1 · Por qué agrupar sobre los ejes y no sobre las variables':
+    '1 · Why cluster on the axes and not on the variables',
+  '2 · El criterio de Ward':
+    '2 · Ward\'s criterion',
+  '3 · Cuántos grupos':
+    '3 · How many clusters',
+  '4 · La consolidación por k-medias':
+    '4 · Consolidation by k-means',
+  '5 · Cómo se describe un grupo':
+    '5 · How a cluster is described',
+  '6 · Lo que un agrupamiento no demuestra':
+    '6 · What a clustering does not prove',
+  '5b.1 · Configuración del agrupamiento':
+    '5b.1 · Clustering settings',
+  'Agrupar los individuos →':
+    'Cluster the individuals →',
+  'Agrupar los individuos (HCPC) →':
+    'Cluster the individuals (HCPC) →',
+  'Agrupando…':
+    'Clustering…',
+  'Todavía no hay una solución factorial que agrupar.':
+    'There is no factor solution to cluster yet.',
+  'Ejes que entran':
+    'Axes used',
+  'Número de grupos':
+    'Number of clusters',
+  'Consolidar por k-medias':
+    'Consolidate by k-means',
+  'automático (consenso de los tres criterios)':
+    'automatic (consensus of the three criteria)',
+  '5b.2 · Resumen de la partición':
+    '5b.2 · Summary of the partition',
+  '5b.3 · Cuántos grupos':
+    '5b.3 · How many clusters',
+  '5b.4 · Dendrograma':
+    '5b.4 · Dendrogram',
+  '5b.5 · Los grupos sobre el plano factorial':
+    '5b.5 · The clusters on the factor plane',
+  '5b.6 · Qué caracteriza a cada grupo':
+    '5b.6 · What characterises each cluster',
+  '5b.7 · Individuos que representan a cada grupo':
+    '5b.7 · Individuals that represent each cluster',
+  '5b.8 · Borrador para la sección de resultados':
+    '5b.8 · Draft for the results section',
+  'Tres reglas independientes sobre el mismo árbol. Cuando coinciden, el número de grupos es una propiedad de los datos; cuando discrepan, la partición es una decisión tuya y conviene decirlo así en el texto.':
+    'Three independent rules on the same tree. When they agree, the number of clusters is a property of the data; when they disagree, the partition is your decision and the text should say so.',
+  'En la figura, la barra de cada q es lo que cuesta la fusión que hay que deshacer para llegar a ese número de grupos. No se corta en la barra más alta, sino donde las barras dejan de serlo: el último q que todavía compra algo.':
+    'In the figure, the bar for each q is the cost of the merger that has to be undone to reach that number of clusters. The cut does not go at the tallest bar but where the bars stop being tall: the last q that still buys something.',
+  'La altura a la que se unen dos ramas es la inercia que se pierde al fusionarlas: cuanto más arriba, más caro fue el agrupamiento y más distintos eran. La línea de puntos marca el corte.':
+    'The height at which two branches join is the inertia lost by merging them: the higher up, the more expensive the merger and the more different they were. The dotted line marks the cut.',
+  'El mismo mapa de individuos de siempre, coloreado por grupo. Si el agrupamiento tiene sentido, los grupos ocupan zonas distintas del plano; si se solapan, es que los ejes que los separan no son los dos que estás viendo.':
+    'The usual map of individuals, coloured by cluster. If the clustering makes sense, the clusters occupy different areas of the plane; if they overlap, the axes that separate them are not the two you are looking at.',
+  'Valor test: cuántas desviaciones típicas se aparta el grupo del conjunto. Por encima de |1.96| la diferencia no se explica por el reparto al azar de los individuos (p < 0.05). Es una descripción, no una prueba: los grupos se construyeron para ser distintos.':
+    'Test value: how many standard deviations the cluster departs from the whole. Above |1.96| the difference is not explained by a random split of the individuals (p < 0.05). It is a description, not a test: the clusters were built to be different.',
+  'Los paragones son los más cercanos al centro de su grupo: los ejemplares típicos. Los específicos son los más alejados de los demás centros: los casos que no se confunden con ningún otro grupo.':
+    'Paragons are those closest to the centre of their cluster: the typical members. Specific individuals are those furthest from the other centres: the cases not confused with any other cluster.',
+  'Ejes usados':
+    'Axes used',
+  'Inercia entre grupos':
+    'Between-cluster inertia',
+  'de la inercia de la nube':
+    'of the inertia of the cloud',
+  'Tamaño de los grupos':
+    'Cluster sizes',
+  'estructura clara':
+    'clear structure',
+  'estructura débil':
+    'weak structure',
+  'sin estructura apreciable':
+    'no appreciable structure',
+  'elegido entre criterios que discrepan':
+    'chosen among criteria that disagree',
+  'grupos':
+    'clusters',
+  'Perfil de fila por grupo':
+    'Row profile by cluster',
+  'Variables cuantitativas':
+    'Quantitative variables',
+  'Posición de cada grupo en los ejes':
+    'Position of each cluster on the axes',
+  'Media del grupo':
+    'Cluster mean',
+  'Media general':
+    'Overall mean',
+  '% en el grupo':
+    '% in the cluster',
+  '% general':
+    '% overall',
+  '% del grupo':
+    '% of the cluster',
+  '% del total':
+    '% of the total',
+  'n en el grupo':
+    'n in the cluster',
+  'Distancia':
+    'Distance',
+  'paragón':
+    'paragon',
+  'específico':
+    'specific',
+  'categoría':
+    'category',
+  'Valor en el grupo':
+    'Value in the cluster',
+  'Valor general':
+    'Overall value',
+  '* variable suplementaria: no intervino en la construcción de los ejes ni del agrupamiento.':
+    '* supplementary variable: it took part neither in building the axes nor in the clustering.',
+  '⬇ Asignación de grupos (CSV)':
+    '⬇ Cluster assignment (CSV)',
+  '⬇ Descripción de los grupos (CSV)':
+    '⬇ Cluster description (CSV)',
+  'Mayor salto de altura':
+    'Largest height jump',
+  'Mayor pérdida relativa de inercia':
+    'Largest relative loss of inertia',
+  'Máxima silueta media':
+    'Maximum average silhouette',
+  'la fusión más costosa del árbol':
+    'the most expensive merger in the tree',
+  'la regla de Husson y Josse':
+    'Husson and Josse\'s rule',
+  'compara cohesión y separación':
+    'compares cohesion and separation',
+  'los criterios discrepan; manda la regla de la pérdida relativa':
+    'the criteria disagree; the relative-loss rule decides',
+  'Dendrograma':
+    'Dendrogram',
+  'Agrupamiento jerárquico de Ward':
+    'Ward\'s hierarchical clustering',
+  'Elección del número de grupos':
+    'Choosing the number of clusters',
+  'Mapa de los grupos':
+    'Map of the clusters',
+  'Los grupos sobre el plano factorial':
+    'The clusters on the factor plane',
+  'Perfil de los grupos':
+    'Cluster profiles',
+  'Qué distingue a cada grupo':
+    'What sets each cluster apart',
+  'valores test por encima de |1.96|, los diez mayores de cada grupo':
+    'test values above |1.96|, the ten largest of each cluster',
+  'Pérdida de inercia al fusionar':
+    'Inertia lost by merging',
+  'Pérdida de inercia del corte':
+    'Inertia lost at the cut',
+  'Silueta media':
+    'Average silhouette',
+  'Valor test (líneas de referencia en ±1.96)':
+    'Test value (reference lines at ±1.96)',
+  'Nada característico por encima del umbral':
+    'Nothing characteristic above the threshold',
+  'Qué se dibuja':
+    'What is drawn',
+  'Color de las barras':
+    'Bar colour',
+  'Color del corte elegido':
+    'Colour of the chosen cut',
+  'Valores sobre las barras':
+    'Values on the bars',
+  'Orientación':
+    'Orientation',
+  'Hojas abajo':
+    'Leaves at the bottom',
+  'Hojas a la izquierda':
+    'Leaves on the left',
+  'Colorear las ramas por grupo':
+    'Colour the branches by cluster',
+  'Color del tronco':
+    'Trunk colour',
+  'Línea de corte':
+    'Cut line',
+  'Color del corte':
+    'Cut colour',
+  'Franja de grupos':
+    'Cluster strip',
+  'Escala en raíz cuadrada':
+    'Square-root scale',
+  'Etiquetas de las hojas':
+    'Leaf labels',
+  'Máximo de hojas etiquetadas':
+    'Maximum number of labelled leaves',
+  'Grosor de las ramas':
+    'Branch thickness',
+  'Largo (px)':
+    'Length (px)',
+  'Alto de las alturas (px)':
+    'Height axis (px)',
+  'Título del eje de alturas':
+    'Height axis title',
+  'Paneles por fila':
+    'Panels per row',
+  'Ancho de cada panel (px)':
+    'Width of each panel (px)',
+  'Ancho del rótulo (px)':
+    'Label column width (px)',
+  'Alto de barra (px)':
+    'Bar height (px)',
+  'Color por encima de la media':
+    'Colour above the mean',
+  'Color por debajo de la media':
+    'Colour below the mean',
+  'Mostrar el valor':
+    'Show the value',
+  'Agrupamiento jerárquico (HCPC)':
+    'Hierarchical clustering (HCPC)',
+  'Agrupamiento jerárquico sobre los ejes':
+    'Hierarchical clustering on the axes',
+  'Bloque 5b · Agrupamiento':
+    'Block 5b · Clustering',
+  'opcional, sin ejecutar':
+    'optional, not run',
+  'Número de grupos sugerido por cada criterio.':
+    'Number of clusters suggested by each criterion.',
+  'Composición de la partición.':
+    'Composition of the partition.',
+  'Variables y categorías que caracterizan a cada grupo (|v| ≥ 1.96).':
+    'Variables and categories that characterise each cluster (|v| ≥ 1.96).',
+  'Individuos representativos de cada grupo.':
+    'Individuals representative of each cluster.',
+  'En el grupo':
+    'In the cluster',
+  'En el conjunto':
+    'In the whole',
+  'Paragones':
+    'Paragons',
+  'Individuos específicos':
+    'Specific individuals',
+  'Los valores test del agrupamiento describen la partición, no la ponen a prueba: los grupos se construyeron para maximizar esas diferencias.':
+    'The test values of the clustering describe the partition, they do not test it: the clusters were built to maximise those differences.',
+  'La rotación no se aplica a este método: el paso siguiente son los mapas factoriales del bloque 4, después la interpretación, el agrupamiento opcional y el informe.':
+    'Rotation does not apply to this method: the next step is the factor maps of Block 4, then the interpretation, the optional clustering and the report.',
 };
 
 /* ============================================================

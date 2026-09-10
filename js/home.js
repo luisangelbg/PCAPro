@@ -128,8 +128,12 @@ const BLOQUES = [
    'Círculo de correlaciones, mapa de individuos y biplot, con cos² y contribuciones para saber a qué puntos hacer caso. Proyecta variables y categorías suplementarias sin que intervengan en los ejes.'],
   ['Interpretación',
    'Umbral de carga ajustable, descripción de cada dimensión, valores test por categoría, comparación de grupos e individuos característicos. Redacta un borrador con tus propios números, para que lo revises.'],
+  /* El agrupamiento es opcional y vive en el paso 7, rotulado 5b: por eso
+     estas tarjetas llevan su destino escrito y no lo deducen de su posición. */
+  ['Agrupamiento',
+   'Agrupamiento jerárquico de Ward sobre las coordenadas factoriales, con tres reglas para el número de grupos, consolidación por k-medias, dendrograma editable y la descripción de cada grupo por valores test.', 7, '5b'],
   ['Informe',
-   'Informe HTML autocontenido, impresión a PDF y paquete ZIP con las figuras tal como las editaste, las tablas en CSV y la referencia para citar la plataforma.'],
+   'Informe HTML autocontenido, impresión a PDF y paquete ZIP con las figuras tal como las editaste, las tablas en CSV y la referencia para citar la plataforma.', 6, '6'],
 ];
 
 function pintar() {
@@ -142,8 +146,8 @@ function pintar() {
 
   const fg = el('featureGrid');
   if (fg) fg.innerHTML = BLOQUES.map((b, i) =>
-    '<button class="feat" data-ir="' + (i + 1) + '" type="button">' +
-      '<span class="feat-n">' + (i + 1) + '</span>' +
+    '<button class="feat" data-ir="' + (b[2] || i + 1) + '" type="button">' +
+      '<span class="feat-n">' + (b[3] || i + 1) + '</span>' +
       '<span><span class="feat-t">' + tt(b[0]) + '</span>' +
       '<span class="feat-d">' + tt(b[1]) + '</span></span></button>').join('');
 

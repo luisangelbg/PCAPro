@@ -37,6 +37,7 @@
   <button class="step-btn" data-step="3" disabled><span class="step-num">3</span> <span data-i18n="Rotación">Rotación</span></button>
   <button class="step-btn" data-step="4" disabled><span class="step-num">4</span> <span data-i18n="Gráficos factoriales">Gráficos factoriales</span></button>
   <button class="step-btn" data-step="5" disabled><span class="step-num">5</span> <span data-i18n="Interpretación">Interpretación</span></button>
+  <button class="step-btn" data-step="7" disabled><span class="step-num">5b</span> <span data-i18n="Agrupamiento">Agrupamiento</span></button>
   <button class="step-btn" data-step="6" disabled><span class="step-num">6</span> <span data-i18n="Informe">Informe</span></button>
 </nav>
 
@@ -2328,11 +2329,199 @@ R̂ = P · Φ · Pᵀ      (oblique rotation)</div>
         <button class="btn btn-secondary btn-sm" id="dlDimDesc" data-i18n="⬇ Descripción de dimensiones (CSV)">⬇ Descripción de dimensiones (CSV)</button>
         <button class="btn btn-secondary btn-sm" id="dlVtest" data-i18n="⬇ Valores test (CSV)">⬇ Valores test (CSV)</button>
         <button class="btn btn-secondary btn-sm" id="dlResid" data-i18n="⬇ Matriz de residuos (CSV)">⬇ Matriz de residuos (CSV)</button>
+        <button class="btn btn-secondary btn-sm goCluster" data-i18n="Agrupar los individuos (HCPC) →">Agrupar los individuos (HCPC) →</button>
         <button class="btn btn-primary btn-sm" id="goStep6" data-i18n="Ir al informe →">Ir al informe →</button>
       </div>
     </div>
   </div>
 </section>
+<section class="step-panel" id="panel-7">
+
+  <!-- ---------- TEORÍA DEL BLOQUE 5b ---------- -->
+  <div class="card theory-card">
+    <h2 data-i18n="Agrupamiento sobre los componentes: teoría">Agrupamiento sobre los componentes: teoría</h2>
+    <p class="hint" data-i18n-auto>El análisis factorial ordena a los individuos en un espacio continuo. Agruparlos es una
+      operación distinta y opcional: convierte esa nube en un pequeño número de clases con nombre.</p>
+
+    <details class="acc" open>
+      <summary data-i18n-auto>1 · Por qué agrupar sobre los ejes y no sobre las variables</summary>
+      <div class="acc-body" data-lang="es">
+        <p>El HCPC —<i>hierarchical clustering on principal components</i>, de Husson, Josse y Pagès— agrupa sobre las
+          coordenadas factoriales, no sobre la tabla original. Hay dos razones y las dos son prácticas:</p>
+        <ul>
+          <li><b>Quita el ruido.</b> Los ejes que no retuviste son, en su mayor parte, variación sin estructura. Agrupar
+            sobre los primeros ejes es agrupar sobre una versión limpia de la tabla.</li>
+          <li><b>Unifica los tipos de dato.</b> Sobre las coordenadas de un ACM o de un AFDM se puede usar la distancia
+            euclídea aunque las variables originales sean cualitativas. Sin ese paso previo habría que elegir un
+            coeficiente de similitud entre las decenas que existen, y esa elección cambia el resultado.</li>
+        </ul>
+        <div class="callout"><b>Cuántos ejes</b>
+          Pocos ejes suavizan demasiado y fabrican grupos limpios que no están en los datos; demasiados devuelven el
+          ruido. La costumbre es usar los mismos que retuviste en el bloque 2.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>HCPC — <i>hierarchical clustering on principal components</i>, by Husson, Josse and Pagès — clusters on the
+          factor coordinates, not on the original table. There are two reasons and both are practical:</p>
+        <ul>
+          <li><b>It removes noise.</b> The axes you did not retain are, for the most part, variation without structure.
+            Clustering on the first axes means clustering on a cleaned-up version of the table.</li>
+          <li><b>It unifies data types.</b> Euclidean distance can be used on the coordinates of an MCA or a FAMD even
+            when the original variables are qualitative. Without that step you would have to pick a similarity
+            coefficient among the dozens that exist, and that choice changes the result.</li>
+        </ul>
+        <div class="callout"><b>How many axes</b>
+          Too few axes over-smooth and manufacture clean clusters that are not in the data; too many bring the noise
+          back. The usual practice is to use the same ones you retained in Block 2.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>2 · El criterio de Ward</summary>
+      <div class="acc-body" data-lang="es">
+        <p>En cada paso se unen los dos grupos cuya fusión menos inercia intra añade. El coste de unir A con B es</p>
+        <p class="formula">Δ(A, B) = [w<sub>A</sub> · w<sub>B</sub> / (w<sub>A</sub> + w<sub>B</sub>)] · d²(g<sub>A</sub>, g<sub>B</sub>)</p>
+        <p>con g los centros y w las masas. Es la <b>altura</b> a la que aparece la fusión en el dendrograma: una rama
+          alta significa que unir esos dos grupos costó caro, es decir, que eran distintos.</p>
+        <p>Ward es el criterio natural aquí porque habla el mismo idioma que el análisis factorial: los dos reparten la
+          inercia total entre una parte intra y una parte entre. La inercia entre grupos dividida por la total es la
+          proporción de la nube que la partición explica.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>At each step the two clusters whose merger adds the least within-cluster inertia are joined. The cost of
+          merging A with B is</p>
+        <p class="formula">Δ(A, B) = [w<sub>A</sub> · w<sub>B</sub> / (w<sub>A</sub> + w<sub>B</sub>)] · d²(g<sub>A</sub>, g<sub>B</sub>)</p>
+        <p>with g the centres and w the masses. This is the <b>height</b> at which the merger appears in the dendrogram:
+          a tall branch means that joining those two clusters was expensive, that is, that they were different.</p>
+        <p>Ward is the natural criterion here because it speaks the same language as factor analysis: both split the
+          total inertia into a within part and a between part. Between-cluster inertia divided by the total is the
+          share of the cloud the partition accounts for.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>3 · Cuántos grupos</summary>
+      <div class="acc-body" data-lang="es">
+        <p>No existe una respuesta única, igual que con el número de componentes. Se calculan tres reglas y se muestra
+          si coinciden:</p>
+        <ul>
+          <li><b>Mayor salto de altura.</b> El corte se pone donde la siguiente fusión sería desproporcionadamente cara.</li>
+          <li><b>Mayor pérdida relativa de inercia.</b> La misma idea, pero relativa a la altura anterior; es la regla que
+            usan Husson y Josse y la que decide cuando las tres discrepan.</li>
+          <li><b>Máxima silueta media.</b> Para cada individuo compara su distancia media a los suyos con la distancia
+            media al grupo vecino más próximo. Por encima de 0.5 la estructura es clara; por debajo de 0.25 no hay
+            estructura que reportar, y conviene decirlo.</li>
+        </ul>
+        <div class="callout"><b>Cuando discrepan</b>
+          Elegir un número distinto del consenso es legítimo si tienes una razón de tu disciplina. Lo que no es legítimo
+          es presentar la partición como si el número hubiera salido de los datos.</div>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>There is no single answer, just as with the number of components. Three rules are computed and their
+          agreement is shown:</p>
+        <ul>
+          <li><b>Largest height jump.</b> The cut goes where the next merger would be disproportionately expensive.</li>
+          <li><b>Largest relative loss of inertia.</b> The same idea, but relative to the previous height; this is the rule
+            Husson and Josse use, and the one that decides when the three disagree.</li>
+          <li><b>Maximum average silhouette.</b> For each individual it compares the mean distance to its own cluster with
+            the mean distance to the nearest neighbouring cluster. Above 0.5 the structure is clear; below 0.25 there is
+            no structure to report, and it is worth saying so.</li>
+        </ul>
+        <div class="callout"><b>When they disagree</b>
+          Choosing a number other than the consensus is legitimate if you have a reason from your discipline. What is
+          not legitimate is presenting the partition as if the number had come out of the data.</div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>4 · La consolidación por k-medias</summary>
+      <div class="acc-body" data-lang="es">
+        <p>El árbol tiene una limitación: una fusión, una vez hecha, no se deshace. Un individuo que quedó del lado
+          equivocado en un paso temprano se queda ahí. La consolidación arregla eso: partiendo de los centros del
+          corte, reasigna cada individuo al centro más cercano y repite hasta que nadie se mueva.</p>
+        <p>Nunca empeora la inercia intra —si lo hiciera sería un error de programación, y la suite de pruebas lo
+          comprueba—. A cambio, la partición final <b>puede dejar de coincidir con el dendrograma</b>: si algún
+          individuo cambió de grupo, el árbol y el mapa discrepan en esos casos y aquí se te avisa de cuántos son.</p>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The tree has one limitation: once a merger is made, it is never undone. An individual that ended up on the
+          wrong side at an early step stays there. Consolidation fixes that: starting from the centres of the cut, it
+          reassigns each individual to the nearest centre and repeats until nobody moves.</p>
+        <p>It can never worsen the within-cluster inertia — if it did, that would be a programming error, and the test
+          suite checks for it. In exchange, the final partition <b>may stop matching the dendrogram</b>: if any
+          individual changed cluster, the tree and the map disagree in those cases, and you are told how many.</p>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>5 · Cómo se describe un grupo</summary>
+      <div class="acc-body" data-lang="es">
+        <p>Un grupo se describe diciendo en qué se aparta del conjunto. El <b>valor test</b> mide ese apartamiento en
+          desviaciones típicas, bajo el modelo de que los individuos del grupo se hubieran sacado al azar y sin
+          reemplazo del total. Por encima de |1.96| la diferencia no se explica por ese reparto al azar.</p>
+        <p>Además se dan dos clases de individuos:</p>
+        <ul>
+          <li><b>Paragones:</b> los más cercanos al centro de su grupo. Son los ejemplares típicos, los que enseñarías
+            para explicar qué es ese grupo.</li>
+          <li><b>Individuos específicos:</b> los más alejados de todos los demás centros. Son los que menos se confunden
+            con otro grupo, útiles cuando hay que elegir casos para un estudio de seguimiento.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>A cluster is described by saying how it departs from the whole. The <b>test value</b> measures that departure
+          in standard deviations, under the model that the individuals in the cluster had been drawn at random and
+          without replacement from the total. Above |1.96| the difference is not explained by that random draw.</p>
+        <p>Two kinds of individuals are also given:</p>
+        <ul>
+          <li><b>Paragons:</b> those closest to the centre of their cluster. They are the typical members, the ones you
+            would show to explain what that cluster is.</li>
+          <li><b>Specific individuals:</b> those furthest from every other centre. They are the ones least confused with
+            another cluster, useful when cases have to be picked for a follow-up study.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary data-i18n-auto>6 · Lo que un agrupamiento no demuestra</summary>
+      <div class="acc-body" data-lang="es">
+        <p>El algoritmo <b>siempre</b> devuelve grupos, también sobre datos sin ninguna estructura. Tres cautelas que
+          conviene tener escritas antes de mirar el resultado:</p>
+        <ul>
+          <li>Los valores test <b>describen</b> la partición, no la ponen a prueba. Los grupos se construyeron
+            precisamente para maximizar esas diferencias, así que presentarlos como contrastes de hipótesis es
+            circular.</li>
+          <li>Una silueta baja con una inercia entre grupos alta significa que la partición reparte bien la varianza
+            pero que los grupos no están separados: la nube es continua y la has cortado en rebanadas.</li>
+          <li>Si los grupos coinciden con una variable que ya conocías —el tratamiento, la especie, el sitio—, eso no es
+            un descubrimiento del agrupamiento: compruébalo con esa variable como suplementaria y dilo así.</li>
+        </ul>
+      </div>
+      <div class="acc-body" data-lang="en" hidden>
+        <p>The algorithm <b>always</b> returns clusters, including on data with no structure at all. Three cautions
+          worth writing down before looking at the result:</p>
+        <ul>
+          <li>Test values <b>describe</b> the partition, they do not test it. The clusters were built precisely to
+            maximise those differences, so presenting them as hypothesis tests is circular.</li>
+          <li>A low silhouette with a high between-cluster inertia means the partition splits the variance well but the
+            clusters are not separated: the cloud is continuous and you have sliced it.</li>
+          <li>If the clusters coincide with a variable you already knew — treatment, species, site — that is not a
+            discovery made by the clustering: check it with that variable as supplementary and say so.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="5b.1 · Configuración del agrupamiento">5b.1 · Configuración del agrupamiento</h2>
+    <div id="cluConfig"></div>
+    <div id="cluMessages"></div>
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn btn-primary btn-lg" id="runCluBtn" data-i18n="Agrupar los individuos →">Agrupar los individuos →</button>
+    </div>
+  </div>
+
+  <div id="cluResults" style="display:none"></div>
+</section>
+
 <section class="step-panel" id="panel-6">
 
   <div class="card theory-card">
@@ -2509,6 +2698,8 @@ R̂ = P · Φ · Pᵀ      (oblique rotation)</div>
 <script src="js/report.js"></script>
 <script src="js/block5.js"></script>
 <script src="js/block6.js"></script>
+<script src="js/plots7.js"></script>
+<script src="js/cluster.js"></script>
 <script src="js/home.js"></script>
 </body>
 </html>

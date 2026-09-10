@@ -201,8 +201,13 @@ Rep.build = opts => {
   }
 
   /* --- métodos --- */
+  /* El agrupamiento, si se corrió, es parte del método y va en el mismo
+     párrafo: quien copie esa sección debe llevárselo también. */
+  const parrafoHcpc = state.hcpc ? ' ' + TT(
+    `Sobre las coordenadas de los ${state.hcpc.ejesUsados} primeros ejes se aplicó después un agrupamiento jerárquico con el criterio de Ward${state.hcpc.consolidacion ? ', consolidado por k-medias' : ''}, reteniendo ${state.hcpc.q} grupos (Husson, Josse y Pagès, 2010).`,
+    `A hierarchical clustering with Ward's criterion${state.hcpc.consolidacion ? ', consolidated by k-means' : ''} was then applied to the coordinates of the first ${state.hcpc.ejesUsados} axes, retaining ${state.hcpc.q} clusters (Husson, Josse and Pagès, 2010).`) : '';
   if (inc('metodos') && esOtroMetodo) {
-    body += '<section><h2>' + tt('Métodos') + '</h2><p>' + Interp.parrafoMetodos(P) + '</p></section>';
+    body += '<section><h2>' + tt('Métodos') + '</h2><p>' + Interp.parrafoMetodos(P) + parrafoHcpc + '</p></section>';
   } else if (inc('metodos')) {
 
     const escal = tt({ none: 'sin escalar (matriz de covarianzas)', center: 'solo centrado', z: 'estandarización z (matriz de correlaciones)', pareto: 'escalado de Pareto', vast: 'escalado VAST', range: 'escalado al rango [0,1]', robust: 'escalado robusto (mediana/MAD)' }[state.prep.scaling]);
@@ -240,7 +245,7 @@ Rep.build = opts => {
       All computations were carried out in PCAPro (Barrera-Guzmán, 2026), which implements the
       spectral decomposition by Jacobi rotations and the factor rotations by the gradient
       projection algorithm.
-    `) + `</p></section>`;
+    `) + parrafoHcpc + `</p></section>`;
   }
 
   /* --- bloque 1 --- */
@@ -466,6 +471,44 @@ Rep.build = opts => {
     body += '</section>';
   }
 
+  /* --- bloque 5b: agrupamiento --- */
+  /* Vale para los cinco métodos y es opcional: la sección solo existe si el
+     usuario llegó a ejecutarla. */
+  if (inc('agrupamiento') && state.hcpc) {
+    const H = state.hcpc, S0 = H.sol, q = H.q;
+    const tam = Array.from({ length: q }, (_, g) => H.grupo.reduce((a, x) => a + (x === g ? 1 : 0), 0));
+    body += '<section><h2>' + tt('Agrupamiento jerárquico sobre los ejes') + '</h2>';
+    body += '<p>' + esc(Clu.narrativa(H, 1.96)) + '</p>';
+    body += htmlTable(T() + tt('Número de grupos sugerido por cada criterio.'),
+      [tt('Criterio'), tt('Grupos'), tt('Nota')],
+      H.criterios.reglas.map(r => [tt(r.nombre), String(r.q), tt(r.nota)])
+        .concat([[`<b>${tt('Consenso')}</b>`, `<b>${H.criterios.consenso}</b>`,
+          H.criterios.acuerdo ? tt('los tres criterios coinciden') : tt('los criterios discrepan; manda la regla de la pérdida relativa')]]),
+      { raw: true, num: [1] });
+    body += htmlTable(T() + tt('Composición de la partición.'),
+      [TT('Grupo', 'Cluster'), 'n', '%'].concat(H.descEjes.map(e => e.name)),
+      Array.from({ length: q }, (_, g) => [Clu.nombre(g), String(tam[g]), fmtNum(100 * tam[g] / S0.n, 1)]
+        .concat(H.descEjes.map(e => fmtNum(e.filas[g].media, 3)))),
+      { num: Array.from({ length: H.descEjes.length + 2 }, (_, j) => j + 1) });
+    const fila = [];
+    H.descQuant.forEach(v => v.filas.forEach(f => { if (Math.abs(f.vtest) >= 1.96)
+      fila.push([Clu.nombre(f.grupo), v.name + (v.supp ? ' *' : ''), fmtNum(f.media, 3), fmtNum(f.mediaGeneral, 3), `<b>${fmtNum(f.vtest, 2)}</b>`, fmtPLabel(f.p)]); }));
+    H.descQual.forEach(v => v.filas.forEach(f => { if (Math.abs(f.vtest) >= 1.96)
+      fila.push([Clu.nombre(f.grupo), v.name + ' = ' + f.categoria + (v.supp ? ' *' : ''), fmtNum(f.pctGrupo, 1) + ' %', fmtNum(f.pctGlobal, 1) + ' %', `<b>${fmtNum(f.vtest, 2)}</b>`, fmtPLabel(f.p)]); }));
+    if (fila.length) body += htmlTable(T() + tt('Variables y categorías que caracterizan a cada grupo (|v| ≥ 1.96).'),
+      [TT('Grupo', 'Cluster'), tt('Variable'), tt('En el grupo'), tt('En el conjunto'), tt('Valor test'), 'p'],
+      fila, { raw: true, num: [2, 3, 4, 5] });
+    body += htmlTable(T() + tt('Individuos representativos de cada grupo.'),
+      [TT('Grupo', 'Cluster'), tt('Paragones'), tt('Individuos específicos')],
+      Array.from({ length: q }, (_, g) => [Clu.nombre(g),
+        (H.paragones[g] || []).map(o => S0.ids[o.i]).join(', '),
+        (H.especificos[g] || []).map(o => S0.ids[o.i]).join(', ')]));
+    if (opts.figures) ['figCorte', 'figDendro', 'figCluMap', 'figPerfil'].forEach(id => {
+      const f = figOf(id); if (f) body += figBlock(f, F() + tt(f.cfg.title));
+    });
+    body += '</section>';
+  }
+
   /* --- advertencias --- */
   if (inc('advertencias') && D) {
     const rec = [];
@@ -477,6 +520,13 @@ Rep.build = opts => {
     if (D.skewed.length) rec.push(TT(`${D.skewed.length} variable(s) presentan |g₁| > 1.`, `${D.skewed.length} variable(s) show |g₁| > 1.`));
     if (I && I.res && I.res.rmsr >= 0.08) rec.push(TT(`El RMSR (${fmtNum(I.res.rmsr, 3)}) sugiere que falta estructura por recoger.`, `The RMSR (${fmtNum(I.res.rmsr, 3)}) suggests there is structure left uncaptured.`));
     if (I && I.cmp) rec.push(tt('Los contrastes entre grupos son descriptivos: no se corrigió por comparaciones múltiples y los ejes se eligieron por maximizar varianza.'));
+    if (state.hcpc) {
+      rec.push(tt('Los valores test del agrupamiento describen la partición, no la ponen a prueba: los grupos se construyeron para maximizar esas diferencias.'));
+      if (state.hcpc.silueta < 0.25) rec.push(TT(`La silueta media del agrupamiento (${fmtNum(state.hcpc.silueta, 3)}) está por debajo de 0.25: la nube no presenta grupos separados, solo se ha cortado.`,
+        `The average silhouette of the clustering (${fmtNum(state.hcpc.silueta, 3)}) is below 0.25: the cloud has no separated clusters, it has merely been sliced.`));
+      if (!state.hcpc.criterios.acuerdo) rec.push(TT(`Los criterios para el número de grupos no coincidieron; se retuvieron ${state.hcpc.q}.`,
+        `The criteria for the number of clusters did not agree; ${state.hcpc.q} were retained.`));
+    }
     body += '<section><h2>' + tt('Limitaciones y advertencias') + '</h2>' +
       (rec.length ? '<ul>' + rec.map(r => `<li>${esc(r)}</li>`).join('') + '</ul>'
         : '<p>' + tt('No se detectaron problemas relevantes en la verificación de supuestos.') + '</p>') +
@@ -491,6 +541,7 @@ Rep.build = opts => {
       <li>Hendrickson, A. E. y White, P. O. (1964). Promax: a quick method for rotation to oblique simple structure. <i>British Journal of Statistical Psychology</i>, 17, 65–70.</li>
       <li>Horn, J. L. (1965). A rationale and test for the number of factors in factor analysis. <i>Psychometrika</i>, 30, 179–185.</li>
       <li>Hotelling, H. (1933). Analysis of a complex of statistical variables into principal components. <i>Journal of Educational Psychology</i>, 24, 417–441.</li>
+      <li>Husson, F., Josse, J. y Pagès, J. (2010). <i>Principal component methods — hierarchical clustering — partitional clustering: why would we need to choose for visualizing data?</i> Technical report, Agrocampus Ouest.</li>
       <li>Jennrich, R. I. (2001, 2002). A simple general procedure for orthogonal / oblique rotation. <i>Psychometrika</i>, 66, 289–306; 67, 7–20.</li>
       <li>Jolliffe, I. T. (2002). <i>Principal Component Analysis</i> (2.ª ed.). Springer.</li>
       <li>Kaiser, H. F. (1958). The varimax criterion for analytic rotation in factor analysis. <i>Psychometrika</i>, 23, 187–200.</li>
@@ -498,6 +549,7 @@ Rep.build = opts => {
       <li>Lebart, L., Morineau, A. y Piron, M. <i>Statistique exploratoire multidimensionnelle</i>. Dunod.</li>
       <li>Pearson, K. (1901). On lines and planes of closest fit to systems of points in space. <i>Philosophical Magazine</i>, 2, 559–572.</li>
       <li>Velicer, W. F. (1976). Determining the number of components from the matrix of partial correlations. <i>Psychometrika</i>, 41, 321–327.</li>
+      <li>Ward, J. H. (1963). Hierarchical grouping to optimize an objective function. <i>Journal of the American Statistical Association</i>, 58, 236–244.</li>
     </ul></section>`;
   }
 

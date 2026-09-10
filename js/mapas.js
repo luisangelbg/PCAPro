@@ -290,7 +290,7 @@ Mapas.renderBloque4 = function (P) {
     <button class="btn btn-primary btn-lg" id="goStep5m">${tt('Ir a la interpretación →')}</button>
   </div>`);
   c.innerHTML = cards.join('');
-  enableStep(5, true);
+  enableStep(5, true); enableStep(7, true);
   el('goStep5m').addEventListener('click', () => {
     if (typeof PCAProInterp !== 'undefined') PCAProInterp.fillGroups();
     goStep(5);

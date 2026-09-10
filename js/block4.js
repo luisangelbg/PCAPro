@@ -44,7 +44,7 @@ function run() {
       if (window.PCAProInterp) PCAProInterp.fillGroups();
       renderBlock4();
       el('facResults').style.display = '';
-      enableStep(5, true);
+      enableStep(5, true); enableStep(7, true);
       el('facResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
       showMessage('facMessages', 'error', TT('Error al construir los mapas: ', 'Error while building the maps: ') + err.message);

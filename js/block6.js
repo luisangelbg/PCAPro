@@ -21,6 +21,7 @@ const SECTIONS = [
   ['rotacion', 'Rotación'],
   ['mapas', 'Representación factorial'],
   ['interpretacion', 'Interpretación'],
+  ['agrupamiento', 'Agrupamiento jerárquico (HCPC)'],
   ['advertencias', 'Limitaciones y advertencias'],
   ['referencias', 'Referencias metodológicas'],
   ['anexo', 'Anexo con la configuración'],
@@ -156,6 +157,7 @@ function tableEntries() {
         ['Variable', 'Categoria', 'n'].concat(I.cat[0].vtest.map((_, i) => 'vtest_' + dim(i)), I.cat[0].p.map((_, i) => 'p_' + dim(i))),
         I.cat.map(r => [r.variable, r.level, r.n].concat(r.vtest, r.p)));
     }
+    agrupamientoTablas(add);
     return out;
   }
 
@@ -202,7 +204,35 @@ function tableEntries() {
     add(TT('tablas/', 'tables/') + '14_residuos.csv', ['', ...state.activeVars],
       state.activeVars.map((v, i) => [v, ...I.res.Res[i]]));
   }
+  agrupamientoTablas(add);
   return out;
+}
+
+/* El agrupamiento es opcional y vale para los cinco métodos, así que sus
+   tablas se añaden en un solo sitio y se llaman desde las dos ramas. */
+function agrupamientoTablas(add) {
+  const H = state.hcpc;
+  if (!H) return;
+  const S0 = H.sol, K = H.ejesUsados, d = TT('tablas/', 'tables/');
+  add(d + '20_grupos_asignacion.csv',
+    [S0.id === 'ca' ? 'Fila' : 'Individuo', 'Grupo', ...S0.labels.slice(0, K)],
+    S0.ids.map((id, i) => [id, H.grupo[i] + 1, ...S0.rowCoord[i].slice(0, K)]));
+  add(d + '21_grupos_criterios.csv',
+    ['Numero_de_grupos', 'Perdida_de_inercia_del_corte', 'Silueta_media'],
+    H.criterios.siluetas.map(s => [s.q, H.arbol.alturas[H.arbol.n - s.q], s.s]));
+  const desc = [];
+  H.descQuant.forEach(v => v.filas.forEach(f => desc.push(
+    [f.grupo + 1, S0.id === 'ca' ? 'perfil' : 'cuantitativa', v.name, f.n, f.media, f.mediaGeneral, f.vtest, f.p])));
+  H.descQual.forEach(v => v.filas.forEach(f => desc.push(
+    [f.grupo + 1, 'categoria', v.name + ' = ' + f.categoria, f.nGrupo, f.pctGrupo, f.pctGlobal, f.vtest, f.p])));
+  H.descEjes.forEach(e => e.filas.forEach(f => desc.push(
+    [f.grupo + 1, 'eje', e.name, f.n, f.media, f.mediaGeneral, f.vtest, f.p])));
+  add(d + '22_grupos_descripcion.csv',
+    ['Grupo', 'Tipo', 'Variable', 'n', 'Valor_en_el_grupo', 'Valor_general', 'Valor_test', 'p'], desc);
+  const par = [];
+  H.paragones.forEach((l, g) => l.forEach((o, r) => par.push([g + 1, 'paragon', r + 1, S0.ids[o.i], o.d])));
+  H.especificos.forEach((l, g) => l.forEach((o, r) => par.push([g + 1, 'especifico', r + 1, S0.ids[o.i], o.d])));
+  add(d + '23_grupos_paragones.csv', ['Grupo', 'Papel', 'Orden', 'Individuo', 'Distancia'], par);
 }
 
 /* ---------- paquete completo ---------- */
@@ -328,6 +358,9 @@ function refreshStatus() {
       hayMapas ? (otroMetodo ? TT(`plano 1–2 · ${fmtPct((P.pct[0] || 0) + (P.pct[1] || 0), 1)}`, `plane 1–2 · ${fmtPct((P.pct[0] || 0) + (P.pct[1] || 0), 1)}`) : (G.rotated ? tt('solución rotada') : tt('solución sin rotar'))) : tt('sin ejecutar')],
     [tt('Bloque 5 · Interpretación'), !!I,
       I ? (otroMetodo ? TT(`${I.ejes.length} eje(s) descritos`, `${I.ejes.length} axis/axes described`) : `RMSR = ${fmtNum(I.res.rmsr, 4)}`) : tt('sin ejecutar')],
+    [tt('Bloque 5b · Agrupamiento'), !!state.hcpc,
+      state.hcpc ? TT(`${state.hcpc.q} grupos sobre ${state.hcpc.ejesUsados} eje(s)`, `${state.hcpc.q} clusters on ${state.hcpc.ejesUsados} axis/axes`)
+        : tt('opcional, sin ejecutar')],
   ];
   const ul = el('repStatus'); ul.innerHTML = '';
   items.forEach(([name, ok, note]) => {
@@ -342,7 +375,7 @@ function refreshStatus() {
          `${figs.length} figure(s) available: ${figs.map(f => tt(f.cfg.title || f.title)).join(' · ')}`)
     : tt('Todavía no hay figuras generadas.');
   /* deshabilita las secciones de bloques que no se ejecutaron */
-  const avail = { datos: !!state.diagnostics, extraccion: !!P, rotacion: otroMetodo ? false : !!R, mapas: hayMapas, interpretacion: !!I };
+  const avail = { datos: !!state.diagnostics, extraccion: !!P, rotacion: otroMetodo ? false : !!R, mapas: hayMapas, interpretacion: !!I, agrupamiento: !!state.hcpc };
   Object.entries(avail).forEach(([id, ok]) => {
     const c = el('sec_' + id);
     if (!c) return;

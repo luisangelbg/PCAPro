@@ -871,6 +871,81 @@ function tieneAviso(d, nivel, frag) {
   return d.avisos.some(a => a.nivel === nivel && a.titulo.toLowerCase().includes(frag));
 }
 
+/* =====================================================================
+   Dendrogram
+   =====================================================================
+   HCPC.ward records the merges by the surviving representative, which is
+   enough to cut the tree but not to draw it. Plots7 rebuilds the tree proper
+   and orders the leaves. What is checked here are the properties a drawing
+   must have to be readable at all, not pixel positions.
+   ===================================================================== */
+suite('Dendrogram', () => {
+  const arbolFijo = () => {
+    const { X, w } = tresGrupos(9091);
+    const a = HCPC.ward(X, w);
+    return { X, w, a, A: Plots7._arbol(a.merges, X.length), n: X.length };
+  };
+
+  test('the tree has 2n - 1 nodes and a single root', () => {
+    const { A, n } = arbolFijo();
+    eq(A.nodos.length, 2 * n - 1, 'node count');
+    eq(A.raiz, 2 * n - 2, 'root index');
+    eq(A.miembros[A.raiz].length, n, 'the root holds every leaf');
+  });
+
+  test('every leaf appears exactly once in the drawing order', () => {
+    const { A, n } = arbolFijo();
+    const orden = Plots7._orden(A);
+    eq(orden.length, n, 'leaves drawn');
+    eq(new Set(orden).size, n, 'no leaf is repeated');
+    ok(orden.every(i => i >= 0 && i < n), 'every index is a real leaf');
+  });
+
+  test('no branch hangs below its children: the drawing has no inversions', () => {
+    const { A, n } = arbolFijo();
+    for (let id = n; id < A.nodos.length; id++) {
+      const nd = A.nodos[id];
+      ok(nd.h >= A.nodos[nd.izq].h - 1e-12, 'left child above its parent at node ' + id);
+      ok(nd.h >= A.nodos[nd.der].h - 1e-12, 'right child above its parent at node ' + id);
+    }
+  });
+
+  test('the clusters of a cut occupy contiguous stretches of the leaf order', () => {
+    /* This is what makes a dendrogram legible: if the leaves of a cluster were
+       scattered along the axis, the branches would cross. */
+    const { X, w, a, A } = arbolFijo();
+    const orden = Plots7._orden(A);
+    [2, 3, 5].forEach(q => {
+      const g = HCPC.corta(a, q);
+      const seq = orden.map(i => g[i]);
+      const vistos = new Set();
+      let previo = -1;
+      seq.forEach(v => {
+        if (v !== previo) { ok(!vistos.has(v), `cluster ${v} is split in two stretches with q = ${q}`); vistos.add(v); previo = v; }
+      });
+      eq(vistos.size, q, `stretches found with q = ${q}`);
+    });
+  });
+
+  test('the cut line falls between the last merge kept and the first undone', () => {
+    const { a, n } = arbolFijo();
+    const alt = a.alturas;
+    for (let q = 2; q <= 6; q++) {
+      const corte = (alt[n - 1 - q] + alt[n - q]) / 2;
+      ok(corte > alt[n - 1 - q] - 1e-12, `the cut is above the last merge kept, q = ${q}`);
+      ok(corte < alt[n - q] + 1e-12, `the cut is below the first merge undone, q = ${q}`);
+    }
+  });
+
+  test('cos2 of each row adds to one and the contributions of each axis to 100', () => {
+    const { X } = tresGrupos(31337);
+    const { cos2, contrib } = Clu.calidades(X, 2);
+    cos2.forEach((f, i) => near(f.reduce((s, v) => s + v, 0), 1, 1e-12, 'cos2 of row ' + i));
+    for (let k = 0; k < 2; k++)
+      near(contrib.reduce((s, f) => s + f[k], 0), 100, 1e-9, 'contributions to axis ' + (k + 1));
+  });
+});
+
 suite('Method recommender', () => {
   test('every verdict is one of the three allowed and the pick is a real method', () => {
     const { nz } = recRng(5);

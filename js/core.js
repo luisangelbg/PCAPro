@@ -45,6 +45,7 @@ const state = {
   rot: null,
   fac: null,
   interp: null,
+  hcpc: null,
 };
 window.state = state;
 

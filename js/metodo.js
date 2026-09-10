@@ -281,14 +281,15 @@ Metodo.ejecutarYRenderizar = function () {
     try {
       const P = Metodo.correr();
       state.pca = P;
-      state.rot = null; state.fac = null;
+      state.rot = null; state.fac = null; state.hcpc = null;
+      if (el('cluResults')) el('cluResults').style.display = 'none';
       el('facResults').style.display = 'none';
       el('rotResults').style.display = 'none';
       el('pcaResults').style.display = 'none';
       Metodo.renderBloque2(P);
       /* la rotación es cosa del ACP: se salta al bloque 4, donde mapas.js
          dibuja los mapas de este método. Interpretación e informe, después. */
-      enableStep(3, false); enableStep(4, true); enableStep(5, false); enableStep(6, false);
+      enableStep(3, false); enableStep(4, true); enableStep(5, false); enableStep(6, false); enableStep(7, false);
       const g3 = el('goStep3');
       if (g3) g3.textContent = tt('Ir a los mapas factoriales →');
       const mp = el('mapasResults');
@@ -336,7 +337,7 @@ Metodo.renderBloque2 = function (P) {
       <div class="table-scroll" id="metColTable"></div>
     </div>
     <div class="card">
-      <p class="hint"><b>${tt('Siguiente entrega')}.</b> ${tt('La interpretación y el informe para este método están en construcción; los mapas factoriales ya están en el bloque 4. El ACP conserva su recorrido completo.')}</p>
+      <p class="hint">${tt('La rotación no se aplica a este método: el paso siguiente son los mapas factoriales del bloque 4, después la interpretación, el agrupamiento opcional y el informe.')}</p>
     </div>`;
 
   const pinta = () => {

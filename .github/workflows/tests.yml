@@ -33,7 +33,7 @@ jobs:
         env:
           # La suite tiene 60 pruebas. Si corren menos, algo se rompio
           # antes de empezar y el verde seria falso.
-          PCAPRO_MIN_TESTS: 105
+          PCAPRO_MIN_TESTS: 111
         run: |
           python3 -m http.server 8790 --bind 127.0.0.1 &
           SERVER_PID=$!
