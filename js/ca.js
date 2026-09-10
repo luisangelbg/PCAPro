@@ -35,9 +35,9 @@ CA.simple = function (N, filas, cols) {
   const perfil = P.map((r, i) => r.map(v => (rw[i] > 0 ? v / rw[i] : 0)));
 
   /* La métrica de la chi cuadrada pondera cada columna por 1/masa. */
-  const res = G.core(perfil, rw, cw.map(c => (c > 0 ? 1 / c : 0)), { method: 'ca' });
+  const res = GSV.core(perfil, rw, cw.map(c => (c > 0 ? 1 / c : 0)), { method: 'ca' });
 
-  const chi = G.chi2Tabla(N);
+  const chi = GSV.chi2Tabla(N);
   res.tipo = 'ca';
   res.filas = filas || N.map((_, i) => 'f' + (i + 1));
   res.cols = cols || N[0].map((_, j) => 'c' + (j + 1));
@@ -61,7 +61,7 @@ CA.simple = function (N, filas, cols) {
 
 /* Construye el AC a partir de dos columnas de etiquetas. */
 CA.desdeColumnas = function (a, b) {
-  const t = G.contingencia(a, b);
+  const t = GSV.contingencia(a, b);
   return CA.simple(t.N, t.filas, t.cols);
 };
 
@@ -71,7 +71,7 @@ CA.desdeColumnas = function (a, b) {
    cols: arreglo de columnas cualitativas (cada una, un arreglo de etiquetas)
    ============================================================ */
 CA.multiple = function (cols, nombresVar) {
-  const dis = G.disyuntiva(cols);
+  const dis = GSV.disyuntiva(cols);
   const Q = dis.nVar, n = dis.Z.length;
 
   /* El ACM es el AC de la tabla disyuntiva. */
@@ -116,8 +116,8 @@ CA.multiple = function (cols, nombresVar) {
     const fila = [];
     for (let j = 0; j < Q; j++) {
       if (i === j) { fila.push(1); continue; }
-      const t = G.contingencia(cols[i], cols[j]);
-      const c = G.chi2Tabla(t.N);
+      const t = GSV.contingencia(cols[i], cols[j]);
+      const c = GSV.chi2Tabla(t.N);
       const m = Math.min(t.filas.length, t.cols.length) - 1;
       fila.push(m > 0 ? Math.sqrt(c.chi2 / (c.n * m)) : 0);
     }
@@ -129,6 +129,6 @@ CA.multiple = function (cols, nombresVar) {
 
 /* Doble salida: <script> en el navegador y require en Node. */
 if (typeof require === 'function' && typeof S === 'undefined') global.S = require('./stats.js');
-if (typeof require === 'function' && typeof G === 'undefined') global.G = require('./gsvd.js');
+if (typeof require === 'function' && typeof GSV === 'undefined') global.GSV = require('./gsvd.js');
 if (typeof module !== 'undefined' && module.exports) module.exports = CA;
 if (typeof window !== 'undefined') window.CA = CA;

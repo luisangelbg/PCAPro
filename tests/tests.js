@@ -558,7 +558,7 @@ suite('Generalized SVD core', () => {
       const m = S.mean(col), s = S.sd(col);
       for (let i = 0; i < n; i++) Z[i][j] = (X[i][j] - m) / s;
     }
-    const res = G.core(Z, new Array(n).fill(1 / n), new Array(p).fill(1), { method: 'pca' });
+    const res = GSV.core(Z, new Array(n).fill(1 / n), new Array(p).fill(1), { method: 'pca' });
     const eig = S.eigenSym(S.corrMatrix(S.transpose(X)));
     /* el nucleo usa el divisor n; la matriz de correlaciones usa n-1 */
     res.values.forEach((v, k) => near(v * n / (n - 1), eig.values[k], 1e-9, `eigenvalue ${k + 1}`));
@@ -566,7 +566,7 @@ suite('Generalized SVD core', () => {
 
   test('the SVD reconstructs its own matrix', () => {
     const Z = [[1, 2, 0], [-1, 3, 2], [0.5, -2, 1], [2, 1, -1]];
-    const { d, U, V } = G.svd(Z);
+    const { d, U, V } = GSV.svd(Z);
     for (let i = 0; i < Z.length; i++) for (let j = 0; j < Z[0].length; j++) {
       let s = 0;
       for (let k = 0; k < d.length; k++) s += U[k][i] * d[k] * V[k][j];
@@ -576,10 +576,145 @@ suite('Generalized SVD core', () => {
 
   test('singular vectors are orthonormal', () => {
     const Z = [[1, 2, 0], [-1, 3, 2], [0.5, -2, 1], [2, 1, -1]];
-    const { d, V } = G.svd(Z);
+    const { d, V } = GSV.svd(Z);
     for (let a = 0; a < d.length; a++) for (let b = 0; b < d.length; b++) {
       const dot = V[a].reduce((s, v, j) => s + v * V[b][j], 0);
       near(dot, a === b ? 1 : 0, 1e-9, `V${a} . V${b}`);
+    }
+  });
+});
+
+/* =====================================================================
+   FAMD and MFA
+   No recorded constants here either: both methods satisfy exact
+   identities that hold for any data set, so the suite checks those
+   instead of numbers copied from another implementation.
+   ===================================================================== */
+function demoMixed(seed) {
+  let s = seed >>> 0;
+  const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const nz = () => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+  const n = 60, g = [], c2 = [], q = [[], [], [], []];
+  for (let i = 0; i < n; i++) {
+    const k = i % 3;
+    g.push(['A', 'B', 'C'][k]);
+    c2.push(r() < 0.5 ? 'x' : 'y');
+    const b = nz() + k * 1.4;
+    q[0].push(b + 0.3 * nz()); q[1].push(b * 0.8 + 0.6 * nz());
+    q[2].push(nz()); q[3].push(-b * 0.5 + 0.9 * nz());
+  }
+  return { n, q, g, c2 };
+}
+
+suite('Factor analysis of mixed data', () => {
+  test('with only quantitative variables it is a PCA on correlations', () => {
+    const { q } = demoMixed(12345);
+    const f = FAMD.run(q, [], ['a', 'b', 'c', 'd'], []);
+    const eig = S.eigenSym(S.corrMatrix(q));
+    f.values.forEach((v, k) => near(v, eig.values[k], 1e-9, `eigenvalue ${k + 1}`));
+  });
+
+  test('with only qualitative variables it is an MCA scaled by Q', () => {
+    const { g, c2 } = demoMixed(12345);
+    const f = FAMD.run([], [g, c2], [], ['g', 's']);
+    const m = CA.multiple([g, c2], ['g', 's']);
+    const a = f.values.slice().sort((x, y) => y - x);
+    const b = m.values.slice().sort((x, y) => y - x);
+    eq(a.length, b.length, 'number of axes');
+    a.forEach((v, k) => near(v, 2 * b[k], 1e-9, `eigenvalue ${k + 1}`));
+  });
+
+  test('total inertia is p_quant + (J - Q)', () => {
+    const { q, g, c2 } = demoMixed(12345);
+    const f = FAMD.run(q, [g, c2], ['a', 'b', 'c', 'd'], ['g', 's']);
+    const s = f.values.reduce((a, b) => a + b, 0);
+    near(s, f.inerciaEsperada, 1e-9, 'total inertia');
+    eq(f.inerciaEsperada, 7, 'expected inertia for this data set');
+  });
+
+  test('correlations and squared correlation ratios stay in range', () => {
+    const { q, g, c2 } = demoMixed(12345);
+    const f = FAMD.run(q, [g, c2], ['a', 'b', 'c', 'd'], ['g', 's']);
+    ok(f.corQuant.every(row => row.every(v => Math.abs(v) <= 1 + 1e-9)), 'correlation out of [-1,1]');
+    ok(f.eta2.every(row => row.every(v => v >= -1e-12 && v <= 1 + 1e-12)), 'eta squared out of [0,1]');
+  });
+
+  test('a category sits at the barycentre of its individuals', () => {
+    const { q, g, c2 } = demoMixed(12345);
+    const f = FAMD.run(q, [g, c2], ['a', 'b', 'c', 'd'], ['g', 's']);
+    const idx = [];
+    for (let i = 0; i < g.length; i++) if (g[i] === 'A') idx.push(i);
+    const m = idx.reduce((a, i) => a + f.rowCoord[i][0], 0) / idx.length;
+    const pos = f.catEtiq.indexOf('A');
+    near(f.coordCat[pos][0], m, 1e-12, 'category coordinate');
+  });
+});
+
+function demoGrupos(seed) {
+  let s = seed >>> 0;
+  const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const nz = () => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+  const n = 50, morf = [[], [], []], suelo = [[], [], [], [], []], clima = [[], []];
+  for (let i = 0; i < n; i++) {
+    const lat = nz();
+    morf[0].push(lat + 0.4 * nz()); morf[1].push(0.9 * lat + 0.5 * nz()); morf[2].push(nz());
+    for (let j = 0; j < 5; j++) suelo[j].push(0.6 * lat + nz());
+    clima[0].push(-0.7 * lat + 0.5 * nz()); clima[1].push(nz());
+  }
+  return [
+    { nombre: 'morphology', tipo: 'quant', cols: morf, nombres: ['m1', 'm2', 'm3'] },
+    { nombre: 'soil', tipo: 'quant', cols: suelo, nombres: ['s1', 's2', 's3', 's4', 's5'] },
+    { nombre: 'climate', tipo: 'quant', cols: clima, nombres: ['c1', 'c2'] },
+  ];
+}
+
+suite('Multiple factor analysis', () => {
+  test('no group contributes more than 1 to the inertia of an axis', () => {
+    /* This is the whole point of the method: the soil group has five
+       variables and climate only two, and neither may dominate. */
+    const m = MFA.run(demoGrupos(777));
+    ok(m.inerciaGrupo.every(f => f.every(v => v <= 1 + 1e-9)), 'a group exceeded 1');
+  });
+
+  test('the global point is the barycentre of the partial points', () => {
+    const m = MFA.run(demoGrupos(777));
+    for (let i = 0; i < m.n; i++) for (let k = 0; k < m.k; k++) {
+      const media = m.parciales.reduce((a, P) => a + P[i][k], 0) / m.nGrupos;
+      near(media, m.rowCoord[i][k], 1e-9, `individual ${i}, axis ${k + 1}`);
+    }
+  });
+
+  test('with a single group it reduces to that group divided by its first eigenvalue', () => {
+    const g = demoGrupos(777);
+    const uno = MFA.run([g[0]]);
+    const n = g[0].cols[0].length;
+    const X = [];
+    for (let i = 0; i < n; i++) {
+      X.push(g[0].cols.map(c => {
+        const mm = S.mean(c);
+        const sd = Math.sqrt(c.reduce((a, v) => a + (v - mm) * (v - mm), 0) / n);
+        return (c[i] - mm) / sd;
+      }));
+    }
+    const solo = GSV.core(X, new Array(n).fill(1 / n), [1, 1, 1], {});
+    uno.values.forEach((v, k) => near(v, solo.values[k] / solo.values[0], 1e-9, `eigenvalue ${k + 1}`));
+  });
+
+  test('duplicating a group doubles the eigenvalues', () => {
+    const g = demoGrupos(777);
+    const uno = MFA.run([g[0]]);
+    const dos = MFA.run([g[0], { nombre: 'copy', tipo: 'quant', cols: g[0].cols, nombres: g[0].nombres }]);
+    uno.values.forEach((v, k) => near(dos.values[k], 2 * v, 1e-9, `eigenvalue ${k + 1}`));
+  });
+
+  test('RV is symmetric, has a unit diagonal and stays in [0, 1]', () => {
+    const m = MFA.run(demoGrupos(777));
+    for (let i = 0; i < m.nGrupos; i++) {
+      near(m.RV[i][i], 1, 1e-12, `RV diagonal ${i}`);
+      for (let j = 0; j < m.nGrupos; j++) {
+        near(m.RV[i][j], m.RV[j][i], 1e-12, `RV symmetry ${i},${j}`);
+        ok(m.RV[i][j] >= -1e-12 && m.RV[i][j] <= 1 + 1e-12, `RV out of range ${i},${j}`);
+      }
     }
   });
 });

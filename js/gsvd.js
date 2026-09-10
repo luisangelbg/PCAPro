@@ -20,7 +20,17 @@
  * para la escuela francesa; Escofier y Pagès (1994) para el AFM.
  */
 
-const G = {};
+const GSV = {};
+
+
+/* Desviación con divisor n. El AFDM y el AFM la necesitan para que cada
+   variable cuantitativa aporte exactamente 1 de inercia: con el divisor n-1
+   aportaría (n-1)/n y la balanza entre tipos de variable quedaría torcida.
+   No cambia la matriz de correlaciones, que es invariante al divisor. */
+GSV.sdPob = function (c) {
+  const m = S.mean(c);
+  return Math.sqrt(c.reduce((a, v) => a + (v - m) * (v - m), 0) / c.length);
+};
 
 /* ============================================================
    Álgebra
@@ -30,7 +40,7 @@ const G = {};
    Se apoya en el Jacobi que ya usa el ACP, así que no se introduce un segundo
    algoritmo numérico que mantener. Para las matrices de esta aplicación
    —decenas o cientos de columnas— es holgadamente suficiente. */
-G.svd = function (Z) {
+GSV.svd = function (Z) {
   const n = Z.length, p = Z[0].length;
   const Zt = S.transpose(Z);
   const C = S.matMul(Zt, Z);                       // p x p, simétrica
@@ -64,7 +74,7 @@ G.svd = function (Z) {
    cw  pesos de columna
    Devuelve la estructura que consumen los bloques 4 y 5.
    ============================================================ */
-G.core = function (X, rw, cw, opt) {
+GSV.core = function (X, rw, cw, opt) {
   opt = opt || {};
   const n = X.length, p = X[0].length;
 
@@ -81,7 +91,7 @@ G.core = function (X, rw, cw, opt) {
   const sr = rw.map(Math.sqrt), sc = cw.map(Math.sqrt);
   const Z = Xc.map((r, i) => r.map((v, j) => v * sr[i] * sc[j]));
 
-  const { d, U, V } = G.svd(Z);
+  const { d, U, V } = GSV.svd(Z);
   const K = d.length;
   const values = d.map(s => s * s);
   const total = values.reduce((a, b) => a + b, 0);
@@ -136,7 +146,7 @@ G.core = function (X, rw, cw, opt) {
    proyecta después, con la fórmula baricéntrica. Vale para filas y para
    columnas y para los cinco métodos.
    ============================================================ */
-G.supRow = function (res, xs, cw) {
+GSV.supRow = function (res, xs, cw) {
   const w = cw || res.colW;
   const K = res.k;
   return xs.map(x => {
@@ -156,7 +166,7 @@ G.supRow = function (res, xs, cw) {
    ============================================================ */
 
 /* Tabla de contingencia a partir de dos vectores de etiquetas. */
-G.contingencia = function (a, b) {
+GSV.contingencia = function (a, b) {
   const fa = [...new Set(a)], fb = [...new Set(b)];
   const ia = new Map(fa.map((v, i) => [v, i])), ib = new Map(fb.map((v, i) => [v, i]));
   const N = fa.map(() => new Array(fb.length).fill(0));
@@ -165,7 +175,7 @@ G.contingencia = function (a, b) {
 };
 
 /* Tabla disyuntiva completa (indicadora) de varias columnas cualitativas. */
-G.disyuntiva = function (cols) {
+GSV.disyuntiva = function (cols) {
   const n = cols[0].length;
   const niveles = cols.map(c => [...new Set(c)]);
   const nombres = [];
@@ -184,7 +194,7 @@ G.disyuntiva = function (cols) {
 
 /* Prueba de independencia sobre la tabla: sin asociación, un AC no tiene
    estructura que mostrar. Es el equivalente de Bartlett para el ACP. */
-G.chi2Tabla = function (N) {
+GSV.chi2Tabla = function (N) {
   const nf = N.length, nc = N[0].length;
   const tot = N.reduce((a, r) => a + r.reduce((x, y) => x + y, 0), 0);
   const fr = N.map(r => r.reduce((a, b) => a + b, 0));
@@ -207,5 +217,5 @@ G.chi2Tabla = function (N) {
 
 /* Doble salida: <script> en el navegador y require en Node. */
 if (typeof require === 'function' && typeof S === 'undefined') global.S = require('./stats.js');
-if (typeof module !== 'undefined' && module.exports) module.exports = G;
-if (typeof window !== 'undefined') window.G = G;
+if (typeof module !== 'undefined' && module.exports) module.exports = GSV;
+if (typeof window !== 'undefined') window.GSV = GSV;
