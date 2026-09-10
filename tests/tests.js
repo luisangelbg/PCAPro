@@ -847,6 +847,129 @@ suite('Hierarchical clustering on principal components', () => {
   });
 });
 
+/* =====================================================================
+   Method recommender
+   Scenarios built so the right answer is known by construction. Two of
+   them guard bugs found while building it: names like "Sepal.Length" must
+   not be read as variable blocks, and one chance pair above |r| = 0.30
+   must not count as correlation structure.
+   ===================================================================== */
+function recRows(n, gen) {
+  return Array.from({ length: n }, (_, i) => gen(i).map(String));
+}
+function recRng(seed) {
+  let s = seed >>> 0;
+  const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const nz = () => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+  return { r, nz };
+}
+function dictamen(cab, rows) {
+  return REC.analiza(PCAProData.profileColumns(cab, rows, '.'));
+}
+function veredicto(d, id) { return d.metodos.find(m => m.id === id).veredicto; }
+function tieneAviso(d, nivel, frag) {
+  return d.avisos.some(a => a.nivel === nivel && a.titulo.toLowerCase().includes(frag));
+}
+
+suite('Method recommender', () => {
+  test('every verdict is one of the three allowed and the pick is a real method', () => {
+    const { nz } = recRng(5);
+    const d = dictamen(['a', 'b', 'c'], recRows(40, () => [nz(), nz(), nz()]));
+    const ids = new Set(['pca', 'ca', 'mca', 'famd', 'mfa', 'hcpc']);
+    d.metodos.forEach(m => {
+      ok(['recomendado', 'posible', 'no aplica'].includes(m.veredicto), `verdict "${m.veredicto}"`);
+      ok(ids.has(m.id), `unknown method ${m.id}`);
+      ok(typeof m.razon === 'string' && m.razon.length > 20, `${m.id} has no reason`);
+    });
+    ok(ids.has(d.recomendado), 'recommended method is not a real one');
+  });
+
+  test('iris: PCA with species supplementary, and no blocks invented from the dots', async () => {
+    const txt = await fetch('../datos/iris.csv').then(r => r.text());
+    const rows = PCAProData.parseCSV(txt);
+    const cab = rows.shift();
+    const d = dictamen(cab, rows);
+    eq(d.recomendado, 'pca', 'recommended method on iris');
+    eq(veredicto(d, 'famd'), 'posible', 'FAMD stays available');
+    eq(d.gruposDetectados, null, '"Sepal.Length" must not be read as a block');
+  });
+
+  test('two groups of two are not a block design', () => {
+    const { nz } = recRng(7);
+    const d = dictamen(['a_1', 'a_2', 'b_1', 'b_2'], recRows(60, () => [nz(), nz(), nz(), nz()]));
+    eq(d.gruposDetectados, null, 'blocks detected from two pairs');
+  });
+
+  test('real blocks in the names are detected and lead to MFA', () => {
+    const { nz } = recRng(8);
+    const cab = ['suelo_pH', 'suelo_MO', 'suelo_N', 'morf_alto', 'morf_hojas', 'clima_temp', 'clima_lluvia'];
+    const d = dictamen(cab, recRows(60, () => {
+      const b = nz();
+      return [b + nz() * .5, b + nz() * .5, nz(), -b + nz() * .5, -b + nz() * .5, b * .5 + nz(), nz()];
+    }));
+    eq(d.recomendado, 'mfa', 'recommended method');
+    eq(d.gruposDetectados.length, 3, 'number of blocks');
+    eq(d.gruposDetectados.map(g => g.nombre).join(','), 'suelo,morf,clima', 'block names');
+  });
+
+  test('independent variables: Bartlett does not reject and there is nothing to summarise', () => {
+    const { nz } = recRng(99);
+    const d = dictamen(['v1', 'v2', 'v3', 'v4'], recRows(80, () => [nz(), nz(), nz(), nz()]));
+    ok(d.correlacion.sinEstructura, 'structure reported on independent data');
+    ok(tieneAviso(d, 'bad', 'summarise') || tieneAviso(d, 'bad', 'resumir'), 'missing "nothing to summarise"');
+  });
+
+  test('correlated variables: Bartlett rejects and structure is reported', () => {
+    const { nz } = recRng(3);
+    const d = dictamen(['a', 'b', 'c', 'd'], recRows(80, () => {
+      const b = nz(); return [b + nz() * .3, b + nz() * .3, b + nz() * .3, nz()];
+    }));
+    ok(!d.correlacion.sinEstructura, 'no structure reported on correlated data');
+    ok(d.correlacion.bartlett.p < 0.05, 'Bartlett should reject here');
+  });
+
+  test('two qualitative variables and nothing else: correspondence analysis', () => {
+    const d = dictamen(['personal', 'consumo'], recRows(193, i =>
+      [['SM', 'JM', 'SE', 'JE', 'SC'][i % 5], ['no', 'poco', 'medio', 'mucho'][(i * 7) % 4]]));
+    eq(d.recomendado, 'ca', 'recommended method');
+    eq(veredicto(d, 'pca'), 'no aplica', 'PCA on no quantitative variables');
+  });
+
+  test('three or more qualitative variables: MCA, and a rare category is flagged', () => {
+    const d = dictamen(['a', 'b', 'c', 'd'], recRows(120, i =>
+      [['x', 'y'][i % 2], ['p', 'q', 'r'][i % 3], ['u', 'v'][(i * 3) % 2], i < 2 ? 'raro' : ['m', 'n'][i % 2]]));
+    eq(d.recomendado, 'mca', 'recommended method');
+    eq(d.categoriasRaras.length, 1, 'one rare category');
+    eq(d.categoriasRaras[0].nivel, 'raro', 'which one');
+    ok(tieneAviso(d, 'warn', 'categor'), 'rare-category warning missing');
+  });
+
+  test('non-negative integers with many zeros are flagged as an abundance table', () => {
+    const { r } = recRng(11);
+    const d = dictamen(['sp1', 'sp2', 'sp3', 'sp4', 'sp5'], recRows(40, () =>
+      [0, 1, 2, 3, 4].map(() => (r() < 0.45 ? 0 : Math.floor(r() * 20)))));
+    ok(d.abundancia && d.abundancia.pCeros >= REC.U.ceros, 'abundance not detected');
+    ok(tieneAviso(d, 'warn', 'abundan'), 'abundance warning missing');
+  });
+
+  test('a small sample raises both size warnings', () => {
+    const { nz } = recRng(13);
+    const d = dictamen(['a', 'b', 'c', 'd', 'e', 'f'], recRows(18, () => {
+      const b = nz(); return [b + nz() * .3, b + nz() * .3, b + nz() * .3, nz(), nz(), nz()];
+    }));
+    ok(tieneAviso(d, 'warn', 'small') || tieneAviso(d, 'warn', 'pequeñ'), 'small-sample warning missing');
+    ok(tieneAviso(d, 'warn', 'per variable') || tieneAviso(d, 'warn', 'por variable'), 'n-per-variable warning missing');
+  });
+
+  test('every warning carries a number, never a bare opinion', () => {
+    const { nz } = recRng(13);
+    const d = dictamen(['a', 'b', 'c', 'd', 'e', 'f'], recRows(18, () => {
+      const b = nz(); return [b + nz() * .3, b + nz() * .3, b + nz() * .3, nz(), nz(), nz()];
+    }));
+    d.avisos.forEach(a => ok(/\d/.test(a.texto), `warning "${a.titulo}" has no figure in it`));
+  });
+});
+
 suite('Input parsing', () => {
   test('comma separated values with quoted fields', () => {
     const rows = PCAProData.parseCSV('a,b,c\n1,"x,y",3\n4,5,6');
