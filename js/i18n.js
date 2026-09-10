@@ -271,6 +271,98 @@ I18N.en = {
     'Inertia of each block on each axis (none exceeds 1) and RV coefficient between blocks: how much structure they share. RV = 0 means two blocks have nothing in common.',
   'propio':
     'own',
+
+  /* ---- Mapas de los otros metodos (mapas.js) ---- */
+  'La interpretación y el informe para este método están en construcción; los mapas factoriales ya están en el bloque 4. El ACP conserva su recorrido completo.':
+    'The interpretation and the report for this method are under construction; the factor maps are already in Block 4. PCA keeps its full workflow.',
+  'La interpretación y el informe para este método están en construcción.':
+    'The interpretation and the report for this method are under construction.',
+  'punto global':
+    'global point',
+  'Solo los N que más contribuyen (0 = todos)':
+    'Only the N that contribute most (0 = all)',
+  'Etiqueta del color de su serie':
+    'Label in its series colour',
+  'Máximo de etiquetas (0 = todas las que quepan)':
+    'Maximum labels (0 = all that fit)',
+  '4.1 · Resumen del plano':
+    '4.1 · Summary of the plane',
+  '4.2 · Mapa simétrico: filas y columnas':
+    '4.2 · Symmetric map: rows and columns',
+  'Filas y columnas en coordenadas principales sobre el mismo plano. La distancia entre dos filas, o entre dos columnas, se lee directamente; la de una fila a una columna solo orienta. Cambia a la vista asimétrica para leer fila-columna con rigor.':
+    'Rows and columns in principal coordinates on the same plane. The distance between two rows, or between two columns, reads directly; from a row to a column it only orients. Switch to the asymmetric view to read row-column rigorously.',
+  '4.2 · Mapa de categorías':
+    '4.2 · Category map',
+  'Cada categoría en el baricentro de los individuos que la presentan, coloreada por su variable. Dos categorías cercanas van juntas en los mismos individuos. Las categorías raras quedan lejos del centro: mira el cos² antes de leerlas.':
+    'Each category at the barycentre of the individuals showing it, coloured by its variable. Two nearby categories go together in the same individuals. Rare categories sit far from the centre: check the cos² before reading them.',
+  '4.3 · Mapa de individuos':
+    '4.3 · Map of individuals',
+  '4.2 · Círculo de correlaciones (cuantitativas)':
+    '4.2 · Correlation circle (quantitative)',
+  '4.3 · Mapa de variables: cuantitativas y cualitativas juntas':
+    '4.3 · Variables map: quantitative and qualitative together',
+  'Cuantitativas por su correlación al cuadrado con cada eje; cualitativas por su η². Ambas en [0, 1], así que un eje se lee viendo qué variables, de uno u otro tipo, están arriba a la derecha.':
+    'Quantitative variables by their squared correlation with each axis; qualitative ones by their η². Both in [0, 1], so an axis is read by seeing which variables, of either type, sit at the top right.',
+  '4.4 · Mapa de categorías':
+    '4.4 · Category map',
+  '4.5 · Mapa de individuos':
+    '4.5 · Map of individuals',
+  '4.2 · Mapa de los bloques':
+    '4.2 · Map of the blocks',
+  'Cada bloque por su inercia en cada eje, entre 0 y 1. Un bloque cerca de (1, 0) está descrito casi por completo por el primer eje; dos bloques cercanos entre sí cuentan la misma historia.':
+    'Each block by its inertia on each axis, between 0 and 1. A block near (1, 0) is almost entirely described by the first axis; two blocks close to each other tell the same story.',
+  '4.3 · Círculo de correlaciones por bloque':
+    '4.3 · Correlation circle by block',
+  '4.5 · Puntos parciales':
+    '4.5 · Partial points',
+  'Cada individuo visto desde cada bloque. El rombo es su posición global, baricentro de los círculos de colores. Cuanto más abiertas las líneas, más discrepan los bloques sobre ese individuo: ahí está la información que el ACP conjunto se traga.':
+    'Each individual seen from each block. The diamond is its global position, the barycentre of the coloured circles. The wider the lines open, the more the blocks disagree about that individual: that is the information a joint PCA swallows.',
+  'inercia representada':
+    'inertia represented',
+  'de':
+    'of',
+  'Individuos':
+    'Individuals',
+  'Categorías':
+    'Categories',
+  'Bloques':
+    'Blocks',
+  'Mapa del análisis de correspondencias':
+    'Correspondence analysis map',
+  'Análisis de correspondencias':
+    'Correspondence analysis',
+  'Vista asimétrica (columnas en coordenadas estándar)':
+    'Asymmetric view (columns in standard coordinates)',
+  'Mapa de categorías':
+    'Category map',
+  'Mapa de variables':
+    'Variables map',
+  'correlación al cuadrado y razón de correlación, en [0, 1]':
+    'squared correlation and correlation ratio, in [0, 1]',
+  'Cuantitativas (r²)':
+    'Quantitative (r²)',
+  'Cualitativas (η²)':
+    'Qualitative (η²)',
+  'Diagonal de referencia':
+    'Reference diagonal',
+  'Mapa de los bloques':
+    'Map of the blocks',
+  'inercia de cada bloque en cada eje':
+    'inertia of each block on each axis',
+  'Puntos parciales':
+    'Partial points',
+  'Puntos parciales por bloque':
+    'Partial points by block',
+  'Todos los individuos':
+    'All individuals',
+  'Solo los N que más contribuyen':
+    'Only the N that contribute most',
+  'Paleta de bloques':
+    'Block palette',
+  'Grosor de las líneas':
+    'Line width',
+  'Variable de grupo':
+    'Group variable',
   '⧉ Copiar párrafo': '⧉ Copy paragraph',
   'Cómo citar': 'How to cite',
   'Cómo citar PCAPro': 'How to cite PCAPro',

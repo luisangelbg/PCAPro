@@ -542,5 +542,9 @@
     return svg;
   }
 
-  window.Plots4 = { corrCircle, indMap, biplot, contribBars, cos2Heat };
+  /* Los ayudantes de marco, ejes y etiquetas se exponen para que los mapas de
+     los otros métodos (mapas.js) tengan exactamente el mismo aspecto sin
+     duplicar el código. */
+  window.Plots4 = { corrCircle, indMap, biplot, contribBars, cos2Heat,
+                    _h: { frame, addTitle, axes, placeLabels } };
 })();

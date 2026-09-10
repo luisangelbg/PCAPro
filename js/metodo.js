@@ -286,9 +286,13 @@ Metodo.ejecutarYRenderizar = function () {
       el('rotResults').style.display = 'none';
       el('pcaResults').style.display = 'none';
       Metodo.renderBloque2(P);
-      /* la rotación es cosa del ACP; los mapas de estos métodos llegan en la
-         siguiente entrega, así que el recorrido termina aquí por ahora */
-      enableStep(3, false); enableStep(4, false); enableStep(5, false); enableStep(6, false);
+      /* la rotación es cosa del ACP: se salta al bloque 4, donde mapas.js
+         dibuja los mapas de este método. Interpretación e informe, después. */
+      enableStep(3, false); enableStep(4, true); enableStep(5, false); enableStep(6, false);
+      const g3 = el('goStep3');
+      if (g3) g3.textContent = tt('Ir a los mapas factoriales →');
+      const mp = el('mapasResults');
+      if (mp) mp.style.display = 'none';
       Metodo.contenedor().scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (err) {
       showMessage('pcaMessages', 'error', TT('Error al ejecutar el método: ', 'Error while running the method: ') + err.message);
@@ -332,7 +336,7 @@ Metodo.renderBloque2 = function (P) {
       <div class="table-scroll" id="metColTable"></div>
     </div>
     <div class="card">
-      <p class="hint"><b>${tt('Siguiente entrega')}.</b> ${tt('Los mapas factoriales, la interpretación y el informe para este método están en construcción; por ahora el recorrido termina en este bloque. El ACP conserva su recorrido completo.')}</p>
+      <p class="hint"><b>${tt('Siguiente entrega')}.</b> ${tt('La interpretación y el informe para este método están en construcción; los mapas factoriales ya están en el bloque 4. El ACP conserva su recorrido completo.')}</p>
     </div>`;
 
   const pinta = () => {

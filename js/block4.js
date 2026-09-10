@@ -14,6 +14,14 @@
 (function () {
 
 function run() {
+  /* Los mapas de los métodos distintos del ACP los dibuja mapas.js; el ACP
+     conserva la ruta de abajo. */
+  if (typeof Mapas !== 'undefined' && state.pca && state.pca.method && state.pca.method !== 'pca') {
+    Mapas.renderBloque4(state.pca);
+    return;
+  }
+  const mp = el('mapasResults');
+  if (mp) mp.style.display = 'none';
   if (!state.pca) {
     clearMessages('facMessages');
     showMessage('facMessages', 'error', tt('Primero extrae los componentes en el Bloque 2.'));

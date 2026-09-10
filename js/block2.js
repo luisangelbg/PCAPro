@@ -569,7 +569,8 @@ function init() {
   el('dlEigen').addEventListener('click', dlEigen);
   el('dlLoadings').addEventListener('click', dlLoadings);
   el('dlScores').addEventListener('click', dlScores);
-  el('goStep3').addEventListener('click', () => goStep(3));
+  /* para los métodos distintos del ACP no hay rotación: se salta a los mapas */
+  el('goStep3').addEventListener('click', () => goStep(state.metodo && state.metodo !== 'pca' ? 4 : 3));
 }
 function renderBlock2Tiles() {
   const P = state.pca;
