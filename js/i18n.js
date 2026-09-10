@@ -65,6 +65,80 @@ I18N.en = {
   'Desmarcar todas': 'Clear all',
   'Restaurar detección automática': 'Restore automatic detection',
   '↻ Actualizar estado': '↻ Refresh status',
+
+  /* ---- Bloque de entrada (panel-0) ---- */
+  'Inicio':
+    'Home',
+  'Estadística multivariada para biología, ecología y agronomía':
+    'Multivariate statistics for biology, ecology and agronomy',
+  'Encuentra los <span class="accent">ejes que ordenan</span> tus datos':
+    'Find the <span class="accent">axes that order</span> your data',
+  'Del archivo crudo a una figura lista para publicar: comprueba si tus datos <b>admiten un ACP</b>, decide <b>cuántos componentes retener</b> con ocho criterios en lugar de uno, rota si hace falta, lee los mapas factoriales y exporta un <b>informe completo</b>. Sin R, sin Python y sin instalar nada.':
+    'From the raw file to a publication-ready figure: check whether your data <b>support a PCA</b>, decide <b>how many components to retain</b> using eight criteria instead of one, rotate if you need to, read the factor maps and export a <b>complete report</b>. No R, no Python and nothing to install.',
+  'Empezar con mis datos →':
+    'Start with my data →',
+  'Ver el ejemplo de iris':
+    'See the iris example',
+  'Leer la teoría':
+    'Read the theory',
+  'Libre y de código abierto':
+    'Free and open source',
+  'Cómo funciona':
+    'How it works',
+  'Un recorrido guiado. Cada paso explica la idea en palabras llanas, revisa tus datos y recomienda qué hacer después. La decisión siempre la tomas tú: la plataforma pone delante el argumento, no la respuesta.':
+    'A guided workflow. Each step explains the idea in plain language, checks your data and recommends what to do next. The decision is always yours: the platform puts the argument in front of you, not the answer.',
+  'Qué incluye':
+    'What it includes',
+  'Seis bloques, en orden. Pulsa una tarjeta para ir directo.':
+    'Six blocks, in order. Click a card to jump straight there.',
+  'Por qué existe':
+    'Why it exists',
+  'El cálculo de un ACP nunca es el problema: cualquier programa devuelve los valores propios. Lo que decide si el análisis se sostiene son las decisiones de alrededor —cómo tratas los faltantes, si estandarizas, cuántos componentes retienes, qué cargas interpretas— y ahí el software habitual calcula la cifra y se detiene. PCAPro pone el argumento metodológico junto al número que lo justifica, en el momento en que hay que decidir.':
+    'Computing a PCA is never the problem: every program returns the eigenvalues. What decides whether the analysis holds up are the decisions around it — how you treat missing values, whether you standardise, how many components you retain, which loadings you interpret — and there the usual software computes the figure and stops. PCAPro puts the methodological argument next to the number that justifies it, at the moment the decision has to be made.',
+  'Si publicas con la plataforma, cítala':
+    'If you publish with the platform, cite it',
+  'PASO':
+    'STEP',
+  'Mapa de individuos, círculo de correlaciones y criterios de retención':
+    'Map of individuals, correlation circle and retention criteria',
+  '¿Cuántos componentes retener? Ocho criterios, no uno':
+    'How many components to retain? Eight criteria, not one',
+  'corte del consenso':
+    'consensus cut',
+  'Codo':
+    'Elbow',
+  'Longitud':
+    'Length',
+  'Anchura':
+    'Width',
+  'Peso':
+    'Weight',
+  'Materia org.':
+    'Organic matter',
+  'tipos, escalado, faltantes, KMO y Bartlett':
+    'types, scaling, missing values, KMO and Bartlett',
+  'valores propios y ocho criterios de retención':
+    'eigenvalues and eight retention criteria',
+  'siete métodos, y cuándo conviene no rotar':
+    'seven methods, and when not to rotate',
+  'círculo, individuos, biplot, cos² y contribuciones':
+    'circle, individuals, biplot, cos² and contributions',
+  'nombrar ejes, valores test, comparación de grupos':
+    'naming axes, test values, group comparison',
+  'HTML, PDF y paquete ZIP con figuras y tablas':
+    'HTML, PDF and a ZIP package with figures and tables',
+  'Lee xlsx, csv y json. Detecta el tipo de cada columna y te la devuelve para que la revises: solo las numéricas activas construyen los componentes. Trata faltantes, transforma, escala de seis maneras y diagnostica la matriz antes de tocar nada.':
+    'Reads xlsx, csv and json. It detects the type of each column and hands it back for you to review: only active numerical columns build the components. It handles missing values, transforms, scales in six ways and diagnoses the matrix before anything else.',
+  'Valores propios con su error estándar, varianza explicada y acumulada, y los ocho criterios lado a lado con la cantidad que decide cada uno. El consenso es una recomendación; el número lo fijas tú.':
+    'Eigenvalues with their standard error, explained and cumulative variance, and the eight criteria side by side with the quantity that decides each. The consensus is a recommendation; you set the number.',
+  'Cuatro rotaciones ortogonales y tres oblicuas por proyección de gradiente, con las matrices de patrón y estructura. Abre advirtiendo que la rotación pertenece al análisis factorial y que hay que declararla.':
+    'Four orthogonal and three oblique rotations by gradient projection, with the pattern and structure matrices. It opens by warning that rotation belongs to factor analysis and has to be declared.',
+  'Círculo de correlaciones, mapa de individuos y biplot, con cos² y contribuciones para saber a qué puntos hacer caso. Proyecta variables y categorías suplementarias sin que intervengan en los ejes.':
+    'Correlation circle, map of individuals and biplot, with cos² and contributions so you know which points to trust. It projects supplementary variables and categories without letting them shape the axes.',
+  'Umbral de carga ajustable, descripción de cada dimensión, valores test por categoría, comparación de grupos e individuos característicos. Redacta un borrador con tus propios números, para que lo revises.':
+    'Adjustable loading threshold, description of each dimension, test values by category, group comparison and characteristic individuals. It drafts a paragraph from your own numbers, for you to review.',
+  'Informe HTML autocontenido, impresión a PDF y paquete ZIP con las figuras tal como las editaste, las tablas en CSV y la referencia para citar la plataforma.':
+    'Self-contained HTML report, printing to PDF and a ZIP package with the figures as you edited them, the tables in CSV and the reference for citing the platform.',
   '⧉ Copiar párrafo': '⧉ Copy paragraph',
   'Cómo citar': 'How to cite',
   'Cómo citar PCAPro': 'How to cite PCAPro',

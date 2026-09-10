@@ -10,7 +10,17 @@
 </head>
 <body>
 
-<div class="lang-bar">
+<header class="topbar">
+  <a class="brand" href="#" id="brandLink">
+    <svg class="brand-mark" viewBox="0 0 512 512" aria-hidden="true">
+      <rect width="512" height="512" rx="112" fill="#5b3fd6"/>
+      <rect x="102" y="126" width="68" height="260" rx="22" fill="#ffffff"/>
+      <rect x="190" y="214" width="68" height="172" rx="22" fill="#ffffff"/>
+      <rect x="278" y="288" width="68" height="98"  rx="22" fill="#2dd4bf"/>
+      <rect x="366" y="330" width="68" height="56"  rx="22" fill="#2dd4bf"/>
+    </svg>
+    <span class="brand-name">PCAPro<span class="dot">.</span></span>
+  </a>
   <label class="inline-label" for="langSelect">
     <span aria-hidden="true">🌐</span>
     <select id="langSelect" aria-label="Language / Idioma">
@@ -18,22 +28,11 @@
       <option value="en" data-i18n="English">English</option>
     </select>
   </label>
-</div>
-
-<header class="app-header">
-  <h1>PCAPro<span class="dot">.</span></h1>
-  <p class="subtitle" data-i18n-html="Plataforma dedicada al &lt;b&gt;Análisis de Componentes Principales&lt;/b&gt;: preparación de datos, verificación de supuestos, extracción, rotación e interpretación, con figuras editables y exportables a resolución de publicación.">Plataforma dedicada al <b>Análisis de Componentes Principales</b>: preparación de datos,
-    verificación de supuestos, extracción, rotación e interpretación, con figuras editables y exportables
-    a resolución de publicación.</p>
-  <div class="badge-row">
-    <span class="badge" data-i18n="Todo el cálculo ocurre en tu navegador">Todo el cálculo ocurre en tu navegador</span>
-    <span class="badge" data-i18n="Ningún dato sale de tu computadora">Ningún dato sale de tu computadora</span>
-    <span class="badge" data-i18n="Figuras SVG / PNG hasta 12×">Figuras SVG / PNG hasta 12×</span>
-  </div>
 </header>
 
 <nav class="stepper" id="stepper">
-  <button class="step-btn active" data-step="1"><span class="step-num">1</span> <span data-i18n="Datos y supuestos">Datos y supuestos</span></button>
+  <button class="step-btn active" data-step="0"><span class="step-num">◆</span> <span data-i18n="Inicio">Inicio</span></button>
+  <button class="step-btn" data-step="1"><span class="step-num">1</span> <span data-i18n="Datos y supuestos">Datos y supuestos</span></button>
   <button class="step-btn" data-step="2" disabled><span class="step-num">2</span> <span data-i18n="Extracción">Extracción</span></button>
   <button class="step-btn" data-step="3" disabled><span class="step-num">3</span> <span data-i18n="Rotación">Rotación</span></button>
   <button class="step-btn" data-step="4" disabled><span class="step-num">4</span> <span data-i18n="Gráficos factoriales">Gráficos factoriales</span></button>
@@ -44,7 +43,59 @@
 <main>
 
 <!-- ==================== PASO 1 ==================== -->
-<section class="step-panel active" id="panel-1">
+<section class="step-panel active" id="panel-0">
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow" data-i18n="Estadística multivariada para biología, ecología y agronomía">Estadística multivariada para biología, ecología y agronomía</div>
+        <h1 data-i18n-html="Encuentra los &lt;span class=&quot;accent&quot;&gt;ejes que ordenan&lt;/span&gt; tus datos">Encuentra los <span class="accent">ejes que ordenan</span> tus datos</h1>
+        <p class="lead" data-i18n-auto>Del archivo crudo a una figura lista para publicar: comprueba si tus datos <b>admiten un ACP</b>,
+          decide <b>cuántos componentes retener</b> con ocho criterios en lugar de uno, rota si hace falta,
+          lee los mapas factoriales y exporta un <b>informe completo</b>. Sin R, sin Python y sin instalar nada.</p>
+        <div class="hero-cta">
+          <button class="btn btn-primary btn-lg" id="startBtn" data-i18n="Empezar con mis datos →">Empezar con mis datos →</button>
+          <button class="btn btn-secondary btn-lg" id="demoBtn" data-i18n="Ver el ejemplo de iris">Ver el ejemplo de iris</button>
+          <button class="btn btn-ghost btn-lg" id="theoryBtn" data-i18n="Leer la teoría">Leer la teoría</button>
+        </div>
+        <div class="badge-row">
+          <span class="badge" data-i18n="Todo el cálculo ocurre en tu navegador">Todo el cálculo ocurre en tu navegador</span>
+          <span class="badge" data-i18n="Ningún dato sale de tu computadora">Ningún dato sale de tu computadora</span>
+          <span class="badge" data-i18n="Figuras SVG / PNG hasta 12×">Figuras SVG / PNG hasta 12×</span>
+          <span class="badge" data-i18n="Libre y de código abierto">Libre y de código abierto</span>
+        </div>
+      </div>
+      <div class="hero-art" id="heroArt"></div>
+    </div>
+  </div>
+
+  <h2 class="section-title" data-i18n="Cómo funciona">Cómo funciona</h2>
+  <p class="section-sub" data-i18n-auto>Un recorrido guiado. Cada paso explica la idea en palabras llanas, revisa tus datos y
+    recomienda qué hacer después. La decisión siempre la tomas tú: la plataforma pone delante el argumento, no la respuesta.</p>
+  <div class="workflow" id="workflow"></div>
+
+  <h2 class="section-title" data-i18n="Qué incluye">Qué incluye</h2>
+  <p class="section-sub" data-i18n-auto>Seis bloques, en orden. Pulsa una tarjeta para ir directo.</p>
+  <div class="feature-grid" id="featureGrid"></div>
+
+  <div class="closing">
+    <div>
+      <h3 data-i18n="Por qué existe">Por qué existe</h3>
+      <p data-i18n-auto>El cálculo de un ACP nunca es el problema: cualquier programa devuelve los valores propios. Lo que decide
+        si el análisis se sostiene son las decisiones de alrededor —cómo tratas los faltantes, si estandarizas, cuántos componentes
+        retienes, qué cargas interpretas— y ahí el software habitual calcula la cifra y se detiene. PCAPro pone el argumento
+        metodológico junto al número que lo justifica, en el momento en que hay que decidir.</p>
+    </div>
+    <div class="closing-cite">
+      <div class="cite-label" data-i18n="Si publicas con la plataforma, cítala">Si publicas con la plataforma, cítala</div>
+      <p class="cite-ref" id="homeCiteRef"></p>
+      <button class="btn btn-secondary btn-sm" id="copyCiteHome" data-i18n="⧉ Copiar referencia">⧉ Copiar referencia</button>
+    </div>
+  </div>
+
+</section>
+
+<section class="step-panel" id="panel-1">
 
   <!-- ---------- TEORÍA ---------- -->
   <div class="card theory-card">
@@ -2439,5 +2490,6 @@ R̂ = P · Φ · Pᵀ      (oblique rotation)</div>
 <script src="js/report.js"></script>
 <script src="js/block5.js"></script>
 <script src="js/block6.js"></script>
+<script src="js/home.js"></script>
 </body>
 </html>
