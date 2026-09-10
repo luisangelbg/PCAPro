@@ -33,6 +33,9 @@ identifiers:
     value: 10.5281/zenodo.22649709
     description: "Concept DOI — always resolves to the latest version. Cite this one."
   - type: doi
+    value: 10.5281/zenodo.22694679
+    description: "Version DOI for release v1.1.0, the current release."
+  - type: doi
     value: 10.5281/zenodo.22649710
     description: "Version DOI for release v1.0.1, the version described in the JSDSE manuscript."
 keywords:
