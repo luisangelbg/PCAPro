@@ -123,6 +123,14 @@ function suggestName(G, d, thr) {
    Interfaz
    ============================================================ */
 function run() {
+  /* Para los métodos distintos del ACP interpreta interpreta.js; el ACP
+     conserva la ruta de abajo. */
+  if (typeof Interp !== 'undefined' && state.pca && state.pca.method && state.pca.method !== 'pca') {
+    Interp.run();
+    return;
+  }
+  const ir = el('interpResults');
+  if (ir) ir.style.display = 'none';
   if (!state.fac) {
     clearMessages('intMessages');
     showMessage('intMessages', 'error', tt('Primero genera los mapas factoriales en el Bloque 4.'));
@@ -165,9 +173,13 @@ function fillGroups() {
   if (!sel) return;
   const prev = sel.value;
   sel.innerHTML = '';
-  sel.appendChild(mk('option', { value: '' }, 'No comparar grupos'));
-  (state.fac ? state.fac.suppCat : []).forEach(s =>
-    sel.appendChild(mk('option', { value: s.name }, s.name)));
+  sel.appendChild(mk('option', { value: '' }, tt('No comparar grupos')));
+  /* con otro método las cualitativas vienen del propio análisis, no de state.fac */
+  const fuentes = (state.pca && state.pca.method && state.pca.method !== 'pca')
+    ? (state.pca.datos.qualNombres || []).map(n => ({ name: n }))
+        .concat((state.suppCat || []).filter(s => s.levels.length >= 2 && !(state.pca.datos.qualNombres || []).includes(s.name)))
+    : (state.fac ? state.fac.suppCat : []);
+  fuentes.forEach(s => sel.appendChild(mk('option', { value: s.name }, s.name)));
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
 }
 

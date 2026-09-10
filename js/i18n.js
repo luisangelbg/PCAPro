@@ -363,6 +363,62 @@ I18N.en = {
     'Line width',
   'Variable de grupo':
     'Group variable',
+
+  /* ---- Interpretacion e informe de los otros metodos ---- */
+  'Con los mapas construidos, el bloque 5 lee cada eje: qué elementos lo definen, qué categorías lo caracterizan y un borrador de la sección de resultados.':
+    'With the maps built, Block 5 reads each axis: which elements define it, which categories characterise it, and a draft of the results section.',
+  'Interpretando…':
+    'Interpreting…',
+  '5.2 · Lectura de cada eje':
+    '5.2 · Reading each axis',
+  'Los elementos que más contribuyen a cada eje, con su signo. Un eje se lee oponiendo lo que está a un lado con lo que está al otro; los elementos de contribución baja no lo definen aunque estén lejos del centro.':
+    'The elements that contribute most to each axis, with their sign. An axis is read by opposing what lies on one side to what lies on the other; low-contribution elements do not define it even if they sit far from the centre.',
+  '5.3 · Valores test de las categorías':
+    '5.3 · Test values of the categories',
+  'Cuánto se aparta el centro de cada categoría del centro general, en desviaciones típicas. Por encima de |1.96| la categoría caracteriza ese eje con p < 0.05.':
+    'How far the centre of each category departs from the overall centre, in standard deviations. Above |1.96| the category characterises that axis with p < 0.05.',
+  '5.4 · Borrador para la sección de resultados':
+    '5.4 · Draft for the results section',
+  'Lado positivo':
+    'Positive side',
+  'Lado negativo':
+    'Negative side',
+  'Ningún elemento supera el umbral de contribución.':
+    'No element exceeds the contribution threshold.',
+  '(sin contribución destacada)':
+    '(no outstanding contribution)',
+  'fila':
+    'row',
+  'columna':
+    'column',
+  'Elemento':
+    'Element',
+  'Variable / categoría':
+    'Variable / category',
+  'nada en el lado positivo':
+    'nothing on the positive side',
+  'nada en el lado negativo':
+    'nothing on the negative side',
+  'Extracción de ejes':
+    'Axis extraction',
+  'Valores propios e inercia.':
+    'Eigenvalues and inertia.',
+  'Número de ejes sugerido por cada criterio.':
+    'Number of axes suggested by each criterion.',
+  'Ejes':
+    'Axes',
+  'Inercia acumulada':
+    'Cumulative inertia',
+  'Coordenadas, calidad de representación y contribución.':
+    'Coordinates, quality of representation and contribution.',
+  'Celdas que más contribuyen a la χ².':
+    'Cells that contribute most to the χ².',
+  'Inercia de cada bloque en cada eje y coeficiente RV entre bloques.':
+    'Inertia of each block on each axis and RV coefficient between blocks.',
+  'Lectura de cada eje':
+    'Reading each axis',
+  'Cuantitativas suplementarias': 'Supplementary quantitative',
+  'Umbral de contribución (%)': 'Contribution threshold (%)',
   '⧉ Copiar párrafo': '⧉ Copy paragraph',
   'Cómo citar': 'How to cite',
   'Cómo citar PCAPro': 'How to cite PCAPro',

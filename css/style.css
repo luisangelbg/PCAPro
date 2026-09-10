@@ -445,3 +445,13 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
 table.mini { font-size: .86rem; }
 table.mini input[type=text] { width: 140px; padding: 3px 8px; }
 #metodoConfig { margin-top: 12px; }
+
+/* Bloque 5 de los otros métodos: lectura de cada eje */
+.eje-box { padding: 12px 0; border-top: 1px solid var(--border); }
+.eje-box:first-child { border-top: none; }
+.eje-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+.eje-dim { font-weight: 700; color: var(--primary); }
+.eje-head .mut { color: var(--text-muted); font-size: .84rem; }
+.ejeNombre { flex: 1; min-width: 200px; padding: 4px 10px; }
+.eje-box p { margin: 0; font-size: .9rem; line-height: 1.6; }
+.eje-box .mut { color: var(--text-muted); }

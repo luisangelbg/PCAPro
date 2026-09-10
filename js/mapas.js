@@ -285,8 +285,16 @@ Mapas.renderBloque4 = function (P) {
     card('figParc', tt('4.5 · Puntos parciales'),
       tt('Cada individuo visto desde cada bloque. El rombo es su posición global, baricentro de los círculos de colores. Cuanto más abiertas las líneas, más discrepan los bloques sobre ese individuo: ahí está la información que el ACP conjunto se traga.'));
   }
-  cards.push(`<div class="card"><p class="hint"><b>${tt('Siguiente entrega')}.</b> ${tt('La interpretación y el informe para este método están en construcción.')}</p></div>`);
+  cards.push(`<div class="card">
+    <p class="hint">${tt('Con los mapas construidos, el bloque 5 lee cada eje: qué elementos lo definen, qué categorías lo caracterizan y un borrador de la sección de resultados.')}</p>
+    <button class="btn btn-primary btn-lg" id="goStep5m">${tt('Ir a la interpretación →')}</button>
+  </div>`);
   c.innerHTML = cards.join('');
+  enableStep(5, true);
+  el('goStep5m').addEventListener('click', () => {
+    if (typeof PCAProInterp !== 'undefined') PCAProInterp.fillGroups();
+    goStep(5);
+  });
 
   /* ---------- resumen ---------- */
   const tiles = [[tt('Plano 1–2'), plano, tt('inercia representada'), ((P.pct[0] || 0) + (P.pct[1] || 0)) >= 0.6 ? 'ok' : 'warn'],

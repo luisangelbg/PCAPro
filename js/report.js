@@ -139,6 +139,16 @@ function figBlock(api, caption) {
 /* ================= construcción del informe ================= */
 Rep.build = opts => {
   const P = state.pca, R = state.rot, G = state.fac, I = state.interp, D = state.diagnostics;
+  /* El informe nacio para el ACP. Cuando el metodo es otro, cambian cuatro
+     cosas: no hay Horn ni baston roto, no hay rotacion, las coordenadas no
+     son de variables sino de filas o categorias, y la interpretacion viene de
+     interpreta.js. Todo lo demas —portada, plantilla, figuras, referencias—
+     se reusa tal cual. */
+  const esOtroMetodo = !!(P && P.method && P.method !== 'pca');
+  const MET = esOtroMetodo ? TT(Metodo.NOMBRE[P.method][0], Metodo.NOMBRE[P.method][1]) : tt('Análisis de Componentes Principales');
+  const SIG = esOtroMetodo ? TT(Metodo.SIGLA[P.method][0], Metodo.SIGLA[P.method][1]) : 'ACP';
+  const ejeLab = i => esOtroMetodo ? 'Dim' + (i + 1) : cp(i + 1);
+
   const figs = Fig.mounted();
   const figOf = id => figs.find(f => f.hostId === id);
   const inc = s => opts.sections.includes(s);
@@ -150,11 +160,14 @@ Rep.build = opts => {
 
   /* --- portada --- */
   body += `<header class="cover">
-    <h1>${esc(opts.title || tt('Análisis de Componentes Principales'))}</h1>
+    <h1>${esc(opts.title || MET)}</h1>
     ${opts.author ? `<p class="author">${esc(opts.author)}</p>` : ''}
     <p class="meta">
       ${TT('Archivo de datos:', 'Data file:')} <b>${esc(state.fileName || '—')}</b>${state.sheetName ? TT(' · hoja <b>', ' · sheet <b>') + esc(state.sheetName) + '</b>' : ''}<br>
-      ${TT(`${P.n} observaciones × ${P.p} variables activas · ${P.k} componente${P.k > 1 ? 's' : ''} retenido${P.k > 1 ? 's' : ''}`,
+      ${esOtroMetodo
+        ? TT(`${SIG} · ${P.n} ${P.method === 'ca' ? 'filas' : 'individuos'} × ${P.p} ${P.method === 'mca' ? 'categorías' : 'columnas'} · ${P.k} eje${P.k > 1 ? 's' : ''} retenido${P.k > 1 ? 's' : ''}`,
+             `${SIG} · ${P.n} ${P.method === 'ca' ? 'rows' : 'individuals'} × ${P.p} ${P.method === 'mca' ? 'categories' : 'columns'} · ${P.k} retained ${P.k > 1 ? 'axes' : 'axis'}`)
+        : TT(`${P.n} observaciones × ${P.p} variables activas · ${P.k} componente${P.k > 1 ? 's' : ''} retenido${P.k > 1 ? 's' : ''}`,
            `${P.n} observations × ${P.p} active variables · ${P.k} retained component${P.k > 1 ? 's' : ''}`)}<br>
       ${TT(`Generado el ${fecha} con PCAPro`, `Generated on ${fecha} with PCAPro`)}
     </p>
@@ -163,20 +176,35 @@ Rep.build = opts => {
   /* --- resumen --- */
   if (inc('resumen')) {
     body += '<section><h2>' + tt('Resumen') + '</h2><div class="tiles">';
-    const tiles = [
-      ['Observaciones', P.n], ['Variables activas', P.p],
-      ['Componentes retenidos', P.k],
-      ['Varianza explicada', fmtPct(P.cum[P.k - 1], 1)],
-      ['KMO', D && D.kmo ? fmtNum(D.kmo.overall, 3) : '—'],
-      ['Bartlett', D ? fmtPLabel(D.bart.p) : '—'],
-    ];
-    if (I) tiles.push(['RMSR', fmtNum(I.res.rmsr, 4)]);
+    const tiles = esOtroMetodo ? (() => {
+      const t = [['Método', SIG],
+        [P.method === 'ca' ? 'Filas' : 'Individuos', P.n],
+        [P.method === 'mca' ? 'Categorías' : 'Columnas', P.p],
+        ['Ejes retenidos', P.k],
+        ['Inercia representada', fmtPct(P.cum[P.k - 1], 1)]];
+      if (P.method === 'ca') t.push(['χ²', fmtNum(P.res.chi2.chi2, 2)], ['p', fmtPLabel(P.res.chi2.p)]);
+      if (P.method === 'mfa') t.push(['Bloques', P.res.grupos.length]);
+      return t;
+    })() : (() => {
+      const t = [
+        ['Observaciones', P.n], ['Variables activas', P.p],
+        ['Componentes retenidos', P.k],
+        ['Varianza explicada', fmtPct(P.cum[P.k - 1], 1)],
+        ['KMO', D && D.kmo ? fmtNum(D.kmo.overall, 3) : '—'],
+        ['Bartlett', D ? fmtPLabel(D.bart.p) : '—'],
+      ];
+      if (I && I.res) t.push(['RMSR', fmtNum(I.res.rmsr, 4)]);
+      return t;
+    })();
     tiles.forEach(([a, b]) => body += `<div class="tile"><span>${esc(tt(a))}</span><b>${esc(b)}</b></div>`);
     body += '</div></section>';
   }
 
   /* --- métodos --- */
-  if (inc('metodos')) {
+  if (inc('metodos') && esOtroMetodo) {
+    body += '<section><h2>' + tt('Métodos') + '</h2><p>' + Interp.parrafoMetodos(P) + '</p></section>';
+  } else if (inc('metodos')) {
+
     const escal = tt({ none: 'sin escalar (matriz de covarianzas)', center: 'solo centrado', z: 'estandarización z (matriz de correlaciones)', pareto: 'escalado de Pareto', vast: 'escalado VAST', range: 'escalado al rango [0,1]', robust: 'escalado robusto (mediana/MAD)' }[state.prep.scaling]);
     const trans = tt({ none: 'sin transformación previa', log: 'logaritmo natural', log10: 'logaritmo base 10', sqrt: 'raíz cuadrada', inverse: 'inversa' }[state.prep.transform]);
     const falt = tt({ listwise: 'eliminación de filas incompletas', mean: 'imputación por la media', median: 'imputación por la mediana' }[state.prep.missing]);
@@ -246,8 +274,26 @@ Rep.build = opts => {
   }
 
   /* --- bloque 2 --- */
-  if (inc('extraccion')) {
+  if (inc('extraccion') && esOtroMetodo) {
+    body += '<section><h2>' + tt('Extracción de ejes') + '</h2>';
+    const colsAdj = P.method === 'mca';
+    body += htmlTable(T() + tt('Valores propios e inercia.'),
+      [tt('Eje'), 'λ', tt('% inercia'), tt('% acumulado')].concat(colsAdj ? [tt('% ajustado (Greenacre)')] : []).concat([tt('Retenido')]),
+      P.values.map((l, i) => [ejeLab(i), fmtNum(l, 4), fmtPct(P.pct[i], 2), fmtPct(P.cum[i], 2)]
+        .concat(colsAdj ? [P.res.ajuste.pctGreenacre[i] != null ? fmtPct(P.res.ajuste.pctGreenacre[i], 2) : '—'] : [])
+        .concat([i < P.k ? tt('Sí') : ''])),
+      { num: [1, 2, 3, 4] });
+    body += htmlTable(T() + tt('Número de ejes sugerido por cada criterio.'),
+      [tt('Criterio'), tt('Ejes'), tt('Inercia acumulada')].map(tt),
+      P.criteria.map(c => [tt(c.name), String(c.k), fmtPct(P.cum[c.k - 1], 1)]), { num: [1, 2] });
+    body += '<p class="note">' + TT(
+      `Horn y el MAP de Velicer no se aplican aquí: están definidos para matrices de correlaciones y en este método lo que se compara son inercias. Decisión adoptada: <b>${P.k}</b> eje${P.k > 1 ? 's' : ''} (consenso: ${P.kRec}), que representan el <b>${fmtPct(P.cum[P.k - 1], 1)}</b> de la inercia total.`,
+      `Horn and Velicer's MAP do not apply here: they are defined for correlation matrices and this method compares inertias. Decision taken: <b>${P.k}</b> ${P.k > 1 ? 'axes' : 'axis'} (consensus: ${P.kRec}), representing <b>${fmtPct(P.cum[P.k - 1], 1)}</b> of the total inertia.`) + '</p>';
+    if (opts.figures) { const f = figOf('figScreeM'); if (f) body += figBlock(f, F() + tt(f.cfg.title)); }
+    body += '</section>';
+  } else if (inc('extraccion')) {
     body += '<section><h2>' + tt('Extracción de componentes') + '</h2>';
+
     body += htmlTable(T() + tt('Valores propios y varianza explicada.'),
       ['Componente', 'λ', '% varianza', '% acumulado', 'p95 aleatorio', 'Bastón roto', 'Retenido'].map(tt),
       P.values.map((l, i) => [cp(i + 1), fmtNum(l, 4), fmtPct(P.pct[i], 2), fmtPct(P.cum[i], 2),
@@ -298,7 +344,41 @@ Rep.build = opts => {
   }
 
   /* --- bloque 4 --- */
-  if (inc('mapas') && G) {
+  if (inc('mapas') && esOtroMetodo) {
+    body += '<section><h2>' + tt('Representación factorial') + '</h2>';
+    const RR = P.res, kk = P.k;
+    const encabezado = P.method === 'ca' ? tt('Columna') : P.method === 'mca' ? tt('Categoría') : tt('Variable');
+    body += htmlTable(T() + tt('Coordenadas, calidad de representación y contribución.'),
+      [encabezado].concat(Array.from({ length: kk }, (_, j) => tt('Coord.') + ' Dim' + (j + 1)),
+        Array.from({ length: kk }, (_, j) => 'cos² Dim' + (j + 1)),
+        Array.from({ length: kk }, (_, j) => tt('Contrib.') + ' Dim' + (j + 1) + ' (%)')),
+      P.labelsCol.map((v, j) => [v].concat(
+        RR.colCoord[j].slice(0, kk).map(x => fmtNum(x, 3)),
+        RR.colCos2[j].slice(0, kk).map(x => fmtNum(x, 3)),
+        RR.colContrib[j].slice(0, kk).map(x => fmtNum(x, 2)))),
+      { num: Array.from({ length: 3 * kk }, (_, j) => j + 1) });
+    if (P.method === 'ca') {
+      const celdas = [];
+      RR.tabla.forEach((fila, i) => fila.forEach((v, j) => celdas.push({ f: RR.filas[i], c: RR.cols[j], o: v, e: RR.celdas[i][j].esp, r: RR.celdas[i][j].resid, ct: RR.celdas[i][j].contrib })));
+      celdas.sort((a, b) => b.ct - a.ct);
+      body += htmlTable(T() + tt('Celdas que más contribuyen a la χ².'),
+        [tt('Fila'), tt('Columna'), tt('Observado'), tt('Esperado'), tt('Residuo'), tt('% de la χ²')],
+        celdas.slice(0, 15).map(x => [x.f, x.c, String(x.o), fmtNum(x.e, 1), fmtNum(x.r, 2), fmtNum(x.ct, 1)]),
+        { num: [2, 3, 4, 5] });
+    }
+    if (P.method === 'mfa') {
+      body += htmlTable(T() + tt('Inercia de cada bloque en cada eje y coeficiente RV entre bloques.'),
+        [tt('Bloque'), tt('Variables')].concat(Array.from({ length: kk }, (_, j) => 'Dim' + (j + 1)), RR.grupos.map(g => 'RV ' + g.nombre)),
+        RR.grupos.map((g, i) => [g.nombre, String(g.nVar)].concat(
+          RR.inerciaGrupo[i].slice(0, kk).map(x => fmtNum(x, 3)), RR.RV[i].map(x => fmtNum(x, 3)))),
+        { num: Array.from({ length: kk + RR.grupos.length + 1 }, (_, j) => j + 1) });
+    }
+    if (opts.figures) ['figCaSim', 'figCat', 'figEta', 'figCircM', 'figGrupos', 'figIndM', 'figParc'].forEach(id => {
+      const f = figOf(id); if (f) body += figBlock(f, F() + tt(f.cfg.title));
+    });
+    body += '</section>';
+  } else if (inc('mapas') && G) {
+
     body += '<section><h2>' + tt('Representación factorial') + '</h2>';
     body += htmlTable(T() + tt('Coordenadas, calidad de representación y contribución de las variables.'),
       [tt('Variable'), ...G.labels.map(l => tt('Coord.') + ' ' + l), ...G.labels.map(l => 'cos² ' + l), ...G.labels.map(l => tt('Contrib.') + ' ' + l + ' (%)')],
@@ -321,7 +401,28 @@ Rep.build = opts => {
   }
 
   /* --- bloque 5 --- */
-  if (inc('interpretacion') && I) {
+  if (inc('interpretacion') && I && esOtroMetodo) {
+    body += '<section><h2>' + tt('Interpretación') + '</h2>';
+    body += '<h3>' + tt('Lectura de cada eje') + '</h3><dl class="interp">';
+    I.ejes.forEach((e, d2) => {
+      const fu = e.items.filter(x => x.ctr >= I.umbralCtr);
+      const pos = fu.filter(x => x.valor > 0), neg = fu.filter(x => x.valor < 0);
+      body += `<dt>${esc(e.dim)} — ${TT('«', '“')}${esc(I.names[d2] || '')}${TT('»', '”')} (${fmtPct(P.pct[d2], 1)})</dt><dd>` +
+        (pos.length ? TT('Lado positivo: ', 'Positive side: ') + pos.slice(0, 6).map(x => esc(x.name) + ' (' + fmtNum(x.ctr, 1) + ' %)').join(', ') + '. ' : '') +
+        (neg.length ? TT('Lado negativo: ', 'Negative side: ') + neg.slice(0, 6).map(x => esc(x.name) + ' (' + fmtNum(x.ctr, 1) + ' %)').join(', ') + '. ' : '') +
+        (!fu.length ? TT('Ningún elemento supera el umbral de contribución. ', 'No element exceeds the contribution threshold. ') : '') + '</dd>';
+    });
+    body += '</dl>';
+    if (I.cat.length) body += htmlTable(T() + tt('Valores test de las categorías (|v| ≥ 1.96 indica p < 0.05).'),
+      [tt('Variable'), tt('Categoría'), 'n'].concat(Array.from({ length: P.k }, (_, j) => 'v.test Dim' + (j + 1))),
+      I.cat.map(r => [r.variable, r.level, String(r.n)].concat(
+        r.vtest.map(v => Math.abs(v) >= 1.96 ? `<b>${fmtNum(v, 2)}</b>` : fmtNum(v, 2)))),
+      { raw: true, num: Array.from({ length: P.k + 1 }, (_, j) => j + 2) });
+    body += '<h3>' + tt('Borrador de la sección de resultados') + '</h3><blockquote>' +
+      esc(el('interpNarr') ? el('interpNarr').textContent : '') + '</blockquote>';
+    body += '</section>';
+  } else if (inc('interpretacion') && I) {
+
     body += '<section><h2>' + tt('Interpretación') + '</h2>';
     body += '<h3>' + tt('Lectura de cada componente') + '</h3><dl class="interp">';
     G.labels.forEach((lab, d) => {
@@ -374,7 +475,7 @@ Rep.build = opts => {
     if (D.redundant.length) rec.push(TT(`Hay ${D.redundant.length} par(es) de variables con |r| ≥ 0.90.`, `There are ${D.redundant.length} pair(s) of variables with |r| ≥ 0.90.`));
     if (D.mOut && D.mOut.length) rec.push(TT(`Se detectaron ${D.mOut.length} atípico(s) multivariante(s).`, `${D.mOut.length} multivariate outlier(s) were detected.`));
     if (D.skewed.length) rec.push(TT(`${D.skewed.length} variable(s) presentan |g₁| > 1.`, `${D.skewed.length} variable(s) show |g₁| > 1.`));
-    if (I && I.res.rmsr >= 0.08) rec.push(TT(`El RMSR (${fmtNum(I.res.rmsr, 3)}) sugiere que falta estructura por recoger.`, `The RMSR (${fmtNum(I.res.rmsr, 3)}) suggests there is structure left uncaptured.`));
+    if (I && I.res && I.res.rmsr >= 0.08) rec.push(TT(`El RMSR (${fmtNum(I.res.rmsr, 3)}) sugiere que falta estructura por recoger.`, `The RMSR (${fmtNum(I.res.rmsr, 3)}) suggests there is structure left uncaptured.`));
     if (I && I.cmp) rec.push(tt('Los contrastes entre grupos son descriptivos: no se corrigió por comparaciones múltiples y los ejes se eligieron por maximizar varianza.'));
     body += '<section><h2>' + tt('Limitaciones y advertencias') + '</h2>' +
       (rec.length ? '<ul>' + rec.map(r => `<li>${esc(r)}</li>`).join('') + '</ul>'
@@ -414,11 +515,15 @@ Rep.build = opts => {
         [tt('Datos faltantes'), state.prep.missing],
         [tt('Transformación'), state.prep.transform],
         [tt('Escalado'), state.prep.scaling],
-        [tt('Componentes retenidos'), String(P.k)],
-        [tt('Análisis paralelo'), TT(`${P.horn.B} repeticiones, método ${P.horn.method === 'perm' ? 'permutación' : 'normal'}`,
-          `${P.horn.B} replicates, ${P.horn.method === 'perm' ? 'permutation' : 'normal'} method`)],
-        [tt('Rotación'), R ? tt(Rot.methods[R.method].name) + (R.opts.normalize && R.method !== 'none' ? tt(' (normalización de Kaiser)') : '') : tt('no aplicada')],
-        [tt('Umbral de carga'), I ? String(I.thr) : '—'],
+        [esOtroMetodo ? tt('Método') : tt('Componentes retenidos'), esOtroMetodo ? MET : String(P.k)],
+        [esOtroMetodo ? tt('Ejes retenidos') : tt('Análisis paralelo'),
+          esOtroMetodo ? String(P.k)
+            : TT(`${P.horn.B} repeticiones, método ${P.horn.method === 'perm' ? 'permutación' : 'normal'}`,
+                 `${P.horn.B} replicates, ${P.horn.method === 'perm' ? 'permutation' : 'normal'} method`)],
+        [tt('Rotación'), esOtroMetodo ? TT('no aplica a este método', 'not applicable to this method')
+          : (R ? tt(Rot.methods[R.method].name) + (R.opts.normalize && R.method !== 'none' ? tt(' (normalización de Kaiser)') : '') : tt('no aplicada'))],
+        [esOtroMetodo ? tt('Umbral de contribución (%)') : tt('Umbral de carga'),
+          I ? (esOtroMetodo ? fmtNum(I.umbralCtr, 2) : String(I.thr)) : '—'],
       ]) + '</section>';
   }
 
