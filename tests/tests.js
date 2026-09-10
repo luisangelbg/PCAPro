@@ -436,6 +436,154 @@ suite('Group comparison', () => {
 /* =====================================================================
    9 · Input parsing
    ===================================================================== */
+/* =====================================================================
+   Correspondence analysis (CA)
+   Reference: Greenacre's smoke data (1984), the canonical CA example.
+   The published principal inertias are 0.074759, 0.010017 and 0.000414,
+   on a total inertia of 0.085190 with chi-square 16.4417 over n = 193.
+   ===================================================================== */
+const SMOKE = [[4, 2, 3, 2], [4, 3, 7, 4], [25, 10, 12, 4], [18, 24, 33, 13], [10, 6, 7, 2]];
+const SMOKE_R = ['SM', 'JM', 'SE', 'JE', 'SC'];
+const SMOKE_C = ['none', 'light', 'medium', 'heavy'];
+
+suite('Correspondence analysis (smoke)', () => {
+  test('principal inertias match Greenacre', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    [0.074759, 0.010017, 0.000414].forEach((v, i) =>
+      near(r.values[i], v, 1e-6, `eigenvalue ${i + 1}`));
+  });
+
+  test('chi-square and total inertia agree with the table', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    near(r.chi2.chi2, 16.4417, 1e-3, 'chi-square');
+    eq(r.chi2.n, 193, 'grand total');
+    near(r.chi2.inerciaTotal, 16.4417 / 193, 1e-6, 'total inertia = chi2/n');
+  });
+
+  test('eigenvalues sum to the total inertia', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const s = r.values.reduce((a, b) => a + b, 0);
+    near(s, r.chi2.inerciaTotal, 1e-12, 'sum of eigenvalues');
+  });
+
+  test('number of axes is min(rows, cols) - 1', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    eq(r.k, Math.min(SMOKE.length, SMOKE[0].length) - 1, 'axes');
+  });
+
+  test('row coordinates have zero weighted mean on every axis', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    for (let k = 0; k < r.k; k++) {
+      const m = r.rowCoord.reduce((a, f, i) => a + r.rowW[i] * f[k], 0);
+      near(m, 0, 1e-12, `weighted mean of axis ${k + 1}`);
+    }
+  });
+
+  test('cell contributions to chi-square sum to 100', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const s = r.celdas.reduce((a, row) => a + row.reduce((x, c) => x + c.contrib, 0), 0);
+    near(s, 100, 1e-9, 'sum of cell contributions');
+  });
+});
+
+/* =====================================================================
+   Multiple correspondence analysis (MCA)
+   No recorded constants: MCA on the indicator matrix of two variables is
+   related to the CA of their cross-table by an exact identity. For a
+   J1 x J2 table, 2*(min(J1,J2) - 1) of the MCA eigenvalues are
+   (1 +/- sqrt(lambda))/2 for each CA eigenvalue lambda, and the remaining
+   ones are exactly 0.5.
+   ===================================================================== */
+function smokeLong() {
+  const a = [], b = [];
+  SMOKE.forEach((row, i) => row.forEach((v, j) => {
+    for (let t = 0; t < v; t++) { a.push(SMOKE_R[i]); b.push(SMOKE_C[j]); }
+  }));
+  return [a, b];
+}
+
+suite('Multiple correspondence analysis', () => {
+  test('eigenvalues match the exact two-variable identity', () => {
+    const cols = smokeLong();
+    const ca = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const mca = CA.multiple(cols, ['staff', 'smoking']);
+    const J = SMOKE_R.length + SMOKE_C.length, Q = 2;
+    const esp = [];
+    ca.values.forEach(l => { const s = Math.sqrt(l); esp.push((1 + s) / 2, (1 - s) / 2); });
+    while (esp.length < J - Q) esp.push(0.5);
+    esp.sort((x, y) => y - x);
+    const obs = mca.values.slice().sort((x, y) => y - x);
+    eq(obs.length, esp.length, 'number of axes');
+    obs.forEach((v, i) => near(v, esp[i], 1e-10, `MCA eigenvalue ${i + 1}`));
+  });
+
+  test('raw inertia is J/Q - 1 and axes are J - Q', () => {
+    const mca = CA.multiple(smokeLong(), ['staff', 'smoking']);
+    const J = mca.cols.length, Q = mca.nVar;
+    near(mca.values.reduce((a, b) => a + b, 0), J / Q - 1, 1e-10, 'raw inertia');
+    eq(mca.k, J - Q, 'number of axes');
+  });
+
+  test('no eigenvalue exceeds one', () => {
+    const mca = CA.multiple(smokeLong(), ['staff', 'smoking']);
+    ok(mca.values.every(v => v <= 1 + 1e-12), 'eigenvalue above 1');
+  });
+
+  test("Benzecri adjustment recovers the CA percentages for two variables", () => {
+    const ca = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const mca = CA.multiple(smokeLong(), ['staff', 'smoking']);
+    ca.pct.forEach((v, i) => near(mca.ajuste.pctBenzecri[i], v, 1e-9, `adjusted percentage ${i + 1}`));
+  });
+
+  test("Cramer's V is symmetric and inside [0, 1]", () => {
+    const mca = CA.multiple(smokeLong(), ['staff', 'smoking']);
+    near(mca.cramer[0][1], mca.cramer[1][0], 1e-12, 'symmetry');
+    ok(mca.cramer[0][1] >= 0 && mca.cramer[0][1] <= 1, 'out of range');
+  });
+});
+
+/* =====================================================================
+   Shared generalized-SVD core
+   ===================================================================== */
+suite('Generalized SVD core', () => {
+  test('reproduces a PCA on correlations when weights are uniform', () => {
+    /* With row weights 1/n and unit column weights on standardized data, the
+       core must return the eigenvalues of the correlation matrix. */
+    const X = [[1, 2, 3], [4, 1, 5], [2, 7, 2], [5, 3, 8], [3, 5, 4], [7, 2, 6]];
+    const n = X.length, p = X[0].length;
+    const Z = [];
+    for (let i = 0; i < n; i++) Z.push(new Array(p));
+    for (let j = 0; j < p; j++) {
+      const col = X.map(r => r[j]);
+      const m = S.mean(col), s = S.sd(col);
+      for (let i = 0; i < n; i++) Z[i][j] = (X[i][j] - m) / s;
+    }
+    const res = G.core(Z, new Array(n).fill(1 / n), new Array(p).fill(1), { method: 'pca' });
+    const eig = S.eigenSym(S.corrMatrix(S.transpose(X)));
+    /* el nucleo usa el divisor n; la matriz de correlaciones usa n-1 */
+    res.values.forEach((v, k) => near(v * n / (n - 1), eig.values[k], 1e-9, `eigenvalue ${k + 1}`));
+  });
+
+  test('the SVD reconstructs its own matrix', () => {
+    const Z = [[1, 2, 0], [-1, 3, 2], [0.5, -2, 1], [2, 1, -1]];
+    const { d, U, V } = G.svd(Z);
+    for (let i = 0; i < Z.length; i++) for (let j = 0; j < Z[0].length; j++) {
+      let s = 0;
+      for (let k = 0; k < d.length; k++) s += U[k][i] * d[k] * V[k][j];
+      near(s, Z[i][j], 1e-9, `cell ${i},${j}`);
+    }
+  });
+
+  test('singular vectors are orthonormal', () => {
+    const Z = [[1, 2, 0], [-1, 3, 2], [0.5, -2, 1], [2, 1, -1]];
+    const { d, V } = G.svd(Z);
+    for (let a = 0; a < d.length; a++) for (let b = 0; b < d.length; b++) {
+      const dot = V[a].reduce((s, v, j) => s + v * V[b][j], 0);
+      near(dot, a === b ? 1 : 0, 1e-9, `V${a} . V${b}`);
+    }
+  });
+});
+
 suite('Input parsing', () => {
   test('comma separated values with quoted fields', () => {
     const rows = PCAProData.parseCSV('a,b,c\n1,"x,y",3\n4,5,6');
