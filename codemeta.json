@@ -3,10 +3,11 @@
   "@type": "SoftwareSourceCode",
   "identifier": "https://doi.org/10.5281/zenodo.22649709",
   "name": "PCAPro",
-  "description": "A self-contained web application that performs a complete principal component analysis entirely in the browser, with no installation and no server-side computation: data preparation, verification of assumptions, extraction with eight retention criteria, seven rotations, factor maps, interpretation and a publication-ready report. Bilingual in Spanish and English.",
-  "version": "1.0.1",
+  "description": "A self-contained web application that performs a complete principal component analysis entirely in the browser, with no installation and no server-side computation: data preparation, verification of assumptions, extraction with eight retention criteria, seven rotations, factor maps, interpretation and a publication-ready report. Since version 1.1.0 it also performs correspondence analysis, multiple correspondence analysis, factor analysis of mixed data and multiple factor analysis on a shared generalized-SVD core, and clusters the individuals hierarchically on the factor coordinates. Bilingual in Spanish and English.",
+  "version": "1.1.0",
   "dateCreated": "2026-09-05",
   "datePublished": "2026-09-07",
+  "dateModified": "2026-09-10",
   "license": "https://spdx.org/licenses/GPL-3.0-or-later",
   "codeRepository": "https://github.com/luisangelbg/PCAPro",
   "programmingLanguage": [

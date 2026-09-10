@@ -1,6 +1,6 @@
 {
   "title": "PCAPro: an offline, browser-based platform for guided principal component analysis",
-  "description": "PCAPro is a self-contained web application that performs a complete principal component analysis entirely in the browser, with no installation and no server-side computation. It covers data import and variable roles, verification of assumptions (Bartlett's test of sphericity, KMO with per-variable MSA, determinant, multicollinearity, Mahalanobis outliers, missing-data pattern, skewness and the n:p ratio), extraction with eight retention criteria, seven factor rotations through Jennrich's gradient projection algorithm, factor maps, interpretation, and a publication-ready report. Figures are drawn by an in-house SVG engine, are editable in place and export at up to 12x resolution. The interface, the embedded methodological guidance and the generated report are bilingual (Spanish and English). Correctness is checked by 60 automated tests whose expectations are reference values from independent implementations or algebraic invariants.",
+  "description": "PCAPro is a self-contained web application that performs a complete principal component analysis entirely in the browser, with no installation and no server-side computation. It covers data import and variable roles, verification of assumptions (Bartlett's test of sphericity, KMO with per-variable MSA, determinant, multicollinearity, Mahalanobis outliers, missing-data pattern, skewness and the n:p ratio), extraction with eight retention criteria, seven factor rotations through Jennrich's gradient projection algorithm, factor maps, interpretation, and a publication-ready report. Figures are drawn by an in-house SVG engine, are editable in place and export at up to 12x resolution. The interface, the embedded methodological guidance and the generated report are bilingual (Spanish and English). Since version 1.1.0 it also performs correspondence analysis, multiple correspondence analysis, factor analysis of mixed data and multiple factor analysis on a shared generalized-SVD core, recommends which of them fits the data at hand, and clusters the individuals hierarchically on the factor coordinates (HCPC), with a dendrogram, cluster maps and a description of each cluster by test values. Correctness is checked by 111 automated tests whose expectations are reference values from independent implementations or algebraic invariants.",
   "upload_type": "software",
   "creators": [
     {
@@ -18,6 +18,9 @@
     "statistics education",
     "reproducible research",
     "factor rotation",
+    "correspondence analysis",
+    "multiple factor analysis",
+    "hierarchical clustering",
     "parallel analysis",
     "agricultural sciences"
   ]

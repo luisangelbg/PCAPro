@@ -7,6 +7,43 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.1.0] — 2026-09-10
+
+The platform stops being a PCA tool and becomes a factor-methods tool. The five methods share a
+single generalized-SVD core, so they also share the maps, the interpretation and the report.
+
+### Added
+
+- **Correspondence analysis (CA)**, **multiple correspondence analysis (MCA)**, **factor analysis
+  of mixed data (FAMD)** and **multiple factor analysis (MFA)**, on a shared core (`js/gsvd.js`)
+  that decomposes `Z = Dr^(1/2)·(X − 1·mᵀ)·Dc^(1/2)` and returns eigenvalues, coordinates, `cos²`
+  and contributions in one shape. MCA reports the Benzécri and Greenacre adjustments and a Cramér's
+  V matrix; FAMD, the `r²` and `η²` of each variable; MFA, the partial points, the block inertias
+  and the RV coefficients.
+- **Method recommender** (`js/recomienda.js`), a card at the end of Block 1 that reads the data —
+  variable types, sample size, Bartlett, rare categories, blocks in the variable names — and says
+  which method applies, which is possible and which does not apply, with the figure that motivates
+  each warning.
+- **Block 5b — hierarchical clustering on the factor coordinates (HCPC)**, for all five methods:
+  Ward on weighted points, three rules for the number of clusters, k-means consolidation,
+  dendrogram, cluster map, test values, paragons and specific individuals.
+- **New figures**: symmetric CA map, category map, variable map mixing `r²` and `η²`, block map,
+  partial points, dendrogram, cut-choice plot and cluster profiles in small multiples.
+- **Landing block** with the workflow and what each block does.
+- **"How to cite" button** in Block 1, and the reference in the report's methods paragraph.
+- `scripts/i18n_faltantes.pl`, which lists the strings that still have no translation.
+
+### Changed
+
+- The report, the printed version and the ZIP package are method-aware: they name the method, its
+  axes and its tables, and add a section for the clustering when it was run.
+- The test suite grows from 60 to **111** tests, in 19 groups.
+
+### Fixed
+
+- The reference value of λ₃ for iris in `tests/tests.js` and `lib/reproduce-iris.js` read 0.146755
+  instead of 0.146757; the tolerance of 1e-5 was hiding the typo.
+
 ## [1.0.1] — 2026-09-07
 
 ### Added
@@ -51,6 +88,7 @@ First public release.
 - **Teaching package** in `curso/`: participant manual, instructor guide and five simulated practice
   data sets with a deliberately planted latent structure.
 
-[Unreleased]: https://github.com/luisangelbg/PCAPro/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/luisangelbg/PCAPro/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/luisangelbg/PCAPro/releases/tag/v1.1.0
 [1.0.1]: https://github.com/luisangelbg/PCAPro/releases/tag/v1.0.1
 [1.0.0]: https://github.com/luisangelbg/PCAPro/releases/tag/v1.0.0

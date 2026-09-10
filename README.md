@@ -1,14 +1,20 @@
 # PCAPro
 
-**A complete principal component analysis, in your browser, with nothing to install.**
+**Principal component methods, in your browser, with nothing to install.**
 
 [![Tests](https://github.com/luisangelbg/PCAPro/actions/workflows/tests.yml/badge.svg)](https://github.com/luisangelbg/PCAPro/actions/workflows/tests.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22649709.svg)](https://doi.org/10.5281/zenodo.22649709)
 
-PCAPro is a self-contained web application dedicated to **principal component analysis (PCA)**:
+PCAPro is a self-contained web application built around **principal component analysis (PCA)**:
 data preparation, verification of assumptions, extraction, rotation, factor maps and
 interpretation, ending in a publication-ready report.
+
+Since **v1.1.0** the same route also runs **correspondence analysis (CA)**, **multiple
+correspondence analysis (MCA)**, **factor analysis of mixed data (FAMD)** and **multiple factor
+analysis (MFA)** — the five share one generalized-SVD core — and, on top of any of them, a
+**hierarchical clustering of the individuals on the factor coordinates (HCPC)**. A recommender
+reads your table and says which of the five fits it.
 
 All computation happens **in the browser**, in plain JavaScript. There is no server, no build
 step and no Python runtime, and **no user data is ever transmitted**.
@@ -62,6 +68,7 @@ The only third-party code is **SheetJS** (`xlsx` 0.18.5, Apache-2.0), used solel
 | 3 | Rotation: varimax, quartimax, equamax, parsimax, promax, direct oblimin and quartimin |
 | 4 | Factor maps: correlation circle, map of individuals, biplot, contributions, `cos²`, ellipses |
 | 5 | Interpretation: naming the axes, dimension description, test values, group comparison, model fit |
+| 5b | Hierarchical clustering on the factor coordinates (HCPC): Ward, three rules for the number of clusters, k-means consolidation, dendrogram, cluster maps and test values |
 | 6 | Self-contained HTML report, PDF via printing, and a full ZIP package |
 
 **Variable roles** follow the French school of data analysis: active, supplementary
@@ -89,8 +96,8 @@ The test suite runs in the browser. Start the local server and open:
 http://localhost:8790/tests/index.html
 ```
 
-It runs 60 tests in 11 groups and takes about 40 seconds. The page title becomes
-`PASS — PCAPro tests` and the summary reads `All 60 tests passed` when everything is green.
+It runs 111 tests in 19 groups and takes a few seconds. The page title becomes
+`PASS — PCAPro tests` and the summary reads `All 111 tests passed` when everything is green.
 
 Every expectation is either a reference value published by an independent implementation
 (R: `prcomp`, `psych::KMO`, `pchisq`, `pf`, `pt`) or an algebraic invariant that must hold
@@ -108,7 +115,7 @@ node tests/run-tests.mjs
 Node is needed **only** for that runner. PCAPro itself has no build step and no package manager.
 
 Run the suite after any change to the numerical engine (`js/stats.js`, `js/rotate.js`,
-`js/factor.js`).
+`js/factor.js`, `js/gsvd.js`, `js/ca.js`, `js/famd.js`, `js/mfa.js`, `js/hcpc.js`).
 
 ---
 
@@ -151,14 +158,21 @@ js/                   engine and interface
   stats.js            linear algebra and distributions
   rotate.js           Jennrich gradient projection rotations
   factor.js           coordinates, cos², contributions
+  gsvd.js             generalized SVD: the core shared by the five methods
+  ca.js, famd.js, mfa.js   correspondence analysis, MCA, FAMD and MFA
+  hcpc.js             hierarchical clustering on the factor coordinates
+  recomienda.js       which method fits the data at hand
   figure.js           SVG figure engine, editing and export
   i18n.js             Spanish/English dictionary and switching
-  data.js, block2-6.js, plots1-5.js, report.js
+  data.js, block2-6.js, plots1-7.js, report.js
+  metodo.js, mapas.js, interpreta.js, cluster.js, home.js
 css/                  styles
 datos/                example data sets
 tests/                automated test suite
 curso/                teaching package (workshop materials, in Spanish)
-paper/jss/             manuscript for the Journal of Statistical Software
+paper/jsdse/          manuscript for the Journal of Statistics and Data Science Education
+paper/jss/            manuscript for the Journal of Statistical Software (fallback)
+scripts/              maintenance helpers (GPL headers, i18n audit)
 ```
 
 ---

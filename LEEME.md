@@ -1,8 +1,14 @@
 # PCAPro
 
-Plataforma local dedicada exclusivamente al **Análisis de Componentes Principales (ACP)**:
+Plataforma local construida alrededor del **Análisis de Componentes Principales (ACP)**:
 preparación de datos, verificación de supuestos, extracción, rotación, gráficos factoriales
 e interpretación, con figuras editables y exportables a resolución de publicación.
+
+Desde la **v1.1.0** el mismo recorrido sirve además para el **análisis de correspondencias (AC)**,
+el **AC múltiple (ACM)**, el **análisis factorial de datos mixtos (AFDM)** y el **análisis
+factorial múltiple (AFM)** —los cinco comparten un solo núcleo de descomposición— y, encima de
+cualquiera de ellos, un **agrupamiento jerárquico sobre las coordenadas factoriales (HCPC)**.
+Un recomendador lee tu tabla y dice cuál de los cinco le corresponde.
 
 Todo el cálculo ocurre **en tu navegador**, en JavaScript puro (sin Python, sin Pyodide,
 sin espera de carga). Ningún dato sale de tu computadora.
@@ -26,6 +32,7 @@ Para verlo desde una tablet en la misma red WiFi, ejecuta el script *como admini
 | 3 | Rotaciones: varimax, quartimax, equamax, parsimax, promax, oblimin, quartimin | ✅ listo |
 | 4 | Gráficos factoriales: círculo de correlaciones, individuos, biplot, elipses | ✅ listo |
 | 5 | Interpretación: nombrar ejes, valores test, comparación de grupos, ajuste | ✅ listo |
+| 5b | Agrupamiento jerárquico sobre los ejes: Ward, tres reglas, consolidación, dendrograma | ✅ listo |
 | 6 | Informe automático y exportación completa (HTML, PDF, ZIP) | ✅ listo |
 
 ## Bloque 1 — qué hace

@@ -24,12 +24,27 @@ $d =~ s/\x5cauthor\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/\x5cauthor{}/s
 $d =~ s/%% -{10,}\n\x5csection\*\{Acknowledgments\}\n.*?(?=\x5csection\*\{Declaration of Interest)//s
   and push @hecho, 'agradecimientos eliminados';
 
-# 3. Las tres URL llevan el usuario de GitHub y el DOI, que resuelve al nombre.
+# 3. Disponibilidad del software. Sustituir URL por URL dejaba una frase
+#    ridicula —"el identificador [anonimizado] resuelve a la ultima version"—,
+#    asi que se reescribe el parrafo entero. Lo que el revisor necesita saber
+#    es la licencia y que la version descrita esta fijada; el numero de version
+#    se conserva porque no identifica a nadie.
+my $anon = <<'PARRAFO';
+PCAPro is free software distributed under the GNU General Public License,
+version 3 or later. The source code, documentation and teaching materials are
+available in a public repository and archived in a general-purpose research
+data repository with a persistent identifier; both are anonymised for review.
+The archived deposit is pinned to version 1.0.1, the version described in this
+article. A working installation requiring no download is also available and
+runs the current release, which may be ahead of the version described here.
+PARRAFO
 my $n = 0;
+$n += ($d =~ s{PCAPro is free software distributed under the GNU General Public License,.*?ahead of the version described here\.\n}{$anon}s);
+# Red de seguridad: cualquier URL que aparezca fuera de ese parrafo.
 $n += ($d =~ s{\x5curl\{https://github\.com/\S+?\}}{[repository, anonymised for review]}g);
 $n += ($d =~ s{\x5curl\{https://doi\.org/10\.5281/zenodo\.\d+\}}{[archived deposit, anonymised for review]}g);
 $n += ($d =~ s{\x5curl\{https://\S+?\.github\.io/\S*?\}}{[working installation, anonymised for review]}g);
-push @hecho, "$n enlaces sustituidos" if $n;
+push @hecho, "$n sustituciones de disponibilidad" if $n;
 
 # 4. El recordatorio de anonimizar ya no aplica en el fichero generado.
 $d =~ s/%% TODO: in the anonymous version.*?identify the author\.\n\n//s
