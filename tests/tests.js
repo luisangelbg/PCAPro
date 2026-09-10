@@ -719,6 +719,134 @@ suite('Multiple factor analysis', () => {
   });
 });
 
+/* =====================================================================
+   HCPC — hierarchical clustering on principal components
+   Three well separated groups, so the correct answer is known by
+   construction rather than copied from another implementation.
+   ===================================================================== */
+function tresGrupos(seed) {
+  let s = seed >>> 0;
+  const r = () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296;
+  const nz = () => Math.sqrt(-2 * Math.log(1 - r())) * Math.cos(2 * Math.PI * r());
+  const centros = [[-6, -6], [6, -6], [0, 6]];
+  const X = [], verdad = [];
+  for (let g = 0; g < 3; g++) for (let t = 0; t < 20; t++) {
+    X.push([centros[g][0] + 0.5 * nz(), centros[g][1] + 0.5 * nz()]);
+    verdad.push(g);
+  }
+  return { X, verdad, w: new Array(X.length).fill(1 / X.length) };
+}
+
+suite('Hierarchical clustering on principal components', () => {
+  test('Ward heights never decrease and there are n - 1 merges', () => {
+    const { X, w } = tresGrupos(4242);
+    const a = HCPC.ward(X, w);
+    eq(a.merges.length, X.length - 1, 'number of merges');
+    a.alturas.forEach((v, i) => {
+      if (i) ok(v >= a.alturas[i - 1] - 1e-12, `height ${i} decreased`);
+    });
+  });
+
+  test('cutting at three recovers the three true groups', () => {
+    const { X, w, verdad } = tresGrupos(4242);
+    const g = HCPC.corta(HCPC.ward(X, w), 3);
+    eq(new Set(g).size, 3, 'number of clusters');
+    for (let t = 0; t < 3; t++) {
+      const idx = [];
+      for (let i = 0; i < verdad.length; i++) if (verdad[i] === t) idx.push(i);
+      eq(new Set(idx.map(i => g[i])).size, 1, `true group ${t} was split`);
+    }
+  });
+
+  test('within plus between inertia equals the total', () => {
+    const { X, w } = tresGrupos(4242);
+    const a = HCPC.ward(X, w);
+    [2, 3, 4, 5].forEach(q => {
+      const I = HCPC.inercias(X, w, HCPC.corta(a, q));
+      near(I.intra + I.entre, I.total, 1e-9, `decomposition at q = ${q}`);
+    });
+  });
+
+  test('one cluster is all within, n clusters is none', () => {
+    const { X, w } = tresGrupos(4242);
+    const a = HCPC.ward(X, w);
+    const I1 = HCPC.inercias(X, w, HCPC.corta(a, 1));
+    near(I1.intra, I1.total, 1e-12, 'q = 1');
+    const In = HCPC.inercias(X, w, HCPC.corta(a, X.length));
+    near(In.intra, 0, 1e-12, 'q = n');
+  });
+
+  test('the three rules agree when the structure is unambiguous', () => {
+    const { X, w } = tresGrupos(4242);
+    const c = HCPC.criterios(X, w, HCPC.ward(X, w), 8);
+    c.reglas.forEach(r => eq(r.q, 3, `rule "${r.nombre}"`));
+    eq(c.consenso, 3, 'consensus');
+    ok(c.acuerdo, 'the rules should agree here');
+  });
+
+  test('consolidation never increases the within inertia', () => {
+    const { X, w } = tresGrupos(4242);
+    /* se parte de una particion deliberadamente estropeada */
+    const mal = HCPC.corta(HCPC.ward(X, w), 3).map((g, i) => (i % 7 === 0 ? (g + 1) % 3 : g));
+    const antes = HCPC.inercias(X, w, mal).intra;
+    const cons = HCPC.consolida(X, w, mal);
+    const despues = HCPC.inercias(X, w, cons.grupo).intra;
+    ok(despues <= antes + 1e-12, `within inertia went from ${antes} to ${despues}`);
+    ok(cons.convergio, 'k-means did not converge');
+  });
+
+  test('weighted deviations of the test values cancel out', () => {
+    const { X, w } = tresGrupos(4242);
+    const g = HCPC.corta(HCPC.ward(X, w), 3);
+    const vt = HCPC.vtest(X.map(p => p[0]), g);
+    const s = vt.reduce((a, v) => a + v.n * (v.media - v.mediaGeneral), 0);
+    near(s, 0, 1e-9, 'sum of weighted deviations');
+  });
+
+  test('a paragon really is the closest individual to its centre', () => {
+    const { X, w } = tresGrupos(4242);
+    const g = HCPC.corta(HCPC.ward(X, w), 3);
+    const I = HCPC.inercias(X, w, g);
+    const pg = HCPC.paragones(X, g, 3);
+    const d2 = (i, c) => (X[i][0] - I.cen[c][0]) ** 2 + (X[i][1] - I.cen[c][1]) ** 2;
+    pg.paragones.forEach((lista, c) => {
+      const idx = [];
+      for (let i = 0; i < X.length; i++) if (g[i] === c) idx.push(i);
+      const min = Math.min(...idx.map(i => d2(i, c)));
+      near(d2(lista[0].i, c), min, 1e-12, `paragon of cluster ${c}`);
+    });
+  });
+
+  test('it runs on top of any of the factor methods', async () => {
+    /* La promesa del nucleo compartido: el mismo HCPC sobre un ACP, un ACM y
+       un AFDM sin tocar una linea. */
+    const iris = await loadIris();
+    const cab = ['Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'];
+    const pca = FAMD.run(iris, [], cab, []);
+    const h1 = HCPC.run(pca, { ejes: 2, qmax: 6 });
+    ok(h1.q >= 2, 'PCA-based clustering produced no clusters');
+    ok(h1.inercia.intra <= h1.inerciaAntes.intra + 1e-12, 'consolidation worsened the PCA case');
+
+    const cortes = iris.map(c => { const m = S.median(c); return c.map(v => (v > m ? 'high' : 'low')); });
+    const acm = CA.multiple(cortes, cab);
+    const h2 = HCPC.run(acm, { ejes: 3, qmax: 6 });
+    ok(h2.q >= 2, 'MCA-based clustering produced no clusters');
+    ok(h2.inercia.intra <= h2.inerciaAntes.intra + 1e-12, 'consolidation worsened the MCA case');
+  });
+
+  test('on iris it finds the two groups that are really there', async () => {
+    /* setosa se separa por completo; versicolor y virginica se solapan, asi
+       que la respuesta correcta sobre las coordenadas del ACP es dos, no tres. */
+    const iris = await loadIris();
+    const pca = FAMD.run(iris, [], ['a', 'b', 'c', 'd'], []);
+    const h = HCPC.run(pca, { ejes: 2, qmax: 6 });
+    eq(h.q, 2, 'number of clusters on iris');
+    const g = h.grupo;
+    eq(new Set(g.slice(0, 50)).size, 1, 'setosa was split');
+    ok(g[0] !== g[50], 'setosa was not separated from the rest');
+  });
+});
+
 suite('Input parsing', () => {
   test('comma separated values with quoted fields', () => {
     const rows = PCAProData.parseCSV('a,b,c\n1,"x,y",3\n4,5,6');
