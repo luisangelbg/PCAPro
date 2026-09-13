@@ -20,20 +20,15 @@ const NS = 'http://www.w3.org/2000/svg';
 /* ================= paletas ================= */
 Fig.palettes = {
   pcapro:     ['#5b3fd6', '#0d9488', '#e8890c', '#e0316f', '#2f9e44', '#0ea5e9', '#a855f7', '#84cc16', '#f43f5e', '#14b8a6'],
-  npg:       ['#E64B35', '#4DBBD5', '#00A087', '#3C5488', '#F39B7F', '#8491B4', '#91D1C2', '#DC0000', '#7E6148', '#B09C85'],
-  lancet:    ['#00468B', '#ED0000', '#42B540', '#0099B4', '#925E9F', '#FDAF91', '#AD002A', '#ADB6B6', '#1B1919', '#00A087'],
-  jco:       ['#0073C2', '#EFC000', '#868686', '#CD534C', '#7AA6DC', '#003C67', '#8F7700', '#3B3B3B', '#A73030', '#4A6990'],
-  nejm:      ['#BC3C29', '#0072B5', '#E18727', '#20854E', '#7876B1', '#6F99AD', '#FFDC91', '#EE4C97', '#1B1919', '#00468B'],
-  d3:        ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'],
-  set2:      ['#66C2A5', '#FC8D62', '#8DA0CB', '#E78AC3', '#A6D854', '#FFD92F', '#E5C494', '#B3B3B3', '#66A61E', '#E6AB02'],
+  set2:      ['#7fc8a9', '#f3a683', '#9aa8d6', '#e7a1c8', '#b5d56a', '#f7d86b', '#dcc19e', '#bfbfbf', '#6fae3e', '#dfad2e'],
   okabe:     ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7', '#000000', '#999999', '#661100'],
   botanica:  ['#2d6a4f', '#95d5b2', '#b7791f', '#7f5539', '#40916c', '#d8f3dc', '#e9c46a', '#9c6644', '#1b4332', '#588157'],
+  pastel:    ['#a8c8ec', '#f7bd92', '#9ddcaf', '#f3a6a3', '#cdbff5', '#dcc0a3', '#f2b6de', '#d3d3d3', '#f6f2a4', '#bde8e5'],
   grises:    ['#111827', '#374151', '#6b7280', '#9ca3af', '#d1d5db', '#4b5563', '#1f2937', '#e5e7eb', '#111827', '#6b7280'],
 };
 Fig.paletteNames = {
-  pcapro: 'PCAPro (violeta)', npg: 'Nature (NPG)', lancet: 'Lancet', jco: 'Clinical Oncology',
-  nejm: 'NEJM', d3: 'D3 clásica', set2: 'Set2 (suave)', okabe: 'Okabe–Ito (daltónicos)',
-  botanica: 'Botánica', grises: 'Escala de grises',
+  pcapro: 'PCAPro (violeta)', set2: 'Suave', okabe: 'Okabe–Ito (daltónicos)',
+  botanica: 'Botánica', pastel: 'Pastel', grises: 'Escala de grises',
 };
 
 /* mapas continuos: t en [0,1] -> color */
@@ -55,12 +50,16 @@ Fig.colormaps = {
   inferno: rampFrom([[0,0,4],[87,16,110],[188,55,84],[249,142,9],[252,255,164]]),
   plasma:  rampFrom([[13,8,135],[126,3,168],[204,71,120],[248,149,64],[240,249,33]]),
   cividis: rampFrom([[0,32,77],[60,86,120],[124,123,120],[192,164,98],[255,234,70]]),
-  rdylbu:  rampFrom([[49,54,149],[145,191,219],[255,255,191],[252,141,89],[165,0,38]]),
-  rdbu:    rampFrom([[5,48,97],[103,169,207],[247,247,247],[239,138,98],[103,0,31]]),
-  spectral:rampFrom([[94,79,162],[102,194,165],[255,255,191],[252,141,89],[158,1,66]]),
-  bluered: rampFrom([[33,102,172],[247,247,247],[178,24,43]]),
-  verdes:  rampFrom([[247,252,245],[116,196,118],[0,68,27]]),
-  calor:   rampFrom([[255,255,204],[254,178,76],[189,0,38]]),
+  /* las rampas divergentes y secuenciales de abajo son originales de este programa: sus paradas salen
+     de anclas en el espacio de color OKLCH, con la luminosidad subiendo al centro y bajando a los
+     extremos (divergentes) o bajando de forma continua (secuenciales), y extremos que siguen
+     distinguiéndose con daltonismo rojo–verde */
+  rdylbu:  rampFrom([[39,67,135],[105,174,213],[252,245,199],[237,156,85],[165,30,36]]),
+  rdbu:    rampFrom([[2,56,105],[151,197,222],[246,239,230],[229,166,146],[144,40,34]]),
+  spectral:rampFrom([[86,69,151],[82,200,180],[241,244,182],[248,154,86],[166,31,71]]),
+  bluered: rampFrom([[30,71,152],[243,237,230],[190,48,37]]),
+  verdes:  rampFrom([[241,247,221],[89,180,125],[0,63,51]]),
+  calor:   rampFrom([[255,247,217],[253,146,62],[158,18,43]]),
 };
 Fig.colormapNames = {
   viridis: 'Viridis', magma: 'Magma', inferno: 'Inferno', plasma: 'Plasma',

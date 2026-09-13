@@ -555,9 +555,9 @@ I18N.en = {
   'Análisis paralelo (p95)': 'Parallel analysis (p95)', 'Kaiser (λ = 1)': 'Kaiser (λ = 1)',
 
   /* ---------- palettes, themes and typefaces ---------- */
-  'PCAPro (violeta)': 'PCAPro (purple)', 'D3 clásica': 'D3 classic',
-  'Set2 (suave)': 'Set2 (soft)', 'Okabe–Ito (daltónicos)': 'Okabe–Ito (colour-blind safe)',
-  'Botánica': 'Botanical', 'Escala de grises': 'Greyscale',
+  'PCAPro (violeta)': 'PCAPro (purple)',
+  'Suave': 'Soft', 'Okabe–Ito (daltónicos)': 'Okabe–Ito (colour-blind safe)',
+  'Botánica': 'Botanical', 'Pastel': 'Pastel', 'Escala de grises': 'Greyscale',
   'Cividis (daltónicos)': 'Cividis (colour-blind safe)',
   'Rojo–Amarillo–Azul': 'Red–Yellow–Blue', 'Rojo–Azul (divergente)': 'Red–Blue (diverging)',
   'Espectral': 'Spectral', 'Azul–Blanco–Rojo': 'Blue–White–Red',
