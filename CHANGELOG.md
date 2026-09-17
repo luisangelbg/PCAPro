@@ -7,6 +7,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Column coordinates in CA and MCA were multiplied by the column mass.** The shared core
+  (`js/gsvd.js`) received the chi-square metric `1/c` as the only column weight and returned
+  `c·G` instead of Greenacre's principal coordinates `G = Dc^(-1/2)·V·Dσ`. On the smoking table the
+  first-axis coordinate of *none* was 0.124 instead of 0.393; in MCA the categories were squeezed
+  towards the origin by a factor between 4 and 35 in the same example. The core now takes the
+  column masses separately (`opt.colMass`); PCA, FAMD and MFA, whose column weights are also their
+  masses, are unchanged. Eigenvalues, row and individual coordinates, `cos²`, contributions,
+  interpretation and HCPC were already right. Affected in 1.1.0: the CA map (symmetric and
+  asymmetric), the MCA category map, the column/category coordinates in Block 2, the report
+  table and `05_columnas_coord_cos2_contrib.csv` / `12_descripcion_ejes.csv` in the ZIP.
+- Seven new tests (118 in total): Greenacre's row and column coordinates, column `cos²` and
+  contributions, the transition formula, the quasi-barycentre of MCA categories, the two-variable
+  MCA–CA identity and the projection of supplementary rows.
+
 ## [1.1.0] — 2026-09-10
 
 The platform stops being a PCA tool and becomes a factor-methods tool. The five methods share a

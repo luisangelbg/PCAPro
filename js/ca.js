@@ -34,8 +34,11 @@ CA.simple = function (N, filas, cols) {
      compare formas y no tamaños. */
   const perfil = P.map((r, i) => r.map(v => (rw[i] > 0 ? v / rw[i] : 0)));
 
-  /* La métrica de la chi cuadrada pondera cada columna por 1/masa. */
-  const res = GSV.core(perfil, rw, cw.map(c => (c > 0 ? 1 / c : 0)), { method: 'ca' });
+  /* La métrica de la chi cuadrada pondera cada columna por 1/masa, pero como
+     punto del mapa cada columna pesa su masa. Hay que dar las dos cosas: con
+     solo la métrica, las coordenadas de columna salían multiplicadas por la
+     masa (corregido tras la v1.1.0; cos² y contribuciones no cambian). */
+  const res = GSV.core(perfil, rw, cw.map(c => (c > 0 ? 1 / c : 0)), { method: 'ca', colMass: cw });
 
   const chi = GSV.chi2Tabla(N);
   res.tipo = 'ca';

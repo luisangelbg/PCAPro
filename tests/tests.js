@@ -484,6 +484,67 @@ suite('Correspondence analysis (smoke)', () => {
     const s = r.celdas.reduce((a, row) => a + row.reduce((x, c) => x + c.contrib, 0), 0);
     near(s, 100, 1e-9, 'sum of cell contributions');
   });
+
+  /* Principal coordinates on the first plane. Greenacre's published values,
+     to the six decimals printed by FactoMineR::CA 2.11 in R 4.4.2 (first
+     axis: none -0.393, light 0.099, medium 0.196, heavy 0.294). Version 1.1.0
+     returned every column coordinate multiplied by the column mass (0.124
+     instead of 0.393 for "none"), because the core received the chi-square
+     metric 1/c as the only column weight; cos2, contributions and the rows
+     were right, and no test looked at the columns. The sign of an axis is
+     arbitrary, so it is taken from the rows: that also checks that rows and
+     columns share orientation, without which the symmetric map is wrong. */
+  test('row and column principal coordinates match Greenacre', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const ROW = [[-0.065768, 0.258958, -0.380595, 0.232952, -0.201089],
+                 [0.193737, 0.243305, 0.010660, -0.057744, -0.078911]];
+    const COL = [[-0.393308, 0.099456, 0.196321, 0.293776],
+                 [0.030492, -0.141064, -0.007359, 0.197766]];
+    for (let k = 0; k < 2; k++) {
+      const i0 = ROW[k].reduce((b, v, i) => (Math.abs(v) > Math.abs(ROW[k][b]) ? i : b), 0);
+      const s = Math.sign(r.rowCoord[i0][k]) === Math.sign(ROW[k][i0]) ? 1 : -1;
+      ROW[k].forEach((v, i) => near(s * r.rowCoord[i][k], v, 1e-6, `row ${SMOKE_R[i]}, axis ${k + 1}`));
+      COL[k].forEach((v, j) => near(s * r.colCoord[j][k], v, 1e-6, `column ${SMOKE_C[j]}, axis ${k + 1}`));
+    }
+  });
+
+  test('column contributions and cos2 match the reference', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    [65.399583, 3.084980, 16.561650, 14.953787].forEach((v, j) =>
+      near(r.colContrib[j][0], v, 1e-5, `contribution of ${SMOKE_C[j]} to axis 1`));
+    [0.994020, 0.326726, 0.981848, 0.684398].forEach((v, j) =>
+      near(r.colCos2[j][0], v, 1e-6, `cos2 of ${SMOKE_C[j]} on axis 1`));
+  });
+
+  test('each column sits at the barycentre of the rows in standard coordinates', () => {
+    /* Transition formula g_jk = sum_i (n_ij / n_.j) f_ik / sigma_k. It holds for
+       any table, so it would catch a wrong scaling of the columns on data that
+       has no published reference. */
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    SMOKE_C.forEach((cn, j) => {
+      const nj = SMOKE.reduce((a, row) => a + row[j], 0);
+      for (let k = 0; k < r.k; k++) {
+        const g = SMOKE.reduce((a, row, i) => a + row[j] / nj * r.rowCoord[i][k], 0) / r.d[k];
+        near(r.colCoord[j][k], g, 1e-10, `column ${cn}, axis ${k + 1}`);
+      }
+    });
+  });
+
+  test('column masses centre each axis and their inertia equals its eigenvalue', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const c = SMOKE_C.map((_, j) => SMOKE.reduce((a, row) => a + row[j], 0) / 193);
+    for (let k = 0; k < r.k; k++) {
+      near(c.reduce((a, cj, j) => a + cj * r.colCoord[j][k], 0), 0, 1e-12, `weighted mean of axis ${k + 1}`);
+      near(c.reduce((a, cj, j) => a + cj * r.colCoord[j][k] ** 2, 0), r.values[k], 1e-12, `column inertia on axis ${k + 1}`);
+    }
+  });
+
+  test('an active row projected as supplementary lands on its own coordinates', () => {
+    const r = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const perfiles = SMOKE.map(row => { const t = row.reduce((a, b) => a + b, 0); return row.map(v => v / t); });
+    GSV.supRow(r, perfiles).forEach((f, i) => f.forEach((v, k) =>
+      near(v, r.rowCoord[i][k], 1e-12, `row ${SMOKE_R[i]}, axis ${k + 1}`)));
+  });
 });
 
 /* =====================================================================
@@ -539,6 +600,42 @@ suite('Multiple correspondence analysis', () => {
     const mca = CA.multiple(smokeLong(), ['staff', 'smoking']);
     near(mca.cramer[0][1], mca.cramer[1][0], 1e-12, 'symmetry');
     ok(mca.cramer[0][1] >= 0 && mca.cramer[0][1] <= 1, 'out of range');
+  });
+
+  test('each category is the quasi-barycentre of its individuals', () => {
+    /* g_jk = (mean of f_ik over the individuals in category j) / sqrt(lambda_k),
+       as FactoMineR::MCA documents it. Version 1.1.0 returned g_jk times the
+       category mass, which squeezed the categories towards the origin. */
+    const cols = smokeLong();
+    const mca = CA.multiple(cols, ['staff', 'smoking']);
+    mca.cols.forEach((cat, j) => {
+      const v = cols[mca.grupoDe[j]];
+      const idx = [];
+      v.forEach((x, i) => { if (x === cat) idx.push(i); });
+      for (let k = 0; k < mca.k; k++) {
+        const m = idx.reduce((a, i) => a + mca.rowCoord[i][k], 0) / idx.length;
+        near(mca.colCoord[j][k], m / Math.sqrt(mca.values[k]), 1e-9, `category ${cat}, axis ${k + 1}`);
+      }
+    });
+  });
+
+  test('with two variables the standard coordinates are those of the CA', () => {
+    /* For Q = 2, the axis with eigenvalue (1 + sqrt(mu))/2 carries, as standard
+       coordinates of the categories, the standard coordinates of rows and
+       columns in the CA of the cross-table (Greenacre 2007, ch. 18). Exact. */
+    const ca = CA.simple(SMOKE, SMOKE_R, SMOKE_C);
+    const mca = CA.multiple(smokeLong(), ['staff', 'smoking']);
+    for (let k = 0; k < ca.k; k++) {
+      near(mca.values[k], (1 + ca.d[k]) / 2, 1e-10, `axis ${k + 1} pairing`);
+      const esp = mca.cols.map(cat => {
+        const i = SMOKE_R.indexOf(cat);
+        return i >= 0 ? ca.rowCoord[i][k] / ca.d[k] : ca.colCoord[SMOKE_C.indexOf(cat)][k] / ca.d[k];
+      });
+      const obs = mca.cols.map((_, j) => mca.colCoord[j][k] / Math.sqrt(mca.values[k]));
+      const j0 = esp.reduce((b, v, j) => (Math.abs(v) > Math.abs(esp[b]) ? j : b), 0);
+      const s = Math.sign(obs[j0]) === Math.sign(esp[j0]) ? 1 : -1;
+      obs.forEach((v, j) => near(s * v, esp[j], 1e-9, `category ${mca.cols[j]}, axis ${k + 1}`));
+    }
   });
 });
 

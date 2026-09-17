@@ -71,12 +71,18 @@ GSV.svd = function (Z) {
    ============================================================
    X   matriz n x p ya transformada por el método que llama
    rw  pesos de fila (masas), suman 1
-   cw  pesos de columna
+   cw  pesos de columna: la métrica con la que se miden distancias entre filas
+   opt.colMass  masas de los puntos columna. Por omisión son los propios cw,
+                que es lo que vale en el ACP, el AFDM y el AFM. En el AC y el
+                ACM no: cw es la métrica de la chi cuadrada, 1/masa, y cada
+                columna pesa su masa. Sin esta distinción las coordenadas de
+                columna del AC salen multiplicadas por la masa.
    Devuelve la estructura que consumen los bloques 4 y 5.
    ============================================================ */
 GSV.core = function (X, rw, cw, opt) {
   opt = opt || {};
   const n = X.length, p = X[0].length;
+  const mc = opt.colMass || cw;
 
   /* media ponderada de cada columna y centrado */
   const media = new Array(p).fill(0);
@@ -98,8 +104,11 @@ GSV.core = function (X, rw, cw, opt) {
 
   /* Coordenadas principales:
        filas    F = D_r^(-1/2) · U · D_σ
-       columnas Gc = D_c^(-1/2) · V · D_σ
-     Son las que se dibujan; las estandarizadas se obtienen dividiendo por σ. */
+       columnas G = D_m^(-1/2) · V · D_σ,   m = masas de columna
+     Son las que se dibujan; las estandarizadas se obtienen dividiendo por σ.
+     Con m = cw, G es la covarianza de cada columna con el eje (la carga del
+     ACP). En el AC, m = c y G es la coordenada principal de Greenacre: usar
+     ahí 1/c, que es la métrica, daría c·G. */
   const rowCoord = [], colCoord = [];
   for (let i = 0; i < n; i++) {
     const f = new Array(K);
@@ -108,13 +117,15 @@ GSV.core = function (X, rw, cw, opt) {
   }
   for (let j = 0; j < p; j++) {
     const g = new Array(K);
-    for (let k = 0; k < K; k++) g[k] = V[k][j] / sc[j] * d[k];
+    const sm = Math.sqrt(mc[j]);
+    for (let k = 0; k < K; k++) g[k] = sm > 0 ? V[k][j] / sm * d[k] : 0;
     colCoord.push(g);
   }
 
-  /* Inercias, cos² y contribuciones: idénticos en los cinco métodos. */
+  /* Inercias, cos² y contribuciones: idénticos en los cinco métodos, siempre
+     que cada columna pese su masa. */
   const rowInertia = rowCoord.map((f, i) => rw[i] * f.reduce((a, v) => a + v * v, 0));
-  const colInertia = colCoord.map((g, j) => cw[j] * g.reduce((a, v) => a + v * v, 0));
+  const colInertia = colCoord.map((g, j) => mc[j] * g.reduce((a, v) => a + v * v, 0));
 
   const cos2 = (coord, inerciaTot) => coord.map((v, i) => {
     const d2 = v.reduce((a, x) => a + x * x, 0);
@@ -129,10 +140,10 @@ GSV.core = function (X, rw, cw, opt) {
     pct: values.map(v => v / total),
     cum: values.reduce((a, v, i) => (a.push((a[i - 1] || 0) + v / total), a), []),
     d, U, V,
-    rowW: rw.slice(), colW: cw.slice(),
+    rowW: rw.slice(), colW: cw.slice(), colMass: mc.slice(),
     rowCoord, colCoord,
     rowCos2: cos2(rowCoord), colCos2: cos2(colCoord),
-    rowContrib: contrib(rowCoord, rw), colContrib: contrib(colCoord, cw),
+    rowContrib: contrib(rowCoord, rw), colContrib: contrib(colCoord, mc),
     rowInertia, colInertia,
     mean: media,
     method: opt.method || 'gsvd',
@@ -144,7 +155,8 @@ GSV.core = function (X, rw, cw, opt) {
    ============================================================
    Un punto suplementario no interviene en la construcción de los ejes: se
    proyecta después, con la fórmula baricéntrica. Vale para filas y para
-   columnas y para los cinco métodos.
+   columnas y para los cinco métodos. Usa la métrica de columna (colW), no
+   las masas: en el AC son cosas distintas.
    ============================================================ */
 GSV.supRow = function (res, xs, cw) {
   const w = cw || res.colW;
