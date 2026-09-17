@@ -22,6 +22,19 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Seven new tests (118 in total): Greenacre's row and column coordinates, column `cos²` and
   contributions, the transition formula, the quasi-barycentre of MCA categories, the two-variable
   MCA–CA identity and the projection of supplementary rows.
+- **FAMD reported for each category a coordinate and a `cos²` that were not the ones on the map.**
+  The tables took the core's column coordinate, `√p_k · barycentre / √λ`, and the `cos²` of that
+  vector, while the category map drew the barycentre and the card itself said so. On iris with
+  *Species* active, *setosa* was −0.765 on Dim1 instead of −2.606, with `cos²` 0.877 instead of
+  0.965. `FAMD.run` now reports what `FactoMineR::FAMD` reports: correlation and `r²` for each
+  quantitative variable, and for each category its barycentre with the `cos²` of that point over
+  all the axes (the core's values stay in `colCoordNucleo` / `colCos2Nucleo`). Quantitative
+  variables, contributions, `η²`, the individuals and the position of the categories on the map
+  were already right. Affected in 1.1.0: category coordinates and `cos²` in card 2.5, in the
+  report table and in `05_columnas_coord_cos2_contrib.csv`; the `cos2` column of
+  `12_descripcion_ejes.csv`; and the category map only when it was filtered or coloured by `cos²`.
+- Two new FAMD tests (120 in total): iris against `FactoMineR::FAMD` and the identity between the
+  reported and the drawn points.
 
 ## [1.1.0] — 2026-09-10
 

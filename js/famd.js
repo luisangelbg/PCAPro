@@ -122,6 +122,23 @@ FAMD.run = function (quant, qual, nomQuant, nomQual) {
     });
   });
 
+  /* --- lo que se reporta por columna ---
+     El núcleo da, para cada columna, su covarianza con el eje. En una
+     cuantitativa estandarizada es la correlación, pero en una categoría es
+     √p_k · baricentro / √λ, un número que no se dibuja en ningún mapa; y su
+     cos² es el de ese vector, no el del punto categoría. La tarjeta 2.5, el
+     informe y el ZIP mostraban esos dos. Se reportan en su lugar los de
+     FactoMineR::FAMD: la correlación y r² de cada cuantitativa, y el
+     baricentro de cada categoría con el cos² de ese punto sobre todos los
+     ejes. Las contribuciones del núcleo ya eran las correctas. */
+  res.colCoordNucleo = res.colCoord;
+  res.colCos2Nucleo = res.colCos2;
+  res.colCoord = res.corQuant.concat(res.coordCat).map(f => f.slice());
+  res.colCos2 = res.corQuant.map(f => f.map(r => r * r)).concat(res.coordCat.map(f => {
+    const d2 = f.reduce((a, x) => a + x * x, 0);
+    return f.map(x => (d2 > 0 ? x * x / d2 : 0));
+  }));
+
   /* --- razón de correlación al cuadrado de cada cualitativa con cada eje ---
      Es la proporción de la varianza del eje que explican los grupos: la medida
      que hace comparables cuantitativas y cualitativas en el mismo mapa. */

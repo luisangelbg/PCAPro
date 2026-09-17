@@ -96,11 +96,11 @@ The test suite runs in the browser. Start the local server and open:
 http://localhost:8790/tests/index.html
 ```
 
-It runs 118 tests in 19 groups and takes a few seconds. The page title becomes
-`PASS — PCAPro tests` and the summary reads `All 118 tests passed` when everything is green.
+It runs 120 tests in 19 groups and takes a few seconds. The page title becomes
+`PASS — PCAPro tests` and the summary reads `All 120 tests passed` when everything is green.
 
 Every expectation is either a reference value published by an independent implementation
-(R: `prcomp`, `psych::KMO`, `FactoMineR::CA`, `pchisq`, `pf`, `pt`) or an algebraic invariant that must hold
+(R: `prcomp`, `psych::KMO`, `FactoMineR::CA`, `FactoMineR::FAMD`, `pchisq`, `pf`, `pt`) or an algebraic invariant that must hold
 regardless of the data. **No expectation was recorded from a previous run of PCAPro itself.**
 
 The same suite runs automatically on every push, in a headless browser, through the

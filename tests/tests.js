@@ -745,6 +745,56 @@ suite('Factor analysis of mixed data', () => {
     const pos = f.catEtiq.indexOf('A');
     near(f.coordCat[pos][0], m, 1e-12, 'category coordinate');
   });
+
+  test('the reported column coordinates are the points that are drawn', () => {
+    /* Version 1.1.0 reported, for a category, the core's column coordinate
+       sqrt(p_k) * barycentre / sqrt(lambda) and the cos2 of that vector, not
+       the barycentre drawn on the map. A quantitative variable is reported by
+       its correlation and r2; a category by its barycentre and the cos2 of that
+       point over all the axes. */
+    const { q, g, c2 } = demoMixed(12345);
+    const f = FAMD.run(q, [g, c2], ['a', 'b', 'c', 'd'], ['g', 's']);
+    for (let j = 0; j < f.nQuant; j++) for (let k = 0; k < f.k; k++) {
+      near(f.colCoord[j][k], f.corQuant[j][k], 1e-12, `variable ${j}, axis ${k + 1}`);
+      near(f.colCos2[j][k], f.corQuant[j][k] ** 2, 1e-12, `r2 of variable ${j}, axis ${k + 1}`);
+    }
+    [g, c2].forEach((col, v) => f.niveles[v].forEach(lv => {
+      const jc = f.nQuant + f.catEtiq.findIndex((e, c) => e === lv && f.catDe[c] === v);
+      const idx = [];
+      col.forEach((x, i) => { if (x === lv) idx.push(i); });
+      for (let k = 0; k < f.k; k++)
+        near(f.colCoord[jc][k], idx.reduce((a, i) => a + f.rowCoord[i][k], 0) / idx.length, 1e-12, `category ${lv}, axis ${k + 1}`);
+      near(f.colCos2[jc].reduce((a, b) => a + b, 0), 1, 1e-12, `cos2 of ${lv} over all axes`);
+    }));
+  });
+
+  test('iris with Species matches FactoMineR::FAMD', async () => {
+    /* FactoMineR::FAMD 2.11 in R 4.4.2 on the whole iris table: quanti.var and
+       quali.var coord, cos2 and contrib on the first plane. The sign of each
+       axis is arbitrary and is taken from the variable that defines it. */
+    const iris = await loadIris();
+    const txt = await fetch('../datos/iris.csv').then(r => r.text());
+    const filas = PCAProData.parseCSV(txt);
+    filas.shift();
+    const sp = filas.map(r => String(r[4]).trim());
+    const f = FAMD.run(iris, [sp], ['Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'], ['Species']);
+    const COORD = [[0.864663, 0.270277], [-0.484282, 0.712939], [0.992036, 0.036395], [0.969257, 0.114816],
+                   [-2.605564, 0.482510], [0.590879, -1.393693], [2.014685, 0.911183]];
+    const COS2 = [[0.747643, 0.073050], [0.234529, 0.508282], [0.984136, 0.001325], [0.939459, 0.013183],
+                  [0.965003, 0.033093], [0.136419, 0.758946], [0.799835, 0.163605]];
+    const CTR = [[19.318137, 5.442424], [6.059927, 37.868647], [25.428824, 0.098688], [24.274426, 0.982162],
+                 [15.108619, 4.307654], [0.776996, 35.938715], [9.033072, 15.361710]];
+    const nom = ['Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width', 'setosa', 'versicolor', 'virginica'];
+    eq(f.catEtiq.join(','), 'setosa,versicolor,virginica', 'category order');
+    [2, 1].forEach((jRef, k) => {
+      const s = Math.sign(f.colCoord[jRef][k]) === Math.sign(COORD[jRef][k]) ? 1 : -1;
+      COORD.forEach((ref, j) => {
+        near(s * f.colCoord[j][k], ref[k], 1e-6, `coord of ${nom[j]}, axis ${k + 1}`);
+        near(f.colCos2[j][k], COS2[j][k], 1e-6, `cos2 of ${nom[j]}, axis ${k + 1}`);
+        near(f.colContrib[j][k], CTR[j][k], 1e-5, `contribution of ${nom[j]}, axis ${k + 1}`);
+      });
+    });
+  });
 });
 
 function demoGrupos(seed) {
