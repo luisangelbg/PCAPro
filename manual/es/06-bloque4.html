@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 6 · Bloque 4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b4" data-pestana="B4" data-orden="6" style="--acento: var(--b4)">
+  <div class="cap-apertura">
+    <div class="cap-num">6</div>
+    <div class="cap-etiqueta">Capítulo seis · Bloque 4</div>
+    <h1>Gráficos factoriales</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">Cómo construir y leer los mapas: el círculo de correlaciones, el mapa de individuos y el biplot, con las dos medidas que evitan malinterpretarlos —cos² y contribuciones—, las elipses de grupo y los elementos suplementarios. Incluye los mapas propios del AC, el ACM, el AFDM y el AFM, y el editor que comparten todas las figuras de la app.</p>
+    <div class="cap-franja"><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span></div>
+    <ul class="cap-contenido">
+      <li><b>6.1</b>Las dos nubes: individuos y variables</li>
+      <li><b>6.2</b>cos² y contribuciones</li>
+      <li><b>6.3</b>Círculo, mapa de individuos y biplot</li>
+      <li><b>6.4</b>Elipses y elementos suplementarios</li>
+      <li><b>6.5</b>Los mapas del AC, ACM, AFDM y AFM</li>
+      <li><b>6.6</b>El editor de figuras</li>
+      <li><b>6.7</b>Paso a paso</li>
+    </ul>
+  </div>
+
+  <!-- 6.1 -->
+  <h2 id="s6-1"><span class="num">6.1</span>Las dos nubes: individuos y variables</h2>
+  <p class="lead">Un ACP produce dos representaciones del mismo análisis, y cada una se lee con reglas distintas. Confundirlas —leer distancias entre flechas o ángulos entre puntos— es el error más común al interpretar un mapa factorial.</p>
+
+  <table>
+    <caption><b>Tabla 6.1.</b> Las dos nubes.</caption>
+    <thead><tr><th style="width:18%"></th><th>Nube de individuos</th><th>Nube de variables</th></tr></thead>
+    <tbody>
+      <tr><td><b>Qué se dibuja</b></td><td>Un punto por observación.</td><td>Un vector por variable.</td></tr>
+      <tr><td><b>Coordenada</b></td><td>La puntuación sobre el eje.</td><td>La carga: la correlación con el eje.</td></tr>
+      <tr><td><b>Qué se lee</b></td><td><b>Distancias</b>: dos individuos cercanos tienen perfiles parecidos.</td><td><b>Ángulos</b> desde el origen, y la <b>longitud</b> del vector.</td></tr>
+      <tr><td><b>Escala</b></td><td>La de las puntuaciones; cambia de un eje a otro.</td><td>Siempre entre −1 y 1 con matriz de correlaciones.</td></tr>
+      <tr><td><b>Figura de la app</b></td><td>Mapa de individuos.</td><td>Círculo de correlaciones.</td></tr>
+    </tbody>
+  </table>
+
+  <p>El Bloque 4 se activa en la barra de pasos al aplicar una rotación en el Bloque 3 —también vale <span class="ui">Sin rotar (comparación)</span>— y necesita al menos dos componentes retenidos. Tiene una tarjeta de teoría con seis temas y la tarjeta <span class="ui">4.1 · Construir los mapas</span>, con dos opciones. Al pulsar <span class="ui">Generar mapas factoriales →</span> aparecen siete tarjetas de resultados y se activan el Bloque 5 y el agrupamiento (5b).</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.2.</b> Las opciones de la tarjeta 4.1.</caption>
+    <thead><tr><th style="width:28%">Opción</th><th>Valores</th><th style="width:34%">Nota</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Solución a representar</span></td><td><span class="ui">Sin rotar (componentes originales)</span>, por defecto, o <span class="ui">Rotada (la del Bloque 3)</span>.</td><td>Si no hay rotación, o fue «Sin rotar», se usa la original. Cambiarla exige volver a generar los mapas.</td></tr>
+      <tr><td><span class="ui">Variable de agrupación</span></td><td><span class="ui">Sin agrupar</span> o cualquier columna cualitativa del Bloque 1, con su número de niveles.</td><td>Colorea individuos y dibuja elipses. Cambiarla redibuja las figuras al momento.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-config.png" alt="Tarjetas 4.1 y 4.2 del proyecto integrador con solución rotada">
+      <span class="marca" style="left:20.5%;top:14.6%">1</span>
+      <span class="marca" style="left:68%;top:14.6%">2</span>
+      <span class="marca" style="left:26.5%;top:40%">3</span>
+      <span class="marca" style="left:32%;top:72.5%">4</span>
+      <span class="marca" style="left:47.8%;top:72.5%">5</span>
+      <span class="marca" style="left:63.6%;top:80.4%">6</span>
+      <span class="marca" style="left:79.3%;top:80.4%">7</span>
+    </div>
+    <figcaption><b>Figura 6.1.</b> Las tarjetas <span class="ui">4.1</span> y <span class="ui">4.2 · Resumen del plano factorial</span> con <code>proyecto_integrador_agronomia.csv</code>, rotación varimax y agrupación por tratamiento.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>La solución: sin rotar o rotada.</li>
+    <li><span class="n">2</span>La cualitativa que colorea los mapas.</li>
+    <li><span class="n">3</span>Construye los mapas.</li>
+    <li><span class="n">4</span>Varianza del plano 1–2, en ámbar.</li>
+    <li><span class="n">5</span>Variables con cos² ≥ 0.5 en el plano.</li>
+    <li><span class="n">6</span>Individuos bien situados en el plano.</li>
+    <li><span class="n">7</span>Suplementarias proyectadas.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.3.</b> Los indicadores de la tarjeta 4.2.</caption>
+    <thead><tr><th style="width:30%">Indicador</th><th>Qué cuenta</th><th style="width:30%">Color</th></tr></thead>
+    <tbody>
+      <tr><td><b>Solución</b></td><td>Sin rotar o rotada, con el método.</td><td>—</td></tr>
+      <tr><td><b>Plano 1–2</b></td><td>Varianza de los dos primeros ejes de la solución elegida.</td><td>verde ≥ 60 % · ámbar ≥ 45 % · rojo</td></tr>
+      <tr><td><b>Variables bien representadas</b></td><td>Variables activas con cos² ≥ 0.5 en el plano 1–2.</td><td>verde ≥ 70 % · ámbar</td></tr>
+      <tr><td><b>Individuos con cos² ≥ 0.5</b></td><td>Individuos bien situados en el plano 1–2.</td><td>verde ≥ 60 % · ámbar</td></tr>
+      <tr><td><b>Cuanti. suplementarias</b></td><td>Cuántas se proyectan sobre el círculo.</td><td>—</td></tr>
+      <tr><td><b>Variables de grupo</b></td><td>Cualitativas disponibles para colorear.</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 6.2 -->
+  <h2 id="s6-2"><span class="num">6.2</span>cos² y contribuciones</h2>
+  <p>Un mapa plano muestra lo que cabe en dos ejes y oculta el resto. Dos medidas dicen qué se puede leer en él: el <b>cos²</b>, qué tan bien está representado un elemento, y la <b>contribución</b>, cuánto pesó en construir el eje.</p>
+
+  <div class="formula">cos²(i, k) = coord²(i, k) / d²(i, centroide)<br>contribución(i, k) = 100 · coord²(i, k) / Σ<sub>i</sub> coord²(i, k)</div>
+
+  <table>
+    <caption><b>Tabla 6.4.</b> Cómo las calcula la app.</caption>
+    <thead><tr><th style="width:16%">Elemento</th><th>cos²</th><th>Contribución</th><th style="width:20%">Referencia</th></tr></thead>
+    <tbody>
+      <tr><td><b>Variables</b></td><td>La coordenada al cuadrado. Con correlaciones, cos² = carga²; su suma en todos los ejes es 1.</td><td>cos² entre la varianza del eje, en %. Suma 100 por eje.</td><td>100/p</td></tr>
+      <tr><td><b>Individuos</b></td><td>Coordenada² entre la distancia² al centro en el espacio completo, con <b>todos</b> los componentes, no solo los retenidos.</td><td>Coordenada² entre la suma de coordenadas² del eje, en %.</td><td>100/n</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿puedo leer este elemento en el plano?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:30%">cos² en el plano 1–2</th><th style="width:22%">Etiqueta de la app</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>≥ 0.70</td><td>muy buena</td><td>Su posición es fiable.</td></tr>
+        <tr><td>0.50 a 0.70</td><td>aceptable</td><td>Léelo, con prudencia en los detalles.</td></tr>
+        <tr><td>0.30 a 0.50</td><td>pobre</td><td>Solo la dirección general.</td></tr>
+        <tr><td>&lt; 0.30</td><td>no interpretable</td><td>Está mal proyectado: su información está en otros ejes. Busca otro plano.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Un vector corto no es una variable poco importante: es una variable que este plano no muestra. Un individuo con contribución alta y cos² bajo es sospechoso: suele ser un atípico que arrastra el eje.</p>
+  </div>
+
+  <h3>Dónde aparecen</h3>
+  <table class="compacta">
+    <caption><b>Tabla 6.5.</b> cos² y contribuciones en el Bloque 4.</caption>
+    <thead><tr><th style="width:34%">Lugar</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td>Tabla bajo el círculo (4.3)</td><td>Coordenadas de cada variable en todos los ejes retenidos, cos² del plano 1–2, contribución al plano y la etiqueta de calidad, ordenadas por cos².</td></tr>
+      <tr><td><b>Individuos más influyentes</b> (4.4)</td><td>Los 12 individuos que más aportan al plano 1–2, con coordenadas, cos² y contribución. La nota da el valor esperado, 200/n %.</td></tr>
+      <tr><td>Figura <b>Contribuciones</b> (4.6)</td><td>Barras de variables o individuos, por eje o por plano, con la línea roja del valor esperado.</td></tr>
+      <tr><td>Figura <b>Calidad de representación (cos²)</b> (4.6)</td><td>Mapa de calor variables × ejes.</td></tr>
+      <tr><td>Color de los vectores y puntos</td><td>El círculo colorea por cos² por defecto; el mapa de individuos puede hacerlo desde el editor.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · dos formas de sumar el plano</div>
+    <p>En las tablas, <b>Contrib. plano (%)</b> es la <b>suma</b> de las contribuciones a los dos ejes, así que la columna suma 200 y su referencia es 200/p o 200/n. En la figura de contribuciones, la opción <span class="ui">Plano 1–2</span> <b>pondera</b> cada eje por su varianza, suma 100 y su referencia es 100/p. Con iris, Sepal.Width marca 92.5 en la tabla (7.3 en CP1 + 85.3 en CP2). Las dos ordenan igual cuando los ejes pesan parecido; si no, compara solo dentro de cada una.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-contrib.png" alt="Figuras de contribuciones y de cos² del proyecto integrador">
+      <span class="marca" style="left:43.2%;top:34.5%">1</span>
+      <span class="marca" style="left:85.5%;top:10.2%">2</span>
+      <span class="marca" style="left:31.2%;top:19.1%">3</span>
+      <span class="marca" style="left:75.5%;top:88.6%">4</span>
+      <span class="marca" style="left:84%;top:68.1%">5</span>
+    </div>
+    <figcaption><b>Figura 6.2.</b> La tarjeta <span class="ui">4.6 · Contribuciones y calidad</span> con el proyecto integrador y varimax. <b>1</b> La línea del valor esperado, 100/12 = 8.33 %. <b>2</b> Las cuatro variables de crecimiento definen CPR1, con 24 % cada una. <b>3</b> Las demás, en gris, casi no aportan. <b>4</b> En el mapa de cos², cada variable brilla en un solo eje: la firma de una rotación limpia. <b>5</b> La escala de color va de 0 a 1.</figcaption>
+  </figure>
+
+  <!-- 6.3 -->
+  <h2 id="s6-3"><span class="num">6.3</span>Círculo, mapa de individuos y biplot</h2>
+
+  <h3>El círculo de correlaciones</h3>
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Cómo se lee</div>
+    <ul>
+      <li>Vectores en la <b>misma dirección</b>: variables correlacionadas positivamente.</li>
+      <li>Vectores <b>opuestos</b>: correlación negativa.</li>
+      <li>Vectores <b>perpendiculares</b>: sin correlación <i>en este plano</i>.</li>
+      <li>Vectores <b>largos</b>, cerca del círculo unitario: bien representados. El círculo interior punteado marca 0.71, es decir, cos² = 0.5.</li>
+    </ul>
+    <p>Las reglas solo valen para vectores largos. El ángulo entre dos vectores cortos no dice nada.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-circulo.png" alt="Círculo de correlaciones del proyecto integrador con la variable suplementaria de rendimiento">
+      <span class="marca" style="left:30.5%;top:24.5%">1</span>
+      <span class="marca" style="left:81.3%;top:34.2%">2</span>
+      <span class="marca" style="left:89.4%;top:35.6%">3</span>
+      <span class="marca" style="left:84.2%;top:49.2%">4</span>
+      <span class="marca" style="left:32.3%;top:53.8%">5</span>
+      <span class="marca" style="left:37.1%;top:71.3%">6</span>
+    </div>
+    <figcaption><b>Figura 6.3.</b> La tarjeta <span class="ui">4.3 · Círculo de correlaciones</span> con el proyecto integrador y varimax.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Leyenda: las suplementarias van en trazo discontinuo.</li>
+    <li><span class="n">2</span>Rendimiento_kg_ha, suplementaria.</li>
+    <li><span class="n">3</span>Escala de cos²: los vectores pálidos no se leen.</li>
+    <li><span class="n">4</span>Crecimiento: cuatro vectores juntos sobre CPR1.</li>
+    <li><span class="n">5</span>Agua y fenología, casi en el origen.</li>
+    <li><span class="n">6</span>El círculo interior, cos² = 0.5.</li>
+  </ul>
+
+  <h3>El mapa de individuos</h3>
+  <p>La tarjeta <span class="ui">4.4 · Mapa de individuos</span> dibuja un punto por observación. Sin variable de agrupación los puntos van en un color; con ella, cada grupo lleva su color, su elipse y su centroide, un rombo con el nombre del grupo. Los ejes <b>no</b> tienen la misma escala por defecto: el eje con menos varianza se estira. Para leer distancias con rigor marca <span class="ui">Misma escala en ambos ejes</span> en el editor.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-individuos.png" alt="Mapa de individuos de iris con elipses de concentración por especie">
+      <span class="marca" style="left:18.5%;top:42.6%">1</span>
+      <span class="marca" style="left:60.7%;top:46.3%">2</span>
+      <span class="marca" style="left:94%;top:22.7%">3</span>
+      <span class="marca" style="left:50%;top:61%">4</span>
+      <span class="marca" style="left:28.3%;top:73.9%">5</span>
+      <span class="marca" style="left:52.3%;top:86.3%">6</span>
+    </div>
+    <figcaption><b>Figura 6.4.</b> El mapa de individuos de iris, sin rotar y agrupado por especie. <b>1</b> Setosa, separada de las otras dos a lo largo de CP1. <b>2</b> El centroide de virginica. <b>3</b> El tipo y nivel de la elipse aparecen bajo la leyenda. <b>4</b> Versicolor y virginica se solapan. <b>5</b> Un individuo fuera de la elipse del 95 %. <b>6</b> Cada eje con su porcentaje.</figcaption>
+  </figure>
+
+  <h3>El biplot</h3>
+  <p>La tarjeta <span class="ui">4.5 · Biplot</span> superpone individuos y variables. Individuos y variables viven en escalas distintas, así que las flechas se multiplican por un factor que se ajusta en <span class="ui">Escala de las flechas</span> (0.2 a 1.6; 0.8 por defecto). Ese factor no tiene significado estadístico.</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿qué se lee en un biplot?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:50%">Sí</th><th>No</th></tr></thead>
+      <tbody>
+        <tr><td>La proyección de un individuo sobre la dirección de una flecha: lejos en su sentido, valores altos en esa variable.</td><td>La longitud absoluta de una flecha comparada con la distancia entre puntos.</td></tr>
+        <tr><td>Grupos de individuos en la dirección de un grupo de variables: se caracterizan por ellas.</td><td>La distancia entre un punto y la punta de una flecha.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-biplot.png" alt="Biplot del proyecto integrador agrupado por tratamiento">
+      <span class="marca" style="left:60%;top:21.9%">1</span>
+      <span class="marca" style="left:71.3%;top:37%">2</span>
+      <span class="marca" style="left:19.7%;top:61.6%">3</span>
+      <span class="marca" style="left:32.5%;top:50.2%">4</span>
+      <span class="marca" style="left:89.5%;top:13.9%">5</span>
+    </div>
+    <figcaption><b>Figura 6.5.</b> El biplot del proyecto integrador con varimax, agrupado por tratamiento. <b>1</b> Las flechas de nutrición. <b>2</b> La elipse de riego + fertilización, desplazada hacia crecimiento y nutrición altos. <b>3</b> La del testigo, hacia valores bajos de ambos. <b>4</b> Las flechas cortas de agua y fenología: no se leen en este plano. <b>5</b> La leyenda de grupos.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.6.</b> Opciones propias de cada figura del Bloque 4, además de las comunes (sección 6.6).</caption>
+    <thead><tr><th style="width:22%">Figura</th><th>Opciones</th></tr></thead>
+    <tbody>
+      <tr><td><b>Círculo</b></td><td>Colorear por cos², contribución o variable; ocultar cos² menor a un valor; solo las N mejores; mostrar suplementarias y su color; círculo unitario y círculo 0.71.</td></tr>
+      <tr><td><b>Individuos</b></td><td>Colorear por grupo, cos² o contribución; envoltura por grupo y nivel; relleno y borde de la elipse; centroides y su etiqueta; tamaño según cos²; etiquetas: ninguna, todas las que quepan o las N que más contribuyen; misma escala en ambos ejes.</td></tr>
+      <tr><td><b>Biplot</b></td><td>Escala, color y grosor de las flechas; nombres de variables; envoltura por grupo.</td></tr>
+      <tr><td><b>Contribuciones</b></td><td>Variables o individuos; eje o plano 1–2; solo los N mayores; línea de referencia; colores sobre y bajo el umbral.</td></tr>
+      <tr><td><b>cos²</b></td><td>Paleta continua; ordenar por los primeros N ejes; escala de 0 a 1 o ajustada al máximo.</td></tr>
+    </tbody>
+  </table>
+
+  <p>Todos los mapas permiten elegir el <span class="ui">Eje horizontal</span> y el <span class="ui">Eje vertical</span> entre los componentes retenidos. El plano 1–2 no es obligatorio: si una variable queda corta en él, el plano 1–3 o el 3–4 pueden mostrarla.</p>
+
+  <!-- 6.4 -->
+  <h2 id="s6-4"><span class="num">6.4</span>Elipses y elementos suplementarios</h2>
+  <p>Las envolturas de grupo se eligen en el editor del mapa de individuos y del biplot. Responden a preguntas distintas.</p>
+
+  <table>
+    <caption><b>Tabla 6.7.</b> Las tres envolturas.</caption>
+    <thead><tr><th style="width:22%">Envoltura</th><th>Qué encierra y cómo se calcula</th><th style="width:30%">Úsala para</th></tr></thead>
+    <tbody>
+      <tr><td><b>Elipse de concentración</b> (por defecto)</td><td>Aproximadamente el 90, 95 o 99 % de los <b>individuos</b> del grupo: la covarianza del grupo en el plano con el radio de χ² con 2 gl. Su tamaño no depende de n.</td><td>Describir la dispersión y el solapamiento real.</td></tr>
+      <tr><td><b>Elipse de confianza de la media</b></td><td>La región donde está el <b>centroide</b>: la misma elipse con el radio dividido entre √n.</td><td>Sugerir que los centroides difieren. Con n grande se vuelve diminuta.</td></tr>
+      <tr><td><b>Envolvente convexa</b></td><td>El polígono mínimo que contiene todos los puntos. No supone ninguna distribución.</td><td>Grupos no elípticos o con pocos individuos.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Un grupo necesita al menos tres individuos para su elipse. El nivel (90, 95 o 99 %) se aplica a las dos elipses y aparece escrito bajo la leyenda.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · una elipse no es una prueba</div>
+    <p>Que dos elipses de la media no se toquen sugiere que los centroides difieren, pero no es una prueba estadística: para eso hace falta un MANOVA, un PERMANOVA o un análisis discriminante. Y el ACP no busca separar grupos, porque ignora la variable de agrupación; si tu objetivo es discriminar, la herramienta es otra. Declara en el pie de figura el tipo de elipse y su nivel.</p>
+  </div>
+
+  <h3>Elementos suplementarios</h3>
+  <p>Las columnas que en el Bloque 1 marcaste como <b>cuantitativas suplementarias</b> o <b>cualitativas</b> no intervinieron en los ejes, pero se proyectan sobre ellos. Aparecen en la tarjeta <span class="ui">4.7 · Elementos suplementarios</span>, que solo se muestra si hay alguno.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.8.</b> Cómo se proyectan.</caption>
+    <thead><tr><th style="width:24%">Tipo</th><th>Coordenada</th><th style="width:34%">Dónde se ven</th></tr></thead>
+    <tbody>
+      <tr><td><b>Cuantitativa</b></td><td>Su correlación de Pearson con las coordenadas de los individuos en cada eje, con los valores no vacíos (al menos 3). La tabla da los n válidos y el cos² del plano.</td><td>Vector discontinuo en el círculo (color propio, editable).</td></tr>
+      <tr><td><b>Categoría</b></td><td>El centroide: la media de las coordenadas de los individuos de esa categoría.</td><td>Rombos del mapa de individuos, al agrupar por esa variable.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · suplementarias con la solución rotada</div>
+    <p>Con la solución rotada, la app gira las puntuaciones de los individuos con la misma matriz que las cargas. Como los componentes originales tienen varianzas distintas, las puntuaciones rotadas pueden quedar <b>correlacionadas</b> aunque la rotación sea ortogonal: en el proyecto integrador, CPR1 y CPR2 se correlacionan 0.258. Por eso, en esa solución, el cos² del plano de una suplementaria puede pasar de 1 —el rendimiento marca 1.073— y su vector sale del círculo. Lee cada correlación por separado y, si vas a reportar el cos² de una suplementaria, usa la solución sin rotar.</p>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.9.</b> Las descargas de la tarjeta 4.8, en CSV.</caption>
+    <thead><tr><th style="width:44%">Botón</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Individuos: coordenadas, cos² y contribuciones (CSV)</span></td><td>Por individuo, con sus cualitativas, en todos los ejes retenidos.</td></tr>
+      <tr><td><span class="ui">⬇ Variables: coordenadas, cos² y contribuciones (CSV)</span></td><td>Por variable activa, en todos los ejes retenidos.</td></tr>
+      <tr><td><span class="ui">⬇ Elementos suplementarios (CSV)</span></td><td>Correlaciones de las cuantitativas y centroides de las categorías.</td></tr>
+    </tbody>
+  </table>
+  <p>El botón <span class="ui">Ir a la interpretación →</span> lleva al Bloque 5. Si vuelves a extraer o cambias el número de componentes, los mapas se borran y hay que generarlos otra vez; si repites la rotación, pulsa de nuevo <span class="ui">Generar mapas factoriales →</span> para que los mapas usen la nueva.</p>
+
+  <!-- 6.5 -->
+  <h2 id="s6-5"><span class="num">6.5</span>Los mapas del AC, ACM, AFDM y AFM</h2>
+  <p>Con un método distinto del ACP, el Bloque 4 se activa al ejecutar el método en el Bloque 2 y la tarjeta 4.1 conserva su botón, pero sus dos opciones no se usan: no hay rotación, y la variable de grupo se elige en el editor del mapa de individuos (<span class="ui">Variable de grupo</span>). Los resultados son otros.</p>
+
+  <table>
+    <caption><b>Tabla 6.10.</b> Las tarjetas del Bloque 4 según el método.</caption>
+    <thead><tr><th style="width:10%">Método</th><th>Tarjetas, además de 4.1 · Resumen del plano</th></tr></thead>
+    <tbody>
+      <tr><td><b>AC</b></td><td><b>4.2 · Mapa simétrico: filas y columnas</b>, en coordenadas principales. La opción <span class="ui">Vista asimétrica (columnas en coordenadas estándar)</span> permite leer la relación fila–columna con rigor. No hay mapa de individuos: el AC analiza una tabla.</td></tr>
+      <tr><td><b>ACM</b></td><td><b>4.2 · Mapa de categorías</b>, cada una en el baricentro de sus individuos y coloreada por su variable; <b>4.3 · Mapa de individuos</b>.</td></tr>
+      <tr><td><b>AFDM</b></td><td><b>4.2 · Círculo de correlaciones (cuantitativas)</b>; <b>4.3 · Mapa de variables: cuantitativas y cualitativas juntas</b>, con r² y η²; <b>4.4 · Mapa de categorías</b>; <b>4.5 · Mapa de individuos</b>.</td></tr>
+      <tr><td><b>AFM</b></td><td><b>4.2 · Mapa de los bloques</b>, por su inercia en cada eje; <b>4.3 · Círculo de correlaciones por bloque</b>, con todas las variables; <b>4.4 · Mapa de individuos</b>; <b>4.5 · Puntos parciales</b>.</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-afdm.png" alt="Mapa de variables del AFDM de iris">
+      <span class="marca" style="left:73%;top:30.8%">1</span>
+      <span class="marca" style="left:65.5%;top:76%">2</span>
+      <span class="marca" style="left:50%;top:40.3%">3</span>
+      <span class="marca" style="left:44.5%;top:47.1%">4</span>
+    </div>
+    <figcaption><b>Figura 6.6.</b> El mapa de variables de un AFDM de iris con la especie activa. <b>1</b> Species: η² = 0.964 en Dim1 y 0.746 en Dim2, la única variable fuerte en los dos ejes. <b>2</b> Petal.Width (r² = 0.939 y 0.013) sin nombre: su etiqueta no cabía junto a la de Petal.Length. <b>3</b> La diagonal de referencia. <b>4</b> Sepal.Width, la que define Dim2 entre las cuantitativas.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.11.</b> Cómo leer los mapas propios de cada método.</caption>
+    <thead><tr><th style="width:22%">Mapa</th><th>Lectura</th></tr></thead>
+    <tbody>
+      <tr><td><b>Simétrico del AC</b></td><td>Distancias entre filas, o entre columnas, se leen directamente; la distancia de una fila a una columna solo orienta.</td></tr>
+      <tr><td><b>Categorías</b> (ACM, AFDM)</td><td>Dos categorías cercanas aparecen juntas en los mismos individuos. Las categorías raras quedan lejos del centro: mira su cos² antes de leerlas.</td></tr>
+      <tr><td><b>Variables</b> (AFDM)</td><td>Cuantitativas por r² y cualitativas por η², en [0, 1]. Las variables arriba a la derecha pesan en los dos ejes.</td></tr>
+      <tr><td><b>Bloques</b> (AFM)</td><td>Un bloque cerca de (1, 0) está descrito casi por completo por el eje 1; dos bloques cercanos cuentan la misma historia.</td></tr>
+      <tr><td><b>Puntos parciales</b> (AFM)</td><td>Cada individuo visto desde cada bloque; el rombo es la posición global. Líneas abiertas: los bloques discrepan sobre ese individuo. Por defecto muestra los 8 que más contribuyen.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · detalles de estos mapas</div>
+    <p>Con estos métodos el Bloque 4 no ofrece descargas: las coordenadas están en la tarjeta 2.5 del Bloque 2. Los ejes se llaman Dim1, Dim2… En el AFM, el círculo colorea los vectores por contribución, no por bloque: para distinguir bloques usa el mapa de los bloques o los puntos parciales. El botón del final es <span class="ui">Ir a la interpretación →</span>.</p>
+  </div>
+
+  <!-- 6.6 -->
+  <h2 id="s6-6"><span class="num">6.6</span>El editor de figuras</h2>
+  <p>Todas las figuras de la app —las de este bloque y las de los demás— comparten el mismo editor. Se abre con <span class="ui">⚙ Editar figura (colores, títulos, tamaño de letra)</span> debajo de cada figura, y cada cambio redibuja la figura al momento.</p>
+
+  <table>
+    <caption><b>Tabla 6.12.</b> Los controles que se repiten en las figuras.</caption>
+    <thead><tr><th style="width:24%">Grupo</th><th>Controles</th></tr></thead>
+    <tbody>
+      <tr><td><b>Textos</b></td><td>Título, subtítulo y títulos de los ejes. Un título de eje vacío usa el automático, con el porcentaje.</td></tr>
+      <tr><td><b>Paletas de grupos</b></td><td>PCAPro (violeta), Nature (NPG), Lancet, Clinical Oncology, NEJM, D3 clásica, Suave, Okabe–Ito (daltónicos), Botánica y Escala de grises.</td></tr>
+      <tr><td><b>Paletas continuas</b></td><td>Viridis, Magma, Inferno, Plasma, Cividis (daltónicos), Rojo–Amarillo–Azul, Rojo–Azul, Espectral, Azul–Blanco–Rojo, Verdes y Calor.</td></tr>
+      <tr><td><b>Letra</b></td><td>Cuatro deslizadores, presentes en todas las figuras: <span class="ui">Letra: todo</span> (0.6 a 2.6) y, por separado, títulos, ejes y marcas, y etiquetas y leyenda (0.6 a 3). Si un texto agrandado se sale, el lienzo se amplía solo.</td></tr>
+      <tr><td><b>Aspecto</b></td><td>Tema (Claro, Papel, Oscuro, Minimalista), tipografía (Helvetica / Arial, Serif, Segoe UI, Monoespaciada), tamaño en píxeles, marco, leyenda y ejes en cero.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b4-editor.png" alt="Editor abierto del mapa de individuos">
+      <span class="marca" style="left:30.8%;top:3.2%">1</span>
+      <span class="marca" style="left:74.7%;top:14.2%">2</span>
+      <span class="marca" style="left:16.5%;top:35.2%">3</span>
+      <span class="marca" style="left:38%;top:33.8%">4</span>
+      <span class="marca" style="left:9.5%;top:57.2%">5</span>
+      <span class="marca" style="left:73%;top:54.5%">6</span>
+      <span class="marca" style="left:6.3%;top:86.5%">7</span>
+      <span class="marca" style="left:95.5%;top:94.3%">8</span>
+    </div>
+    <figcaption><b>Figura 6.7.</b> El editor del mapa de individuos, abierto.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Abre y cierra el editor.</li>
+    <li><span class="n">2</span>Los ejes del mapa.</li>
+    <li><span class="n">3</span>El tipo de envoltura.</li>
+    <li><span class="n">4</span>Su nivel de confianza.</li>
+    <li><span class="n">5</span>Qué individuos llevan nombre.</li>
+    <li><span class="n">6</span>Misma escala en los dos ejes.</li>
+    <li><span class="n">7</span>Los cuatro tamaños de letra.</li>
+    <li><span class="n">8</span>El tamaño final de la imagen.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Tabla 6.13.</b> La barra de exportación, bajo cada figura.</caption>
+    <thead><tr><th style="width:22%">Control</th><th>Opciones</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Formato</span></td><td>PNG (mapa de bits), SVG (vectorial, editable), JPG y WEBP.</td></tr>
+      <tr><td><span class="ui">Resolución</span></td><td>Pantalla 2× (~150 ppp), Alta 4× (~300 ppp, por defecto), Muy alta 6×, Publicación 8× (~600 ppp) y Máxima 12× (~900 ppp). No aplica al SVG.</td></tr>
+      <tr><td>Fondo</td><td>Blanco o transparente; el transparente solo funciona con PNG.</td></tr>
+      <tr><td><span class="ui">⬇ Descargar figura</span></td><td>Descarga con el nombre del archivo de datos y de la figura. Al lado se lee el tamaño final en píxeles.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿cómo exporto para publicar?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">Si la revista…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td>Acepta vectores (PDF, EPS, SVG)</td><td><b>SVG</b>: se escala sin perder nitidez y se edita en Inkscape o Illustrator.</td></tr>
+        <tr><td>Pide mapa de bits</td><td>PNG a <b>8×</b> (~600 ppp); 4× como mínimo.</td></tr>
+        <tr><td>Imprime en blanco y negro o quieres accesibilidad</td><td>Paleta <b>Okabe–Ito</b> o <b>Escala de grises</b>, y Cividis para escalas continuas.</td></tr>
+        <tr><td>La figura va en una presentación con fondo de color</td><td>PNG con fondo transparente, o el tema Oscuro.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Pon siempre el porcentaje en los ejes, declara si la solución está rotada y di en el pie qué elipse usaste. El signo de un eje es arbitrario: si lo inviertes para leer mejor, decláralo.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · los cambios no se guardan al recalcular</div>
+    <p>El informe del Bloque 6 incluye las figuras tal como las dejaste. Pero si vuelves a generar los mapas, cambias de idioma y regeneras, o recalculas un bloque anterior, las figuras se vuelven a crear con los valores por defecto y <b>se pierden los títulos y colores editados</b>. Edita las figuras al final, cuando el análisis ya no vaya a cambiar.</p>
+  </div>
+
+  <!-- 6.7 -->
+  <h2 id="s6-7"><span class="num">6.7</span>Paso a paso</h2>
+  <p>Un análisis completo con el archivo <code>proyecto_integrador_agronomia.csv</code>: 150 parcelas de un ensayo con cuatro tratamientos —testigo, riego, fertilización y riego con fertilización— en tres bloques, y trece variables de planta. La pregunta es qué dimensiones resumen la respuesta de las plantas y cómo se reparten los tratamientos en ellas. Las cifras son las de la app.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Proyecto integrador · 144 parcelas completas, doce variables, escalado z</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>En el Bloque 1 deja <code>Parcela</code> como identificador y <code>Tratamiento</code> y <code>Bloque</code> como cualitativas, y desmarca <code>Rendimiento_kg_ha</code>: pasa a suplementaria, porque es la respuesta que queremos explicar. Al preparar quedan 144 filas de 150 y KMO = 0.783.</li>
+      <li>En el Bloque 2, seis de los ocho criterios —Horn, Kaiser, bastón roto, MAP, 80 % y Jolliffe— coinciden en <b>4</b> componentes, que explican el 87.2 %.</li>
+      <li>En el Bloque 3, varimax deja 12 de 12 variables limpias y complejidad 1.05: <b>CPR1 crecimiento</b> (altura, diámetro, área foliar y biomasa, de 0.91 a 0.92), <b>CPR2 nutrición</b> (clorofila, P y N foliar, de 0.92 a 0.93), <b>CPR3 agua</b> (conductancia 0.929, potencial hídrico 0.917, temperatura de la hoja −0.907) y <b>CPR4 fenología</b> (días a madurez 0.947 y a floración 0.938).</li>
+      <li>En el Bloque 4 elige <span class="ui">Rotada (la del Bloque 3)</span> y agrupa por <code>Tratamiento</code>. El plano CPR1–CPR2 recoge 50.4 % (28.6 + 21.8), en ámbar; 7 de 12 variables y 63 de 144 parcelas están bien representadas en él.</li>
+      <li>El círculo (figura 6.3) muestra dos haces perpendiculares: crecimiento y nutrición son independientes. Agua y fenología quedan en el origen: no se leen aquí. En el editor elige <span class="ui">Eje horizontal</span> CPR3 y <span class="ui">Eje vertical</span> CPR4 para verlas.</li>
+      <li>El rendimiento, suplementario, se correlaciona 0.809 con CPR1 y 0.647 con CPR2: sube con el crecimiento y con la nutrición.</li>
+      <li>Los centroides de la tabla 4.7 ordenan los tratamientos: testigo (−0.87, −0.94), riego (−0.49, −0.59), fertilización (0.01, 0.77) y riego + fertilización (1.36, 0.80). La fertilización mueve la nutrición; solo la combinación mueve también el crecimiento. En CPR3, riego queda en 0.48 y fertilización en −0.97.</li>
+      <li>Los centroides de <code>Bloque</code> quedan todos a menos de 0.31 del origen: el bloque no ordena las parcelas.</li>
+      <li>Las elipses de concentración del biplot (figura 6.5) se solapan mucho: las diferencias entre centroides son reales en promedio, pero una parcela suelta no se asigna a su tratamiento por su posición.</li>
+      <li>En <b>Individuos más influyentes</b>, PAR005 y PAR058 aportan 8.21 % y 7.97 % al plano, cuando lo esperado es 1.39 %. Tienen cos² de 0.86 y 0.96: están bien representadas, así que son parcelas extremas, no errores de proyección. Conviene revisar su captura.</li>
+    </ol>
+  </div>
+
+  <p><b>Lectura.</b> El ensayo se resume en cuatro dimensiones independientes, y el plano 1–2 muestra las dos que más importan para el rendimiento. La fertilización actúa sobre la nutrición y el riego sobre el estado hídrico, pero solo su combinación desplaza las parcelas hacia el crecimiento alto, que es donde apunta el rendimiento. Para afirmar que los tratamientos difieren hace falta una prueba —un MANOVA o un PERMANOVA sobre las puntuaciones—; los mapas muestran dónde y en qué dimensión.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Cómo describir la figura</div>
+    <p>«Figura 3. Biplot del plano formado por los dos primeros componentes rotados (varimax), que explican el 50.4 % de la varianza (28.6 % y 21.8 %). Los puntos son parcelas coloreadas por tratamiento, con elipses de concentración del 95 %; las flechas, las variables activas. El rendimiento, proyectado como variable suplementaria, se correlacionó 0.81 con el primer componente y 0.65 con el segundo.»</p>
+  </div>
+
+  <p style="margin-top:0.3in">Con los mapas construidos, el siguiente capítulo entra al Bloque 5: la lectura de cada eje y el borrador de la sección de resultados.</p>
+</section>
+
+</body>
+</html>

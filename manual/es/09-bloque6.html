@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 9 · Bloque 6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  figure.mini .marco { width: 58%; margin: 0 auto; }
+  figure.mini figcaption { margin-left: 21%; margin-right: 21%; }
+  .arbol { font-family: var(--mono); font-size: 8.4pt; line-height: 1.5; white-space: pre; background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.1in 0.16in; margin: 0.06in 0 0.16in; color: var(--marino); overflow: hidden; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b6" data-pestana="B6" data-orden="9" style="--acento: var(--b6)">
+  <div class="cap-apertura">
+    <div class="cap-num">9</div>
+    <div class="cap-etiqueta">Capítulo nueve · Bloque 6</div>
+    <h1>Informe</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">El último bloque reúne todo lo calculado en un informe HTML autocontenido, que también se imprime a PDF, y en un paquete ZIP con las figuras, las tablas en CSV y la cita del programa. Este capítulo explica qué contiene cada pieza, qué revisar antes de usarla y cómo redactar la sección de métodos.</p>
+    <div class="cap-franja"><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span></div>
+    <ul class="cap-contenido">
+      <li><b>9.1</b>El estado del análisis</li>
+      <li><b>9.2</b>El informe y sus secciones</li>
+      <li><b>9.3</b>El paquete ZIP</li>
+      <li><b>9.4</b>Redactar los métodos y citar</li>
+    </ul>
+  </div>
+
+  <!-- 9.1 -->
+  <h2 id="s9-1"><span class="num">9.1</span>El estado del análisis</h2>
+  <p class="lead">El informe no recalcula nada: recoge lo que ya hiciste en los bloques anteriores, con las decisiones que tomaste y las figuras tal como las dejaste. Por eso conviene llegar a este bloque con el análisis terminado.</p>
+  <p>El Bloque 6 se activa al interpretar en el Bloque 5 o al agrupar en el 5b, y basta con haber extraído en el Bloque 2 para generar un informe. Tiene una tarjeta de teoría y cuatro tarjetas: <span class="ui">6.1 · Estado del análisis</span>, <span class="ui">6.2 · Configuración del informe</span>, <span class="ui">6.3 · Vista previa</span> y <span class="ui">6.4 · Cómo citar PCAPro</span>.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/app-b6-estado.png" alt="Tarjeta 6.1 con el estado del análisis del proyecto integrador"></div>
+    <figcaption><b>Figura 9.1.</b> La tarjeta <span class="ui">6.1 · Estado del análisis</span> con el proyecto integrador: los seis bloques ejecutados, cada uno con su resumen, y la lista de las 26 figuras que entrarán en el informe.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 9.1.</b> Lo que resume cada renglón del estado.</caption>
+    <thead><tr><th style="width:30%">Bloque</th><th>Con el ACP</th><th style="width:34%">Con otros métodos</th></tr></thead>
+    <tbody>
+      <tr><td>Bloque 1 · Datos y supuestos</td><td>Observaciones × variables activas.</td><td>Igual.</td></tr>
+      <tr><td>Bloque 2</td><td>«4 de 12 componentes».</td><td>Con la sigla del método: «2 de 6 ejes».</td></tr>
+      <tr><td>Bloque 3 · Rotación</td><td>El método, o «sin aplicar».</td><td>«no aplica a este método», con ✔.</td></tr>
+      <tr><td>Bloque 4 · Mapas factoriales</td><td>Solución rotada o sin rotar.</td><td>La inercia del plano 1–2.</td></tr>
+      <tr><td>Bloque 5 · Interpretación</td><td>El RMSR.</td><td>Cuántos ejes se describieron.</td></tr>
+      <tr><td>Bloque 5b · Agrupamiento</td><td colspan="2">Grupos y ejes usados, o «opcional, sin ejecutar».</td></tr>
+    </tbody>
+  </table>
+
+  <p>Debajo se listan las figuras disponibles: todas las que están montadas en tarjetas visibles de los bloques, en el orden de la app. Las de tarjetas ocultas —por ejemplo, las del ACP después de ejecutar otro método— no entran. Si cambias algo en otro bloque, pulsa <span class="ui">↻ Actualizar estado</span>; el estado también se actualiza al abrir el bloque desde la barra de pasos o con el botón <span class="ui">Ir al informe →</span> del Bloque 5 del ACP. Si llegas desde el agrupamiento o desde otro método, pulsa <span class="ui">↻ Actualizar estado</span> antes de generar el informe.</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · secciones que se apagan</div>
+    <p>Las secciones de bloques que no se ejecutaron se desmarcan y se atenúan en la tarjeta 6.2: con otros métodos, la de <b>Rotación</b>; sin agrupamiento, la de <b>Agrupamiento</b>. En la versión 1.1, si después ejecutas ese bloque y actualizas el estado, la casilla vuelve a estar disponible pero <b>sigue desmarcada</b>: márcala a mano antes de generar el informe.</p>
+  </div>
+
+  <!-- 9.2 -->
+  <h2 id="s9-2"><span class="num">9.2</span>El informe y sus secciones</h2>
+  <p>La tarjeta <span class="ui">6.2 · Configuración del informe</span> define el título, los autores, las secciones y las figuras.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/app-b6-config.png" alt="Tarjeta 6.2 de configuración del informe"></div>
+    <figcaption><b>Figura 9.2.</b> La tarjeta <span class="ui">6.2</span> con un título propio, las once secciones marcadas, las figuras incrustadas y los cuatro botones de salida.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 9.2.</b> Las opciones de la tarjeta 6.2.</caption>
+    <thead><tr><th style="width:30%">Opción</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Título</span> · <span class="ui">Autor o autores</span></td><td>Encabezan la portada. Sin título, se usa el nombre del método; el autor es opcional.</td></tr>
+      <tr><td><span class="ui">Secciones a incluir</span></td><td>Once casillas (tabla 9.3). La cita del programa se añade siempre al final.</td></tr>
+      <tr><td><span class="ui">Incrustar las figuras en el informe</span></td><td>Inserta cada figura en SVG dentro del HTML, con la edición que le hiciste. Sin ella, el informe solo lleva texto y tablas.</td></tr>
+      <tr><td><span class="ui">Formato de las figuras en el ZIP</span> · <span class="ui">Resolución del mapa de bits</span></td><td>Solo afectan al paquete ZIP (sección 9.3).</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 9.3.</b> Las secciones del informe.</caption>
+    <thead><tr><th style="width:26%">Sección</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><b>Resumen</b></td><td>Indicadores: observaciones, variables, componentes, varianza, KMO, Bartlett y RMSR; con otros métodos, individuos, columnas, ejes, inercia y, en el AC, la χ².</td></tr>
+      <tr><td><b>Métodos</b></td><td>Un párrafo redactado con tus parámetros (sección 9.4).</td></tr>
+      <tr><td><b>Preparación de datos y supuestos</b></td><td>Descriptivos con la MSA, una tabla de verificación de supuestos con «Sí», «No», «Marginal» o «Revisar», y las figuras del Bloque 1.</td></tr>
+      <tr><td><b>Extracción</b></td><td>Valores propios, número propuesto por cada criterio, la decisión adoptada y las figuras del Bloque 2.</td></tr>
+      <tr><td><b>Rotación</b></td><td>Método, estructura simple, matriz de cargas rotadas (o de patrón) con las cargas sobre el umbral en negrita, varianza antes y después, Φ si es oblicua, y las figuras.</td></tr>
+      <tr><td><b>Representación factorial</b></td><td>Coordenadas, cos² y contribuciones, suplementarias y centroides, y las figuras del Bloque 4.</td></tr>
+      <tr><td><b>Interpretación</b></td><td>La lectura de cada componente con su nombre, los valores test, la comparación de grupos, el RMSR, las figuras y el borrador de resultados del Bloque 5.</td></tr>
+      <tr><td><b>Agrupamiento (HCPC)</b></td><td>El borrador del 5b, los criterios, la composición, los descriptores, paragones y específicos, y sus figuras.</td></tr>
+      <tr><td><b>Limitaciones y advertencias</b></td><td>Una lista generada con los problemas detectados: razón n:p &lt; 5, KMO &lt; 0.60, Bartlett no significativa, pares redundantes, atípicos, asimetría, RMSR ≥ 0.08, contrastes descriptivos, silueta &lt; 0.25 y criterios de grupos que discrepan.</td></tr>
+      <tr><td><b>Referencias metodológicas</b></td><td>Catorce referencias fijas: Pearson, Hotelling, Kaiser, Horn, Cattell, Velicer, Jennrich, Ward, Husson y colaboradores, entre otros.</td></tr>
+      <tr><td><b>Anexo con la configuración</b></td><td>Los parámetros del análisis: archivo, filas, variables, faltantes, transformación, escalado, componentes, análisis paralelo, rotación y umbral.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Las tablas y figuras se numeran solas en el orden en que aparecen. Los pies de figura usan el título que cada figura tiene en su editor, así que un buen título en el editor es un buen pie en el informe.</p>
+
+  <h3>Los cuatro botones</h3>
+  <table class="compacta">
+    <caption><b>Tabla 9.4.</b> Las salidas del informe.</caption>
+    <thead><tr><th style="width:34%">Botón</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Generar vista previa</span></td><td>Muestra el informe en la tarjeta 6.3 y avisa cuántas secciones y figuras incluyó.</td></tr>
+      <tr><td><span class="ui">⬇ Informe HTML</span></td><td>Descarga un único archivo <code>…_informe_ACP.html</code>, sin dependencias: se abre en cualquier navegador y se envía por correo.</td></tr>
+      <tr><td><span class="ui">🖨 Imprimir / guardar como PDF</span></td><td>Abre el informe en una ventana nueva y lanza la impresión. Elige «Guardar como PDF». Si el navegador bloquea ventanas emergentes, la app lo avisa: descarga el HTML y imprímelo desde ahí.</td></tr>
+      <tr><td><span class="ui">⬇ Descargar paquete completo (ZIP)</span></td><td>Genera el paquete de la sección 9.3.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco"><img src="../img/app-b6-vista.png" alt="Vista previa del informe con portada, resumen y métodos"></div>
+    <figcaption><b>Figura 9.3.</b> La tarjeta <span class="ui">6.3 · Vista previa</span>: es el documento real, con la portada —título, archivo, dimensiones, fecha—, los indicadores del resumen y el principio de los métodos. Se desplaza dentro de su propio marco.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · el informe es una foto del momento</div>
+    <p>El informe se construye con el estado de la app al pulsar el botón. Si vuelves a un bloque y cambias algo, genera la vista previa otra vez antes de descargar. Y recuerda que recalcular un bloque regenera sus figuras con los valores por defecto (sección 6.6): haz las ediciones finales de las figuras justo antes de generar el informe.</p>
+  </div>
+
+  <!-- 9.3 -->
+  <h2 id="s9-3"><span class="num">9.3</span>El paquete ZIP</h2>
+  <p><span class="ui">⬇ Descargar paquete completo (ZIP)</span> genera, en el propio navegador, un archivo <code>…_ACP_completo.zip</code> con esta estructura. El botón va mostrando el avance figura por figura y, al terminar, un mensaje dice cuántos archivos y megabytes tiene.</p>
+
+  <div class="arbol">proyecto_integrador_agronomia_ACP_completo.zip
+├── informe_ACP.html          el mismo informe de la sección 9.2
+├── CITATION.bib              la cita en BibTeX
+├── LEEME.txt                 contenido del paquete y resumen del análisis
+├── figuras/
+│   ├── 01_…_faltantes.svg     numeradas en el orden de la app
+│   ├── 01_…_faltantes.png
+│   └── …
+└── tablas/
+    ├── 01_matriz_preparada.csv
+    ├── 02_correlaciones.csv
+    └── …</div>
+
+  <table class="compacta">
+    <caption><b>Tabla 9.5.</b> Las figuras del paquete.</caption>
+    <thead><tr><th style="width:34%">Formato</th><th>Resultado</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Ambos: SVG y PNG</span> (por defecto)</td><td>Cada figura dos veces: vectorial y en mapa de bits.</td></tr>
+      <tr><td>PNG, JPG o WEBP</td><td>Solo mapa de bits, a la resolución elegida (2× a 12×), con fondo blanco.</td></tr>
+      <tr><td>SVG</td><td>Solo vectorial; la resolución no aplica. Es el paquete más ligero.</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <caption><b>Tabla 9.6.</b> Las tablas CSV del paquete, según lo ejecutado.</caption>
+    <thead><tr><th style="width:10%">Nº</th><th style="width:36%">ACP</th><th>AC, ACM, AFDM y AFM</th></tr></thead>
+    <tbody>
+      <tr><td>01–03</td><td colspan="2">Matriz preparada (con suplementarias y cualitativas), correlaciones y resumen de variables con MSA.</td></tr>
+      <tr><td>04</td><td>Valores propios con p95 aleatorio y bastón roto.</td><td>Valores propios e inercia (en el ACM, con el % de Greenacre).</td></tr>
+      <tr><td>05–06</td><td>Cargas sin rotar y puntuaciones.</td><td>Coordenadas, cos² y contribuciones de columnas y de filas.</td></tr>
+      <tr><td>07–09</td><td>Cargas rotadas; estructura y Φ si es oblicua.</td><td>Propias del método: celdas de la χ² (AC), v de Cramér (ACM), r² y η² (AFDM), inercia de bloques, RV y puntos parciales (AFM).</td></tr>
+      <tr><td>10–11</td><td>Coordenadas, cos² y contribuciones de variables e individuos.</td><td>—</td></tr>
+      <tr><td>12–14</td><td>Descripción de dimensiones, valores test y residuos.</td><td>Descripción de ejes y valores test.</td></tr>
+      <tr><td>20–23</td><td colspan="2">Si hubo agrupamiento: asignación, criterios por número de grupos, descripción y paragones.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Los CSV van en UTF-8 con BOM y separados por comas, para que Excel reconozca los acentos. Con el proyecto integrador y los seis bloques, el paquete tiene 16 tablas, 26 figuras en SVG y PNG, el informe, la cita y el LEEME: 71 archivos.</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿qué resolución elijo para el paquete?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">Si el paquete es para…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td>Archivar el análisis o compartirlo con coautores</td><td>SVG y PNG a 4×, las opciones por defecto.</td></tr>
+        <tr><td>Enviar las figuras a una revista</td><td>SVG, o PNG a 8×. Revisa antes el peso: con muchas figuras, 8× y 12× pueden llegar a cientos de MB.</td></tr>
+        <tr><td>Un correo o una presentación</td><td>PNG a 2×, o solo el informe HTML.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">El ZIP se guarda sin compresión para no depender de librerías externas: si pesa demasiado, comprímelo después con tu sistema operativo.</p>
+  </div>
+
+  <!-- 9.4 -->
+  <h2 id="s9-4"><span class="num">9.4</span>Redactar los métodos y citar</h2>
+  <p>La sección <b>Métodos</b> del informe es un párrafo con tus parámetros. Con el ACP describe la muestra y las variables, el tratamiento de faltantes, la transformación y el escalado, KMO y Bartlett, los criterios de retención, la rotación, el umbral y, si lo hubo, el agrupamiento. Con los otros métodos describe la tabla, la codificación, la inercia y los criterios empleados.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · qué corregir en el párrafo de métodos</div>
+    <ul>
+      <li><b>Los criterios de retención.</b> Con el ACP, el párrafo dice siempre que el número se decidió «combinando» Horn, Kaiser, el bastón roto, el MAP y el gráfico de sedimentación, aunque esos criterios hayan discrepado. Escribe cuáles sostienen el número que elegiste.</li>
+      <li><b>La frase de preprocesamiento.</b> «Se aplicó sin transformación previa y estandarización z» es forzada: reescríbela como «Las variables se estandarizaron (z), sin transformación previa».</li>
+      <li><b>El nombre de los métodos.</b> Con otros métodos el párrafo empieza con mayúscula a media frase («un Análisis factorial de datos mixtos»), dice «1 cualitativas» y escribe «codo del scree (cattell)» en minúscula.</li>
+      <li><b>El anexo.</b> Muestra los códigos internos: <code>listwise</code>, <code>none</code>, <code>z</code>. Tradúcelos si publicas el anexo.</li>
+    </ul>
+  </div>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Un párrafo de métodos completo</div>
+    <p>«Se analizaron 144 parcelas y 12 variables cuantitativas mediante análisis de componentes principales; las 6 parcelas con datos faltantes se eliminaron. Las variables se estandarizaron (z), sin transformación previa. La adecuación de los datos se verificó con el índice KMO (0.783) y la prueba de esfericidad de Bartlett (χ²(66) = 1353.7, p &lt; 0.0001). Se retuvieron cuatro componentes, número en el que coincidieron el análisis paralelo de Horn (500 permutaciones, percentil 95), el bastón roto y el MAP de Velicer, y se rotaron con varimax y normalización de Kaiser; se interpretaron las cargas con |r| ≥ 0.40. El rendimiento se proyectó como variable suplementaria. Sobre los cuatro componentes se aplicó un agrupamiento jerárquico de Ward consolidado por k-medias (Husson, Josse y Pagès, 2010). Los análisis se realizaron en PCAPro, versión 1.1.0 (Barrera-Guzmán, 2026).»</p>
+  </div>
+
+  <h3>Qué no debe decir el texto</h3>
+  <table class="compacta">
+    <caption><b>Tabla 9.7.</b> Errores frecuentes al redactar un análisis factorial.</caption>
+    <thead><tr><th style="width:44%">En lugar de…</th><th>escribe…</th></tr></thead>
+    <tbody>
+      <tr><td>«Los factores explican…», en un ACP</td><td>«Los componentes…»: el análisis factorial es otro modelo.</td></tr>
+      <tr><td>«El ACP demostró que los tratamientos difieren»</td><td>«Los tratamientos se situaron en zonas distintas del plano», y la prueba que usaste (MANOVA, PERMANOVA).</td></tr>
+      <tr><td>«CP1 explica la altura»</td><td>«La altura se asocia con CP1 (r = 0.92)».</td></tr>
+      <tr><td>Porcentajes de cada componente con rotación oblicua</td><td>La varianza conjunta y las cargas de patrón (sección 5.2).</td></tr>
+      <tr><td>Grupos con valores p como prueba de que existen</td><td>La silueta, el acuerdo de las reglas y que los valores test describen (sección 8.5).</td></tr>
+      <tr><td>Nada sobre el preprocesamiento</td><td>Faltantes, transformación y escalado: cambian el resultado.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Citar PCAPro</h3>
+  <p>La tarjeta <span class="ui">6.4 · Cómo citar PCAPro</span> muestra la referencia con los botones <span class="ui">⧉ Copiar referencia</span> y <span class="ui">⧉ Copiar BibTeX</span>. Es la misma que aparece al final de cada informe y en el archivo <code>CITATION.bib</code> del paquete. La referencia usa el DOI de concepto, que apunta siempre a la versión más reciente; si tu revista pide la versión exacta, usa el DOI de la versión (sección 2.4).</p>
+
+  <div class="caja dato">
+    <div class="dato-cifra">0</div>
+    <div class="dato-txt"><div class="caja-t">Datos enviados fuera del equipo</div>El informe y el paquete se generan en tu navegador: <b>ningún dato sale de tu computadora</b>, y así lo declara el pie del informe. Puedes trabajar con datos confidenciales sin conexión.</div>
+  </div>
+
+  <p style="margin-top:0.3in">Con el informe se cierra el recorrido por los bloques. Los apéndices reúnen los formatos de archivo, las reglas de decisión, el glosario, la solución de problemas, la verificación de los cálculos y las referencias.</p>
+</section>
+
+</body>
+</html>

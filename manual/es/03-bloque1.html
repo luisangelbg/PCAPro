@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 3 · Bloque 1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  /* una hoja de cálculo en miniatura */
+  table.hoja-ej { font-family: var(--mono); font-size: 7.8pt; }
+  table.hoja-ej th { background: #e9edf5; color: var(--marino); font-weight: 600; }
+  table.hoja-ej td.mal { background: #fdecec !important; color: #9b1c1c; }
+  table.hoja-ej .fila { color: var(--gris); background: #f3f4f8 !important; width: 0.3in; text-align: center; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b1" data-pestana="B1" data-orden="3" style="--acento: var(--b1)">
+  <div class="cap-apertura">
+    <div class="cap-num">3</div>
+    <div class="cap-etiqueta">Capítulo tres · Bloque 1</div>
+    <h1>Datos y supuestos</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">Cómo preparar la hoja, cargarla, decir qué papel juega cada columna, tratar faltantes y escalas, y comprobar si los datos admiten un análisis factorial antes de calcular nada. Termina con la elección del método y cuatro archivos de práctica, uno por cada situación típica.</p>
+    <div class="cap-franja"><span class="k1"></span><span class="k1"></span><span class="k1"></span><span class="k1"></span><span class="k1"></span><span class="k1"></span><span class="k1"></span><span class="k1"></span></div>
+    <ul class="cap-contenido">
+      <li><b>3.1</b>Preparar la hoja de datos</li>
+      <li><b>3.2</b>Cargar un archivo y la vista previa</li>
+      <li><b>3.3</b>El papel de cada variable</li>
+      <li><b>3.4</b>Faltantes, transformaciones y escalado</li>
+      <li><b>3.5</b>El diagnóstico: Bartlett, KMO y MSA</li>
+      <li><b>3.6</b>Exploración gráfica y recomendaciones</li>
+      <li><b>3.7</b>Qué método corresponde</li>
+      <li><b>3.8</b>Paso a paso: cuatro archivos de práctica</li>
+    </ul>
+  </div>
+
+  <!-- 3.1 -->
+  <h2 id="s3-1"><span class="num">3.1</span>Preparar la hoja de datos</h2>
+  <p class="lead">La mayoría de los problemas de un análisis factorial se originan antes de abrir el programa, en la forma de la hoja. Diez minutos ordenándola ahorran horas de resultados raros.</p>
+  <p>PCAPro espera una <b>tabla rectangular</b>: la primera fila con los nombres de las variables y cada fila siguiente con un individuo —una planta, una parcela, una muestra de suelo—. Es el formato «ancho» que ya usas para capturar datos de campo.</p>
+
+  <div class="dos">
+    <div>
+      <h4>Así sí</h4>
+      <table class="hoja-ej compacta">
+        <thead><tr><th class="fila"></th><th>ID</th><th>Sitio</th><th>MO_pct</th><th>N_total_pct</th></tr></thead>
+        <tbody>
+          <tr><td class="fila">1</td><td>S001</td><td>Ladera alta</td><td>2.15</td><td>0.080</td></tr>
+          <tr><td class="fila">2</td><td>S002</td><td>Ladera alta</td><td>1.04</td><td>0.079</td></tr>
+          <tr><td class="fila">3</td><td>S031</td><td>Ladera media</td><td>3.09</td><td></td></tr>
+          <tr><td class="fila">4</td><td>S061</td><td>Vega</td><td>3.54</td><td>0.182</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h4>Así no</h4>
+      <table class="hoja-ej compacta">
+        <thead><tr><th class="fila"></th><th>ID</th><th>Sitio</th><th>MO</th><th>N total</th></tr></thead>
+        <tbody>
+          <tr><td class="fila">1</td><td>S001</td><td class="mal">1</td><td class="mal">2.15 %</td><td>0.080</td></tr>
+          <tr><td class="fila">2</td><td class="mal" colspan="4">— Ladera media —</td></tr>
+          <tr><td class="fila">3</td><td>S031</td><td class="mal">2</td><td>3.09</td><td class="mal">sin dato</td></tr>
+          <tr><td class="fila">4</td><td>S061</td><td class="mal">3</td><td class="mal">≈ 3.5</td><td class="mal">0,182</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="small">A la izquierda, cuatro filas de <code>practica1_suelos.csv</code>, con un faltante dejado en blanco a modo de ejemplo. A la derecha, cinco errores comunes: un sitio codificado con números, un renglón de título en medio de los datos, un faltante escrito como texto no reconocido, un número aproximado y un decimal con coma en un archivo que usa punto. El signo % al final de un número, en cambio, se ignora sin problema.</p>
+
+  <table>
+    <caption><b>Tabla 3.1.</b> Reglas para una hoja que PCAPro lee sin problemas.</caption>
+    <thead><tr><th style="width:34%">Regla</th><th>Por qué</th></tr></thead>
+    <tbody>
+      <tr><td><b>Una sola tabla por hoja</b>, empezando en la celda A1</td><td>La app toma la primera fila no vacía como encabezado y todo lo de abajo como datos.</td></tr>
+      <tr><td><b>Sin celdas combinadas ni renglones de título</b> intercalados</td><td>Un renglón como «— Ladera media —» se leería como un individuo más, casi vacío.</td></tr>
+      <tr><td><b>Una columna por variable</b>, con un nombre corto y único</td><td>El nombre aparece en tablas y figuras. Evita espacios y acentos si el archivo pasará por otros programas.</td></tr>
+      <tr><td><b>Solo el número en cada celda</b></td><td>«12 cm» o «≈ 3.5» no se leen como número. El signo % al final sí se ignora.</td></tr>
+      <tr><td><b>Grupos con texto, no con códigos</b>: «Valle», «T1», «Testigo»</td><td>Una columna 1, 2, 3 parece numérica; la app sospecha que es un código, pero una etiqueta de texto no deja dudas.</td></tr>
+      <tr><td><b>Una columna de identificador</b> con valores distintos</td><td>Etiqueta los puntos en los mapas; sin ella, los individuos se llaman «Ind 1», «Ind 2»…</td></tr>
+      <tr><td><b>Faltantes vacíos</b> o con un código reconocido (tabla 3.2)</td><td>Cualquier otro texto en una columna numérica cuenta como valor no numérico.</td></tr>
+      <tr><td><b>Prefijos para bloques temáticos</b>: <code>suelo_pH</code>, <code>planta_altura</code></td><td>Así el recomendador detecta los bloques y propone el análisis factorial múltiple (sección 3.7).</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 3.2.</b> Textos que la app reconoce como dato faltante, sin distinguir mayúsculas.</caption>
+    <tbody>
+      <tr><td>Celda vacía · <code>NA</code> · <code>N/A</code> · <code>NaN</code> · <code>null</code> · <code>nulo</code> · <code>.</code> · <code>-</code> · <code>--</code> · <code>?</code> · <code>ND</code> · <code>S/D</code> · <code>SD</code> · <code>missing</code> · <code>faltante</code> · <code>#N/A</code> · <code>#¡DIV/0!</code> · <code>#VALUE!</code> · <code>#VALOR!</code></td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · «SD» es dato faltante</div>
+    <p>La app lee <code>SD</code> y <code>sd</code> como «sin dato». Si alguna columna guarda desviaciones estándar o una categoría llamada así, renómbrala antes de cargar el archivo; de lo contrario esas celdas quedarán vacías.</p>
+  </div>
+
+  <!-- 3.2 -->
+  <h2 id="s3-2"><span class="num">3.2</span>Cargar un archivo y la vista previa</h2>
+  <p>La tarjeta <span class="ui">1.1 · Sube tu base de datos</span> acepta archivos .xlsx, .xls, .csv, .tsv y .txt. Arrastra el archivo a la zona punteada o haz clic en ella para buscarlo. Al terminar la lectura aparece un mensaje verde con las filas y columnas leídas, y se abren las tarjetas 1.2, 1.3 y 1.4.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b1-carga.png" alt="Tarjeta 1.1 para subir la base de datos">
+      <span class="marca" style="left:69.1%;top:22.9%">1</span>
+      <span class="marca" style="left:19.6%;top:64.2%">2</span>
+      <span class="marca" style="left:73.4%;top:64.2%">3</span>
+      <span class="marca" style="left:12%;top:95%">4</span>
+      <span class="marca" style="left:56.6%;top:87.5%">5</span>
+    </div>
+    <figcaption><b>Figura 3.1.</b> La tarjeta <span class="ui">1.1 · Sube tu base de datos</span>.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Zona de carga: arrastra el archivo o haz clic.</li>
+    <li><span class="n">2</span>Separador decimal (tabla 3.3).</li>
+    <li><span class="n">3</span>Separador de columnas, solo para archivos de texto.</li>
+    <li><span class="n">4</span>Ejemplo de iris; necesita servidor local o la versión en línea.</li>
+    <li><span class="n">5</span>Ejemplo simulado; funciona siempre.</li>
+  </ul>
+
+  <table>
+    <caption><b>Tabla 3.3.</b> El separador decimal.</caption>
+    <thead><tr><th style="width:26%">Opción</th><th>Cómo lee «1,234» y «12,5»</th><th style="width:30%">Cuándo elegirla</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Detectar automáticamente</span></td><td>Cada valor por separado: si termina en coma y uno a tres dígitos, y no tiene un punto seguido de dígitos, la coma es decimal: «12,5» = 12.5, pero también «1,234» = 1.234. En otro caso, las comas se eliminan como separadores de miles.</td><td>La mayoría de los archivos.</td></tr>
+      <tr><td><span class="ui">Punto (12.34)</span></td><td>Las comas se eliminan: «1,234» = 1234.</td><td>Si tu archivo usa coma para los miles.</td></tr>
+      <tr><td><span class="ui">Coma (12,34)</span></td><td>Los puntos se eliminan y la coma es decimal: «1.234,5» = 1234.5.</td><td>Archivos exportados con configuración regional en español.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · hojas de cálculo</div>
+    <p>Si el libro de Excel tiene varias hojas, aparece el selector <span class="ui">Hoja del libro</span> para elegir cuál analizar. Los separadores no aplican a .xlsx, que ya guarda los números como números. Recuerda que leer .xlsx necesita conexión la primera vez que abres la app; los .csv se leen siempre sin conexión (sección 1.5).</p>
+  </div>
+
+  <p>La tarjeta <span class="ui">1.4 · Vista previa del archivo</span> muestra las doce primeras filas tal como se leyeron. Un símbolo delante de cada nombre recuerda su papel: <b>⌗</b> activa · <b>⊕</b> cuantitativa suplementaria · <b>⌸</b> cualitativa · <b>◇</b> identificador · <b>∅</b> excluida. Si ves números donde esperabas texto, o guiones donde había datos, revisa el separador decimal antes de seguir.</p>
+
+  <!-- 3.3 -->
+  <h2 id="s3-3"><span class="num">3.3</span>El papel de cada variable</h2>
+  <p>Al cargar el archivo, la app examina cada columna, deduce su tipo y le propone un papel. La propuesta suele ser correcta, pero <b>revisarla es el paso más importante del bloque</b>: solo las variables marcadas como activas construyen los componentes.</p>
+
+  <table>
+    <caption><b>Tabla 3.4.</b> Cómo decide la app el tipo y el papel inicial de una columna.</caption>
+    <thead><tr><th style="width:42%">Si la columna…</th><th style="width:26%">Tipo detectado</th><th>Papel propuesto</th></tr></thead>
+    <tbody>
+      <tr><td>tiene al menos 85 % de valores numéricos (y tres o más)</td><td>Numérica continua o entera</td><td>Activa</td></tr>
+      <tr><td>es numérica pero no varía</td><td>Constante</td><td>Excluir</td></tr>
+      <tr><td>es numérica entera con muy pocos valores distintos (8 o menos, y no más del 5 % de las filas)</td><td>Numérica (enteros), con la alerta «¿código de grupo?»</td><td>Cualitativa / grupo</td></tr>
+      <tr><td>es de texto y todos sus valores son distintos</td><td>Identificador</td><td>Identificador de fila</td></tr>
+      <tr><td>es de texto con más de 30 categorías</td><td>Texto</td><td>Excluir</td></tr>
+      <tr><td>es de texto con 30 categorías o menos</td><td>Categórica</td><td>Cualitativa / grupo</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <caption><b>Tabla 3.5.</b> Los cinco papeles.</caption>
+    <thead><tr><th style="width:24%">Papel en la app</th><th>Qué hace en el análisis</th><th style="width:32%">Úsalo para</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Activa (entra al ACP)</span></td><td>Construye los componentes.</td><td>Las mediciones que quieres resumir, todas sobre la misma pregunta.</td></tr>
+      <tr><td><span class="ui">Cuantitativa suplementaria</span></td><td>No interviene en el cálculo; se proyecta después sobre el círculo de correlaciones.</td><td>Una variable de respuesta, como el rendimiento, que quieres ver en el mapa sin que lo defina.</td></tr>
+      <tr><td><span class="ui">Cualitativa / grupo</span></td><td>Colorea los individuos, dibuja elipses y permite comparar grupos; en el ACM, el AC y el AFDM puede entrar a los ejes.</td><td>Factores de diseño y características con categorías: sitio, tratamiento, especie.</td></tr>
+      <tr><td><span class="ui">Identificador de fila</span></td><td>Pone nombre a cada individuo en tablas y mapas.</td><td>La clave de la muestra.</td></tr>
+      <tr><td><span class="ui">Excluir</span></td><td>La columna queda fuera de todo.</td><td>Fechas, observaciones de campo, columnas auxiliares.</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b1-variables.png" alt="Tarjeta 1.2 con los papeles de las variables del archivo de suelos">
+      <span class="marca" style="left:48.5%;top:14.8%">1</span>
+      <span class="marca" style="left:31.8%;top:37.4%">2</span>
+      <span class="marca" style="left:94%;top:50%">3</span>
+      <span class="marca" style="left:66%;top:57.3%">4</span>
+      <span class="marca" style="left:41.8%;top:62.6%">5</span>
+      <span class="marca" style="left:14.9%;top:71.4%">6</span>
+    </div>
+    <figcaption><b>Figura 3.2.</b> La tarjeta <span class="ui">1.2 · Define el papel de cada variable</span> con <code>practica1_suelos.csv</code>.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Indicadores de papeles; la razón n:p se colorea sola.</li>
+    <li><span class="n">2</span>Cuántas variables activas entrarán.</li>
+    <li><span class="n">3</span>Selección rápida: desmarcar pasa a suplementaria.</li>
+    <li><span class="n">4</span>Marcar todas, desmarcar todas o volver a lo detectado.</li>
+    <li><span class="n">5</span>Histograma en miniatura de cada columna.</li>
+    <li><span class="n">6</span><code>Sitio</code>, detectada como categórica de 3 niveles.</li>
+  </ul>
+
+  <p>La tabla de variables sigue hacia la derecha con la dispersión, la forma de la distribución, las alertas y el desplegable del papel, que muestra la figura 3.3 con el archivo de semillas. La selección rápida y el desplegable <span class="ui">Papel en el ACP</span> están sincronizados: cambiar uno cambia el otro.</p>
+
+  <figure>
+    <div class="marco"><img src="../img/app-b1-papeles.png" alt="Parte derecha de la tabla de variables con alertas y papeles"></div>
+    <figcaption><b>Figura 3.3.</b> Parte derecha de la tabla de variables con <code>practica2_semillas.csv</code>. La columna <b>Alertas</b> marca en naranja las variables con un valor a más de tres desviaciones de la media; la columna <b>Papel en el ACP</b> ofrece solo los papeles que admite cada tipo: una columna de texto no puede ser activa. Debajo, el recuadro <b>Cómo decidir</b> resume la tabla 3.5.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 3.6.</b> Las alertas de la tabla de variables.</caption>
+    <thead><tr><th style="width:32%">Alerta</th><th style="width:16%">Color</th><th>Qué significa y qué hacer</th></tr></thead>
+    <tbody>
+      <tr><td>varianza cero</td><td>rojo</td><td>Todos los valores son iguales; no aporta nada y queda excluida.</td></tr>
+      <tr><td>N % faltantes</td><td>naranja &gt; 5 % · rojo &gt; 20 %</td><td>Revisa si conviene imputar o excluir la variable (sección 3.4).</td></tr>
+      <tr><td>asimétrica · muy asimétrica</td><td>naranja |g₁| &gt; 1 · rojo |g₁| &gt; 2</td><td>Considera una transformación logarítmica o de raíz cuadrada.</td></tr>
+      <tr><td>N at. |z|&gt;3</td><td>naranja</td><td>Hay N valores a más de tres desviaciones de la media: comprueba que no sean errores de captura.</td></tr>
+      <tr><td>¿código de grupo?</td><td>naranja</td><td>Enteros con pocos valores distintos: probablemente un tratamiento o un bloque.</td></tr>
+      <tr><td>sin alertas</td><td>verde</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿activa, suplementaria o fuera?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">Si la variable…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td><b>Describe</b> a los individuos desde la misma pregunta que las demás</td><td>Activa.</td></tr>
+        <tr><td>Es la <b>respuesta</b> que quieres explicar con la estructura (rendimiento, mortalidad)</td><td>Cuantitativa suplementaria: así no fabricas la relación que quieres encontrar.</td></tr>
+        <tr><td>Es un <b>factor de diseño</b> (tratamiento, bloque, sitio)</td><td>Cualitativa / grupo, y fuera de los ejes (sección 1.4).</td></tr>
+        <tr><td>Es <b>suma, cociente o porcentaje</b> de otras activas (área = largo × ancho)</td><td>Deja solo las variables originales o solo la derivada, no las dos.</td></tr>
+        <tr><td>Mide <b>otro tema</b> (clima entre variables de planta)</td><td>Suplementaria, o bien un análisis factorial múltiple con bloques.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">El botón de preparación se activa con dos variables activas, pero un ACP con menos de tres rara vez tiene algo que resumir. El indicador de la razón n:p se pone verde a partir de 10 individuos por variable, ámbar entre 5 y 10, y rojo por debajo de 5.</p>
+  </div>
+
+  <!-- 3.4 -->
+  <h2 id="s3-4"><span class="num">3.4</span>Faltantes, transformaciones y escalado</h2>
+  <p>La tarjeta <span class="ui">1.3 · Preparación de la matriz</span> reúne las tres decisiones que transforman la tabla cruda en la matriz que se analiza. Se aplican en este orden: primero los faltantes, luego la transformación y al final el escalado. La figura 3.4 muestra la tarjeta completa.</p>
+
+
+  <h3>Datos faltantes</h3>
+  <table>
+    <caption><b>Tabla 3.7.</b> Opciones para los datos faltantes de las variables activas.</caption>
+    <thead><tr><th style="width:30%">Opción</th><th>Qué hace</th><th style="width:30%">Úsala cuando</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Eliminar filas incompletas (listwise)</span></td><td>Descarta toda fila con algún faltante en las variables activas. Es la opción por defecto.</td><td>Faltan pocos datos y dispersos: pierdes menos del 10 % de las filas.</td></tr>
+      <tr><td><span class="ui">Imputar con la media de la variable</span></td><td>Rellena cada hueco con la media de su columna.</td><td>Faltan pocos datos, la variable es simétrica y no quieres perder filas.</td></tr>
+      <tr><td><span class="ui">Imputar con la mediana de la variable</span></td><td>Rellena cada hueco con la mediana.</td><td>Igual que la anterior, con variables asimétricas o con atípicos.</td></tr>
+    </tbody>
+  </table>
+  <p>Con cualquiera de las dos imputaciones, una fila vacía en todas las activas se descarta igual. Si después del tratamiento quedan menos de tres filas, la app no prepara la matriz y lo avisa.</p>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b1-preparacion.png" alt="Tarjeta 1.3 de preparación de la matriz">
+      <span class="marca" style="left:15.2%;top:17.2%">1</span>
+      <span class="marca" style="left:71%;top:17.2%">2</span>
+      <span class="marca" style="left:26.5%;top:34.6%">3</span>
+      <span class="marca" style="left:25.4%;top:46%">4</span>
+      <span class="marca" style="left:73.4%;top:66.9%">5</span>
+      <span class="marca" style="left:44.9%;top:85.1%">6</span>
+      <span class="marca" style="left:28.8%;top:91.6%">7</span>
+    </div>
+    <figcaption><b>Figura 3.4.</b> La tarjeta <span class="ui">1.3 · Preparación de la matriz</span>.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Tratamiento de los datos faltantes.</li>
+    <li><span class="n">2</span>Transformación previa.</li>
+    <li><span class="n">3</span>El escalado, marcado como decisión clave.</li>
+    <li><span class="n">4</span>Estandarización z, elegida por defecto.</li>
+    <li><span class="n">5</span>Las otras seis formas de escalar.</li>
+    <li><span class="n">6</span>El escalado elegido, tal como irá al informe.</li>
+    <li><span class="n">7</span>Prepara la matriz y lanza el diagnóstico.</li>
+  </ul>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>El precio de imputar</div>
+    <p>Rellenar con la media no inventa información, pero la aplana: todos los huecos reciben el mismo valor, así que la varianza de la variable baja y sus correlaciones con las demás se atenúan. Con un 2 % de huecos el efecto es despreciable; con un 20 % puede cambiar los componentes. Si imputas, decláralo en los métodos, y si faltan muchos datos considera métodos iterativos como los de <code>missMDA</code> en R.</p>
+  </div>
+
+  <h3>Transformación previa</h3>
+  <table class="compacta">
+    <caption><b>Tabla 3.8.</b> Transformaciones disponibles. Se aplican a cada variable activa antes de escalar.</caption>
+    <thead><tr><th style="width:26%">Opción</th><th style="width:36%">Para qué sirve</th><th>Si hay ceros o negativos</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Ninguna (datos originales)</span></td><td>Opción por defecto.</td><td>—</td></tr>
+      <tr><td><span class="ui">Logaritmo natural, ln(x)</span></td><td>Asimetría positiva fuerte: concentraciones, biomasa, conteos.</td><td>Suma 1 − mínimo, para que el menor valor sea 1.</td></tr>
+      <tr><td><span class="ui">Logaritmo base 10</span></td><td>Lo mismo que ln, en órdenes de magnitud.</td><td>Suma 1 − mínimo.</td></tr>
+      <tr><td><span class="ui">Raíz cuadrada</span></td><td>Asimetría moderada y conteos pequeños.</td><td>Suma −mínimo si hay negativos.</td></tr>
+      <tr><td><span class="ui">Inversa, 1/x</span></td><td>Tasas y tiempos muy sesgados.</td><td>Suma 1 − mínimo.</td></tr>
+    </tbody>
+  </table>
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · una transformación para todas</div>
+    <p>La transformación elegida se aplica a <b>todas</b> las variables activas, no solo a las asimétricas. Si solo una o dos lo necesitan, transfórmalas en tu hoja de cálculo antes de cargar el archivo y deja aquí <span class="ui">Ninguna</span>.</p>
+  </div>
+
+  <h3>Escalado: la decisión clave</h3>
+  <p>El ACP busca las direcciones de mayor varianza, y la varianza depende de las unidades. El escalado decide cuánto pesa cada variable. Empieza por la regla de decisión; la tabla 3.9 detalla las siete opciones de la app.</p>
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿cómo escalo?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">Si tus variables activas…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td>Están en <b>unidades distintas</b> (%, ppm, cm, g)</td><td><b>Estandarización z.</b> Es el caso de casi todos los estudios agronómicos y ecológicos.</td></tr>
+        <tr><td>Comparten <b>unidad y escala</b> y quieres conservarlas</td><td>Sin escalar. La app lo considera defendible, en ámbar, si la mayor desviación estándar no pasa de 4 veces la menor; por encima lo marca en rojo.</td></tr>
+        <tr><td>Tienen <b>atípicos reales</b> que no quieres quitar</td><td>Robusta, y compara con z.</td></tr>
+        <tr><td>Son <b>intensidades o espectros</b> con picos dominantes</td><td>Pareto.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Si dudas, estandariza. Un ACP sobre correlaciones rara vez es un error; uno sobre covarianzas con unidades mezcladas lo es casi siempre. La sección 3.8 muestra el caso con cifras.</p>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Tabla 3.9.</b> Las siete formas de escalar.</caption>
+    <thead><tr><th style="width:22%">Opción</th><th style="width:26%">Cálculo</th><th>Efecto y uso</th></tr></thead>
+    <tbody>
+      <tr><td><b>Estandarización z</b> <span class="small">(por defecto)</span></td><td>(x − media) / DE</td><td>Toda variable pesa igual. ACP sobre la matriz de <b>correlaciones</b>. La opción correcta si las unidades difieren.</td></tr>
+      <tr><td><b>Sin escalar</b></td><td>x</td><td>ACP sobre <b>covarianzas</b>. Solo si todas las variables comparten unidad y escala, por ejemplo medidas de un mismo órgano en milímetros.</td></tr>
+      <tr><td><b>Solo centrar</b></td><td>x − media</td><td>Equivale a sin escalar: el ACP centra de todos modos.</td></tr>
+      <tr><td><b>Pareto</b></td><td>(x − media) / √DE</td><td>Atenúa las variables dominantes sin igualarlas. Típico en metabolómica y espectros.</td></tr>
+      <tr><td><b>VAST</b></td><td>(x − media) / DE × media / DE</td><td>Premia las variables estables, de coeficiente de variación bajo.</td></tr>
+      <tr><td><b>Rango [0, 1]</b></td><td>(x − mín) / (máx − mín)</td><td>Cómodo para índices, pero un solo valor extremo comprime al resto.</td></tr>
+      <tr><td><b>Robusta</b></td><td>(x − mediana) / MAD</td><td>Usa mediana y desviación absoluta mediana: resiste a los atípicos que no quieres eliminar.</td></tr>
+    </tbody>
+  </table>
+
+
+  <!-- 3.5 -->
+  <h2 id="s3-5"><span class="num">3.5</span>El diagnóstico: Bartlett, KMO y MSA</h2>
+  <p>Al pulsar <span class="ui">Preparar matriz y diagnosticar →</span> la app construye la matriz, calcula sus correlaciones y abre la tarjeta <span class="ui">1.5 · Diagnóstico de la base de datos</span>: una calificación de la A a la D, ocho indicadores y la adecuación muestral de cada variable.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Qué supone un ACP</div>
+    <p>El tema 3 del marco teórico, <i>Postulados y supuestos</i>, los desarrolla; en resumen son cinco condiciones. Las variables deben estar <b>correlacionadas</b>, porque de eso vive el análisis; las relaciones deben ser aproximadamente <b>lineales</b>, porque así las mide Pearson; la muestra debe ser <b>suficiente</b> para que las correlaciones sean estables; no debe haber <b>atípicos</b> que creen un eje por sí solos; y las <b>escalas</b> deben ser comparables o estar estandarizadas. El ACP descriptivo no exige normalidad, aunque distribuciones muy sesgadas deforman las correlaciones.</p>
+  </div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Bartlett, KMO y MSA en una frase cada uno</div>
+    <p><b>Bartlett</b> pregunta si las variables están correlacionadas en absoluto; con muestras grandes casi siempre dice que sí, así que no basta. <b>KMO</b> pregunta si esas correlaciones son de estructura común: compara las correlaciones con las correlaciones parciales, que se vuelven pequeñas cuando varias variables comparten un factor. La <b>MSA</b> es el mismo cálculo para cada variable: dice cuáles aportan a la estructura y cuáles solo añaden ruido. La escala de Kaiser para interpretarlos está en la sección 1.9.</p>
+  </div>
+
+  <h3>La calificación de la A a la D</h3>
+  <p>La calificación suma puntos de seis criterios hasta un máximo de 100. Resume el diagnóstico en una letra, pero no lo sustituye.</p>
+  <table class="compacta">
+    <caption><b>Tabla 3.11.</b> Cómo se calcula la calificación.</caption>
+    <thead><tr><th style="width:24%">Criterio</th><th class="c" style="width:10%">Máximo</th><th>Puntos</th></tr></thead>
+    <tbody>
+      <tr><td>KMO global</td><td class="c">30</td><td>≥ 0.80: 30 · ≥ 0.70: 24 · ≥ 0.60: 17 · ≥ 0.50: 9 · menos: 0</td></tr>
+      <tr><td>Bartlett</td><td class="c">20</td><td>p &lt; 0.05: 20 · si no: 0</td></tr>
+      <tr><td>Razón n:p</td><td class="c">20</td><td>≥ 10: 20 · ≥ 5: 14 · ≥ 3: 8 · menos: 2</td></tr>
+      <tr><td>Tamaño n</td><td class="c">10</td><td>≥ 100: 10 · ≥ 50: 7 · ≥ 30: 4 · menos: 1</td></tr>
+      <tr><td>Faltantes</td><td class="c">10</td><td>&lt; 5 %: 10 · &lt; 15 %: 6 · más: 2</td></tr>
+      <tr><td>Determinante de R</td><td class="c">10</td><td>&gt; 10⁻⁵: 10 · &gt; 10⁻⁹: 5 · menos: 0</td></tr>
+      <tr><td colspan="3"><b>A</b> Excelente: 82 o más · <b>B</b> Buena: 66 a 81 · <b>C</b> Aceptable con reservas: 48 a 65 · <b>D</b> Problemática: menos de 48</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · la letra no ve todo</div>
+    <p>La calificación no considera las escalas, los atípicos, la asimetría ni la redundancia. Por eso un archivo con unidades dispares y sin estandarizar puede sacar una <b>A</b>, y uno con cuatro variables inaceptables una <b>B</b>. Lee siempre los colores de los indicadores, la tabla de MSA y la lista de recomendaciones de la sección 3.6: ahí están los problemas que la letra no pesa.</p>
+  </div>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b1-diagnostico.png" alt="Tarjeta 1.5 de diagnóstico con el archivo de semillas">
+      <span class="marca" style="left:3.2%;top:15.5%">1</span>
+      <span class="marca" style="left:48.4%;top:22%">2</span>
+      <span class="marca" style="left:96.8%;top:22%">3</span>
+      <span class="marca" style="left:32.8%;top:35.2%">4</span>
+      <span class="marca" style="left:63%;top:63.4%">5</span>
+      <span class="marca" style="left:53%;top:95.3%">6</span>
+    </div>
+    <figcaption><b>Figura 3.5.</b> El diagnóstico de <code>practica2_semillas.csv</code>, un archivo con problemas sembrados.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>La calificación: B, «Buena», con 79 de 100 puntos.</li>
+    <li><span class="n">2</span>KMO de 0.556, en rojo: bajo.</li>
+    <li><span class="n">3</span>Correlación absoluta media de 0.219, en ámbar.</li>
+    <li><span class="n">4</span>Cuatro atípicos multivariantes.</li>
+    <li><span class="n">5</span>Cuatro variables con MSA inaceptable.</li>
+    <li><span class="n">6</span>Peso_mg, la única meritoria.</li>
+  </ul>
+
+  <table>
+    <caption><b>Tabla 3.10.</b> Los ocho indicadores del diagnóstico.</caption>
+    <thead><tr><th style="width:24%">Indicador</th><th>Qué mide</th><th style="width:30%">Color</th></tr></thead>
+    <tbody>
+      <tr><td><b>Observaciones (n)</b></td><td>Individuos que quedaron tras el tratamiento de faltantes.</td><td>—</td></tr>
+      <tr><td><b>Variables activas (p)</b></td><td>Columnas que construyen los componentes.</td><td>—</td></tr>
+      <tr><td><b>KMO global</b></td><td>Qué parte de las correlaciones es común a varias variables y no solo de pares.</td><td>verde ≥ 0.80 · ámbar ≥ 0.60 · rojo</td></tr>
+      <tr><td><b>Bartlett</b></td><td>Si la matriz de correlaciones difiere de la identidad.</td><td>verde si p &lt; 0.05 · rojo</td></tr>
+      <tr><td><b>Determinante de R</b></td><td>Cercano a 0: variables linealmente dependientes; cercano a 1: casi sin correlación.</td><td>verde &gt; 10⁻⁵ · ámbar</td></tr>
+      <tr><td><b>|r| media</b></td><td>Correlación absoluta media entre pares, y cuántos pares superan 0.3.</td><td>verde ≥ 0.30 · ámbar</td></tr>
+      <tr><td><b>Componentes λ &gt; 1</b></td><td>Cuántos ejes retendría Kaiser y cuánto explicarían. Es una vista previa; el Bloque 2 decide.</td><td>—</td></tr>
+      <tr><td><b>Atípicos (Mahalanobis)</b></td><td>Individuos cuya distancia D² supera el percentil 99.9 de χ² con <i>p</i> grados de libertad.</td><td>ámbar si hay alguno · verde</td></tr>
+    </tbody>
+  </table>
+
+
+  <h3>Adecuación muestral por variable</h3>
+  <p>La tabla de MSA ordena las variables de menor a mayor. Las que quedan por debajo de 0.50 son candidatas a salir del análisis, pero <b>de una en una</b>: al retirar una variable cambian las correlaciones parciales de todas, y otra que parecía inaceptable puede quedar bien. La sección 3.8 lo muestra con las semillas.</p>
+  <ol class="pasos">
+    <li>Identifica la variable con la MSA más baja.</li>
+    <li>Pregúntate si tiene sentido quitarla desde tu disciplina. Si es central para tu pregunta, déjala y acepta un KMO más modesto.</li>
+    <li>Desmárcala en la selección rápida de la tarjeta 1.2: pasa a suplementaria y seguirá visible en los mapas.</li>
+    <li>Pulsa otra vez <span class="ui">Preparar matriz y diagnosticar →</span> y vuelve a leer la tabla.</li>
+    <li>Repite mientras quede alguna por debajo de 0.50 y el retiro se justifique.</li>
+  </ol>
+
+  <!-- 3.6 -->
+  <h2 id="s3-6"><span class="num">3.6</span>Exploración gráfica y recomendaciones</h2>
+  <p>Debajo del diagnóstico, la tarjeta <span class="ui">1.6 · Exploración gráfica</span> reúne cinco figuras editables. Sirven para ver lo que las cifras resumen: la tabla 3.12 las describe, y la figura 3.6 muestra la que más decisiones cambia.</p>
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b1-escalas.png" alt="Perfil de escalas del archivo de escalas dispares">
+      <span class="marca" style="left:71.6%;top:18.2%">1</span>
+      <span class="marca" style="left:94.6%;top:26%">2</span>
+      <span class="marca" style="left:39%;top:59%">3</span>
+      <span class="marca" style="left:70.4%;top:76.7%">4</span>
+    </div>
+    <figcaption><b>Figura 3.6.</b> Perfil de escalas de <code>practica3_escalas.csv</code>. <b>1</b> La razón entre la mayor y la menor desviación estándar: más de un millón de veces. <b>2</b> Volumen_mm3, con una desviación de 49 500. <b>3</b> El pH, con 0.321. <b>4</b> El eje es logarítmico: cada marca multiplica por diez.</figcaption>
+  </figure>
+  <table>
+    <caption><b>Tabla 3.12.</b> Las figuras de exploración.</caption>
+    <thead><tr><th style="width:28%">Figura</th><th>Qué muestra</th><th style="width:32%">Qué buscar</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mapa de datos faltantes</b></td><td>Cada fila del archivo contra cada variable, con los huecos en rojo y su conteo.</td><td>Faltantes agrupados en una variable o en un grupo de individuos.</td></tr>
+      <tr><td><b>Perfil de escalas</b></td><td>La desviación estándar original de cada variable, en escala logarítmica.</td><td>Diferencias de varios órdenes de magnitud: hay que estandarizar.</td></tr>
+      <tr><td><b>Distribución de cada variable</b></td><td>Histogramas con la curva normal de referencia y la asimetría g₁.</td><td>Colas largas, bimodalidad, valores imposibles.</td></tr>
+      <tr><td><b>Matriz de correlaciones</b></td><td>Las correlaciones de Pearson entre activas, en colores.</td><td>Bloques de variables correlacionadas y pares casi redundantes.</td></tr>
+      <tr><td><b>Comparación después del preprocesamiento</b></td><td>Diagramas de caja de las variables ya transformadas y escaladas.</td><td>Que las escalas hayan quedado comparables.</td></tr>
+    </tbody>
+  </table>
+
+
+  <h3>Las recomendaciones</h3>
+  <p>La tarjeta <span class="ui">1.7 · Recomendaciones sobre tu base de datos</span> traduce el diagnóstico a diez puntos, siempre en el mismo orden, cada uno con su color, la cifra que lo motiva y la acción sugerida. La figura 3.7 la muestra con el archivo sin estructura, y la tabla 3.13 resume cuándo toma cada color.</p>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b1-recomendaciones.png" alt="Lista de recomendaciones del archivo sin estructura">
+      <span class="marca" style="left:36%;top:9.6%">1</span>
+      <span class="marca" style="left:49%;top:19.3%">2</span>
+      <span class="marca" style="left:32%;top:29%">3</span>
+      <span class="marca" style="left:32%;top:40.7%">4</span>
+      <span class="marca" style="left:36%;top:88.5%">5</span>
+    </div>
+    <figcaption><b>Figura 3.7.</b> Las recomendaciones de <code>practica4_sin_estructura.csv</code>. <b>1</b> Muestra justa: n = 80. <b>2</b> Bartlett no significativa. <b>3</b> KMO inaceptable. <b>4</b> Correlaciones demasiado débiles. <b>5</b> Aun así, Kaiser retendría 3 componentes: una advertencia sobre ese criterio.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 3.13.</b> Los diez puntos de la lista de recomendaciones.</caption>
+    <thead><tr><th style="width:4%">#</th><th style="width:22%">Punto</th><th><span class="si">✔</span> verde</th><th>⚠ ámbar</th><th>✖ rojo</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Tamaño de muestra</td><td>n:p ≥ 10 y n ≥ 100</td><td>n:p ≥ 5</td><td>n:p &lt; 5</td></tr>
+      <tr><td>2</td><td>Bartlett</td><td>p &lt; 0.05</td><td>—</td><td>p ≥ 0.05, o matriz singular</td></tr>
+      <tr><td>3</td><td>KMO</td><td>≥ 0.80 sin MSA &lt; 0.50</td><td>≥ 0.60, o alguna MSA &lt; 0.50</td><td>&lt; 0.60</td></tr>
+      <tr><td>4</td><td>Estructura de correlación</td><td>algún par con |r| ≥ 0.30</td><td>—</td><td>|r| media &lt; 0.30 y ningún par ≥ 0.30</td></tr>
+      <tr><td>5</td><td>Multicolinealidad</td><td>ningún par con |r| ≥ 0.90</td><td>algún par ≥ 0.90</td><td>—</td></tr>
+      <tr><td>6</td><td>Escalas</td><td>estandarización z</td><td>sin escalar o solo centrar, razón de desviaciones ≤ 4</td><td>sin escalar o solo centrar, razón &gt; 4</td></tr>
+      <tr><td>7</td><td>Faltantes</td><td>≤ 5 % de las celdas</td><td>≤ 15 %</td><td>&gt; 15 %</td></tr>
+      <tr><td>8</td><td>Atípicos multivariantes</td><td>ninguno</td><td>alguno</td><td>—</td></tr>
+      <tr><td>9</td><td>Asimetría</td><td>ninguna |g₁| &gt; 1</td><td>alguna</td><td>—</td></tr>
+      <tr><td>10</td><td>Dimensionalidad esperada</td><td colspan="3">Informativo (ℹ): componentes con λ &gt; 1 y varianza del plano 1–2.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Dos puntos pueden salir también como informativos (ℹ): el de escalas, cuando eliges Pareto, VAST, rango o robusta, que la app no califica y te pide documentar; y el de atípicos, cuando hay tan pocas observaciones (n ≤ p + 2) que la distancia de Mahalanobis no se puede calcular.</p>
+
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · un redondeo que confunde</div>
+    <p>En la figura 3.7, el punto del KMO lista «Variables con MSA &lt; 0.5» e incluye «Temperatura_C (0.5)». Su MSA real es 0.497; la lista la muestra con dos decimales. Para los valores exactos consulta la tabla de MSA del diagnóstico, que usa tres.</p>
+  </div>
+
+  <h3>La matriz preparada y las descargas</h3>
+  <p>La tarjeta <span class="ui">1.8 · Matriz preparada y descargas</span>, al final del bloque, muestra las diez primeras filas de la matriz que se analizará y ofrece cuatro descargas.</p>
+  <table class="compacta">
+    <thead><tr><th style="width:36%">Botón</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Matriz preparada (CSV)</span></td><td>La matriz tras faltantes, transformación y escalado: lo que realmente entra al análisis.</td></tr>
+      <tr><td><span class="ui">⬇ Matriz de correlaciones (CSV)</span></td><td>Las correlaciones entre variables activas.</td></tr>
+      <tr><td><span class="ui">⬇ Resumen de variables (CSV)</span></td><td>La tabla de la tarjeta 1.2 con descriptivos y papeles.</td></tr>
+      <tr><td><span class="ui">⬇ Informe del Bloque 1 (TXT)</span></td><td>El diagnóstico y las recomendaciones en texto plano.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 3.7 -->
+  <h2 id="s3-7"><span class="num">3.7</span>Qué método corresponde</h2>
+  <p>Entre las recomendaciones y las descargas está la tarjeta <span class="ui">1.9 · Qué método corresponde</span>, que presentó la figura 1.4. Tiene tres partes: una tarjeta por método con su veredicto, una lista de avisos y, debajo, la configuración que pide el método elegido. Un clic en una tarjeta elige el método; las marcadas <b>no aplica</b> no se pueden elegir.</p>
+
+  <table>
+    <caption><b>Tabla 3.14.</b> Cuándo recomienda la app cada método.</caption>
+    <thead><tr><th style="width:12%">Método</th><th>Recomendado si…</th><th style="width:30%">Posible si…</th></tr></thead>
+    <tbody>
+      <tr><td><b>ACP</b></td><td>Hay al menos dos cuantitativas activas y ninguna cualitativa, o hasta dos cualitativas con tres o más cuantitativas: la firma de mediciones más un factor de diseño.</td><td>Hay más cualitativas; quedarían como suplementarias.</td></tr>
+      <tr><td><b>AC</b></td><td>Hay exactamente dos cualitativas y ninguna cuantitativa.</td><td>Hay dos o más cualitativas: se cruza un par.</td></tr>
+      <tr><td><b>ACM</b></td><td>Hay tres o más cualitativas y ninguna cuantitativa.</td><td>Hay dos o más cualitativas.</td></tr>
+      <tr><td><b>AFDM</b></td><td>Hay cuantitativas y cualitativas, sin la firma de factor de diseño.</td><td>Con la firma de factor de diseño: si la cualitativa es una característica.</td></tr>
+      <tr><td><b>AFM</b></td><td>Los nombres de seis o más cuantitativas forman dos o más bloques por prefijo (con <code>_</code> o <code>-</code>), que cubren al menos el 75 % y alguno tiene tres variables.</td><td>Hay cuatro o más variables en total; los bloques se declaran a mano.</td></tr>
+    </tbody>
+  </table>
+  <p>Una sexta tarjeta, <b>Agrupamiento sobre componentes (HCPC)</b>, aparece siempre como «posible»: no compite con los otros cinco, se corre después de cualquiera de ellos (capítulo 8). Si hay más de un método recomendado, la app preselecciona el más específico en este orden: AFM, AFDM, ACM, AC y ACP. Si ninguno está recomendado, toma el primero que sea posible.</p>
+  <p>Para el recomendador, una cualitativa es cualquier columna con el papel <span class="ui">Cualitativa / grupo</span> y al menos dos niveles; una cuantitativa, cualquier columna numérica activa. Si cambias un papel en la tarjeta 1.2 y vuelves a preparar la matriz, los veredictos se recalculan.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 3.15.</b> Los avisos de la tarjeta 1.9, cada uno con la cifra que lo motiva.</caption>
+    <thead><tr><th style="width:30%">Aviso</th><th>Se emite cuando</th></tr></thead>
+    <tbody>
+      <tr><td>Muestra pequeña</td><td>Hay menos de 50 observaciones.</td></tr>
+      <tr><td>Pocas observaciones por variable</td><td>Hay menos de 5 observaciones por variable.</td></tr>
+      <tr><td>No hay correlación que resumir <span class="small">(rojo)</span></td><td>Bartlett no rechaza la independencia (p ≥ 0.05), o la |r| media es menor que 0.20 y a lo sumo un par supera 0.30.</td></tr>
+      <tr><td>Variables casi redundantes</td><td>Algún par de cuantitativas tiene |r| ≥ 0.90.</td></tr>
+      <tr><td>Parece una tabla de abundancias</td><td>Tres o más activas, todas enteras no negativas, con al menos 20 % de ceros. Sobre esos datos el ACP produce el «arco de Gauch»: conviene el AC o transformar.</td></tr>
+      <tr><td>Categorías con muy pocos casos</td><td>Alguna categoría tiene menos de 5 casos o menos del 2 % de las filas.</td></tr>
+      <tr><td>Las cualitativas no están asociadas <span class="small">(rojo)</span></td><td>La v de Cramér más alta entre pares de cualitativas es menor que 0.10.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · el veredicto mira los tipos; los avisos, el contenido</div>
+    <p>El veredicto de cada tarjeta se basa en <b>qué tipo</b> de variables tienes; los avisos dicen si el método tiene <b>algo que encontrar</b>. Pueden contradecirse. Con <code>practica4_sin_estructura.csv</code>, la tarjeta del ACP dice «recomendado» —seis cuantitativas y una cualitativa— y justo debajo aparece en rojo «No hay correlación que resumir». Manda el aviso: con esos datos no hay análisis que hacer.</p>
+  </div>
+
+  <h3>La configuración de cada método</h3>
+  <table>
+    <caption><b>Tabla 3.16.</b> Lo que pide la tarjeta 1.9 según el método elegido.</caption>
+    <thead><tr><th style="width:12%">Método</th><th>Configuración</th></tr></thead>
+    <tbody>
+      <tr><td><b>ACP</b></td><td>Ninguna: usa las activas con el escalado elegido, y las cualitativas quedan como suplementarias.</td></tr>
+      <tr><td><b>AC</b></td><td>Dos desplegables, <span class="ui">Filas</span> y <span class="ui">Columnas</span>, para elegir qué cualitativas se cruzan. Deben ser distintas.</td></tr>
+      <tr><td><b>ACM</b></td><td>Una casilla por cualitativa; las desmarcadas quedan como suplementarias. Hacen falta al menos dos.</td></tr>
+      <tr><td><b>AFDM</b></td><td>Una casilla por cualitativa: marca las que son características del individuo y desmarca los factores de diseño. Hace falta al menos una.</td></tr>
+      <tr><td><b>AFM</b></td><td>Una tabla con cada variable activa y un campo para el nombre de su bloque. Las que llevan el mismo nombre van juntas; cada bloque necesita al menos dos variables.</td></tr>
+    </tbody>
+  </table>
+  <p>El botón del final del bloque cambia con la elección —<span class="ui">Ir al Bloque 2: ACP →</span>, <span class="ui">Ir al Bloque 2: ACM →</span>— para que siempre sepas qué método vas a ejecutar. Con el AC, el ACM y el AFDM, las filas que tengan vacía alguna de las cualitativas usadas se descartan al ejecutar el método, y el Bloque 2 lo indica con el indicador <b>Filas sin dato</b>.</p>
+
+  <!-- 3.8 -->
+  <h2 id="s3-8"><span class="num">3.8</span>Paso a paso: cuatro archivos de práctica</h2>
+  <p>Los cuatro archivos de la carpeta <code>datos/</code> recrean las situaciones que más se repiten en la práctica. Carga cada uno con la zona de carga de la tarjeta 1.1, deja los papeles detectados y el escalado z salvo que el caso indique otra cosa, y pulsa <span class="ui">Preparar matriz y diagnosticar →</span>. Las cifras son las que da la app.</p>
+
+  <h3>Caso 1 · Suelos: todo en orden</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practica1_suelos.csv</code> · 90 muestras de suelo de tres sitios: ladera alta, ladera media y vega</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Al cargar, la app detecta <code>ID</code> como identificador, <code>Sitio</code> como cualitativa de 3 niveles y las seis variables de suelo como activas. La razón n:p es 15.0 : 1, en verde.</li>
+      <li>Tras preparar, la calificación es <b>A, Excelente (91/100)</b>: KMO = 0.752, Bartlett χ² = 443.9 con 15 gl (p &lt; 0.0001), determinante 5.79 × 10⁻³ y |r| media 0.455, con 9 de 15 pares por encima de 0.3.</li>
+      <li>Todas las MSA superan 0.69; la más baja es Arcilla_pct (0.695). No hay atípicos, faltantes ni asimetrías.</li>
+      <li>El par más fuerte es materia orgánica y nitrógeno total (<i>r</i> = 0.891), esperable en suelos. Dos componentes superan λ = 1 y el plano 1–2 retiene el 87.2 %.</li>
+      <li>La única observación ámbar es «Tamaño de muestra suficiente pero justo»: la razón pasa de 10, pero n = 90 no llega a 100. La tarjeta 1.9 recomienda el ACP, con <code>Sitio</code> como suplementaria.</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> Un archivo así se puede extraer con confianza. El aviso de tamaño sugiere prudencia con las cargas menores: con n &lt; 100 conviene interpretar solo las que superen 0.55.</p>
+
+  <h3>Caso 2 · Escalas: por qué estandarizar</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practica3_escalas.csv</code> · 100 observaciones de cuatro parcelas, con variables en unidades muy dispares</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Carga el archivo y, en la tarjeta 1.3, elige <span class="ui">Sin escalar</span> a propósito. Prepara la matriz.</li>
+      <li>La calificación es <b>A (94/100)</b>: KMO = 0.757, Bartlett significativa. Nada en la letra sugiere un problema.</li>
+      <li>Pero la lista de recomendaciones marca en rojo <b>«Escalas muy dispares sin estandarizar»</b>, y el perfil de escalas (figura 3.6) muestra por qué: la desviación de Volumen_mm3 es 49 500 y la del pH 0.321.</li>
+      <li>Si se extrajeran así los componentes, CP1 recogería el <b>100.00 %</b> de la varianza y sería, literalmente, Volumen_mm3: su coeficiente en CP1 vale 1.000 y el de todas las demás 0.000.</li>
+      <li>Vuelve a la tarjeta 1.3, elige <span class="ui">Estandarización z — recomendada</span> y prepara de nuevo. La calificación sigue en A, la alerta roja pasa a verde, y los tres primeros componentes recogen ahora 41.95 %, 35.02 % y 13.07 %, con Altura, Peso y Volumen repartiendo peso en CP1.</li>
+    </ol>
+  </div>
+  <div class="caja dato">
+    <div class="dato-cifra">10⁶×</div>
+    <div class="dato-txt"><div class="caja-t">Una letra que no avisa</div>La razón entre desviaciones de este archivo es de 1 013 367 veces, y aun así la calificación es A: KMO y Bartlett usan correlaciones, que no dependen de las unidades. <b>La advertencia solo está en la lista de recomendaciones.</b></div>
+  </div>
+
+  <h3>Caso 3 · Sin estructura: cuándo no hacer un ACP</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practica4_sin_estructura.csv</code> · 80 puntos de muestreo en dos lotes, con seis variables ambientales independientes</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Carga y prepara con estandarización z. La calificación es <b>D, Problemática (47/100)</b>.</li>
+      <li>Bartlett no es significativa: χ² = 9.3 con 15 gl, <b>p = 0.8605</b>. El KMO es <b>0.465</b>, inaceptable, y ninguna variable llega a una MSA de 0.54.</li>
+      <li>La |r| media es 0.076 y ningún par alcanza 0.30; el más alto, precipitación con altitud, es <i>r</i> = 0.169. El determinante vale 0.885: la matriz de correlaciones es casi la identidad.</li>
+      <li>Aun así, el punto informativo dice que Kaiser retendría <b>3 componentes</b> y que el plano 1–2 explicaría el 40.8 %.</li>
+      <li>En la tarjeta 1.9, el ACP aparece como «recomendado» por los tipos de variables, y debajo el aviso rojo <b>«No hay correlación que resumir»</b>.</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> No hay análisis que hacer: cada variable es su propio eje. El caso enseña dos cosas que conviene recordar. Primera, que el criterio de Kaiser retiene componentes incluso en datos sin estructura, y por eso el Bloque 2 no se fía de él solo. Segunda, que el veredicto del método no reemplaza a los avisos. Si esperabas que esas variables estuvieran relacionadas, el hallazgo es precisamente que no lo están.</p>
+
+  <h3>Caso 4 · Semillas: retirar variables de una en una</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practica2_semillas.csv</code> · 120 semillas, 60 silvestres y 60 cultivadas, con problemas sembrados</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Carga y prepara. La calificación es <b>B (79/100)</b>, pero los indicadores cuentan otra historia: KMO = 0.556, bajo; cuatro variables con MSA inaceptable; dos pares redundantes, Ancho_mm con Area_mm2 (<i>r</i> = 0.934) y Largo_mm con Area_mm2 (<i>r</i> = 0.921); y cuatro atípicos multivariantes, el mayor G017 con D² = 75.5 (figura 3.5).</li>
+      <li>Retira la variable de MSA más baja, Humedad_pct (0.388), desmarcándola en la selección rápida, y vuelve a preparar.</li>
+      <li>Repite con la nueva más baja hasta que ninguna quede por debajo de 0.50. La tabla 3.17 muestra la secuencia.</li>
+    </ol>
+  </div>
+
+  <table>
+    <caption><b>Tabla 3.17.</b> Retiro sucesivo de variables en el archivo de semillas.</caption>
+    <thead><tr><th style="width:6%">Paso</th><th style="width:22%">Se retira</th><th class="c" style="width:9%">Activas</th><th class="c" style="width:9%">KMO</th><th class="c" style="width:9%">Letra</th><th>Qué pasa con las demás</th></tr></thead>
+    <tbody>
+      <tr><td>0</td><td>—</td><td class="c">9</td><td class="c">0.556</td><td class="c">B</td><td>Humedad 0.388 · Aceite 0.442 · Grosor 0.446 · Dureza 0.446 por debajo de 0.50.</td></tr>
+      <tr><td>1</td><td>Humedad_pct (0.388)</td><td class="c">8</td><td class="c">0.558</td><td class="c">B</td><td>Siguen tres por debajo de 0.50.</td></tr>
+      <tr><td>2</td><td>Dureza_N (0.447)</td><td class="c">7</td><td class="c">0.577</td><td class="c">B</td><td>Aceite 0.461 y Grosor 0.482.</td></tr>
+      <tr><td>3</td><td>Aceite_pct (0.461)</td><td class="c">6</td><td class="c">0.591</td><td class="c">B</td><td>Todas ≥ 0.50: <b>Grosor_mm subió a 0.503 sin retirarla</b>.</td></tr>
+      <tr><td>4</td><td>Area_mm2 (redundante)</td><td class="c">5</td><td class="c">0.726</td><td class="c">A</td><td>Desaparecen los pares redundantes, pero Grosor_mm cae a 0.333.</td></tr>
+      <tr><td>5</td><td>Grosor_mm (0.333)</td><td class="c">4</td><td class="c">0.741</td><td class="c">A</td><td>Todas ≥ 0.54; quedan dos atípicos: G017 (D² = 58.0) y G101 (D² = 40.9).</td></tr>
+    </tbody>
+  </table>
+
+  <p><b>Lectura.</b> Tres lecciones en una tabla. La primera: retirar de una en una importa. En el paso 3, Grosor_mm quedó bien sin tocarla; si se hubieran quitado de golpe las cuatro inaceptables del inicio, se habría perdido sin razón. La segunda: la redundancia pesa. Area_mm2 es casi el producto de largo por ancho, y quitarla subió el KMO de 0.591 a 0.726. La tercera: los retiros se encadenan, porque cada conjunto de variables tiene sus propias correlaciones parciales, y Grosor_mm, que se había salvado, cayó al quitar Area_mm2.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · cada variable que quitas cambia la pregunta</div>
+    <p>El caso termina con 4 de 9 variables y una calificación A. Es un buen resultado estadístico, pero ya no describe la composición química de las semillas, solo su tamaño, peso y proteína. Antes de retirar una variable pregúntate si tu pregunta sigue en pie sin ella, y en los métodos declara cuáles quitaste y por qué. Los dos atípicos que quedan no se eliminan por ser atípicos: revisa si G017 y G101 son errores de captura y, si son semillas reales, compara el análisis con y sin ellas.</p>
+  </div>
+
+  <p style="margin-top:0.3in">Con la matriz preparada, diagnosticada y el método elegido, el siguiente capítulo entra al Bloque 2: extraer los componentes y decidir cuántos conservar.</p>
+</section>
+
+</body>
+</html>

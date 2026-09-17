@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 8 · Bloque 5b</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  figure.mini .marco { width: 58%; margin: 0 auto; }
+  figure.mini figcaption { margin-left: 21%; margin-right: 21%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b5b" data-pestana="B5b" data-orden="8" style="--acento: var(--b5b)">
+  <div class="cap-apertura">
+    <div class="cap-num">8</div>
+    <div class="cap-etiqueta">Capítulo ocho · Bloque 5b</div>
+    <h1>Agrupamiento</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">El paso opcional que convierte la nube de individuos en unos pocos grupos con nombre: agrupamiento jerárquico de Ward sobre los ejes, tres reglas para decidir cuántos grupos, consolidación por k-medias y la descripción de cada grupo. Funciona con los cinco métodos. Termina con lo que un agrupamiento no puede demostrar.</p>
+    <div class="cap-franja"><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span></div>
+    <ul class="cap-contenido">
+      <li><b>8.1</b>Agrupar sobre los ejes</li>
+      <li><b>8.2</b>El criterio de Ward y el dendrograma</li>
+      <li><b>8.3</b>¿Cuántos grupos? Tres reglas</li>
+      <li><b>8.4</b>Consolidación y descripción de los grupos</li>
+      <li><b>8.5</b>Lo que un agrupamiento no demuestra</li>
+      <li><b>8.6</b>Paso a paso</li>
+    </ul>
+  </div>
+
+  <!-- 8.1 -->
+  <h2 id="s8-1"><span class="num">8.1</span>Agrupar sobre los ejes</h2>
+  <p class="lead">El análisis factorial ordena a los individuos en un espacio continuo. Agruparlos es otra operación, y es opcional: responde a la pregunta «¿qué tipos de individuos hay?», no a «¿qué dimensiones los ordenan?».</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>HCPC: por qué sobre los ejes y no sobre las variables</div>
+    <p>El HCPC —<i>hierarchical clustering on principal components</i>, de Husson, Josse y Pagès— agrupa sobre las coordenadas factoriales, no sobre la tabla original. Tiene dos ventajas:</p>
+    <ul>
+      <li><b>Quita el ruido.</b> Los ejes que no retuviste son, en su mayor parte, variación sin estructura: agrupar sobre los primeros es agrupar sobre una versión limpia de la tabla.</li>
+      <li><b>Unifica los tipos de dato.</b> Sobre las coordenadas de un ACM o de un AFDM se usa la distancia euclídea aunque las variables originales sean cualitativas, sin tener que elegir un coeficiente de similitud.</li>
+    </ul>
+  </div>
+
+  <p>El bloque aparece en la barra como <span class="ui">5b · Agrupamiento</span> y se activa al generar los mapas del Bloque 4, junto con el Bloque 5. Tiene una tarjeta de teoría con seis temas y la tarjeta <span class="ui">5b.1 · Configuración del agrupamiento</span>. Al pulsar <span class="ui">Agrupar los individuos →</span> aparecen siete tarjetas de resultados y se activa el Bloque 6.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · entra por el botón del Bloque 5</div>
+    <p>La tarjeta de configuración se llena al abrir el bloque con el botón <span class="ui">Agrupar los individuos (HCPC) →</span>, que está al final del Bloque 5, tanto en el ACP como en los demás métodos. En la versión 1.1, si llegas con el botón <span class="chip k5b">5b</span> de la barra de pasos, la tarjeta queda vacía y pulsar <span class="ui">Agrupar los individuos →</span> da un error. Pulsa <span class="ui">Interpretar componentes →</span> en el Bloque 5 y usa ese botón.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5b-config.png" alt="Tarjetas 5b.1 y 5b.2 con iris">
+      <span class="marca" style="left:18.8%;top:16.2%">1</span>
+      <span class="marca" style="left:59.5%;top:16.2%">2</span>
+      <span class="marca" style="left:76.5%;top:16.2%">3</span>
+      <span class="marca" style="left:22.9%;top:28.1%">4</span>
+      <span class="marca" style="left:8%;top:48.5%">5</span>
+      <span class="marca" style="left:9%;top:79.5%">6</span>
+      <span class="marca" style="left:95%;top:94.4%">7</span>
+    </div>
+    <figcaption><b>Figura 8.1.</b> Las tarjetas <span class="ui">5b.1</span> y <span class="ui">5b.2 · Resumen de la partición</span> con iris y dos componentes.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Cuántos ejes entran.</li>
+    <li><span class="n">2</span>Número de grupos: automático o fijo.</li>
+    <li><span class="n">3</span>La consolidación por k-medias.</li>
+    <li><span class="n">4</span>Lanza el agrupamiento.</li>
+    <li><span class="n">5</span>Grupos, en verde si los criterios coinciden.</li>
+    <li><span class="n">6</span>La silueta media y su lectura.</li>
+    <li><span class="n">7</span>Lo que hizo la consolidación.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Tabla 8.1.</b> Las opciones de la tarjeta 5b.1.</caption>
+    <thead><tr><th style="width:26%">Opción</th><th>Valores</th><th style="width:36%">Consejo</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Ejes que entran</span></td><td>De 1 al número de ejes del método. Por defecto, los retenidos en el Bloque 2 (al menos 2 y como mucho 5). Debajo se lee cuánta inercia suman.</td><td>Usa los retenidos: pocos ejes fabrican grupos limpios que no están en los datos; muchos devuelven el ruido.</td></tr>
+      <tr><td><span class="ui">Número de grupos</span></td><td><span class="ui">automático (consenso de los tres criterios)</span> o un número de 2 a 10.</td><td>Empieza en automático y cambia solo con una razón de tu disciplina (sección 8.3).</td></tr>
+      <tr><td><span class="ui">Consolidar por k-medias</span></td><td>Casilla, marcada.</td><td>Déjala marcada; desmárcala si necesitas que la partición coincida exactamente con el árbol.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 8.2.</b> Los indicadores de la tarjeta 5b.2.</caption>
+    <thead><tr><th style="width:26%">Indicador</th><th>Qué dice</th><th style="width:30%">Color</th></tr></thead>
+    <tbody>
+      <tr><td><b>Grupos</b></td><td>El número de grupos y si los tres criterios coinciden.</td><td>verde si coinciden · ámbar</td></tr>
+      <tr><td><b>Ejes usados</b></td><td>Cuántos y cuánta inercia suman.</td><td>—</td></tr>
+      <tr><td><b>Inercia entre grupos</b></td><td>La proporción de la inercia de la nube que explica la partición.</td><td>verde ≥ 50 % · ámbar</td></tr>
+      <tr><td><b>Silueta media</b></td><td>Cohesión frente a separación (sección 8.3).</td><td>verde ≥ 0.50 «estructura clara» · ámbar ≥ 0.25 «débil» · rojo «sin estructura apreciable»</td></tr>
+      <tr><td><b>Tamaño de los grupos</b></td><td>Individuos de cada grupo.</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p class="small">En la versión 1.1 los indicadores de esta tarjeta se apilan en una columna en vez de formar una fila, como en el Bloque 2 con métodos distintos del ACP.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 8.3.</b> Qué se agrupa con cada método.</caption>
+    <thead><tr><th style="width:12%">Método</th><th>Individuos</th><th style="width:44%">Con qué se describen los grupos</th></tr></thead>
+    <tbody>
+      <tr><td><b>ACP</b></td><td>Las puntuaciones sin rotar de las observaciones. Una rotación ortogonal no cambiaría las distancias; con una oblicua se agrupa igualmente la solución sin rotar.</td><td>Variables activas en sus unidades originales, cuantitativas suplementarias y cualitativas.</td></tr>
+      <tr><td><b>AC</b></td><td>Las <b>filas</b> de la tabla de contingencia, con su masa.</td><td>El perfil de cada fila: su reparto porcentual entre las columnas.</td></tr>
+      <tr><td><b>ACM, AFDM, AFM</b></td><td>Los individuos, sin las filas descartadas por vacíos.</td><td>Cuantitativas y cualitativas de los datos, activas y suplementarias.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 8.2 -->
+  <h2 id="s8-2"><span class="num">8.2</span>El criterio de Ward y el dendrograma</h2>
+  <p>El árbol se construye de abajo arriba: cada individuo empieza siendo un grupo y, en cada paso, se unen los dos grupos cuya fusión menos inercia intragrupo añade.</p>
+
+  <div class="formula">Δ(A, B) = [w<sub>A</sub> · w<sub>B</sub> / (w<sub>A</sub> + w<sub>B</sub>)] · d²(g<sub>A</sub>, g<sub>B</sub>)</div>
+  <p>g son los centros y w las masas de los grupos. Δ es la <b>altura</b> a la que aparece la fusión en el dendrograma: una rama alta significa que unir esos dos grupos costó caro, es decir, que eran distintos. Ward es el criterio natural aquí porque, como el análisis factorial, reparte la inercia total en una parte entre grupos y otra dentro de ellos.</p>
+
+  <figure>
+    <div class="marco"><img src="../img/app-b5b-dendro.png" alt="Dendrograma de Ward de iris con corte en tres grupos"></div>
+    <figcaption><b>Figura 8.2.</b> La tarjeta <span class="ui">5b.4 · Dendrograma</span> con iris cortado en tres grupos. La fusión más alta (2.5) separa setosa del resto; la siguiente (0.53) divide el grupo grande en dos. La línea naranja marca el corte y la franja inferior colorea las hojas según el grupo del corte. La nota avisa que la consolidación movió después 6 individuos.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 8.4.</b> Opciones propias del dendrograma.</caption>
+    <thead><tr><th style="width:30%">Control</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td>Orientación</td><td>Hojas abajo u hojas a la izquierda.</td></tr>
+      <tr><td>Colorear las ramas por grupo · Color del tronco</td><td>Las ramas de cada grupo en su color; lo que está por encima del corte, en gris.</td></tr>
+      <tr><td>Línea de corte · Franja de grupos</td><td>La altura del corte y una banda de color bajo las hojas.</td></tr>
+      <tr><td>Escala en raíz cuadrada</td><td>Comprime las fusiones altas para ver mejor las bajas.</td></tr>
+      <tr><td>Etiquetas de las hojas · Máximo de hojas etiquetadas</td><td>Nombres de los individuos (80 como máximo por defecto; con más se ocultan).</td></tr>
+      <tr><td>Largo · Alto de las alturas</td><td>El tamaño del dibujo en píxeles.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 8.3 -->
+  <h2 id="s8-3"><span class="num">8.3</span>¿Cuántos grupos? Tres reglas</h2>
+  <p>Igual que con el número de componentes, no hay una respuesta única. La tarjeta <span class="ui">5b.3 · Cuántos grupos</span> calcula tres reglas sobre el mismo árbol, entre 2 y 10 grupos, y muestra si coinciden.</p>
+
+  <table>
+    <caption><b>Tabla 8.5.</b> Las tres reglas.</caption>
+    <thead><tr><th style="width:28%">Regla</th><th>Qué busca</th><th style="width:28%">Carácter</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mayor salto de altura</b></td><td>El número de grupos cuya fusión siguiente sería la más costosa en términos absolutos.</td><td>Suele elegir pocos grupos: la primera gran división.</td></tr>
+      <tr><td><b>Mayor pérdida relativa de inercia</b></td><td>El mismo salto, dividido entre la altura anterior.</td><td>La regla de Husson y Josse; decide cuando las tres discrepan.</td></tr>
+      <tr><td><b>Máxima silueta media</b></td><td>El número con la mejor silueta: para cada individuo, (b − a) / máx(a, b), con a su distancia media a los de su grupo y b la distancia media al grupo vecino más próximo.</td><td>Premia grupos compactos y separados.</td></tr>
+    </tbody>
+  </table>
+  <p>El <b>consenso</b> es el número que proponen más reglas; si las tres discrepan, manda la pérdida relativa. Con <span class="ui">automático</span>, ese es el número de grupos.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/app-b5b-corte.png" alt="Tarjeta 5b.3 con las tres reglas y la figura de elección del número de grupos"></div>
+    <figcaption><b>Figura 8.3.</b> La tarjeta <span class="ui">5b.3</span> con iris. Las tres reglas proponen 2 grupos. En la figura, la barra de cada número es lo que cuesta la fusión que habría que deshacer para llegar a él: la de 2 grupos (2.5) es casi cinco veces la de 3 (0.53). El editor permite dibujar la silueta media en lugar de la pérdida.</figcaption>
+  </figure>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿cuántos grupos reporto?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">Si…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td>Las tres reglas coinciden y la silueta es ≥ 0.50</td><td>Ese número es una propiedad de los datos: repórtalo así.</td></tr>
+        <tr><td>Discrepan, pero una opción tiene sentido en tu disciplina</td><td>Elígela en <span class="ui">Número de grupos</span> y di que fue una decisión, con los números de cada regla.</td></tr>
+        <tr><td>La silueta de la mejor opción es &lt; 0.25</td><td>No hay grupos que reportar: la nube es continua.</td></tr>
+        <tr><td>El salto elige 2 y las otras reglas un número alto con silueta baja</td><td>Desconfía del número alto: suele ser la nube continua cortada en rebanadas (caso 3 de la sección 8.6).</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">No se corta en la barra más alta de la figura, sino donde las barras dejan de ser altas: el último número que todavía «compra» inercia.</p>
+  </div>
+
+  <!-- 8.4 -->
+  <h2 id="s8-4"><span class="num">8.4</span>Consolidación y descripción de los grupos</h2>
+  <h3>La consolidación por k-medias</h3>
+  <p>Una fusión del árbol, una vez hecha, no se deshace: un individuo que quedó del lado equivocado en un paso temprano se queda ahí. La consolidación parte de los centros del corte, reasigna cada individuo al centro más cercano y repite, hasta 30 veces, hasta que nadie se mueve. Nunca empeora la inercia intragrupo.</p>
+  <p>El texto bajo los indicadores dice cuántas iteraciones hizo y cómo cambió la inercia entre grupos. Si no hubo cambio, añade «el corte del árbol ya era estable».</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · el árbol y el mapa pueden no coincidir</div>
+    <p>El dendrograma se colorea siempre con el <b>corte del árbol</b>; el mapa, las tablas y las descargas usan la partición <b>consolidada</b>. Si la consolidación movió individuos, la tarjeta 5b.4 dice cuántos. Con iris y tres grupos movió 6: el árbol tiene grupos de 50, 39 y 61 individuos, y la partición final de 50, 45 y 55. Si necesitas que coincidan, desmarca la consolidación.</p>
+  </div>
+
+  <h3>Los grupos sobre el plano</h3>
+  <figure class="mini">
+    <div class="marco"><img src="../img/app-b5b-mapa.png" alt="Mapa de los tres grupos de iris sobre el plano factorial"></div>
+    <figcaption><b>Figura 8.4.</b> La tarjeta <span class="ui">5b.5 · Los grupos sobre el plano factorial</span>: el mismo mapa de individuos del Bloque 4, coloreado por grupo y con las mismas opciones de editor. Aquí sí tiene la misma escala en los dos ejes por defecto. El grupo 1 está aislado; los grupos 2 y 3 se solapan en el centro.</figcaption>
+  </figure>
+
+  <h3>Qué caracteriza a cada grupo</h3>
+  <p>La tarjeta <span class="ui">5b.6 · Qué caracteriza a cada grupo</span> describe cada grupo por lo que lo aparta del conjunto, con <b>valores test</b>: cuántas desviaciones típicas se aleja el grupo de la media general, bajo el modelo de que sus individuos se hubieran sacado al azar y sin reemplazo del total.</p>
+
+  <figure class="mini">
+    <div class="marco"><img src="../img/app-b5b-perfil.png" alt="Perfil de los grupos y tablas de descripción de iris"></div>
+    <figcaption><b>Figura 8.5.</b> La tarjeta <span class="ui">5b.6</span> con iris y tres grupos. La figura muestra, por grupo, los diez valores test mayores que |1.96|: en verde lo que está por encima de la media, en naranja lo que está por debajo. El grupo 1 tiene pétalos pequeños (−11.26) y es todo setosa (50 de 50); el grupo 2 es 75.6 % virginica; el grupo 3, 70.9 % versicolor.</figcaption>
+  </figure>
+
+  <table>
+    <caption><b>Tabla 8.6.</b> Las tres tablas de descripción. Solo se listan los valores con |v| ≥ 1.96.</caption>
+    <thead><tr><th style="width:24%">Tabla</th><th>Columnas</th><th style="width:30%">Lectura</th></tr></thead>
+    <tbody>
+      <tr><td><b>Variables cuantitativas</b></td><td>Grupo, variable, media del grupo, media general, valor test y p. Las suplementarias llevan *.</td><td>Valor test positivo: el grupo está por encima de la media.</td></tr>
+      <tr><td><b>Categorías</b></td><td>Grupo, categoría, n en el grupo / tamaño del grupo, % del grupo, % del total, valor test y p.</td><td>Positivo: la categoría está sobrerrepresentada; negativo: casi ausente.</td></tr>
+      <tr><td><b>Posición de cada grupo en los ejes</b></td><td>n y la media de cada eje usado. Siempre completa.</td><td>Dónde está el centro del grupo en cada dimensión.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Con el AC, la primera tabla se llama <b>Perfil de fila por grupo</b> y compara el porcentaje de cada columna en el grupo con el general. Como las filas tienen masas muy distintas, ese valor test se lee como orden de importancia, no como probabilidad.</p>
+
+  <h3>Paragones, específicos y el borrador</h3>
+  <p>La tarjeta <span class="ui">5b.7 · Individuos que representan a cada grupo</span> da, por grupo, los cinco <b>paragones</b> —los más cercanos a su centro: los ejemplares típicos— y los cinco <b>específicos</b> —los más alejados de los demás centros: los que no se confunden con ningún otro grupo—, con su distancia. Los paragones sirven para explicar qué es un grupo; los específicos, para elegir casos para un estudio de seguimiento.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/app-b5b-borrador.png" alt="Borrador para la sección de resultados del agrupamiento"></div>
+    <figcaption><b>Figura 8.6.</b> La tarjeta <span class="ui">5b.8 · Borrador para la sección de resultados</span> con iris y tres grupos elegidos a mano. El párrafo describe los ejes y el método, las reglas, el tamaño de los grupos, la inercia explicada y la silueta, los descriptores de cada grupo con su ejemplar más típico, y cierra advirtiendo que los valores test describen, no prueban.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · revisa la segunda frase del borrador</div>
+    <p>Si eliges un número de grupos distinto del consenso y las tres reglas coincidían, el borrador dice «coincidieron en 2 grupos» y a continuación describe 3. Corrige esa frase: «Las tres reglas indicaban 2 grupos; se retuvieron 3 porque…». El indicador <b>Grupos</b> tiene el mismo problema: sigue diciendo «los tres criterios coinciden». La lista de reglas de la tarjeta 5b.3 sí lo aclara: «elegiste 3».</p>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Tabla 8.7.</b> Las descargas del bloque, en CSV.</caption>
+    <thead><tr><th style="width:38%">Botón</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Asignación de grupos (CSV)</span></td><td>Individuo, grupo y sus coordenadas en los ejes usados. Sirve para llevar el grupo a otro análisis.</td></tr>
+      <tr><td><span class="ui">⬇ Descripción de los grupos (CSV)</span></td><td>Todos los valores test —también los no significativos— de cuantitativas, categorías y ejes, con valor en el grupo, valor general y p.</td></tr>
+    </tbody>
+  </table>
+  <p>El botón <span class="ui">Ir al informe →</span> abre el Bloque 6, que incluye el agrupamiento si lo ejecutaste.</p>
+
+  <!-- 8.5 -->
+  <h2 id="s8-5"><span class="num">8.5</span>Lo que un agrupamiento no demuestra</h2>
+  <p>El algoritmo <b>siempre</b> devuelve grupos, también sobre datos sin estructura. Conviene tener escritas tres cautelas antes de mirar el resultado.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · tres cautelas</div>
+    <ul>
+      <li><b>Los valores test describen, no prueban.</b> Los grupos se construyeron para maximizar esas diferencias; presentarlos como contrastes de hipótesis es circular. Con iris, todas las p son &lt; 0.0001, y no significa nada.</li>
+      <li><b>Inercia alta con silueta baja es una nube cortada en rebanadas.</b> La partición reparte bien la varianza, pero los grupos no están separados.</li>
+      <li><b>Encontrar lo que ya sabías no es un descubrimiento.</b> Si los grupos coinciden con el tratamiento, la especie o el sitio, dilo así: el agrupamiento confirma que esa variable ordena los datos, no la descubre.</li>
+    </ul>
+  </div>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/app-b5b-ruido.png" alt="Resumen y elección de grupos con datos sin estructura"></div>
+    <figcaption><b>Figura 8.7.</b> El agrupamiento de <code>practica4_sin_estructura.csv</code>, seis variables independientes con tres componentes. La app propone <b>8 grupos</b>, de 3 a 17 individuos, que explican el 75.6 % de la inercia, en verde. Pero la silueta es 0.316, las reglas discrepan (2 y 8) y la figura baja de forma continua, sin un escalón claro después del primero.</figcaption>
+  </figure>
+
+  <div class="caja dato">
+    <div class="dato-cifra">75.6 %</div>
+    <div class="dato-txt"><div class="caja-t">De inercia explicada, sobre ruido</div>Con datos generados sin ninguna relación entre variables, ocho grupos explican tres cuartas partes de la inercia de los tres ejes. <b>La inercia entre grupos no mide si hay grupos</b>: siempre crece al añadir grupos. Mira la silueta y el acuerdo de las reglas.</div>
+  </div>
+
+  <!-- 8.6 -->
+  <h2 id="s8-6"><span class="num">8.6</span>Paso a paso</h2>
+  <p>Tres agrupamientos con resultados muy distintos. Las cifras son las de la app; en todos se entró al bloque con el botón del Bloque 5.</p>
+
+  <h3>Caso 1 · Iris: dos grupos claros, tres con sentido</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>iris.csv</code> · ACP con dos componentes (95.8 %)</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Con los valores por defecto —2 ejes, automático, consolidación— las tres reglas eligen <b>2 grupos</b>: silueta 0.615 («estructura clara»), inercia entre grupos 65.7 %, tamaños 50 y 100. La consolidación no movió a nadie.</li>
+      <li>El grupo 1 es todo setosa (50 de 50, v = 12.21); el grupo 2 reúne versicolor y virginica, 50 de cada una.</li>
+      <li>Como hay tres especies, elige <b>3</b> en <span class="ui">Número de grupos</span>. La silueta baja a 0.511, todavía clara; la inercia sube a 80.0 %; la consolidación movió 6 individuos (figura 8.2).</li>
+      <li>Grupo 2: 34 de 45 son virginica (75.6 %), con sépalos largos (v = 9.18). Grupo 3: 39 de 55 son versicolor (70.9 %), con sépalos estrechos (v = −8.26).</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> Los datos tienen dos tipos claros —setosa y el resto— y un tercero borroso. La partición en tres recupera las especies con errores en la frontera entre versicolor y virginica, justo donde el mapa las solapa. Reportar tres grupos es legítimo si se dice que fue una decisión, y que las reglas indicaban dos.</p>
+
+  <h3>Caso 2 · Proyecto integrador: siete tipos de parcela</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>proyecto_integrador_agronomia.csv</code> · ACP con cuatro componentes, rendimiento suplementario</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Con 4 ejes (87.2 %), el salto elige 2 grupos; la pérdida relativa y la silueta, <b>7</b>. El consenso es 7, con tamaños de 15 a 27 parcelas, inercia entre grupos del 60.4 % y silueta 0.227: «sin estructura apreciable».</li>
+      <li>Los descriptores son nítidos: el grupo 7 (27 parcelas) tiene plantas altas (v = 7.43) y rendimiento alto (v = 5.90), y 18 de sus 27 parcelas son de riego + fertilización (v = 5.53). El grupo 3 (15) tiene nitrógeno foliar alto (v = 6.32) y 11 parcelas de fertilización (v = 4.66).</li>
+      <li>La consolidación movió 26 de 144 parcelas: el árbol no tenía cortes naturales.</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> Los grupos se describen bien porque las cuatro dimensiones son reales, pero la silueta dice que las parcelas forman un continuo en esas dimensiones y no tipos separados. Es un caso para reportar las dimensiones del capítulo 7 y, si acaso, los grupos como una forma cómoda de resumirlas, declarando la silueta.</p>
+
+  <h3>Caso 3 · Datos sin estructura</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practica4_sin_estructura.csv</code> · ACP con tres componentes (58.7 %)</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>La app propone <b>8 grupos</b>; uno de ellos tiene 3 individuos. Inercia entre grupos: 75.6 %. Silueta: 0.316.</li>
+      <li>Las siluetas de 2 a 10 grupos van de 0.226 a 0.304, sin un máximo marcado; la figura de la tarjeta 5b.3 decrece sin escalones (figura 8.7).</li>
+      <li>La consolidación movió 6 individuos.</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> Es el control negativo: el capítulo 3 ya diagnosticó estos datos como sin estructura (KMO = 0.465), y aun así el algoritmo devuelve ocho grupos con un porcentaje de inercia que parece excelente. Nada aquí debe reportarse como tipología. Si tus datos se parecen a este caso, la respuesta honesta es que no hay grupos.</p>
+
+  <p style="margin-top:0.3in">Con el análisis completo, el siguiente capítulo presenta el Bloque 6: el informe que reúne todas las decisiones, tablas y figuras.</p>
+</section>
+
+</body>
+</html>

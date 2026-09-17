@@ -13,6 +13,9 @@ Un recomendador lee tu tabla y dice cuál de los cinco le corresponde.
 Todo el cálculo ocurre **en tu navegador**, en JavaScript puro (sin Python, sin Pyodide,
 sin espera de carga). Ningún dato sale de tu computadora.
 
+**Manual de usuario:** [PDF](manual/PCAPro%20User%27s%20Manual.pdf) ·
+[HTML](https://luisangelbg.github.io/PCAPro/manual/es/manual-completo.html)
+
 ## Cómo abrir
 
 1. Clic derecho en **`servidor.ps1`** → *Ejecutar con PowerShell*.

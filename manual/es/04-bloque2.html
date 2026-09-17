@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 4 · Bloque 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  /* fórmulas centradas */
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; }
+  td.si-voto { color: var(--negro); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b2" data-pestana="B2" data-orden="4" style="--acento: var(--b2)">
+  <div class="cap-apertura">
+    <div class="cap-num">4</div>
+    <div class="cap-etiqueta">Capítulo cuatro · Bloque 2</div>
+    <h1>Extracción</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">Qué calcula la extracción, cómo leer valores propios, varianza y cargas, y cómo decidir cuántos componentes conservar con ocho criterios que casi nunca coinciden. Termina con lo que el Bloque 2 muestra cuando el método es el AC, el ACM, el AFDM o el AFM, y con dos análisis completos.</p>
+    <div class="cap-franja"><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span></div>
+    <ul class="cap-contenido">
+      <li><b>4.1</b>Valores propios, varianza y cargas</li>
+      <li><b>4.2</b>Los ocho criterios de retención</li>
+      <li><b>4.3</b>El consenso y la decisión</li>
+      <li><b>4.4</b>Tablas, figuras y descargas</li>
+      <li><b>4.5</b>Inercia y ejes en AC, ACM, AFDM y AFM</li>
+      <li><b>4.6</b>Paso a paso: iris y semillas</li>
+    </ul>
+  </div>
+
+  <!-- 4.1 -->
+  <h2 id="s4-1"><span class="num">4.1</span>Valores propios, varianza y cargas</h2>
+  <p class="lead">El Bloque 2 hace la cuenta central del ACP: descompone la matriz preparada en ejes ordenados de mayor a menor varianza. Todo lo que verás después —rotación, mapas, interpretación— se construye con lo que sale de aquí.</p>
+  <p>El bloque se abre desde la barra de pasos una vez que preparaste la matriz en el Bloque 1. Tiene una tarjeta de teoría con tres temas y, debajo, la tarjeta <span class="ui">2.1 · Extraer los componentes</span>, que recuerda cuántos individuos y variables entran y sobre qué matriz se calculará: la de <b>correlaciones</b> si estandarizaste, la de <b>covarianzas</b> con cualquier otro escalado.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Los cuatro productos de la extracción</div>
+    <p>Sobre la matriz de correlaciones o covarianzas se calcula su descomposición espectral. Salen cuatro objetos:</p>
+    <ul>
+      <li><b>Valores propios</b> λ₁ ≥ λ₂ ≥ … ≥ λ<sub>p</sub>: la varianza que recoge cada eje. Con correlaciones suman <i>p</i>, porque cada variable estandarizada aporta 1.</li>
+      <li><b>Vectores propios</b>: los coeficientes de la combinación lineal que define cada componente.</li>
+      <li><b>Puntuaciones</b>: la posición de cada individuo sobre cada eje, la nueva tabla reducida.</li>
+      <li><b>Cargas</b>: la correlación entre cada variable y cada componente. Es lo que se interpreta.</li>
+    </ul>
+  </div>
+
+  <div class="formula">% de varianza<sub>k</sub> = λ<sub>k</sub> / Σλ<br>carga<sub>jk</sub> = v<sub>jk</sub> · √λ<sub>k</sub> / s<sub>j</sub><br>comunalidad<sub>j</sub> = Σ<sub>k retenidos</sub> carga<sub>jk</sub>²</div>
+
+  <table class="compacta">
+    <caption><b>Tabla 4.1.</b> Las opciones de la tarjeta 2.1.</caption>
+    <thead><tr><th style="width:30%">Opción</th><th>Valores</th><th style="width:36%">Consejo</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Análisis paralelo: generación</span></td><td><span class="ui">Permutación de tus datos (recomendada)</span> baraja cada columna por separado; <span class="ui">Datos normales aleatorios (Horn clásico)</span> simula datos normales.</td><td>La permutación no supone normalidad y sirve también con covarianzas.</td></tr>
+      <tr><td><span class="ui">Repeticiones</span></td><td>200 (rápido), 500 (recomendado) o 1000.</td><td>500 es un buen equilibrio; con 1000 el percentil 95 varía menos entre corridas.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Los indicadores de la tarjeta 2.2</h3>
+  <table>
+    <caption><b>Tabla 4.2.</b> Los seis indicadores de la extracción.</caption>
+    <thead><tr><th style="width:24%">Indicador</th><th>Qué dice</th><th style="width:28%">Color</th></tr></thead>
+    <tbody>
+      <tr><td><b>Componentes posibles</b></td><td>Tantos como variables activas.</td><td>—</td></tr>
+      <tr><td><b>Varianza total</b></td><td>Igual a <i>p</i> con correlaciones; en unidades al cuadrado con covarianzas.</td><td>—</td></tr>
+      <tr><td><b>CP1</b></td><td>Porcentaje de varianza del primer eje y su λ₁.</td><td>—</td></tr>
+      <tr><td><b>CP1 + CP2</b></td><td>La varianza del plano factorial que dibujará el Bloque 4.</td><td>verde ≥ 60 % · ámbar ≥ 45 % · rojo</td></tr>
+      <tr><td><b>Recomendación</b></td><td>El número de componentes que da el consenso de los ocho criterios (sección 4.3).</td><td>—</td></tr>
+      <tr><td><b>Retenidos ahora</b></td><td>Los que conservas y cuánta varianza suman. Empieza igual a la recomendación.</td><td>verde ≥ 70 % · ámbar ≥ 50 % · rojo</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b2-valores.png" alt="Tarjetas 2.1 y 2.2 con el archivo de semillas">
+      <span class="marca" style="left:27%;top:12.6%">1</span>
+      <span class="marca" style="left:63%;top:12.6%">2</span>
+      <span class="marca" style="left:23.2%;top:23.9%">3</span>
+      <span class="marca" style="left:63.6%;top:41%">4</span>
+      <span class="marca" style="left:79.8%;top:39%">5</span>
+      <span class="marca" style="left:95.1%;top:43.5%">6</span>
+      <span class="marca" style="left:60.4%;top:50.8%">7</span>
+      <span class="marca" style="left:81.8%;top:50.8%">8</span>
+      <span class="marca" style="left:87.2%;top:70.4%">9</span>
+    </div>
+    <figcaption><b>Figura 4.1.</b> Las tarjetas <span class="ui">2.1</span> y <span class="ui">2.2</span> con <code>practica2_semillas.csv</code>, sus nueve variables activas y estandarización z.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Cómo se generan las matrices del análisis paralelo.</li>
+    <li><span class="n">2</span>Cuántas matrices aleatorias se simulan.</li>
+    <li><span class="n">3</span>Lanza la extracción.</li>
+    <li><span class="n">4</span>Varianza del plano 1–2, en ámbar: 58 %.</li>
+    <li><span class="n">5</span>El número que sugiere el consenso.</li>
+    <li><span class="n">6</span>Los componentes que conservas ahora, en rojo: 38.6 %.</li>
+    <li><span class="n">7</span>Percentil 95 de los valores propios aleatorios.</li>
+    <li><span class="n">8</span>Qué referencias supera cada componente.</li>
+    <li><span class="n">9</span>CP4 supera el bastón roto, pero el criterio ya se detuvo en CP2.</li>
+  </ul>
+
+  <h3>La tabla de valores propios</h3>
+  <table class="compacta">
+    <caption><b>Tabla 4.3.</b> Columnas de la tabla de valores propios.</caption>
+    <thead><tr><th style="width:26%">Columna</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td>Valor propio λ</td><td>La varianza del componente.</td></tr>
+      <tr><td>± EE aprox.</td><td>Error estándar asintótico de Anderson, λ·√(2/(n−1)), válido bajo normalidad multivariante.</td></tr>
+      <tr><td>% varianza · % acumulado</td><td>λ entre la varianza total, y su suma hasta ese componente.</td></tr>
+      <tr><td>λᵢ − λᵢ₊₁</td><td>La distancia al siguiente valor propio.</td></tr>
+      <tr><td>p95 aleatorio</td><td>El valor que el azar produce el 5 % de las veces (análisis paralelo).</td></tr>
+      <tr><td>Bastón roto</td><td>La varianza esperada si se repartiera al azar.</td></tr>
+      <tr><td>Criterios que lo retienen</td><td>Etiquetas <b>Kaiser</b> (λ &gt; 1, solo con correlaciones), <b>Horn</b> (λ &gt; p95) y <b>bastón</b> (λ &gt; bastón roto), evaluadas en cada fila por separado.</td></tr>
+      <tr><td>Retenido</td><td>✔ en los componentes que conservas.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · las etiquetas no son los criterios</div>
+    <p>Las etiquetas de la tabla comparan cada fila con su referencia; los criterios, en cambio, cuentan componentes <b>seguidos desde el primero</b> y se detienen en el primero que falla. En la figura 4.1, CP4 lleva la etiqueta «bastón» (1.0052 &gt; 0.9956), pero CP2 ya no la tenía (1.7377 &lt; 1.829): el criterio del bastón roto retiene un solo componente. Una etiqueta aislada después de un hueco no cuenta.</p>
+  </div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Cuándo dos ejes no se distinguen</div>
+    <p>Si dos valores propios consecutivos difieren menos que su error estándar, los dos ejes son intercambiables: otra muestra podría girarlos dentro de su plano. Con las semillas, λ₂ − λ₃ = 0.2456 y el EE de λ₂ es 0.2253: CP2 y CP3 están casi empatados. El plano 2–3 es estable, pero la orientación de cada eje no lo es, y leerlos por separado es arriesgado. Es una buena razón para rotar en el Bloque 3.</p>
+  </div>
+
+  <!-- 4.2 -->
+  <h2 id="s4-2"><span class="num">4.2</span>Los ocho criterios de retención</h2>
+  <p>La tarjeta <span class="ui">2.3 · ¿Cuántos componentes retener?</span> calcula ocho reglas publicadas y muestra, para cada una, cuántos componentes retendría y cuánta varianza sumarían. Ninguna es la correcta por sí sola; cada una tiene un sesgo conocido.</p>
+
+  <table>
+    <caption><b>Tabla 4.4.</b> Los ocho criterios, en el orden de la app, con su peso en el consenso.</caption>
+    <thead><tr><th style="width:24%">Criterio</th><th>Regla que aplica la app</th><th style="width:25%">Sesgo conocido</th><th class="c" style="width:7%">Peso</th></tr></thead>
+    <tbody>
+      <tr><td><b>Análisis paralelo (Horn)</b></td><td>Componentes seguidos cuyo λ supera el percentil 95 de los λ de 200, 500 o 1000 matrices sin estructura.</td><td>El mejor evaluado en simulaciones.</td><td class="c">3</td></tr>
+      <tr><td><b>Kaiser–Guttman (λ &gt; 1)</b></td><td>λ &gt; 1. Con covarianzas se convierte en <b>Media de los λ</b>: λ mayor que el promedio.</td><td>Sobreestima; retiene ejes aun en datos sin estructura.</td><td class="c">1</td></tr>
+      <tr><td><b>Bastón roto</b></td><td>Componentes seguidos cuyo λ supera b<sub>k</sub> = (varianza total / p) · Σ<sub>i=k..p</sub> 1/i.</td><td>Conservador; frecuente en ecología.</td><td class="c">2</td></tr>
+      <tr><td><b>MAP de Velicer</b></td><td>El número de componentes que minimiza la media de las correlaciones parciales al cuadrado. Se calcula siempre sobre correlaciones.</td><td>Tiende a quedarse corto con pocos datos.</td><td class="c">2</td></tr>
+      <tr><td><b>Codo del scree (Cattell)</b></td><td>El componente donde la caída de λ cambia más de pendiente (máxima segunda diferencia), contando ese componente.</td><td>Visual por naturaleza; conviene mirarlo.</td><td class="c">1</td></tr>
+      <tr><td><b>Varianza acumulada ≥ 70 %</b></td><td>El primer <i>k</i> cuya varianza acumulada llega al 70 %.</td><td>Siempre se alcanza añadiendo ejes.</td><td class="c">1</td></tr>
+      <tr><td><b>Varianza acumulada ≥ 80 %</b></td><td>Lo mismo con el 80 %.</td><td>Umbral exigente.</td><td class="c">1</td></tr>
+      <tr><td><b>Jolliffe (λ &gt; 0.7)</b></td><td>λ &gt; 0.7. Con covarianzas repite la regla de la media y la nota dice «no aplica sin estandarizar».</td><td>Versión relajada de Kaiser; retiene aún más.</td><td class="c">1</td></tr>
+    </tbody>
+  </table>
+
+  <p>Con las semillas los ocho criterios se reparten entre 1 y 4 componentes. No es un error de la app: es lo habitual cuando hay un eje dominante —el tamaño, que suma cuatro variables— y otros ejes más débiles. La tabla del MAP, debajo de la lista, muestra por qué Velicer se queda con uno: la media de las correlaciones parciales al cuadrado baja de 0.136 a 0.0855 al extraer el primero y vuelve a subir con el segundo (0.115).</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿a qué criterio le hago caso?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">Si…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td>Horn, bastón roto y MAP <b>coinciden</b></td><td>Ese es el número. Los demás criterios solo confirman.</td></tr>
+        <tr><td>Horn da <b>más</b> que el bastón roto y el MAP</td><td>Quédate en el rango entre ambos y elige por interpretabilidad (sección 4.3).</td></tr>
+        <tr><td>Solo Kaiser o Jolliffe piden un eje más</td><td>No lo añadas por ellos: son los que más sobreestiman.</td></tr>
+        <tr><td>El ACP es sobre <b>covarianzas</b></td><td>Ignora Kaiser y Jolliffe; la regla de la media es su equivalente, pero Horn por permutación sigue siendo válido.</td></tr>
+        <tr><td>Un eje cumple los números pero <b>no se puede nombrar</b></td><td>No lo retengas: el criterio de interpretabilidad manda.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">El análisis paralelo usa números aleatorios: al repetir la extracción el percentil 95 cambia unas centésimas (1.569, 1.578 y 1.555 para CP1 de las semillas en tres corridas). Si un λ queda a menos de 0.02 de su percentil, el voto de Horn puede cambiar entre corridas; súbelo a 1000 repeticiones antes de decidir.</p>
+  </div>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b2-criterios.png" alt="Tarjeta 2.3 con los ocho criterios, el MAP y la decisión">
+      <span class="marca" style="left:90%;top:6.9%">1</span>
+      <span class="marca" style="left:90%;top:18.6%">2</span>
+      <span class="marca" style="left:90%;top:30.2%">3</span>
+      <span class="marca" style="left:92%;top:66.1%">4</span>
+      <span class="marca" style="left:12.9%;top:86.9%">5</span>
+      <span class="marca" style="left:56.5%;top:95.9%">6</span>
+    </div>
+    <figcaption><b>Figura 4.2.</b> La tarjeta <span class="ui">2.3 · ¿Cuántos componentes retener?</span> con las semillas, justo después de extraer.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Horn: 3 componentes, 74.5 % de la varianza.</li>
+    <li><span class="n">2</span>✔ en los criterios que coinciden con los retenidos.</li>
+    <li><span class="n">3</span>Codo: 2 componentes.</li>
+    <li><span class="n">4</span>El mínimo del MAP, con un componente.</li>
+    <li><span class="n">5</span>Tu decisión: el número y el botón del consenso.</li>
+    <li><span class="n">6</span>Avisos sobre la varianza conservada.</li>
+  </ul>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b2-scree.png" alt="Gráfico de sedimentación de las semillas con Kaiser y análisis paralelo">
+      <span class="marca" style="left:27.5%;top:18.7%">1</span>
+      <span class="marca" style="left:91.9%;top:60.6%">2</span>
+      <span class="marca" style="left:73.3%;top:66%">3</span>
+      <span class="marca" style="left:33.8%;top:87.6%">4</span>
+      <span class="marca" style="left:94.3%;top:95.1%">5</span>
+    </div>
+    <figcaption><b>Figura 4.3.</b> El gráfico de sedimentación de las semillas. <b>1</b> La franja de los componentes retenidos. <b>2</b> La línea de Kaiser en λ = 1. <b>3</b> El percentil 95 del análisis paralelo: CP3 queda por encima y CP4 por debajo. <b>4</b> El panel de edición. <b>5</b> Formato, resolución, fondo y descarga.</figcaption>
+  </figure>
+
+  <!-- 4.3 -->
+  <h2 id="s4-3"><span class="num">4.3</span>El consenso y la decisión</h2>
+  <p>La recomendación es una <b>moda ponderada</b>: cada criterio vota por su número de componentes con el peso de la tabla 4.4 —Horn 3; bastón roto y MAP 2; los demás 1— y gana el número con más votos. Si hay empate, gana el <b>menor</b>.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 4.5.</b> El recuento de votos con las nueve variables de las semillas.</caption>
+    <thead><tr><th class="c" style="width:12%">k</th><th>Criterios que lo proponen</th><th class="c" style="width:12%">Votos</th></tr></thead>
+    <tbody>
+      <tr><td class="c si-voto">1</td><td>Bastón roto (2) · MAP de Velicer (2)</td><td class="c si-voto">4</td></tr>
+      <tr><td class="c">2</td><td>Codo del scree (1)</td><td class="c">1</td></tr>
+      <tr><td class="c si-voto">3</td><td>Análisis paralelo (3) · Varianza acumulada ≥ 70 % (1)</td><td class="c si-voto">4</td></tr>
+      <tr><td class="c">4</td><td>Kaiser (1) · Varianza acumulada ≥ 80 % (1) · Jolliffe (1)</td><td class="c">3</td></tr>
+      <tr><td colspan="3">Empate entre 1 y 3 con 4 votos: la app recomienda <b>1</b>, el menor.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Tu decisión</h3>
+  <p>El campo <span class="ui">Componentes a retener:</span> admite cualquier número entre 1 y <i>p</i>. Al cambiarlo se actualizan los indicadores, la tabla de cargas, las cuatro figuras y el texto de debajo; el botón <span class="ui">Usar la recomendación del consenso</span> vuelve al número sugerido. Tres avisos pueden aparecer en ese texto:</p>
+  <table class="compacta">
+    <caption><b>Tabla 4.6.</b> Avisos de la decisión.</caption>
+    <thead><tr><th style="width:36%">Situación</th><th>Aviso</th></tr></thead>
+    <tbody>
+      <tr><td>La varianza conservada es menor que 50 %</td><td>En rojo: menos de la mitad de la información queda representada.</td></tr>
+      <tr><td>Más de 95 % con más de dos componentes</td><td>En ámbar: probablemente no estés reduciendo dimensiones.</td></tr>
+      <tr><td>Un solo componente</td><td>En ámbar: sin plano factorial no hay rotación ni mapas; es habitual retener el CP2 declarando cuánto aporta.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco"><img src="../img/app-b2-figcriterios.png" alt="Figura de comparación de criterios de retención"></div>
+    <figcaption><b>Figura 4.4.</b> La figura <b>Comparación de criterios de retención</b> resume la tabla 4.4 en una sola imagen: un punto por criterio en el número que propone y la línea roja «tu elección». Se actualiza al cambiar el número de componentes, y es la que conviene incluir como material suplementario de un artículo.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · qué borra cambiar el número</div>
+    <p>Cambiar los componentes retenidos <b>borra la rotación y los mapas</b> calculados después: hay que volver a calcular los Bloques 3 y 4 con el nuevo número. Volver a pulsar <span class="ui">Extraer componentes →</span> conserva el número que elegiste a mano; volver a preparar la matriz en el Bloque 1, no: la extracción empieza de cero con la recomendación.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · las marcas ✔ de la lista</div>
+    <p>La lista de criterios marca con ✔ los que coinciden con el número retenido <b>al extraer</b>. Si después cambias el número a mano, la lista no se redibuja: las marcas siguen en los criterios del número anterior. La figura 4.4 y los indicadores sí se actualizan.</p>
+  </div>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Cómo reportar la decisión</div>
+    <p>«Se retuvieron tres componentes, que explican el 74.5 % de la varianza, con base en el análisis paralelo de Horn (500 permutaciones, percentil 95) y la interpretabilidad de la solución; el bastón roto y el MAP de Velicer sugerían uno, y el criterio de Kaiser, cuatro.» Nombrar los criterios que discrepan es más honesto que citar solo el que conviene.</p>
+  </div>
+
+  <!-- 4.4 -->
+  <h2 id="s4-4"><span class="num">4.4</span>Tablas, figuras y descargas</h2>
+  <p>La tarjeta <span class="ui">2.4 · Figuras de extracción</span> reúne cuatro figuras editables, y la <span class="ui">2.5 · Matriz de componentes (cargas sin rotar)</span>, la tabla de cargas y las descargas del bloque.</p>
+
+  <p>La tabla tiene una columna por componente retenido. Las cargas que superan el umbral se resaltan en color —violeta si son positivas, rojo si son negativas— y las demás se atenúan. <b>Carga dominante</b> indica el componente con la carga absoluta mayor. El umbral solo cambia el resaltado, no los cálculos.</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿qué umbral de carga uso?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">Si tu muestra tiene…</th><th>resalta a partir de</th></tr></thead>
+      <tbody>
+        <tr><td>n ≥ 300</td><td>0.30 a 0.40</td></tr>
+        <tr><td>100 ≤ n &lt; 300</td><td>0.40 (el valor por defecto)</td></tr>
+        <tr><td>n &lt; 100</td><td>0.55, como pide la recomendación de tamaño del Bloque 1</td></tr>
+        <tr><td>Quieres solo lo muy claro para un resumen</td><td>0.70: la variable comparte con el eje la mitad de su varianza</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Una carga de 0.40 equivale a un 16 % de varianza compartida con el componente; una de 0.70, a un 49 %.</p>
+  </div>
+
+  <table>
+    <caption><b>Tabla 4.8.</b> Las descargas del Bloque 2, en CSV.</caption>
+    <thead><tr><th style="width:34%">Botón</th><th>Columnas</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Valores propios (CSV)</span></td><td>Componente, valor propio, EE, % de varianza, % acumulado, diferencia, p95 aleatorio, bastón roto y si se retuvo.</td></tr>
+      <tr><td><span class="ui">⬇ Cargas (CSV)</span></td><td>Las cargas de <b>todos</b> los componentes, no solo los retenidos, y la comunalidad con los retenidos.</td></tr>
+      <tr><td><span class="ui">⬇ Puntuaciones de los individuos (CSV)</span></td><td>El identificador, las cualitativas y las puntuaciones en todos los componentes.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · la escala de las puntuaciones</div>
+    <p>Las puntuaciones descargadas son las proyecciones de la matriz preparada sobre los vectores propios: su varianza en cada componente es λ<sub>k</sub>, no 1. Si vas a usarlas en otro análisis que las necesite en unidades estándar, divide cada columna entre su desviación estándar.</p>
+  </div>
+
+  <p>El botón <span class="ui">Ir a rotación →</span> lleva al Bloque 3, que ya quedó activo al extraer.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b2-cargas.png" alt="Tarjeta 2.5 con las cargas de tres componentes">
+      <span class="marca" style="left:60.5%;top:15.1%">1</span>
+      <span class="marca" style="left:28%;top:19.2%">2</span>
+      <span class="marca" style="left:60.8%;top:26.6%">3</span>
+      <span class="marca" style="left:36.1%;top:62.7%">4</span>
+      <span class="marca" style="left:67%;top:72.9%">5</span>
+      <span class="marca" style="left:66.1%;top:94%">6</span>
+    </div>
+    <figcaption><b>Figura 4.5.</b> La tarjeta <span class="ui">2.5</span> con las semillas y tres componentes retenidos.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Variables mal representadas (comunalidad &lt; 0.5).</li>
+    <li><span class="n">2</span>Umbral para resaltar: 0.30 a 0.70.</li>
+    <li><span class="n">3</span>Comunalidad con los componentes retenidos.</li>
+    <li><span class="n">4</span>Carga negativa resaltada, en rojo.</li>
+    <li><span class="n">5</span>Humedad_pct: 0.014, casi nada de su varianza.</li>
+    <li><span class="n">6</span>Descargas y paso al Bloque 3.</li>
+  </ul>
+
+  <table>
+    <caption><b>Tabla 4.7.</b> Las figuras del Bloque 2.</caption>
+    <thead><tr><th style="width:28%">Figura</th><th>Qué muestra</th><th style="width:32%">Opciones propias</th></tr></thead>
+    <tbody>
+      <tr><td><b>Gráfico de sedimentación</b></td><td>Los λ en barras y línea, la franja de los retenidos, Kaiser y el percentil 95 de Horn.</td><td>Eje Y en λ o en % de varianza; mostrar el bastón roto; barras multicolor.</td></tr>
+      <tr><td><b>Análisis paralelo de Horn</b></td><td>Los λ observados frente a la media y el percentil 95 aleatorios.</td><td>Banda media–p95 y línea de la media.</td></tr>
+      <tr><td><b>Varianza acumulada</b></td><td>La curva acumulada con un umbral y tu elección marcada.</td><td>Umbral en % (80 por defecto), área bajo la curva.</td></tr>
+      <tr><td><b>Comparación de criterios</b></td><td>Un punto por criterio en el número que propone (figura 4.4).</td><td>Notas, un solo color, marca de tu elección.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 4.5 -->
+  <h2 id="s4-5"><span class="num">4.5</span>Inercia y ejes en AC, ACM, AFDM y AFM</h2>
+  <p>Si en la tarjeta 1.9 elegiste otro método, la tarjeta 2.1 no cambia de aspecto, pero su botón dice <span class="ui">Ejecutar AFM →</span> (o la sigla que corresponda) y los resultados son otros. En estos métodos no se habla de varianza sino de <b>inercia</b>: la dispersión de la nube medida con la métrica propia de cada método.</p>
+
+  <table>
+    <caption><b>Tabla 4.9.</b> Qué se descompone y cuánto vale la inercia total.</caption>
+    <thead><tr><th style="width:10%">Método</th><th>Qué entra</th><th style="width:36%">Inercia total</th></tr></thead>
+    <tbody>
+      <tr><td><b>AC</b></td><td>La tabla de contingencia de las dos cualitativas elegidas.</td><td>φ² = χ²/n: cuánto se aparta la tabla de la independencia.</td></tr>
+      <tr><td><b>ACM</b></td><td>La tabla disyuntiva de las cualitativas marcadas.</td><td>J/Q − 1 (J categorías, Q variables), un valor artificial.</td></tr>
+      <tr><td><b>AFDM</b></td><td>Cuantitativas estandarizadas y categorías divididas entre √p<sub>k</sub>.</td><td>Cuantitativas + (categorías − cualitativas).</td></tr>
+      <tr><td><b>AFM</b></td><td>Los bloques de cuantitativas estandarizadas, cada uno dividido entre su primer valor propio.</td><td>La suma de las inercias ponderadas; ningún bloque aporta más de 1 al primer eje.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · el AFDM y el AFM ignoran el escalado del Bloque 1</div>
+    <p>Estos dos métodos toman las cuantitativas <b>después</b> del tratamiento de faltantes pero <b>antes</b> de la transformación y el escalado, y las estandarizan por su cuenta, porque su equilibrio entre tipos o bloques lo exige. Elegir Pareto o una transformación logarítmica en la tarjeta 1.3 no cambia sus resultados. Si necesitas una variable transformada, transfórmala en la hoja antes de cargarla.</p>
+  </div>
+
+  <h3>Lo que muestra el bloque</h3>
+  <table>
+    <caption><b>Tabla 4.10.</b> Las tarjetas del Bloque 2 con un método distinto del ACP.</caption>
+    <thead><tr><th style="width:28%">Tarjeta</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><b>2.2 · Inercia y ejes</b></td><td>Individuos o filas, columnas, ejes posibles, inercia total, ejes retenidos; en el AC, además, la χ² de independencia. Tabla de λ con % de inercia y acumulado, y una nota sobre cómo leer la inercia de ese método.</td></tr>
+      <tr><td><b>Tarjeta propia del método</b></td><td><b>AC</b>: las doce celdas que más aportan a la χ², con observado, esperado y residuo. <b>ACM</b>: la v de Cramér entre cada par de variables. <b>AFDM</b>: r² de cada cuantitativa y η² de cada cualitativa con cada eje. <b>AFM</b>: la inercia de cada bloque en cada eje y el coeficiente RV entre bloques.</td></tr>
+      <tr><td><b>2.3 · ¿Cuántos ejes retener?</b></td><td>Cuatro criterios (tabla 4.11), el consenso y el número de ejes.</td></tr>
+      <tr><td><b>2.4 · Figuras de extracción</b></td><td>El gráfico de sedimentación.</td></tr>
+      <tr><td><b>2.5 · Coordenadas</b></td><td>Coordenadas de las columnas, categorías o variables en los primeros cuatro ejes, su cos² en el plano 1–2 y su contribución al eje 1.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 4.11.</b> Criterios de retención fuera del ACP. Horn y el MAP no aplican: están pensados para correlaciones.</caption>
+    <thead><tr><th style="width:36%">Criterio</th><th>Regla</th><th class="c" style="width:8%">Peso</th></tr></thead>
+    <tbody>
+      <tr><td><b>Ejes por encima de la inercia media</b> (AC, AFDM, AFM)</td><td>λ mayor que la inercia total entre el número de ejes.</td><td class="c">2</td></tr>
+      <tr><td><b>Ejes por encima de 1/Q (Benzécri)</b> (ACM)</td><td>λ &gt; 1/Q: solo esos ejes tienen contenido.</td><td class="c">3</td></tr>
+      <tr><td><b>Inercia acumulada ≥ 70 %</b> y <b>≥ 80 %</b></td><td>En el ACM, con la inercia ajustada de Greenacre.</td><td class="c">1 y 1</td></tr>
+      <tr><td><b>Codo del scree</b></td><td>Igual que en el ACP; solo con tres ejes o más.</td><td class="c">1</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 4.12.</b> Qué vigilar en cada método, con ejemplos de la app.</caption>
+    <thead><tr><th style="width:10%">Método</th><th>Qué vigilar</th><th style="width:40%">Ejemplo</th></tr></thead>
+    <tbody>
+      <tr><td><b>AC</b></td><td>La χ² de independencia antes que los porcentajes: con una tabla independiente el primer eje puede recoger casi toda una inercia minúscula.</td><td>Tratamiento × Bloque del proyecto integrador: χ² = 0.78, gl 6, p = 0.99, inercia total 0.0054, y aun así Dim1 = 93.4 %. No hay mapa que leer: es un diseño balanceado.</td></tr>
+      <tr><td><b>ACM</b></td><td>Los porcentajes crudos subestiman; lee la columna <b>% ajustado (Greenacre)</b>, que solo existe para los ejes con λ &gt; 1/Q.</td><td>Las mismas dos variables: Dim1 = 21.4 % crudo y 93.45 % ajustado, igual que el AC. La v de Cramér de 0.052 avisa que no hay asociación.</td></tr>
+      <tr><td><b>AFDM</b></td><td>Que la inercia total coincida con cuantitativas + (categorías − cualitativas); r² y η² se comparan en la misma escala.</td><td>Iris con Species activa: inercia 6 (4 + 3 − 1); Species tiene η² = 0.964 en el eje 1 y 0.746 en el 2. Dos ejes, 86.9 %, y los cuatro criterios coinciden.</td></tr>
+      <tr><td><b>AFM</b></td><td>Los RV entre bloques y que cada bloque tenga al menos dos variables.</td><td>Figura 4.6.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b2-afm.png" alt="Tabla de ejes y tarjeta de bloques de un AFM">
+      <span class="marca" style="left:15.5%;top:48.1%">1</span>
+      <span class="marca" style="left:39.5%;top:64.7%">2</span>
+      <span class="marca" style="left:55.8%;top:68.1%">3</span>
+      <span class="marca" style="left:89.5%;top:92.4%">4</span>
+    </div>
+    <figcaption><b>Figura 4.6.</b> Un AFM con <code>proyecto_integrador_agronomia.csv</code>: 144 parcelas completas y cuatro bloques declarados a mano —crecimiento (4 variables), agua (3), nutrición (3) y fenología (2)—, con el rendimiento como suplementaria. <b>1</b> La nota sobre la ponderación. <b>2</b> El primer valor propio de cada bloque analizado por separado. <b>3</b> La inercia del crecimiento en el eje 1: 0.551, nunca más de 1. <b>4</b> El RV entre bloques: todos por debajo de 0.07.</figcaption>
+  </figure>
+
+  <p>La lectura de la figura 4.6 es instructiva: los RV cercanos a 0 dicen que los cuatro bloques casi no comparten estructura, y por eso ningún eje domina —el primero recoge solo 31.4 % de la inercia— y hacen falta cuatro ejes para llegar al 87.5 %. Los criterios discrepan (media 4, acumulada 70 % 3, acumulada 80 % 4, codo 5) y el consenso queda en cuatro.</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · detalles de la interfaz en estos métodos</div>
+    <p>Con un método distinto del ACP el Bloque 2 no ofrece descargas, y el botón <span class="ui">Ir a rotación →</span> no aparece: al Bloque 4 se pasa con el botón <span class="chip k4">4</span> de la barra de pasos, que queda activo al ejecutar el método (el 3 se apaga, porque la rotación es del ACP). Tres detalles de la versión 1.1: los indicadores de la tarjeta 2.2 se apilan en una columna en lugar de formar una fila; la tarjeta 2.4 solo muestra el gráfico de sedimentación, que no mueve la franja de retenidos si cambias el número de ejes; y la tabla de λ llama a los ejes CP1, CP2… en el AFDM y el AFM, mientras la de coordenadas los llama Dim1, Dim2…</p>
+  </div>
+
+  <!-- 4.6 -->
+  <h2 id="s4-6"><span class="num">4.6</span>Paso a paso: iris y semillas</h2>
+  <p>Dos análisis completos del Bloque 2. En el primero los criterios casi coinciden y la decisión es sobre el plano; en el segundo se reparten y hay que decidir con la interpretación. Las cifras son las de la app; los percentiles de Horn varían ligeramente entre corridas.</p>
+
+  <h3>Caso 1 · Iris: un eje fuerte y un plano útil</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>iris.csv</code> · 150 flores, cuatro medidas, estandarización z</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Carga el ejemplo de iris, prepara la matriz en el Bloque 1 y abre el Bloque 2. Deja permutación y 500 repeticiones y pulsa <span class="ui">Extraer componentes →</span>.</li>
+      <li>Los valores propios son 2.9185, 0.9140, 0.1468 y 0.0207. CP1 recoge <b>72.96 %</b>; CP1 + CP2, <b>95.81 %</b>.</li>
+      <li>Horn, Kaiser, bastón roto, MAP y varianza ≥ 70 % proponen <b>1</b>; codo, varianza ≥ 80 % y Jolliffe proponen 2. El recuento es 9 votos contra 3: la recomendación es <b>1 componente</b>.</li>
+      <li>Con un componente, la tabla de cargas avisa que <b>Sepal.Width</b> está mal representada: carga −0.460 y comunalidad 0.212. El texto de la decisión recuerda que sin CP2 no habrá mapas.</li>
+      <li>Escribe <b>2</b> en <span class="ui">Componentes a retener:</span>. La comunalidad de Sepal.Width sube a <b>0.991</b>: CP2 es, casi en exclusiva, el ancho del sépalo (carga 0.883).</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> Iris tiene una dimensión dominante —el tamaño de la flor, con cargas de 0.89 a 0.99 en tres medidas— y una segunda que es una sola variable. Retener dos es la práctica habitual: se declara que CP2 aporta 22.85 % y que lo define Sepal.Width. CP3 y CP4 juntos no llegan al 4.2 %.</p>
+
+  <h3>Caso 2 · Semillas: criterios repartidos</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practica2_semillas.csv</code> · 120 semillas, nueve variables, estandarización z</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Carga el archivo, deja las nueve variables activas, prepara y extrae. CP1 recoge 38.65 % y el plano 1–2, 57.96 %.</li>
+      <li>Los criterios van de 1 a 4 (figura 4.2): bastón roto y MAP, 1; codo, 2; Horn y varianza ≥ 70 %, 3; Kaiser, varianza ≥ 80 % y Jolliffe, 4. El consenso empata 1 y 3 y recomienda <b>1</b> (tabla 4.5).</li>
+      <li>Con un componente el aviso es rojo: se conserva 38.6 % y cinco variables quedan mal representadas.</li>
+      <li>Retén <b>3</b>, lo que pide Horn. Se conserva <b>74.5 %</b>, y la tabla de cargas (figura 4.5) se ordena en tres temas: CP1, el <b>tamaño</b> (largo, ancho, área y peso, de 0.87 a 0.98); CP2, la <b>firmeza</b> (grosor 0.769 y dureza 0.786); CP3, la <b>composición</b> (aceite 0.764 frente a proteína −0.691).</li>
+      <li>Humedad_pct se queda con comunalidad <b>0.014</b>: no pertenece a ninguno de los tres temas, lo mismo que decía su MSA de 0.388 en el Bloque 1.</li>
+      <li>Revisa la tabla de valores propios: λ₂ − λ₃ = 0.2456 apenas supera el EE de λ₂ (0.2253). CP2 y CP3 comparten carga en grosor, dureza, aceite y proteína; la rotación del Bloque 3 los separará mejor.</li>
+    </ol>
+  </div>
+  <p><b>Lectura.</b> Aquí el consenso no ayuda: empata y resuelve hacia el número más pequeño, que deja fuera dos tercios de la información. La decisión la toman Horn —el criterio más fiable— y la interpretación: tres componentes con nombre claro. Kaiser pedía un cuarto eje con λ = 1.0052, que no supera el percentil 95 (1.14) y no se puede nombrar. Compara con el capítulo 3: el retiro de variables por MSA llevaba a otra solución, de un solo componente de tamaño, con seis o cuatro variables. Las dos son válidas, pero responden preguntas distintas.</p>
+
+  <div class="caja dato">
+    <div class="dato-cifra">3 de 8</div>
+    <div class="dato-txt"><div class="caja-t">Una mayoría que no existe</div>Con las semillas ningún número reúne más de tres criterios. Cuando ocurre, la recomendación es un desempate y no un acuerdo: <b>la tarjeta 2.3 se lee entera</b> antes de aceptar el número del indicador.</div>
+  </div>
+
+  <p style="margin-top:0.3in">Con el número de componentes decidido, el siguiente capítulo entra al Bloque 3: rotar la solución para que cada eje sea más fácil de nombrar.</p>
+</section>
+
+</body>
+</html>

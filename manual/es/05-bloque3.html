@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 5 · Bloque 3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b3" data-pestana="B3" data-orden="5" style="--acento: var(--b3)">
+  <div class="cap-apertura">
+    <div class="cap-num">5</div>
+    <div class="cap-etiqueta">Capítulo cinco · Bloque 3</div>
+    <h1>Rotación</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">Cómo girar los componentes retenidos para que cada uno quede definido por su propio grupo de variables, qué rotación elegir, cómo leer las matrices de patrón, estructura y Φ, y cómo saber si la rotación mejoró la solución. Solo aplica al ACP.</p>
+    <div class="cap-franja"><span class="k3"></span><span class="k3"></span><span class="k3"></span><span class="k3"></span><span class="k3"></span><span class="k3"></span><span class="k3"></span><span class="k3"></span></div>
+    <ul class="cap-contenido">
+      <li><b>5.1</b>Para qué rotar y cuándo no</li>
+      <li><b>5.2</b>Rotaciones ortogonales y oblicuas</li>
+      <li><b>5.3</b>Calidad de la estructura simple</li>
+      <li><b>5.4</b>El umbral de las cargas</li>
+      <li><b>5.5</b>Paso a paso: morfometría foliar</li>
+    </ul>
+  </div>
+
+  <!-- 5.1 -->
+  <h2 id="s5-1"><span class="num">5.1</span>Para qué rotar y cuándo no</h2>
+  <p class="lead">Los componentes del Bloque 2 maximizan varianza, no claridad. Lo habitual es que casi todas las variables carguen fuerte en el CP1 y que los ejes siguientes sean contrastes difíciles de nombrar. Rotar busca otra orientación de esos mismos ejes en la que cada uno tenga su grupo de variables.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Qué se conserva y qué cambia</div>
+    <p>Los <i>k</i> componentes retenidos definen un subespacio, y ese subespacio contiene la misma información sea cual sea la orientación de los ejes dentro de él. Por eso rotar <b>conserva</b> la varianza total de los <i>k</i> componentes y la comunalidad de cada variable, y <b>cambia</b> el reparto de la varianza entre ejes, las cargas individuales y el orden: los ejes rotados ya no van de mayor a menor λ y la app los llama <b>CPR1, CPR2…</b></p>
+  </div>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿roto o no roto?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">Si tu objetivo es…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td><b>Interpretar y nombrar</b> las dimensiones</td><td>Rota. Es para lo que existe la rotación.</td></tr>
+        <tr><td>Usar las puntuaciones en <b>otro análisis</b> (regresión, agrupamiento)</td><td>Probablemente no: los componentes sin rotar son ortogonales y están ordenados, justo lo que ese análisis necesita.</td></tr>
+        <tr><td>Tienes <b>un solo componente</b> retenido</td><td>No se puede: la app pide al menos dos y lo avisa.</td></tr>
+        <tr><td>La solución sin rotar <b>ya es simple</b></td><td>Rota de todos modos para comprobarlo; si no mejora, repórtala sin rotar (sección 5.3).</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Rotar componentes principales es práctica aceptada —SPSS, SAS y <code>psych::principal</code> la ofrecen— siempre que se declare. La tarjeta de teoría del bloque incluye la redacción habitual para la sección de métodos.</p>
+  </div>
+
+  <p>El Bloque 3 se abre con la tarjeta de teoría, de seis temas, y la tarjeta <span class="ui">3.1 · Elegir la rotación</span>. Pulsar <span class="ui">Aplicar rotación →</span> muestra los resultados y activa el Bloque 4. Con el AC, el ACM, el AFDM y el AFM el bloque queda apagado: la rotación es propia del ACP.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 5.1.</b> Las opciones de la tarjeta 3.1.</caption>
+    <thead><tr><th style="width:28%">Opción</th><th>Valores</th><th style="width:34%">Nota</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Método</span></td><td>Varimax (recomendada), quartimax, equamax, parsimax, promax, oblimin directo, quartimin y <span class="ui">Sin rotar (comparación)</span>.</td><td>Al cambiar de método aparece debajo una descripción breve.</td></tr>
+      <tr><td><span class="ui">Umbral de carga interpretable</span></td><td>0.30, 0.40 (habitual), 0.50, 0.55 y 0.70.</td><td>Cambiarlo vuelve a calcular la rotación al momento (sección 5.4).</td></tr>
+      <tr><td><span class="ui">δ (oblimin)</span></td><td>De −5 a 0.8; 0 por defecto. Solo con oblimin directo.</td><td>Negativo, ejes más ortogonales; positivo, más oblicuos.</td></tr>
+      <tr><td><span class="ui">κ (promax)</span></td><td>De 2 a 10; 4 por defecto. Solo con promax.</td><td>Más alto, más oblicuo.</td></tr>
+      <tr><td><span class="ui">Normalización de Kaiser</span></td><td>Casilla, marcada. Se oculta con <span class="ui">Sin rotar</span>.</td><td>Igual que SPSS y <code>stats::varimax</code> de R.</td></tr>
+    </tbody>
+  </table>
+
+  <p>La opción <span class="ui">Sin rotar (comparación)</span> no gira nada: muestra la solución del Bloque 2 con los mismos indicadores, para comparar, y también activa el Bloque 4. En los mapas del Bloque 4 decides después qué solución dibujar; por defecto es la sin rotar.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b3-config.png" alt="Tarjetas 3.1 y 3.2 con la rotación varimax de la morfometría foliar">
+      <span class="marca" style="left:10%;top:9.2%">1</span>
+      <span class="marca" style="left:57.3%;top:9.2%">2</span>
+      <span class="marca" style="left:87.5%;top:12.3%">3</span>
+      <span class="marca" style="left:20%;top:23.7%">4</span>
+      <span class="marca" style="left:48%;top:32.5%">5</span>
+      <span class="marca" style="left:80%;top:32.5%">6</span>
+      <span class="marca" style="left:95.8%;top:32.5%">7</span>
+      <span class="marca" style="left:27.3%;top:61.5%">8</span>
+      <span class="marca" style="left:67.3%;top:78.3%">9</span>
+    </div>
+    <figcaption><b>Figura 5.1.</b> Las tarjetas <span class="ui">3.1</span> y <span class="ui">3.2</span> con el ejemplo simulado de morfometría foliar, dos componentes y rotación varimax.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>El método de rotación.</li>
+    <li><span class="n">2</span>El umbral de carga interpretable.</li>
+    <li><span class="n">3</span>La normalización de Kaiser, activa por defecto.</li>
+    <li><span class="n">4</span>Aplica la rotación.</li>
+    <li><span class="n">5</span>Variables que cargan en un solo componente.</li>
+    <li><span class="n">6</span>Complejidad media de Hofmann.</li>
+    <li><span class="n">7</span>Variables sin ninguna carga sobre el umbral.</li>
+    <li><span class="n">8</span>La comparación con la solución sin rotar.</li>
+    <li><span class="n">9</span>El reparto de la varianza tras rotar.</li>
+  </ul>
+
+  <!-- 5.2 -->
+  <h2 id="s5-2"><span class="num">5.2</span>Rotaciones ortogonales y oblicuas</h2>
+  <p>Las <b>ortogonales</b> mantienen los ejes perpendiculares: los componentes siguen sin correlacionarse. Las <b>oblicuas</b> permiten que se correlacionen, lo que suele ser más realista en biología, donde las dimensiones —tamaño, forma, fisiología— rara vez son independientes.</p>
+
+  <div class="formula">Familia ortomax: Q(γ) = Σ a⁴<sub>ij</sub> − (γ/p) · Σ<sub>j</sub> (Σ<sub>i</sub> a²<sub>ij</sub>)²<br>Complejidad de Hofmann de una variable: c = (Σ a²)² / Σ a⁴</div>
+
+  <table>
+    <caption><b>Tabla 5.2.</b> Las siete rotaciones de la app.</caption>
+    <thead><tr><th style="width:15%">Rotación</th><th style="width:12%">Tipo</th><th style="width:20%">Parámetro</th><th>Qué hace y cuándo usarla</th></tr></thead>
+    <tbody>
+      <tr><td><b>Varimax</b></td><td>ortogonal</td><td>γ = 1</td><td>Simplifica columnas: empuja cada carga hacia 0 o ±1 dentro de cada componente. <b>La opción por defecto</b> y la más reportada.</td></tr>
+      <tr><td><b>Quartimax</b></td><td>ortogonal</td><td>γ = 0</td><td>Simplifica filas: cada variable en el menor número de ejes. Tiende a dejar un primer factor general.</td></tr>
+      <tr><td><b>Equamax</b></td><td>ortogonal</td><td>γ = k/2</td><td>Compromiso entre las dos anteriores; inestable con pocas variables.</td></tr>
+      <tr><td><b>Parsimax</b></td><td>ortogonal</td><td>γ = p(k−1)/(p+k−2)</td><td>Busca la máxima parsimonia global; poco frecuente.</td></tr>
+      <tr><td><b>Promax</b></td><td>oblicua</td><td>κ = 4</td><td>Parte de varimax y eleva las cargas a la potencia κ para exagerar el contraste. Rápida; la preferida con muestras grandes.</td></tr>
+      <tr><td><b>Oblimin directo</b></td><td>oblicua</td><td>δ = 0</td><td>Familia general; δ controla cuánta correlación se permite.</td></tr>
+      <tr><td><b>Quartimin</b></td><td>oblicua</td><td>δ = 0 fijo</td><td>La oblicua más simple: oblimin con δ = 0.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 5.3.</b> Detalles del cálculo que conviene conocer.</caption>
+    <thead><tr><th style="width:30%">Aspecto</th><th>Qué hace la app</th></tr></thead>
+    <tbody>
+      <tr><td>Algoritmo</td><td>Proyección de gradiente de Jennrich (2001, 2002), el de <code>GPArotation</code> en R, con hasta 1500 iteraciones. Si no converge, un aviso ámbar sugiere otra rotación o revisar variables casi redundantes.</td></tr>
+      <tr><td>Normalización de Kaiser</td><td>Divide cada fila de cargas entre la raíz de su comunalidad antes de rotar y la restaura después, para que las variables mal representadas no pesen menos.</td></tr>
+      <tr><td>Signo</td><td>Cada componente rotado se orienta para que predominen las cargas positivas. El signo es arbitrario: un CPR puede salir invertido respecto del CP sin rotar.</td></tr>
+      <tr><td>Orden</td><td>Los componentes rotados se ordenan por su suma de cargas al cuadrado, de mayor a menor.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Las tres matrices de una rotación oblicua</h3>
+  <p>Con una rotación oblicua aparece, en la tarjeta <span class="ui">3.3 · Matriz de cargas rotadas</span>, un recuadro adicional con la matriz de estructura y la correlación entre componentes.</p>
+
+  <table>
+    <caption><b>Tabla 5.4.</b> Patrón, estructura y Φ.</caption>
+    <thead><tr><th style="width:18%">Matriz</th><th>Qué es</th><th style="width:34%">Uso</th></tr></thead>
+    <tbody>
+      <tr><td><b>Patrón</b></td><td>El coeficiente único de cada variable sobre cada componente, controlando los demás. Son pesos de regresión: <b>pueden superar |1|</b>.</td><td>La que se interpreta y se reporta. Es la tabla principal de la tarjeta 3.3.</td></tr>
+      <tr><td><b>Estructura</b></td><td>La correlación simple variable–componente: patrón × Φ. Incluye el efecto de los otros componentes.</td><td>Valores más altos y menos limpios; útil como complemento.</td></tr>
+      <tr><td><b>Φ</b></td><td>La correlación entre los componentes rotados.</td><td>Dice si la oblicuidad hacía falta.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b3-oblicua.png" alt="Tarjeta 3.3 con la rotación promax: patrón, estructura y correlación entre componentes">
+      <span class="marca" style="left:24%;top:16.9%">1</span>
+      <span class="marca" style="left:37.3%;top:34.1%">2</span>
+      <span class="marca" style="left:19%;top:45.3%">3</span>
+      <span class="marca" style="left:55%;top:66.2%">4</span>
+      <span class="marca" style="left:29.4%;top:80.7%">5</span>
+      <span class="marca" style="left:62%;top:86.5%">6</span>
+      <span class="marca" style="left:15.5%;top:96.1%">7</span>
+    </div>
+    <figcaption><b>Figura 5.2.</b> La tarjeta <span class="ui">3.3</span> con rotación promax y tres componentes. <b>1</b> Coeficientes de patrón mayores que 1: no es un error. <b>2</b> CPR2 quedó con Densidad_estomas positiva; en varimax salía negativa. <b>3</b> La matriz de estructura. <b>4</b> Grosor_lamina_um: 0.098 en el patrón de CPR1, pero 0.396 en la estructura, por su relación con CPR2. <b>5</b> La matriz Φ. <b>6</b> La correlación mayor, −0.309. <b>7</b> La lectura automática de Φ.</figcaption>
+  </figure>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿ortogonal u oblicua?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">Aplica primero una oblicua (promax) y mira la mayor |Φ| fuera de la diagonal. Si es…</th><th>entonces</th></tr></thead>
+      <tbody>
+        <tr><td>menor que 0.15</td><td>Los ejes salieron casi ortogonales solos: vuelve a <b>varimax</b>, más parsimoniosa.</td></tr>
+        <tr><td>entre 0.15 y 0.32</td><td>La oblicua está justificada, pero la ortogonal dará casi lo mismo: compara y elige la más clara.</td></tr>
+        <tr><td>0.32 o más</td><td>Los componentes comparten más del 10 % de varianza: usa la <b>oblicua</b> e interpreta el patrón.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Son los mismos cortes que usa la nota automática bajo la tabla Φ. Con la morfometría foliar la mayor |Φ| es 0.244 con dos componentes y 0.309 con tres: las dos rotaciones cuentan la misma historia.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · con oblicuas, los porcentajes no suman</div>
+    <p>En una rotación oblicua las sumas de cuadrados de cada componente se solapan, así que <b>no reparten</b> la varianza. El indicador <b>Componentes rotados · explican … en conjunto</b> y la última columna de la tabla <b>Varianza por componente</b> suman esos cuadrados, y con oblicuas eso no es la varianza conjunta: con promax y tres componentes marcan 98.5 %, más que el 98.2 % real, y con oblimin δ = 0.5 llegan a un imposible 162.5 %. La varianza conjunta de los componentes es siempre la del Bloque 2, porque rotar no la cambia. Reporta esa, y para cada componente oblicuo reporta sus cargas, no un porcentaje.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · valores positivos de δ</div>
+    <p>El campo δ admite hasta 0.8, pero valores positivos fuerzan componentes muy correlacionados. Con la morfometría foliar, δ = 0.5 subió la mayor |Φ| de 0.18 (con δ = −1) a 0.67 y apareció una carga cruzada. Deja δ = 0 salvo que tengas una razón teórica para cambiarlo.</p>
+  </div>
+
+  <!-- 5.3 -->
+  <h2 id="s5-3"><span class="num">5.3</span>Calidad de la estructura simple</h2>
+  <p>El objetivo de rotar es la <b>estructura simple</b> de Thurstone: que cada variable cargue fuerte en un componente y casi nada en los demás, y que cada componente tenga su propio grupo de variables. La tarjeta <span class="ui">3.2 · Calidad de la estructura simple</span> mide qué tan cerca estás.</p>
+
+  <table>
+    <caption><b>Tabla 5.5.</b> Los indicadores de la tarjeta 3.2.</caption>
+    <thead><tr><th style="width:24%">Indicador</th><th>Qué cuenta</th><th style="width:30%">Color</th></tr></thead>
+    <tbody>
+      <tr><td><b>Rotación</b></td><td>El método y si es ortogonal u oblicua.</td><td>—</td></tr>
+      <tr><td><b>Componentes rotados</b></td><td>Cuántos se rotaron y la suma de sus cargas al cuadrado (ver el aviso de la sección 5.2).</td><td>—</td></tr>
+      <tr><td><b>Variables limpias</b></td><td>Superan el umbral en un solo componente.</td><td>verde ≥ 75 % · ámbar ≥ 50 % · rojo</td></tr>
+      <tr><td><b>Cargas cruzadas</b></td><td>Superan el umbral en dos o más componentes.</td><td>verde 0 · ámbar 1 o 2 · rojo</td></tr>
+      <tr><td><b>Complejidad media</b></td><td>La media de la complejidad de Hofmann: 1 si cada variable carga en un solo eje, hasta <i>k</i> si se reparte por igual.</td><td>verde &lt; 1.3 · ámbar &lt; 1.8 · rojo</td></tr>
+      <tr><td><b>Sin representar</b></td><td>Ninguna carga llega al umbral.</td><td>verde 0 · ámbar</td></tr>
+    </tbody>
+  </table>
+
+  <p>Debajo, el recuadro <b>¿Mejoró la estructura simple?</b> compara las variables limpias, las cargas cruzadas y la complejidad media antes y después de rotar, con el mismo umbral. Da la rotación por buena, en verde, si aumentan las variables limpias <b>o</b> baja la complejidad media; si no, en ámbar, sugiere otro método o reportar la solución sin rotar.</p>
+
+  <div class="caja dato">
+    <div class="dato-cifra">86.2 %</div>
+    <div class="dato-txt"><div class="caja-t">Lo que la rotación no toca</div>Sin rotar, CP1 y CP2 suman 67.09 % + 19.13 %; con varimax, CPR1 y CPR2 suman 64.03 % + 22.19 %. <b>El total es el mismo</b>, y también la comunalidad de cada variable.</div>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Tabla 5.6.</b> Columnas de la matriz de cargas rotadas.</caption>
+    <thead><tr><th style="width:26%">Columna</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td>CPR1, CPR2…</td><td>Cargas rotadas (patrón, si la rotación es oblicua); resaltadas si superan el umbral.</td></tr>
+      <tr><td>Comunalidad</td><td>La misma que antes de rotar. Con oblicuas se calcula con Φ.</td></tr>
+      <tr><td>Complejidad</td><td>Complejidad de Hofmann de la variable.</td></tr>
+      <tr><td>Estructura</td><td><b>limpia · CPRj</b>, <b>cruzada</b> o <b>sin carga</b>.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>La lectura de cada componente</h3>
+  <p>La tarjeta 3.4 redacta, para cada componente rotado, su porcentaje y las variables que superan el umbral, separadas en positivas y negativas. Añade dos observaciones: si hay cargas de los dos signos, lo llama <b>eje de contraste</b>; si solo una variable supera el umbral, lo marca en ámbar como <b>frágil</b>, porque un componente suele necesitar al menos tres variables marcadoras. El nombre del eje lo pones tú.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b3-patron.png" alt="Tarjetas 3.3 y 3.4 con las cargas varimax">
+      <span class="marca" style="left:39.5%;top:13.9%">1</span>
+      <span class="marca" style="left:68.6%;top:16.4%">2</span>
+      <span class="marca" style="left:41.7%;top:43.2%">3</span>
+      <span class="marca" style="left:40.5%;top:51.6%">4</span>
+      <span class="marca" style="left:91.5%;top:55.8%">5</span>
+      <span class="marca" style="left:30.4%;top:86.8%">6</span>
+    </div>
+    <figcaption><b>Figura 5.3.</b> Las tarjetas <span class="ui">3.3 · Matriz de cargas rotadas</span> y <span class="ui">3.4 · Lectura de cada componente</span> con varimax y dos componentes.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Ordena las variables por el componente en que cargan.</li>
+    <li><span class="n">2</span>Complejidad de Hofmann de cada variable.</li>
+    <li><span class="n">3</span>Peso_seco_g: 0.352 en CPR2, bajo el umbral.</li>
+    <li><span class="n">4</span>Carga negativa resaltada en rojo.</li>
+    <li><span class="n">5</span>Clorofila_SPAD, sin carga en ningún eje.</li>
+    <li><span class="n">6</span>La lectura automática de CPR2: un eje de contraste.</li>
+  </ul>
+
+  <table>
+    <caption><b>Tabla 5.7.</b> Las figuras de la tarjeta 3.5.</caption>
+    <thead><tr><th style="width:28%">Figura</th><th>Qué muestra</th><th style="width:34%">Opciones propias</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mapa de calor de la matriz de cargas</b></td><td>Variables × componentes en escala de color, con los valores.</td><td>Paleta continua, agrupar por componente, ocultar bajo el umbral.</td></tr>
+      <tr><td><b>Plano de cargas</b></td><td>Las variables como vectores en dos componentes rotados, con su posición sin rotar en gris discontinuo.</td><td>Ejes, colorear por variable o por cos², círculo interior, unir con línea.</td></tr>
+      <tr><td><b>Cargas por componente</b></td><td>Barras por componente con la línea del umbral.</td><td>Columnas, ordenar por magnitud, colores positivo y negativo.</td></tr>
+      <tr><td><b>Varianza antes y después de rotar</b></td><td>La suma de cargas al cuadrado de cada componente, sin rotar y rotada.</td><td>Colores, valores, contorno.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b3-plano.png" alt="Plano de cargas varimax con la posición sin rotar">
+      <span class="marca" style="left:29%;top:14.6%">1</span>
+      <span class="marca" style="left:73%;top:15.8%">2</span>
+      <span class="marca" style="left:69%;top:76%">3</span>
+      <span class="marca" style="left:47.3%;top:41.5%">4</span>
+      <span class="marca" style="left:28.3%;top:71.1%">5</span>
+      <span class="marca" style="left:57.5%;top:84.4%">6</span>
+    </div>
+    <figcaption><b>Figura 5.4.</b> El plano de cargas con varimax. <b>1</b> La leyenda de la posición sin rotar. <b>2</b> Grosor_lamina_um rotado, casi sobre CPR2. <b>3</b> Su posición sin rotar: aparece en el lado opuesto porque la app invirtió el signo de CPR2 (tabla 5.3), no porque la rotación girara 180°. <b>4</b> Clorofila_SPAD, un vector corto: está mal representada en este plano. <b>5</b> El círculo unitario, que solo se dibuja con matriz de correlaciones. <b>6</b> Cada eje con su porcentaje rotado.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 5.8.</b> Las descargas del Bloque 3, en CSV.</caption>
+    <thead><tr><th style="width:38%">Botón</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Cargas rotadas (CSV)</span></td><td>Cargas (o patrón), comunalidad, complejidad y tipo de estructura de cada variable.</td></tr>
+      <tr><td><span class="ui">⬇ Matriz de estructura (CSV)</span></td><td>Correlaciones variable–componente; igual a las cargas si la rotación es ortogonal.</td></tr>
+      <tr><td><span class="ui">⬇ Correlación entre componentes (CSV)</span></td><td>La matriz Φ; la identidad si la rotación es ortogonal.</td></tr>
+      <tr><td><span class="ui">⬇ Puntuaciones rotadas (CSV)</span></td><td>Puntuaciones de cada individuo en los componentes rotados, por el método de regresión de Thurstone sobre las variables estandarizadas, con las cualitativas.</td></tr>
+    </tbody>
+  </table>
+  <p>El botón <span class="ui">Ir a los mapas factoriales →</span> lleva al Bloque 4.</p>
+
+  <!-- 5.4 -->
+  <h2 id="s5-4"><span class="num">5.4</span>El umbral de las cargas</h2>
+  <p>Una carga solo se interpreta si supera el umbral. El umbral no cambia la rotación —las cargas son las mismas—, pero decide qué variables cuentan como limpias, cruzadas o sin carga, qué se resalta en las tablas y figuras y qué redacta la lectura automática.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 5.9.</b> Los umbrales de la app.</caption>
+    <thead><tr><th class="c" style="width:12%">Umbral</th><th style="width:28%">Etiqueta en la app</th><th class="c" style="width:18%">Varianza compartida</th><th>Cuándo</th></tr></thead>
+    <tbody>
+      <tr><td class="c">0.30</td><td>mínimo</td><td class="c">9 %</td><td>Muestras grandes (n ≥ 300) o análisis exploratorio.</td></tr>
+      <tr><td class="c">0.40</td><td>habitual</td><td class="c">16 %</td><td>El valor por defecto; muestras de 100 a 300.</td></tr>
+      <tr><td class="c">0.50</td><td>prácticamente significativa</td><td class="c">25 %</td><td>Cuando quieres solo relaciones sustantivas.</td></tr>
+      <tr><td class="c">0.55</td><td>muestras pequeñas</td><td class="c">30 %</td><td>n &lt; 100, como pide la recomendación de tamaño del Bloque 1.</td></tr>
+      <tr><td class="c">0.70</td><td>muy exigente</td><td class="c">49 %</td><td>Resúmenes muy limpios; puede dejar componentes sin marcadoras.</td></tr>
+    </tbody>
+  </table>
+
+  <p>Cambiar el umbral en la tarjeta 3.1 recalcula al momento, y también cambia la columna «antes» de la comparación con la solución sin rotar, que se evalúa con el mismo umbral. La tabla 5.10 lo muestra con la morfometría foliar, tres componentes y varimax.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 5.10.</b> El mismo varimax con tres umbrales.</caption>
+    <thead><tr><th class="c" style="width:12%">Umbral</th><th class="c">Limpias sin rotar → rotadas</th><th class="c">Cruzadas sin rotar → rotadas</th><th>Qué pasa</th></tr></thead>
+    <tbody>
+      <tr><td class="c">0.30</td><td class="c">7 → 8</td><td class="c">2 → 1</td><td>Peso_seco_g queda cruzada: 0.922 en CPR1 y 0.369 en CPR2.</td></tr>
+      <tr><td class="c">0.40</td><td class="c">8 → 9</td><td class="c">1 → 0</td><td>Todas limpias tras rotar.</td></tr>
+      <tr><td class="c">0.55</td><td class="c">9 → 9</td><td class="c">0 → 0</td><td>La comparación ya no distingue; solo baja la complejidad (1.21 → 1.10).</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · fija el umbral antes de mirar</div>
+    <p>El umbral se decide por el tamaño de muestra y se declara en los métodos. Subirlo o bajarlo hasta que la tabla «se vea bien» es una forma de sobreajuste: con los datos de la tabla 5.10, pasar de 0.30 a 0.40 hace desaparecer una carga cruzada real de 0.369. Si una variable queda cerca del umbral, repórtala con su valor.</p>
+  </div>
+
+  <!-- 5.5 -->
+  <h2 id="s5-5"><span class="num">5.5</span>Paso a paso: morfometría foliar</h2>
+  <p>El ejemplo simulado de la app —<span class="ui">Ejemplo simulado: morfometría foliar (120 × 9)</span> en la tarjeta 1.1— tiene nueve medidas de hoja y planta y una cualitativa, el sitio. Es un caso típico para rotar: un eje de tamaño enorme y otros más finos. Las cifras son las de la app.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Morfometría foliar · 117 observaciones, nueve variables, escalado z</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Carga el ejemplo simulado, prepara la matriz y extrae en el Bloque 2. KMO = 0.821. CP1 recoge 67.09 % y CP2 19.13 %. El consenso recomienda <b>2</b> componentes (86.2 %); Kaiser, MAP y Jolliffe proponían 3.</li>
+      <li>Sin rotar, CP1 mezcla seis medidas de tamaño con Grosor_lamina_um (0.511), que además carga −0.846 en CP2: una carga cruzada. Clorofila_SPAD tiene comunalidad 0.088.</li>
+      <li>Abre el Bloque 3, deja <span class="ui">Varimax (ortogonal) — recomendada</span>, umbral 0.40 y normalización, y pulsa <span class="ui">Aplicar rotación →</span>.</li>
+      <li>La tarjeta 3.2 (figura 5.1) muestra 8 de 9 variables limpias, ninguna cruzada y complejidad 1.06; la comparación dice 7 → 8 limpias y 1.15 → 1.06: la rotación mejoró.</li>
+      <li>La matriz (figura 5.3) queda en dos grupos. <b>CPR1, tamaño</b> (64.03 %): largo, peciolo, área, ancho, altura y peso seco, de 0.93 a 0.99. <b>CPR2, estructura de la lámina</b> (22.19 %): grosor 0.947 frente a densidad de estomas −0.921, un contraste entre hojas gruesas con pocos estomas y hojas delgadas con muchos.</li>
+      <li>Clorofila_SPAD sigue <b>sin carga</b>: con dos componentes no pertenece a ninguno.</li>
+      <li>Para comprobar la oblicuidad, elige <span class="ui">Promax (oblicua)</span>. La mayor |Φ| es 0.244: la nota dice que la oblicua está justificada pero la ortogonal da resultados parecidos. Los grupos no cambian.</li>
+      <li>Por curiosidad, vuelve al Bloque 2 y retén 3. Tras varimax, CPR3 es solo Clorofila_SPAD (0.996), y la lectura automática lo marca como <b>frágil</b>: una sola variable marcadora.</li>
+    </ol>
+  </div>
+
+  <p><b>Lectura.</b> La solución de dos componentes con varimax es la que se reporta: dos ejes con nombre y sin cargas cruzadas. El tercer componente que pedían Kaiser y el MAP no es una dimensión, sino la varianza propia de la clorofila, que no se relaciona con la forma de la hoja; se declara como variable sin estructura común. La rotación no creó los grupos: los hizo visibles. CP2 sin rotar ya contenía el contraste grosor–estomas, pero mezclado con el tamaño.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Cómo reportarlo</div>
+    <p>«Se realizó un ACP sobre la matriz de correlaciones de nueve variables (n = 117). Se retuvieron dos componentes, que explican el 86.2 % de la varianza, con base en el análisis paralelo y el gráfico de sedimentación. Se aplicó una rotación varimax con normalización de Kaiser y se interpretaron las cargas con |a| ≥ 0.40. El primer componente rotado (64.0 %) agrupó las medidas de tamaño y el segundo (22.2 %) contrapuso el grosor de la lámina a la densidad de estomas. El contenido de clorofila no cargó en ninguno (comunalidad 0.09). Una rotación promax dio la misma estructura, con una correlación entre componentes de 0.24.»</p>
+  </div>
+
+  <p style="margin-top:0.3in">Con la solución rotada, el siguiente capítulo entra al Bloque 4: los mapas factoriales de variables e individuos.</p>
+</section>
+
+</body>
+</html>

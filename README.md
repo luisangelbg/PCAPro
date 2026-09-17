@@ -22,6 +22,9 @@ step and no Python runtime, and **no user data is ever transmitted**.
 The interface, the embedded theory and the generated report are available in **Spanish and
 English**. *Documentación en español: [`LEEME.md`](LEEME.md).*
 
+**User manual (Spanish):** [PDF](manual/PCAPro%20User%27s%20Manual.pdf) ·
+[HTML](https://luisangelbg.github.io/PCAPro/manual/es/manual-completo.html)
+
 ---
 
 ## Running it

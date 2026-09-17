@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>captura</title>
+<!-- Herramienta interna del manual: abre la app en un marco, ejecuta una receta de pasos
+     y deja la vista lista para una captura de pantalla con el navegador sin ventana.
+     Uso (con el servidor local de la app en el puerto 8790):
+       msedge --headless=new --hide-scrollbars --window-size=1400,860 --force-device-scale-factor=2
+              --virtual-time-budget=30000 --screenshot=salida.png
+              "http://localhost:8790/manual/herramientas/captura.html?w=1400&h=860&do=lang:es;ex:iris;process;scroll:%23card19"
+     Con --dump-dom en lugar de --screenshot, la receta deja en <pre id="marcas"> la posición de los
+     elementos pedidos con marks:, en porcentaje de la captura, para colocar las marcas numeradas.
+     Pasos: lang:es|en · ex:iris|sim (carga un ejemplo) · file:archivo.csv (uno de datos/) ·
+            uncheck:Variable (la desmarca en la selección rápida) · process (prepara la matriz y diagnostica) ·
+            step:N (botón de la barra; el 5b es step:7) · run:idBoton (espera a que termine) · wait:ms ·
+            scroll:selector[,desfase] · click:selector · open:selector (abre un <details>) ·
+            shut:selector (cierra todos los <details> que coincidan) ·
+            bloques:Nombre=var1,var2|Nombre2=var3,var4 (bloques del AFM) ·
+            select:selector=valor · hide:selector · top · marks:sel1|sel2|… -->
+<style>html,body{margin:0;overflow:hidden;background:#fff}iframe{border:0;display:block;position:absolute;left:0;top:0}#marcas{display:none}</style>
+</head>
+<body>
+<iframe id="app" src="../../index.html"></iframe>
+<pre id="marcas"></pre>
+<script>
+(async function () {
+  const p = new URLSearchParams(location.search);
+  const W = +(p.get('w') || 1400), H = +(p.get('h') || 860);
+  const f = document.getElementById('app');
+  f.style.width = W + 'px';
+  f.style.height = H + 'px';
+  await new Promise(r => f.addEventListener('load', r, { once: true }));
+  const w = f.contentWindow, d = f.contentDocument;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const q = s => d.querySelector(s);
+  await sleep(800);
+  for (const raw of (p.get('do') || '').split(';').filter(Boolean)) {
+    const i = raw.indexOf(':');
+    const cmd = i < 0 ? raw : raw.slice(0, i), arg = i < 0 ? '' : decodeURIComponent(raw.slice(i + 1));
+    /* el selector no se entera de un cambio hecho por código: se mueve a mano */
+    if (cmd === 'lang') { w.I18N.set(arg); const s = q('#langSelect'); if (s) s.value = arg; await sleep(500); }
+    else if (cmd === 'ex') { q(arg === 'sim' ? '#exampleSim' : '#exampleIris').click(); await sleep(2500); }
+    /* file:nombre.csv — un archivo de datos/, entregado por el mismo selector que usa quien lo carga a mano */
+    else if (cmd === 'file') {
+      const txt = await (await fetch('../../datos/' + arg + '?v=' + Date.now())).text();
+      const dt = new w.DataTransfer(); dt.items.add(new w.File([txt], arg, { type: 'text/csv' }));
+      const inp = q('#fileInput'); inp.files = dt.files; inp.dispatchEvent(new w.Event('change', { bubbles: true }));
+      await sleep(2000);
+    }
+    /* uncheck:Variable — la desmarca en la selección rápida, que la pasa a cuantitativa suplementaria */
+    else if (cmd === 'uncheck') {
+      const cb = q(`#quickVars input[data-col="${arg}"]`);
+      if (cb) { cb.checked = false; cb.dispatchEvent(new w.Event('change', { bubbles: true })); }
+      await sleep(500);
+    }
+    else if (cmd === 'process') { q('#processBtn').click(); await sleep(400); for (let k = 0; k < 400 && q('#processBtn').disabled; k++) await sleep(250); await sleep(1200); }
+    else if (cmd === 'step') { q(`.step-btn[data-step="${arg}"]`).click(); await sleep(900); }
+    else if (cmd === 'run') { q('#' + arg).click(); await sleep(400); for (let k = 0; k < 2400 && q('#' + arg).disabled; k++) await sleep(250); await sleep(1200); }
+    else if (cmd === 'wait') await sleep(+arg);
+    else if (cmd === 'scroll') {
+      /* las capturas sin ventana no siguen el desplazamiento dentro de un marco: el marco se hace
+         tan alto como la página y se sube detrás del área visible */
+      const [sel, off] = arg.split(',');
+      f.style.height = Math.max(H, d.documentElement.scrollHeight + 50) + 'px';
+      await sleep(300);
+      const y = q(sel).getBoundingClientRect().top + w.scrollY - (+off || 12);
+      f.style.top = -Math.max(0, y) + 'px'; await sleep(500);
+    }
+    else if (cmd === 'click') { q(arg).click(); await sleep(800); }
+    else if (cmd === 'open') { q(arg).open = true; await sleep(500); }
+    /* scrollx:selector — lleva al extremo derecho una tabla con desplazamiento horizontal */
+    else if (cmd === 'scrollx') { const n = q(arg); if (n) n.scrollLeft = n.scrollWidth; await sleep(400); }
+    /* bloques:Nombre=var1,var2|Nombre2=var3,var4 — escribe el bloque de cada variable en la configuración del AFM */
+    else if (cmd === 'bloques') {
+      arg.split('|').forEach(b => {
+        const [nom, vars] = b.split('=');
+        vars.split(',').forEach(v => {
+          const inp = d.querySelector(`.mfaGrupo[data-v="${v}"]`);
+          if (inp) { inp.value = nom; inp.dispatchEvent(new w.Event('input', { bubbles: true })); }
+        });
+      });
+      await sleep(400);
+    }
+    else if (cmd === 'shut') { d.querySelectorAll(arg).forEach(n => { n.open = false; }); await sleep(400); }
+    else if (cmd === 'select') { const [sel, val] = arg.split('='); const n = q(sel); n.value = val; n.dispatchEvent(new Event('change')); await sleep(700); }
+    else if (cmd === 'hide') { d.querySelectorAll(arg).forEach(n => { n.style.display = 'none'; }); await sleep(300); }
+    else if (cmd === 'top') { f.style.top = '0px'; w.scrollTo(0, 0); await sleep(300); }
+    else if (cmd === 'marks') {
+      const top = parseFloat(f.style.top) || 0;
+      const out = arg.split('|').map(sel => {
+        const n = q(sel);
+        if (!n) return sel + '\tno existe';
+        const r = n.getBoundingClientRect();
+        const cx = (r.left + r.width / 2) / W * 100, cy = (r.top + top + r.height / 2) / H * 100;
+        const lx = r.left / W * 100, ty = (r.top + top) / H * 100;
+        return `${sel}\tcentro ${cx.toFixed(1)}% ${cy.toFixed(1)}%\tesquina ${lx.toFixed(1)}% ${ty.toFixed(1)}%\tancho ${(r.width / W * 100).toFixed(1)}% alto ${(r.height / H * 100).toFixed(1)}%`;
+      });
+      document.getElementById('marcas').textContent = out.join('\n');
+    }
+  }
+  document.title = 'ready';
+})();
+</script>
+</body>
+</html>

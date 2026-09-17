@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 2 · Inicio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  /* capturas que no necesitan el ancho completo */
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  /* código para copiar tal cual */
+  .bloque-codigo { font-family: var(--mono); font-size: 8.4pt; line-height: 1.45; white-space: pre-wrap; word-break: break-word; background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.1in 0.16in; margin: 0.06in 0 0.16in; color: var(--marino); overflow: hidden; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-inicio" data-pestana="I" data-orden="2" style="--acento: var(--bi)">
+  <div class="cap-apertura">
+    <div class="cap-num">2</div>
+    <div class="cap-etiqueta">Capítulo dos · Inicio</div>
+    <h1 data-corto="Inicio, teoría y cómo citar">Inicio, teoría integrada y cómo citar</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">La portada de la app, la teoría que acompaña a cada bloque, el idioma de trabajo y la forma de citar el programa. Es el capítulo corto que conviene leer antes de cargar el primer archivo.</p>
+    <div class="cap-franja"><span class="ki"></span><span class="ki"></span><span class="ki"></span><span class="ki"></span><span class="ki"></span><span class="ki"></span><span class="ki"></span><span class="ki"></span></div>
+    <ul class="cap-contenido">
+      <li><b>2.1</b>La portada de la app</li>
+      <li><b>2.2</b>La teoría dentro de cada bloque</li>
+      <li><b>2.3</b>Idioma y preferencias</li>
+      <li><b>2.4</b>Cómo citar PCAPro</li>
+    </ul>
+  </div>
+
+  <!-- 2.1 -->
+  <h2 id="s2-1"><span class="num">2.1</span>La portada de la app</h2>
+  <p class="lead">La portada es el paso <span class="ui">Inicio</span>, el primero de la barra y lo primero que ves al abrir PCAPro. No calcula nada: presenta el programa, resume el recorrido y ofrece tres puertas de entrada.</p>
+  <p>La parte superior —encabezado, barra de pasos y presentación con sus tres botones— se describió en la figura 1.1. Debajo hay tres secciones más, que muestra la figura 2.1. A la portada se vuelve desde cualquier bloque con un clic en el logotipo <b>PCAPro.</b> del encabezado o en el botón <span class="ui">Inicio</span>, y volver no borra el análisis en curso.</p>
+
+  <table>
+    <caption><b>Tabla 2.1.</b> Las zonas de la portada, de arriba abajo.</caption>
+    <thead><tr><th style="width:22%">Zona</th><th>Qué contiene</th><th style="width:32%">Para qué sirve</th></tr></thead>
+    <tbody>
+      <tr><td><b>Encabezado</b></td><td>Logotipo y selector de idioma.</td><td>Volver a la portada; cambiar entre español e inglés (sección 2.3).</td></tr>
+      <tr><td><b>Barra de pasos</b></td><td><span class="ui">Inicio</span> y los bloques 1 a 6, con el 5b entre el 5 y el 6.</td><td>Moverse entre bloques ya activados (tabla 2.3).</td></tr>
+      <tr><td><b>Presentación</b></td><td>El propósito en una frase, tres botones, cuatro garantías y tres figuras de muestra.</td><td>Empezar: con tus datos, con el ejemplo o con la teoría (tabla 2.2).</td></tr>
+      <tr><td><b>Cómo funciona</b></td><td>Los seis pasos del recorrido, cada uno con lo que revisa.</td><td>Ver el orden del análisis de un vistazo.</td></tr>
+      <tr><td><b>Qué incluye</b></td><td>Una tarjeta por bloque con su descripción.</td><td>Ir directo a un bloque.</td></tr>
+      <tr><td><b>Por qué existe</b></td><td>La razón de ser del programa y la referencia para citarlo.</td><td>Copiar la cita con un clic (sección 2.4).</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Las tres puertas de entrada</h3>
+  <table>
+    <caption><b>Tabla 2.2.</b> Los botones de la presentación.</caption>
+    <thead><tr><th style="width:30%">Botón</th><th>Qué hace</th><th style="width:30%">Cuándo usarlo</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Empezar con mis datos →</span></td><td>Abre el Bloque 1 en la tarjeta <span class="ui">1.1 · Sube tu base de datos</span>.</td><td>Cuando ya tienes tu archivo.</td></tr>
+      <tr><td><span class="ui">Ver el ejemplo de iris</span></td><td>Abre el Bloque 1 y carga el ejemplo de iris, listo para diagnosticar.</td><td>Para practicar o comprobar resultados. Requiere abrir la app con el servidor local o en línea (tabla 1.4).</td></tr>
+      <tr><td><span class="ui">Leer la teoría</span></td><td>Abre el Bloque 1 con el primer tema del marco teórico desplegado.</td><td>Antes de tu primer análisis, o para repasar.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>La barra de pasos</h3>
+  <p>Los bloques se activan en orden, a medida que terminas el anterior: un botón gris todavía no está disponible. Una vez activado, puedes ir y volver entre bloques sin perder lo calculado. La tabla 2.3 dice qué acción enciende cada uno.</p>
+  <table class="compacta">
+    <caption><b>Tabla 2.3.</b> Qué activa cada bloque de la barra.</caption>
+    <thead><tr><th style="width:12%">Bloque</th><th>Se activa al…</th><th style="width:34%">Observación</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip ki">I</span> <span class="chip k1">1</span></td><td>Siempre disponibles.</td><td>—</td></tr>
+      <tr><td><span class="chip k2">2</span></td><td>Pulsar <span class="ui">Preparar matriz y diagnosticar →</span> en el Bloque 1.</td><td>Volver a preparar borra la extracción anterior.</td></tr>
+      <tr><td><span class="chip k3">3</span></td><td>Extraer los componentes en el Bloque 2.</td><td>Solo con el ACP; con los otros métodos queda apagado.</td></tr>
+      <tr><td><span class="chip k4">4</span></td><td>Aplicar la rotación en el Bloque 3; con los otros métodos, al ejecutarlos en el Bloque 2.</td><td>Si no quieres rotar, elige <span class="ui">Sin rotar (comparación)</span>: también cuenta como paso.</td></tr>
+      <tr><td><span class="chip k5">5</span> <span class="chip k5b">5b</span></td><td>Construir los mapas en el Bloque 4.</td><td>Los dos se activan a la vez.</td></tr>
+      <tr><td><span class="chip k6">6</span></td><td>Interpretar en el Bloque 5 o agrupar en el 5b.</td><td>Basta con uno de los dos.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-inicio-recorrido.png" alt="Parte baja de la portada: cómo funciona, qué incluye y por qué existe">
+      <span class="marca" style="left:19.5%;top:2.9%">1</span>
+      <span class="marca" style="left:17.1%;top:30.5%">2</span>
+      <span class="marca" style="left:90%;top:47.8%">3</span>
+      <span class="marca" style="left:88.5%;top:84.1%">4</span>
+      <span class="marca" style="left:76%;top:95.3%">5</span>
+    </div>
+    <figcaption><b>Figura 2.1.</b> La parte baja de la portada.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span><b>Cómo funciona</b>: los seis pasos del recorrido.</li>
+    <li><span class="n">2</span><b>Qué incluye</b>: una tarjeta lleva a su bloque, o al Bloque 1 si aún no está activo.</li>
+    <li><span class="n">3</span>El agrupamiento, opcional, tiene su propia tarjeta, rotulada 5b.</li>
+    <li><span class="n">4</span>La referencia del programa, ya formateada.</li>
+    <li><span class="n">5</span><span class="ui">⧉ Copiar referencia</span> la lleva al portapapeles.</li>
+  </ul>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · el recorrido tiene seis pasos, la barra ocho botones</div>
+    <p>La sección <b>Cómo funciona</b> resume el recorrido en seis pasos porque el agrupamiento (5b) es opcional y la portada no es un paso de análisis. La barra, en cambio, muestra los ocho destinos posibles. Un mismo análisis puede ir del Bloque 5 directamente al informe.</p>
+  </div>
+
+  <!-- 2.2 -->
+  <h2 id="s2-2"><span class="num">2.2</span>La teoría dentro de cada bloque</h2>
+  <p>Cada bloque empieza con una tarjeta de teoría: temas desplegables que explican qué se calcula y cómo decidir, escritos para quien necesita entender sin un libro de estadística al lado. En total son <b>40 temas</b>, cada uno redactado en español y en inglés; no es una traducción automática.</p>
+  <p>El más extenso es el marco teórico del Bloque 1, con trece temas que conviene tener claros antes de tocar los datos. Algunos llevan una etiqueta: <span class="ui">esencial</span> marca lo que no debes saltarte, y <span class="ui">▸ Bloque 2</span> o <span class="ui">▸ Bloque 3</span> indica que el tema se aplica más adelante. En la cabecera de esa tarjeta está también el botón <span class="ui">Cómo citar</span>.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · la teoría habla del ACP</div>
+    <p>Las tarjetas de teoría desarrollan el análisis de componentes principales y el agrupamiento. Lo propio del análisis de correspondencias, del ACM, del AFDM y del AFM —la inercia, las correcciones de Benzécri y Greenacre, el equilibrio entre bloques— aparece en las notas de cada tarjeta de resultados cuando usas esos métodos, y se desarrolla en los capítulos de este manual (secciones 4.5, 6.5 y 7.6).</p>
+  </div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>Cómo aprovechar la teoría</div>
+    <p>No hace falta leer los cuarenta temas antes de empezar. Lee completo el marco del Bloque 1 una vez —en especial el tema 3, <i>Postulados y supuestos</i>— y deja los demás para el momento de la decisión: abre la teoría del Bloque 2 cuando los criterios de retención no coincidan, la del Bloque 4 antes de publicar una figura. Así la teoría llega cuando tiene una pregunta concreta que responder.</p>
+  </div>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-teoria.png" alt="Marco teórico del Bloque 1 con sus trece temas cerrados">
+      <span class="marca" style="left:85.6%;top:6.8%">1</span>
+      <span class="marca" style="left:35%;top:19%">2</span>
+      <span class="marca" style="left:35%;top:30.9%">3</span>
+      <span class="marca" style="left:39%;top:66.9%">4</span>
+      <span class="marca" style="left:23%;top:90.9%">5</span>
+    </div>
+    <figcaption><b>Figura 2.2.</b> El marco teórico del Bloque 1, con los trece temas cerrados.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span><span class="ui">Cómo citar</span> abre el diálogo de la figura 2.4.</li>
+    <li><span class="n">2</span>Cada tema se abre y se cierra con un clic.</li>
+    <li><span class="n">3</span><span class="ui">esencial</span>: postulados y supuestos del ACP.</li>
+    <li><span class="n">4</span><span class="ui">▸ Bloque 2</span>: se aplica al decidir cuántos componentes retener.</li>
+    <li><span class="n">5</span>El último tema reúne un glosario y lecturas recomendadas.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Tabla 2.4.</b> Los trece temas del marco teórico y dónde los desarrolla este manual.</caption>
+    <thead><tr><th style="width:58%">Tema en la app</th><th style="width:22%">Se aplica en</th><th>En el manual</th></tr></thead>
+    <tbody>
+      <tr><td>1 · ¿Qué es el ACP y qué problema resuelve?</td><td>Todo el análisis</td><td>1.1, 1.3</td></tr>
+      <tr><td>2 · La matemática, en una página</td><td>Bloque 2</td><td>4.1</td></tr>
+      <tr><td>3 · Postulados y supuestos del ACP <span class="ui">esencial</span></td><td>Bloque 1</td><td>3.5</td></tr>
+      <tr><td>4 · Pruebas previas obligatorias: Bartlett, KMO, determinante</td><td>Bloque 1</td><td>1.9, 3.5</td></tr>
+      <tr><td>5 · Tamaño de muestra: cuánta gente / cuántas parcelas hacen falta</td><td>Bloque 1</td><td>1.8, 3.5</td></tr>
+      <tr><td>6 · Datos faltantes: qué hacer con los huecos</td><td>Bloque 1</td><td>3.4</td></tr>
+      <tr><td>7 · Estandarización, transformaciones y la elección covarianza / correlación</td><td>Bloque 1</td><td>1.3, 3.4</td></tr>
+      <tr><td>8 · Variables e individuos activos frente a suplementarios</td><td>Bloques 1 y 4</td><td>3.3, 6.4</td></tr>
+      <tr><td>9 · ¿Cuántos componentes retener? <span class="ui">▸ Bloque 2</span></td><td>Bloque 2</td><td>4.2, 4.3</td></tr>
+      <tr><td>10 · Rotaciones: varimax, quartimax, equamax, promax, oblimin <span class="ui">▸ Bloque 3</span></td><td>Bloque 3</td><td>5.1, 5.2</td></tr>
+      <tr><td>11 · ACP frente a Análisis Factorial (y otras confusiones frecuentes)</td><td>Bloques 2 y 3</td><td>5.1</td></tr>
+      <tr><td>12 · Errores frecuentes que arruinan un ACP</td><td>Todo el análisis</td><td>Apéndice B</td></tr>
+      <tr><td>13 · Glosario y lecturas</td><td>Consulta</td><td>Apéndices C y F</td></tr>
+    </tbody>
+  </table>
+
+  <p>Los bloques siguientes tienen su propia tarjeta de teoría, más breve y centrada en lo que ese bloque decide.</p>
+  <table class="compacta">
+    <caption><b>Tabla 2.5.</b> La teoría de los demás bloques.</caption>
+    <thead><tr><th style="width:12%">Bloque</th><th style="width:30%">Título de la tarjeta</th><th>Temas</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip k2">2</span></td><td>Extracción de componentes: teoría</td><td>Qué produce la extracción · Los criterios de retención, uno por uno · Errores frecuentes en este paso</td></tr>
+      <tr><td><span class="chip k3">3</span></td><td>Rotación: teoría</td><td>El problema que resuelve la rotación · Estructura simple: el objetivo de Thurstone · Rotaciones ortogonales: la familia ortomax · Rotaciones oblicuas: cuando los ejes pueden correlacionarse · ¿Es legítimo rotar componentes principales? · Cómo elegir el umbral de las cargas</td></tr>
+      <tr><td><span class="chip k4">4</span></td><td>Mapas factoriales: teoría</td><td>Las dos nubes: individuos y variables · cos² y contribuciones: las dos medidas que evitan malinterpretar · El biplot y su escala · Elipses: cuál dibujar y qué significa cada una · Elementos suplementarios · Convenciones al publicar una figura de ACP</td></tr>
+      <tr><td><span class="chip k5">5</span></td><td>Interpretación: teoría</td><td>Qué significa «interpretar» un componente · El valor test (v.test): cómo se caracteriza un eje con categorías · ¿Los grupos difieren en los componentes? — y la trampa de la circularidad · Calidad del ajuste: matriz reproducida y RMSR · Cómo se escriben los resultados</td></tr>
+      <tr><td><span class="chip k5b">5b</span></td><td>Agrupamiento sobre los componentes: teoría</td><td>Por qué agrupar sobre los ejes y no sobre las variables · El criterio de Ward · Cuántos grupos · La consolidación por k-medias · Cómo se describe un grupo · Lo que un agrupamiento no demuestra</td></tr>
+      <tr><td><span class="chip k6">6</span></td><td>Informe y exportación</td><td>Qué produce este bloque</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 2.3 -->
+  <h2 id="s2-3"><span class="num">2.3</span>Idioma y preferencias</h2>
+  <p>PCAPro funciona completo en español y en inglés: la interfaz, los cuarenta temas de teoría, los textos de interpretación que redacta con tus cifras y el informe final. El idioma se elige en el selector del encabezado. La primera vez, la app usa el idioma de tu navegador —inglés si está en inglés, español en cualquier otro caso— y a partir de entonces recuerda tu elección.</p>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-ingles.png" alt="Portada de PCAPro con la interfaz en inglés">
+      <span class="marca" style="left:78.5%;top:4.7%">1</span>
+      <span class="marca" style="left:91.6%;top:11.2%">2</span>
+    </div>
+    <figcaption><b>Figura 2.3.</b> La misma portada con la interfaz en inglés. <b>1</b> El selector de idioma. <b>2</b> Los bloques cambian de nombre: el 5b, <span class="ui">Agrupamiento</span>, aparece como <i>Clustering</i>.</figcaption>
+  </figure>
+
+  <h3>Qué cambia al instante y qué no</h3>
+  <p>El cambio de idioma es inmediato en los textos de la interfaz, pero no en lo que ya se calculó. Lo comprobamos con el ejemplo de iris: tras extraer los componentes en español y pasar la app a inglés, los títulos de las tarjetas cambiaron, pero el gráfico de sedimentación y los indicadores siguieron en español hasta volver a pulsar <span class="ui">Extraer componentes →</span>.</p>
+  <table>
+    <caption><b>Tabla 2.6.</b> Efecto de cambiar el idioma a mitad de un análisis.</caption>
+    <thead><tr><th style="width:38%">Elemento</th><th class="c" style="width:14%">Cambia al instante</th><th>Cómo actualizarlo</th></tr></thead>
+    <tbody>
+      <tr><td>Botones, menús, títulos de tarjetas y teoría</td><td class="c si">●</td><td>—</td></tr>
+      <tr><td>Resultados ya calculados: indicadores, tablas y listas de verificación</td><td class="c no">—</td><td>Vuelve a pulsar el botón principal del bloque.</td></tr>
+      <tr><td>Figuras ya dibujadas: títulos, ejes y leyendas por defecto</td><td class="c no">—</td><td>Vuelve a pulsar el botón principal del bloque.</td></tr>
+      <tr><td>Títulos que escribiste tú en el editor de figuras</td><td class="c no">—</td><td>El cambio de idioma no los toca, pero <b>se pierden si vuelves a ejecutar el bloque</b>: la figura se redibuja desde sus valores por defecto.</td></tr>
+      <tr><td>Informe y paquete ZIP</td><td class="c parcial">◐</td><td>Salen en el idioma activo al momento de generarlos.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿en qué idioma trabajo?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:36%">Si vas a…</th><th>entonces…</th></tr></thead>
+      <tbody>
+        <tr><td><b>Publicar en español</b> o trabajar en clase</td><td>Elige español antes de cargar los datos y déjalo así.</td></tr>
+        <tr><td><b>Publicar en inglés</b></td><td>Elige inglés antes de cargar los datos: las figuras saldrán ya con títulos y ejes en inglés, y el informe también.</td></tr>
+        <tr><td><b>Cambiar a mitad del análisis</b></td><td>Vuelve a ejecutar los bloques desde el primero que quieras en el otro idioma, en orden, y edita las figuras <b>después</b>: volver a ejecutar un bloque borra los cambios hechos en sus figuras.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Los nombres de los archivos también cambian con el idioma: el informe se descarga como <code>…_informe_ACP.html</code> o <code>…_PCA_report.html</code>, y las tablas del ZIP van en <code>tablas/</code> o en <code>tables/</code>.</p>
+  </div>
+
+  <h3>Qué recuerda la app</h3>
+  <p>PCAPro no tiene cuentas de usuario ni un panel de ajustes, y guarda lo mínimo.</p>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">Qué</th><th class="c" style="width:14%">Se recuerda</th><th>Detalle</th></tr></thead>
+    <tbody>
+      <tr><td>Idioma</td><td class="c si">●</td><td>Queda guardado en tu navegador, en esa computadora.</td></tr>
+      <tr><td>Datos, ajustes y resultados del análisis</td><td class="c no">—</td><td>Viven mientras la pestaña está abierta; recargar la página empieza de cero.</td></tr>
+      <tr><td>Estilo de las figuras</td><td class="c no">—</td><td>Se conserva mientras no vuelvas a ejecutar el bloque ni recargues la página; descarga cada figura en cuanto la tengas como quieres.</td></tr>
+      <tr><td>Modo claro u oscuro</td><td class="c parcial">◐</td><td>La interfaz sigue el modo de tu sistema operativo; las figuras conservan su tema, <span class="ui">Claro</span> por defecto, para que se descarguen igual.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 2.4 -->
+  <h2 id="s2-4"><span class="num">2.4</span>Cómo citar PCAPro</h2>
+  <p>Citar el software con que se hizo un análisis es parte de reportarlo: permite que otros sepan exactamente con qué herramienta, y en qué versión, se obtuvieron los resultados. Es también lo que hace visible el trabajo detrás de un programa libre. La referencia aparece en cinco lugares de la app, siempre idéntica.</p>
+
+  <table>
+    <caption><b>Tabla 2.7.</b> Dónde encontrar la referencia.</caption>
+    <thead><tr><th style="width:30%">Lugar</th><th>Qué ofrece</th></tr></thead>
+    <tbody>
+      <tr><td>Botón <span class="ui">Cómo citar</span>, en la teoría del Bloque 1</td><td>Un diálogo con la referencia y dos botones para copiarla en formato de texto o en BibTeX (figura 2.4).</td></tr>
+      <tr><td>Portada, sección <b>Por qué existe</b></td><td>La referencia y <span class="ui">⧉ Copiar referencia</span> (figura 2.1).</td></tr>
+      <tr><td>Tarjeta <span class="ui">6.4 · Cómo citar PCAPro</span> del Bloque 6</td><td>La referencia con sus dos botones de copia, al terminar el análisis.</td></tr>
+      <tr><td>Informe generado</td><td>El párrafo de métodos ya incluye «(Barrera-Guzmán, 2026)», y una sección final repite la referencia con su BibTeX.</td></tr>
+      <tr><td>Paquete ZIP</td><td>El archivo <code>CITATION.bib</code>, listo para importar en Zotero, Mendeley o LaTeX.</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-citar.png" alt="Diálogo Cómo citar PCAPro con la referencia y los botones de copia">
+      <span class="marca" style="left:96%;top:38%">1</span>
+      <span class="marca" style="left:15.6%;top:73.5%">2</span>
+      <span class="marca" style="left:39.1%;top:73.5%">3</span>
+      <span class="marca" style="left:55.9%;top:73.5%">4</span>
+    </div>
+    <figcaption><b>Figura 2.4.</b> El diálogo <span class="ui">Cómo citar PCAPro</span>. <b>1</b> La referencia. <b>2</b> La copia como texto. <b>3</b> La copia en BibTeX. <b>4</b> Cierra el diálogo.</figcaption>
+  </figure>
+
+  <h3>La referencia</h3>
+  <div class="cita">Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided principal component analysis</i> (versión 1.1.0) [software]. Zenodo. https://doi.org/10.5281/zenodo.22649709</div>
+  <p class="small">En BibTeX, tal como la copia el botón <span class="ui">⧉ Copiar BibTeX</span> y como va en <code>CITATION.bib</code>:</p>
+  <div class="bloque-codigo">@software{pcapro,
+  author    = {Barrera-Guzmán, Luis Ángel},
+  title     = {{PCAPro}: an offline, browser-based platform for guided principal component analysis},
+  year      = {2026},
+  version   = {1.1.0},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.22649709},
+  url       = {https://github.com/luisangelbg/PCAPro}
+}</div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>El DOI de concepto y los DOI de versión</div>
+    <p>Cada versión publicada de PCAPro se archiva en Zenodo con su propio identificador digital (DOI), y todas cuelgan de un <b>DOI de concepto</b> que siempre lleva a la versión más reciente. La referencia usa el de concepto, <code>10.5281/zenodo.22649709</code>: así todas las citas del programa se acumulan en un mismo registro, y la versión exacta que usaste queda dicha en el texto, «(versión 1.1.0)». Si una revista o un revisor te pide el identificador de la versión concreta, la 1.1.0 es <code>10.5281/zenodo.22694679</code>.</p>
+  </div>
+
+  <h3>Qué escribir en la sección de métodos</h3>
+  <p>El informe del Bloque 6 redacta el párrafo de métodos con los ajustes y las cifras de tu análisis, e incluye ya la cita. Con el ejemplo de iris, recién extraídos los componentes y sin rotar, dice:</p>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Párrafo generado por el informe · iris</div>
+    <p>Se analizaron 150 observaciones y 4 variables cuantitativas (Sepal.Length, Sepal.Width, Petal.Length, Petal.Width) mediante análisis de componentes principales. Los datos faltantes se trataron por eliminación de filas incompletas. Se aplicó sin transformación previa y estandarización z (matriz de correlaciones). La adecuación muestral se verificó con el índice de Kaiser–Meyer–Olkin (KMO = 0.54) y la prueba de esfericidad de Bartlett (χ²(6) = 707, p &lt; 0.0001). El número de componentes se decidió combinando el análisis paralelo de Horn (500 matrices generadas por permutación de los datos observados, percentil 95), el criterio de Kaiser, el bastón roto, el criterio MAP de Velicer y el gráfico de sedimentación. No se aplicó rotación. Todos los cálculos se realizaron en PCAPro (Barrera-Guzmán, 2026), que implementa la descomposición espectral por rotaciones de Jacobi y las rotaciones factoriales por el algoritmo de proyección de gradiente.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · es un borrador, no un texto final</div>
+    <p>El párrafo sirve de punto de partida, pero revísalo antes de pegarlo. Tres cosas que casi siempre hay que ajustar: la <b>redacción</b>, que al armarse por piezas puede quedar forzada —en el ejemplo, «se aplicó sin transformación previa»—; el <b>criterio de retención</b> que de verdad usaste para decidir, que el párrafo enumera en general; y el <b>número de componentes retenidos</b>, que debes declarar con su porcentaje de varianza.</p>
+  </div>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · qué citar además del programa</div>
+    <table class="compacta">
+      <thead><tr><th style="width:42%">Si en tu análisis usaste…</th><th>cita también</th></tr></thead>
+      <tbody>
+        <tr><td>Cualquier ACP</td><td>Pearson (1901) y Hotelling (1933), o un texto de referencia como Jolliffe (2002).</td></tr>
+        <tr><td>Análisis paralelo para retener componentes</td><td>Horn (1965).</td></tr>
+        <tr><td>Criterio MAP</td><td>Velicer (1976).</td></tr>
+        <tr><td>Rotación varimax o promax</td><td>Kaiser (1958); Hendrickson y White (1964).</td></tr>
+        <tr><td>Prueba de esfericidad</td><td>Bartlett (1950).</td></tr>
+        <tr><td>Agrupamiento sobre los ejes</td><td>Ward (1963); Husson, Josse y Pagès (2010).</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">No hace falta buscar los datos completos: la sección <b>Referencias metodológicas</b> del informe los trae, y el apéndice F los reúne.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · cita también este manual si lo usas en clase</div>
+    <p>Si preparas un curso, una tesis o un material didáctico apoyado en este manual, cítalo aparte del programa: Barrera-Guzmán, L. Á. (2026). <i>PCAPro. Manual de usuario</i> (1.ª ed.).</p>
+  </div>
+
+  <p style="margin-top:0.3in">Con la portada, la teoría, el idioma y la cita resueltos, el siguiente capítulo entra al primer bloque de análisis: cómo preparar la hoja de datos, cargarla y comprobar si admite un análisis factorial.</p>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Capítulo 7 · Bloque 5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  figure.mini .marco { width: 58%; margin: 0 auto; }
+  figure.mini figcaption { margin-left: 21%; margin-right: 21%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b5" data-pestana="B5" data-orden="7" style="--acento: var(--b5)">
+  <div class="cap-apertura">
+    <div class="cap-num">7</div>
+    <div class="cap-etiqueta">Capítulo siete · Bloque 5</div>
+    <h1>Interpretación</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">De los números a las frases: cómo nombrar cada componente, qué variables y categorías lo describen, cómo comparar grupos sin caer en la circularidad, cuánto de la estructura reproduce la solución y cómo convertir todo en un borrador de la sección de resultados.</p>
+    <div class="cap-franja"><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span></div>
+    <ul class="cap-contenido">
+      <li><b>7.1</b>Nombrar un eje</li>
+      <li><b>7.2</b>Descripción de dimensiones y valores test</li>
+      <li><b>7.3</b>Comparar grupos sin caer en la circularidad</li>
+      <li><b>7.4</b>Calidad del ajuste</li>
+      <li><b>7.5</b>El borrador de resultados</li>
+      <li><b>7.6</b>Interpretar AC, ACM, AFDM y AFM</li>
+      <li><b>7.7</b>Paso a paso</li>
+    </ul>
+  </div>
+
+  <!-- 7.1 -->
+  <h2 id="s7-1"><span class="num">7.1</span>Nombrar un eje</h2>
+  <p class="lead">Un componente es una combinación lineal y, por sí mismo, no significa nada. Interpretarlo es encontrar el concepto de tu disciplina que explica por qué esas variables varían juntas, y darle un nombre corto que un lector entienda sin mirar la tabla de cargas.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>El procedimiento</div>
+    <ol>
+      <li>Mira las variables con |carga| por encima del umbral que fijaste.</li>
+      <li>Sepáralas por signo. Si hay de los dos, el eje es un <b>contraste</b>: opone dos conjuntos de características.</li>
+      <li>Busca qué tienen en común: tamaño, vigor, un gradiente ambiental, una estrategia de uso de recursos.</li>
+      <li>Ponle un nombre <b>corto y sustantivo</b>. Si no puedes nombrarlo, probablemente no debiste retenerlo.</li>
+      <li>Confírmalo con las variables suplementarias, las categorías y los individuos extremos.</li>
+    </ol>
+  </div>
+
+  <p>El Bloque 5 se activa al generar los mapas del Bloque 4 y trabaja sobre la solución que elegiste ahí: sin rotar o rotada. Tiene una tarjeta de teoría con cinco temas y la tarjeta <span class="ui">5.1 · Configuración</span>, con dos opciones. Al pulsar <span class="ui">Interpretar componentes →</span> aparecen siete tarjetas de resultados y se activa el Bloque 6.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.1.</b> Las opciones de la tarjeta 5.1.</caption>
+    <thead><tr><th style="width:30%">Opción</th><th>Valores</th><th style="width:34%">Nota</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Umbral de carga interpretable</span></td><td>0.30, 0.40 (por defecto), 0.50, 0.55 y 0.70.</td><td>Es independiente del umbral del Bloque 3: conviene usar el mismo.</td></tr>
+      <tr><td><span class="ui">Comparar grupos sobre los componentes</span></td><td><span class="ui">No comparar grupos</span> o una cualitativa del Bloque 1.</td><td>Añade la tarjeta 5.5 con un ANOVA y un Kruskal–Wallis por componente.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Cambiar cualquiera de las dos opciones vuelve a interpretar al momento. Los nombres que escribiste se conservan mientras no cambie el número de componentes.</p>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-config.png" alt="Tarjetas 5.1 y 5.2 del proyecto integrador con los componentes nombrados">
+      <span class="marca" style="left:24.1%;top:10.9%">1</span>
+      <span class="marca" style="left:79%;top:10.9%">2</span>
+      <span class="marca" style="left:24.8%;top:27.2%">3</span>
+      <span class="marca" style="left:38.6%;top:52%">4</span>
+      <span class="marca" style="left:56.9%;top:52%">5</span>
+      <span class="marca" style="left:21%;top:80.1%">6</span>
+      <span class="marca" style="left:14.5%;top:92.2%">7</span>
+    </div>
+    <figcaption><b>Figura 7.1.</b> Las tarjetas <span class="ui">5.1</span> y <span class="ui">5.2 · Resumen</span> con el proyecto integrador, rotación varimax y los cuatro componentes ya nombrados.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>El umbral de carga.</li>
+    <li><span class="n">2</span>La cualitativa que se compara.</li>
+    <li><span class="n">3</span>Lanza la interpretación.</li>
+    <li><span class="n">4</span>RMSR en verde: buen ajuste.</li>
+    <li><span class="n">5</span>Pares mal reproducidos, en ámbar.</li>
+    <li><span class="n">6</span>Componente y su porcentaje.</li>
+    <li><span class="n">7</span>La sugerencia de la app, que se conserva.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.2.</b> Los indicadores de la tarjeta 5.2.</caption>
+    <thead><tr><th style="width:28%">Indicador</th><th>Qué cuenta</th><th style="width:30%">Color</th></tr></thead>
+    <tbody>
+      <tr><td><b>Componentes interpretados</b></td><td>Cuántos, y si la solución es rotada o sin rotar.</td><td>—</td></tr>
+      <tr><td><b>RMSR</b></td><td>Residuo cuadrático medio (sección 7.4).</td><td>verde &lt; 0.05 · ámbar &lt; 0.08 · rojo</td></tr>
+      <tr><td><b>Residuos &gt; 0.05</b></td><td>Pares de variables cuyo residuo supera 0.05 en valor absoluto.</td><td>verde &lt; 10 % · ámbar &lt; 25 % · rojo</td></tr>
+      <tr><td><b>Categorías caracterizadas</b></td><td>Categorías con |v.test| ≥ 1.96 en algún eje (sección 7.2).</td><td>—</td></tr>
+      <tr><td><b>Varianza retenida</b></td><td>La de todos los ejes interpretados.</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Los nombres</h3>
+  <p>Bajo los indicadores, <b>Nombra cada componente</b> ofrece un campo por componente, relleno con una sugerencia construida a partir de las cargas que superan el umbral. Escribe encima el término de tu disciplina: el nombre pasa a la lectura de los componentes, al borrador de resultados y al informe del Bloque 6. La sugerencia original queda siempre visible debajo del campo.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.3.</b> Cómo construye la app la sugerencia.</caption>
+    <thead><tr><th style="width:40%">Si las cargas sobre el umbral son…</th><th>la sugerencia es</th></tr></thead>
+    <tbody>
+      <tr><td>Todas positivas</td><td>Las tres mayores: «Altura_cm, Diametro_tallo_mm, Area_foliar_cm2».</td></tr>
+      <tr><td>De los dos signos</td><td>Las dos mayores de cada lado: «Conductancia_mmol + Potencial_hidrico_MPa frente a Temp_hoja_C».</td></tr>
+      <tr><td>Todas negativas</td><td>Las tres mayores precedidas de «Menor».</td></tr>
+      <tr><td>Ninguna</td><td>«(sin carga clara)»: el eje no se interpreta con ese umbral.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿es un buen nombre?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">Pregunta</th><th>Si la respuesta es no…</th></tr></thead>
+      <tbody>
+        <tr><td>¿Resume a <b>todas</b> las variables marcadoras, no solo a la primera?</td><td>Busca un término más general, o revisa si hay dos temas mezclados.</td></tr>
+        <tr><td>Si es un contraste, ¿dice qué queda en <b>cada extremo</b>?</td><td>Usa la forma «A frente a B», o un nombre de gradiente: «grosor de la lámina».</td></tr>
+        <tr><td>¿Lo confirman las <b>suplementarias</b> y los individuos extremos?</td><td>El nombre describe las cargas, pero no el sistema: reconsidéralo.</td></tr>
+        <tr><td>¿Lo entendería un lector sin ver la tabla?</td><td>Evita los nombres de columna: «Crecimiento», no «Altura_cm, Biomasa_g».</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">El signo de un eje es arbitrario. Nombra el eje por su extremo positivo y, si inviertes el signo en una figura para leer mejor, hazlo en todas y decláralo.</p>
+  </div>
+
+  <!-- 7.2 -->
+  <h2 id="s7-2"><span class="num">7.2</span>Descripción de dimensiones y valores test</h2>
+  <p>Dos tarjetas describen cada eje desde fuera de las cargas: la <span class="ui">5.3 · Descripción de cada dimensión</span>, con las variables cuantitativas, y la <span class="ui">5.4 · Caracterización por categorías (valores test)</span>, con las cualitativas. Juntas equivalen a la función <code>dimdesc()</code> de FactoMineR.</p>
+
+  <h3>Variables que describen el eje</h3>
+  <p>El selector <span class="ui">Eje a describir:</span> elige el componente de la tabla. La tabla ordena todas las variables —activas y cuantitativas suplementarias— por el valor absoluto de su correlación con las puntuaciones de ese eje. Para las activas, esa correlación es la carga; para las suplementarias, la misma coordenada del círculo del Bloque 4.</p>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-dimdesc.png" alt="Tarjeta 5.3 con la descripción del primer componente rotado">
+      <span class="marca" style="left:21.5%;top:6%">1</span>
+      <span class="marca" style="left:81.2%;top:27.7%">2</span>
+      <span class="marca" style="left:46.4%;top:46.9%">3</span>
+      <span class="marca" style="left:94.4%;top:79%">4</span>
+    </div>
+    <figcaption><b>Figura 7.2.</b> La tarjeta <span class="ui">5.3</span> con CPR1 del proyecto integrador. <b>1</b> El eje que se describe. <b>2</b> El rendimiento, suplementario, en verde azulado y con †. <b>3</b> Las líneas de referencia en ±0.30. <b>4</b> Las variables no significativas, marcadas n.s.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.4.</b> Columnas de la tabla de descripción.</caption>
+    <thead><tr><th style="width:28%">Columna</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td>Tipo</td><td>activa o suplementaria.</td></tr>
+      <tr><td>Correlación con el eje · r²</td><td>La correlación y su cuadrado: la proporción de la varianza de la variable que recoge el eje.</td></tr>
+      <tr><td>p y estrellas</td><td>Prueba t sobre el coeficiente con n − 2 gl (con los n válidos, en las suplementarias): * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001, n.s.</td></tr>
+    </tbody>
+  </table>
+  <p>La figura <b>Descripción de la dimensión</b> dibuja las mismas correlaciones como barras. Su editor tiene su propio selector de eje, orden por magnitud o por signo, solo las significativas, solo las N mayores y las líneas en ±0.30, que no cambian con el umbral de la tarjeta 5.1.</p>
+
+  <h3>Valores test de las categorías</h3>
+  <p>Cada categoría de las cualitativas del Bloque 1 se sitúa en el centroide de sus individuos. El <b>valor test</b> mide cuánto se aparta ese centroide del centro del eje respecto a lo que se esperaría si la categoría fuera una muestra al azar de los individuos.</p>
+
+  <div class="formula">v = ( x̄<sub>categoría</sub> − x̄<sub>global</sub> ) / √[ (s² / n<sub>q</sub>) · (N − n<sub>q</sub>) / (N − 1) ]</div>
+
+  <figure class="mini">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-vtest.png" alt="Tarjeta 5.4 con los valores test de tratamiento y bloque">
+      <span class="marca" style="left:15.3%;top:37.7%">1</span>
+      <span class="marca" style="left:21%;top:44.5%">2</span>
+      <span class="marca" style="left:79.6%;top:51.5%">3</span>
+      <span class="marca" style="left:86%;top:80.5%">4</span>
+    </div>
+    <figcaption><b>Figura 7.3.</b> La tarjeta <span class="ui">5.4</span> con el proyecto integrador. <b>1</b> Riego + fertilización, con v = 5.1 en CPR1: la categoría que más caracteriza el crecimiento. <b>2</b> Los bloques, sin ningún valor significativo. <b>3</b> La clave de las estrellas. <b>4</b> Fertilización también caracteriza la fenología (v = 2.22).</figcaption>
+  </figure>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿cómo leo un valor test?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:30%">|v|</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>&lt; 1.96</td><td>La categoría no se distingue del centro en ese eje (en gris).</td></tr>
+        <tr><td>≥ 1.96 (*)</td><td>Caracteriza el eje con p &lt; 0.05; el signo dice de qué lado.</td></tr>
+        <tr><td>≥ 2.58 (**)</td><td>p &lt; 0.01.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Ordena por |v|: las categorías con el valor más alto son las que mejor caracterizan el eje. Con n grande casi cualquier diferencia pequeña pasa de 1.96: mira también la distancia del centroide en el mapa.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · los valores p de las activas son circulares</div>
+    <p>Los ejes se construyeron con las variables activas, así que su correlación con el eje será significativa casi siempre: con n = 144, basta |r| ≥ 0.17. Esos p son una ayuda de lectura, no evidencia. Los valores p de las <b>suplementarias</b> sí dicen algo, porque esas variables no intervinieron en los ejes, aunque tampoco llevan corrección por comparaciones múltiples.</p>
+  </div>
+
+  <h3>Individuos característicos</h3>
+  <p>La tarjeta <span class="ui">5.6 · Individuos característicos de cada eje</span> lista, para cada componente, los cinco individuos con la coordenada más negativa y los cinco con la más positiva. Sirven para comprobar el nombre: si llamaste «Crecimiento» a CPR1, las parcelas del extremo positivo deberían ser las más vigorosas que conoces.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/app-b5-extremos.png" alt="Tarjeta 5.6 con los individuos extremos de cada eje"></div>
+    <figcaption><b>Figura 7.4.</b> La tarjeta <span class="ui">5.6</span> con el proyecto integrador. PAR005 y PAR058 aparecen en el extremo negativo de CPR1 y de CPR2 a la vez: poco crecimiento y mala nutrición. PAR024 encabeza el lado positivo de CPR2 y de CPR3.</figcaption>
+  </figure>
+
+  <!-- 7.3 -->
+  <h2 id="s7-3"><span class="num">7.3</span>Comparar grupos sin caer en la circularidad</h2>
+  <p>Si elegiste una cualitativa en <span class="ui">Comparar grupos sobre los componentes</span>, aparece la tarjeta <span class="ui">5.5 · Comparación de grupos sobre los componentes</span>. Para cada componente compara las puntuaciones de los grupos con un ANOVA de una vía y con la prueba de Kruskal–Wallis. Solo entran los grupos con al menos dos individuos.</p>
+
+  <table>
+    <caption><b>Tabla 7.5.</b> Columnas de la tabla de comparación.</caption>
+    <thead><tr><th style="width:22%">Columna</th><th>Contenido</th><th style="width:30%">Referencia</th></tr></thead>
+    <tbody>
+      <tr><td>F, gl, p (ANOVA)</td><td>La prueba F de un ANOVA de una vía sobre las puntuaciones.</td><td>—</td></tr>
+      <tr><td>η²</td><td>Proporción de la varianza del componente explicada por el factor.</td><td>0.01 pequeño · 0.06 medio · 0.14 grande</td></tr>
+      <tr><td>ω²</td><td>Versión menos sesgada de η²; repórtala con muestras pequeñas.</td><td>Las mismas</td></tr>
+      <tr><td>H, p (Kruskal)</td><td>La alternativa que no supone normalidad.</td><td>—</td></tr>
+      <tr><td>Lectura</td><td>«separa los grupos» con el tamaño del efecto si p &lt; 0.05; si no, «no distingue grupos».</td><td>Por el p del ANOVA</td></tr>
+    </tbody>
+  </table>
+  <p>Debajo están la figura <b>Puntuaciones por grupo</b> —diagramas de caja o medias con IC 95 %, un panel por componente con su prueba F— y la tabla <b>Medias por grupo</b>, con n, media, DE e intervalo de confianza del 95 % de cada media.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · qué se puede afirmar</div>
+    <p>Estos contrastes son <b>legítimos</b> porque la cualitativa no intervino en los ejes. Pero tienen dos límites que hay que declarar: son <i>k</i> pruebas sin corrección por comparaciones múltiples, y los ejes se eligieron <i>a posteriori</i> por maximizar varianza, así que los p son optimistas. Úsalos para describir <b>en qué dimensión</b> difieren los grupos. Si tu pregunta es «¿difieren los grupos?», la respuesta es un MANOVA, un PERMANOVA o un análisis discriminante sobre las variables originales.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · un control negativo gratuito</div>
+    <p>Si tu diseño tiene un factor que no debería importar, compáralo también. En el proyecto integrador, con <code>Bloque</code> ningún componente distingue los grupos: F entre 0.05 y 1.06, η² ≤ 0.015. Es la comprobación de que las diferencias entre tratamientos no son un artefacto del terreno.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-grupos.png" alt="Tarjeta 5.5 con la comparación de tratamientos">
+      <span class="marca" style="left:93%;top:18.4%">1</span>
+      <span class="marca" style="left:49%;top:34.3%">2</span>
+      <span class="marca" style="left:47.4%;top:45.3%">3</span>
+      <span class="marca" style="left:60.5%;top:62.5%">4</span>
+      <span class="marca" style="left:46.7%;top:65.9%">5</span>
+    </div>
+    <figcaption><b>Figura 7.5.</b> La tarjeta <span class="ui">5.5</span> con el tratamiento. <b>1</b> CPR4, la fenología, no distingue los tratamientos. <b>2</b> La prueba F de cada panel, con η². <b>3</b> Riego + fertilización, el único tratamiento con la mediana de CPR1 claramente sobre cero. <b>4</b> En CPR4 las cajas se solapan casi por completo. <b>5</b> Puntuaciones atípicas, en rojo.</figcaption>
+  </figure>
+
+  <!-- 7.4 -->
+  <h2 id="s7-4"><span class="num">7.4</span>Calidad del ajuste</h2>
+  <p>Los <i>k</i> componentes retenidos permiten reconstruir la matriz de correlaciones. La diferencia entre la observada y la reproducida son los <b>residuos</b>; si son pequeños, los componentes recogen toda la estructura que importa.</p>
+
+  <div class="formula">R̂ = A · Aᵀ (sin rotar u ortogonal) &nbsp;&nbsp;·&nbsp;&nbsp; R̂ = P · Φ · Pᵀ (oblicua)<br>RMSR = √( Σ<sub>i&lt;j</sub> residuo²<sub>ij</sub> / [p(p − 1)/2] )</div>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Regla de decisión · ¿retuve suficientes componentes?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:30%">RMSR</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr><td>&lt; 0.05</td><td>Buen ajuste: la solución reproduce la estructura.</td></tr>
+        <tr><td>0.05 a 0.08</td><td>Aceptable.</td></tr>
+        <tr><td>&gt; 0.08</td><td>Se pierde estructura: considera retener un componente más en el Bloque 2.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Complemento: que menos del 10 % de los pares tenga un residuo mayor que 0.05. Un par concreto con residuo grande señala una relación que ningún eje recoge. Con el proyecto integrador, 4 componentes dan RMSR = 0.029 y 8 de 66 pares; con 3, RMSR = 0.105 y 19 de 66: el cuarto componente hace falta.</p>
+  </div>
+
+  <figure class="mini">
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-residuos.png" alt="Mapa de calor de los residuos con cuatro componentes">
+      <span class="marca" style="left:84.9%;top:36.9%">1</span>
+      <span class="marca" style="left:54.5%;top:67.2%">2</span>
+      <span class="marca" style="left:71.4%;top:76.9%">3</span>
+      <span class="marca" style="left:75.5%;top:90.6%">4</span>
+      <span class="marca" style="left:55%;top:94.8%">5</span>
+    </div>
+    <figcaption><b>Figura 7.6.</b> La tarjeta <span class="ui">5.7 · Calidad del ajuste</span> con cuatro componentes. <b>1</b> La escala se ajusta al residuo mayor. <b>2</b> La temperatura de la hoja con la conductancia y el potencial hídrico (0.08 y 0.09): el eje del agua no recoge del todo esa relación. <b>3</b> Los residuos negativos del bloque de nutrición. <b>4</b> Floración y madurez (−0.09). <b>5</b> El resumen: RMSR y pares mayores que 0.05.</figcaption>
+  </figure>
+
+  <p>La figura, <b>Residuos de la matriz reproducida</b>, muestra el triángulo inferior por defecto —su editor permite el superior o la matriz completa— y marca en negrita los residuos mayores que 0.05. La descarga <span class="ui">⬇ Matriz de residuos (CSV)</span> da la matriz completa.</p>
+
+  <!-- 7.5 -->
+  <h2 id="s7-5"><span class="num">7.5</span>El borrador de resultados</h2>
+  <p>La última tarjeta, <span class="ui">5.8 · Lectura de los componentes</span>, reúne todo en dos piezas de texto que se actualizan al cambiar los nombres.</p>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.6.</b> Qué contiene la lectura de cada componente.</caption>
+    <thead><tr><th style="width:30%">Frase</th><th>De dónde sale</th></tr></thead>
+    <tbody>
+      <tr><td>Encabezado</td><td>Componente, nombre entre comillas y porcentaje.</td></tr>
+      <tr><td>«Valores altos en este eje corresponden a…»</td><td>Variables con |r| sobre el umbral, activas y suplementarias (supl.), separadas por signo.</td></tr>
+      <tr><td>«Categorías que lo caracterizan»</td><td>Hasta seis categorías con |v| ≥ 1.96, de mayor a menor.</td></tr>
+      <tr><td>«Comparación entre grupos»</td><td>F, p y η² del ANOVA, si elegiste una cualitativa.</td></tr>
+      <tr><td>Color del recuadro</td><td>Verde si al menos dos variables superan el umbral; ámbar si no.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-lectura.png" alt="Tarjeta 5.8 con la lectura de los componentes y el borrador">
+      <span class="marca" style="left:36.8%;top:7.5%">1</span>
+      <span class="marca" style="left:87.2%;top:12.5%">2</span>
+      <span class="marca" style="left:69.5%;top:61.4%">3</span>
+      <span class="marca" style="left:1.2%;top:75.5%">4</span>
+      <span class="marca" style="left:90.4%;top:90.6%">5</span>
+    </div>
+    <figcaption><b>Figura 7.7.</b> La tarjeta <span class="ui">5.8</span> con los nombres escritos. <b>1</b> El nombre, tomado del campo de la tarjeta 5.2. <b>2</b> Las suplementarias se marcan (supl.). <b>3</b> La fenología no separa los tratamientos. <b>4</b> El borrador para la sección de resultados. <b>5</b> El paso al agrupamiento; debajo, al informe.</figcaption>
+  </figure>
+
+  <p>El <b>borrador</b> es un párrafo con tus números: matriz, número de variables y observaciones, KMO y Bartlett, componentes y varianza acumulada, rotación y normalización, umbral, el nombre y porcentaje de cada componente, y el RMSR. <span class="ui">⧉ Copiar párrafo</span> lo lleva al portapapeles.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · revisa estas tres cosas antes de pegar el borrador</div>
+    <ul>
+      <li><b>El criterio de retención.</b> El párrafo siempre dice «con base en el análisis paralelo de Horn y el gráfico de sedimentación», aunque hayas elegido el número por otro criterio. Corrígelo con los criterios que realmente usaste (sección 4.3).</li>
+      <li><b>Los nombres.</b> Si no los cambiaste, el párrafo usa las sugerencias, con nombres de columna.</li>
+      <li><b>Lo que falta.</b> No menciona el tratamiento de faltantes, la transformación ni el escalado, que están en el informe del Bloque 6, ni la comparación de grupos.</li>
+    </ul>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.7.</b> Los botones de la tarjeta 5.8.</caption>
+    <thead><tr><th style="width:40%">Botón</th><th>Qué hace</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Descripción de dimensiones (CSV)</span></td><td>Para cada eje, variables con tipo, correlación, r² y p.</td></tr>
+      <tr><td><span class="ui">⬇ Valores test (CSV)</span></td><td>Categorías con n, v.test y p en cada eje.</td></tr>
+      <tr><td><span class="ui">⬇ Matriz de residuos (CSV)</span></td><td>La matriz de residuos completa.</td></tr>
+      <tr><td><span class="ui">Agrupar los individuos (HCPC) →</span></td><td>Abre el agrupamiento (capítulo 8).</td></tr>
+      <tr><td><span class="ui">Ir al informe →</span></td><td>Abre el Bloque 6 (capítulo 9).</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 7.6 -->
+  <h2 id="s7-6"><span class="num">7.6</span>Interpretar AC, ACM, AFDM y AFM</h2>
+  <p>Con un método distinto del ACP, el mismo botón <span class="ui">Interpretar componentes →</span> abre otras tarjetas, porque la correlación de cada variable con cada eje no siempre existe. Lo que describe un eje es la <b>contribución</b> de cada elemento, con su signo.</p>
+
+  <table>
+    <caption><b>Tabla 7.8.</b> Qué describe cada eje según el método.</caption>
+    <thead><tr><th style="width:12%">Método</th><th>Elementos de la tarjeta 5.2 · Lectura de cada eje</th></tr></thead>
+    <tbody>
+      <tr><td><b>AC</b></td><td>Filas y columnas de la tabla, con su coordenada y contribución.</td></tr>
+      <tr><td><b>ACM</b></td><td>Las categorías, con la variable a la que pertenecen.</td></tr>
+      <tr><td><b>AFDM</b></td><td>Las cuantitativas por su correlación con el eje y las categorías por su coordenada.</td></tr>
+      <tr><td><b>AFM</b></td><td>Las variables, con el bloque al que pertenecen.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Tabla 7.9.</b> Las tarjetas con estos métodos.</caption>
+    <thead><tr><th style="width:36%">Tarjeta</th><th>Contenido</th></tr></thead>
+    <tbody>
+      <tr><td><b>5.2 · Lectura de cada eje</b></td><td>Para cada eje, su inercia, un campo para nombrarlo y los elementos sobre el umbral, en lado positivo y negativo, con su contribución.</td></tr>
+      <tr><td><b>5.3 · Valores test de las categorías</b></td><td>Los valores test de las categorías sobre los individuos, con la misma fórmula del ACP. No aparece en el AC, que no tiene individuos.</td></tr>
+      <tr><td><b>5.4 · Borrador para la sección de resultados</b></td><td>Datos del análisis, ejes retenidos y si los criterios coincidieron, qué opone cada eje, categorías significativas y, en el AFM, el rango de RV entre bloques.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/app-b5-afdm.png" alt="Interpretación de un AFDM de iris">
+      <span class="marca" style="left:96%;top:15%">1</span>
+      <span class="marca" style="left:56.3%;top:53%">2</span>
+      <span class="marca" style="left:3%;top:84.5%">3</span>
+      <span class="marca" style="left:49.5%;top:95.1%">4</span>
+    </div>
+    <figcaption><b>Figura 7.8.</b> La interpretación de un AFDM de iris con la especie activa. <b>1</b> El nombre sugerido para Dim1, editable. <b>2</b> Setosa, con v = −11.43 en Dim1. <b>3</b> El borrador: su primer renglón queda fuera del recuadro gris por un estilo de la app. <b>4</b> El paso al informe.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Importante · el umbral cambia de significado</div>
+    <p>Con estos métodos el <span class="ui">Umbral de carga interpretable</span> se convierte en un umbral de contribución: umbral × 100 / número de columnas. En el AFDM de iris hay 7 columnas (4 cuantitativas y 3 categorías), así que 0.40 equivale a 5.7 %, bastante menos que la contribución media, 100/7 = 14.3 %. Por eso aparecen elementos de contribución modesta, como Sepal.Width con 6.1 % en Dim1. Para quedarte solo con lo que supera la media, sube el umbral a 0.70 o lee las contribuciones de la tarjeta 2.5.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Nota · lo que no hay con estos métodos</div>
+    <p>No hay comparación de grupos —el selector de la tarjeta 5.1 se ignora—, ni descripción de dimensiones por correlación, ni individuos extremos, ni calidad del ajuste, ni descargas en este bloque. Si llegas al Bloque 5 con la barra de pasos, el selector de grupos puede conservar las cualitativas de un archivo anterior; llegar con el botón <span class="ui">Ir a la interpretación →</span> del Bloque 4 lo actualiza.</p>
+  </div>
+
+  <!-- 7.7 -->
+  <h2 id="s7-7"><span class="num">7.7</span>Paso a paso</h2>
+  <p>La interpretación del proyecto integrador, continuación del caso del capítulo 6: 144 parcelas, doce variables, cuatro componentes con varimax y la solución rotada en los mapas. Las cifras son las de la app.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Proyecto integrador · interpretación de cuatro componentes rotados</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>En la tarjeta 5.1 deja el umbral en 0.40, elige <code>Tratamiento</code> y pulsa <span class="ui">Interpretar componentes →</span>. RMSR = 0.0291, en verde; 8 de 66 residuos pasan de 0.05; 4 de 7 categorías caracterizan algún eje.</li>
+      <li>Sustituye las sugerencias por <b>Crecimiento</b>, <b>Nutrición</b>, <b>Estado hídrico</b> y <b>Fenología</b>. La tercera sugerencia, «Conductancia_mmol + Potencial_hidrico_MPa frente a Temp_hoja_C», confirma que CPR3 es un contraste: hojas bien hidratadas y frescas frente a hojas calientes.</li>
+      <li>En la tarjeta 5.3, el rendimiento suplementario se correlaciona 0.809 con Crecimiento (p &lt; 0.0001) y 0.647 con Nutrición. Es la única correlación de la tabla que no es circular.</li>
+      <li>Los valores test (figura 7.3) ordenan los tratamientos: riego + fertilización caracteriza el lado positivo de Crecimiento (5.11), Nutrición (3.41) y Estado hídrico (4.39); el testigo, el negativo de los tres; la fertilización sube la Nutrición (3.25) pero baja el Estado hídrico (−4.11); el riego hace lo contrario (−2.52 y 2.08).</li>
+      <li>El ANOVA separa los tratamientos en Crecimiento (η² = 0.211), Nutrición (0.237) y Estado hídrico (0.242), todos efectos grandes, y no en Fenología (F = 1.86, p = 0.14). Con <code>Bloque</code>, ningún componente separa los grupos.</li>
+      <li>En la calidad del ajuste, los residuos mayores son temperatura–potencial hídrico (0.09), temperatura–conductancia (0.08) y floración–madurez (−0.09): relaciones un poco más fuertes de lo que reproducen los ejes, pero sin un patrón que pida otro componente. Prueba a retener 3 en el Bloque 2 y repetir la cadena: RMSR = 0.105, en rojo.</li>
+      <li>Los extremos confirman los nombres: PAR005 y PAR058 están en el lado negativo de Crecimiento y de Nutrición, las mismas parcelas que tiraban del plano en el capítulo 6.</li>
+      <li>Copia el borrador y corrige el criterio de retención: aquí fueron seis de los ocho criterios, no solo Horn y el codo.</li>
+    </ol>
+  </div>
+
+  <p><b>Lectura.</b> Los tratamientos no actúan sobre una sola dimensión. La fertilización mejora la nutrición a costa del estado hídrico; el riego, lo contrario; solo la combinación mejora los tres ejes y desplaza las parcelas hacia el crecimiento, que es lo que más se asocia con el rendimiento. Ningún tratamiento cambia la fenología. Esa lectura, dimensión por dimensión, es lo que el ACP añade a un ANOVA variable por variable.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>El borrador, corregido</div>
+    <p>«Se realizó un análisis de componentes principales sobre la matriz de correlaciones de 12 variables medidas en 144 parcelas (KMO = 0.78; prueba de esfericidad de Bartlett: χ²(66) = 1353.7, p &lt; 0.001). Se retuvieron cuatro componentes, en los que coincidieron el análisis paralelo, el bastón roto y el MAP de Velicer, que en conjunto explican el 87.2 % de la varianza. Sobre ellos se aplicó una rotación varimax con normalización de Kaiser y se interpretaron las cargas con |r| ≥ 0.40. Los componentes rotados se interpretaron como crecimiento (28.6 %), nutrición (21.8 %), estado hídrico (21.6 %) y fenología (15.2 %). La solución reproduce la matriz de correlaciones con un RMSR de 0.029. El rendimiento, proyectado como variable suplementaria, se correlacionó con el crecimiento (r = 0.81) y la nutrición (r = 0.65). Los tratamientos difirieron en los tres primeros componentes (η² de 0.21 a 0.24), pero no en la fenología (F(3, 140) = 1.86, p = 0.14).»</p>
+  </div>
+
+  <p style="margin-top:0.3in">Con los componentes interpretados, el siguiente capítulo presenta el agrupamiento opcional de los individuos sobre los componentes (Bloque 5b).</p>
+</section>
+
+</body>
+</html>

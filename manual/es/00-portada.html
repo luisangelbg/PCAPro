@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · Manual de usuario · Portada</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../manual.css">
+<style>
+  .cover { background: #ffffff; }
+  .cover text { font-kerning: normal; }
+</style>
+</head>
+<body>
+
+<section class="page cover" aria-label="Portada">
+  <svg id="cover" viewBox="0 0 850 1100" xmlns="http://www.w3.org/2000/svg" role="img"
+       aria-label="Portada del manual de PCAPro: un biplot partido en dos. Arriba, un círculo de correlaciones cuyos vectores apuntan a jitomate, naranja, limón mexicano, flor de maracuyá, abeja carpintera, mariposa de los cítricos y crisopa. Abajo, una nube de individuos en tres dimensiones con sus ejes principales y el plano de los dos primeros componentes; a los lados, un gráfico de sedimentación y un dendrograma de agrupamiento."></svg>
+</section>
+
+<script>
+/* La portada se dibuja una sola vez, de forma determinista (semilla fija), como gráficos
+   vectoriales: imprime nítida a cualquier tamaño y todas las ilustraciones son originales. */
+(function () {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('cover');
+  const el = (tag, attrs, parent, text) => {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) if (attrs[k] != null) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    (parent || svg).appendChild(n);
+    return n;
+  };
+  const rng = (seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; })(20260913);
+  const gauss = () => { let u = 0, v = 0; while (u === 0) u = rng(); while (v === 0) v = rng(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+
+  const W = 850, H = 1100;
+  const INK = '#1b1f2a', GRIS = '#5b6474', BLANCO = '#ffffff', VIOLETA = '#5b3fd6';
+  const rad = d => d * Math.PI / 180;
+  const pol = (cx, cy, r, a) => [cx + r * Math.cos(rad(a)), cy + r * Math.sin(rad(a))];
+  const f1 = v => (+v).toFixed(2);
+  const hex = c => [1, 3, 5].map(i => parseInt(c.slice(i, i + 2), 16));
+  const mix = (a, b, t) => { const A = hex(a), B = hex(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
+  const poly = pts => 'M' + pts.map(([x, y]) => f1(x) + ' ' + f1(y)).join('L');
+
+  /* los degradados solo rellenan figuras con área (un degradado en un tspan o en el trazo
+     de una línea recta se imprime como un rectángulo gigante) */
+  const defs = el('defs');
+  function grad(kind, id, stops, attrs) {
+    const g = el(kind, Object.assign({ id }, attrs), defs);
+    stops.forEach(([off, c, op]) => el('stop', { offset: off, 'stop-color': c, 'stop-opacity': op }, g));
+    return `url(#${id})`;
+  }
+  const radial = (id, stops, a) => grad('radialGradient', id, stops, Object.assign({ cx: '50%', cy: '50%', r: '55%', fx: '34%', fy: '30%' }, a));
+  const linear = (id, stops, a) => grad('linearGradient', id, stops, Object.assign({ x1: 0, y1: 0, x2: 1, y2: 1 }, a));
+  const esfera = {};
+  const sphere = c => esfera[c] || (esfera[c] = radial('sp' + c.slice(1), [['0%', mix(c, BLANCO, 0.8)], ['30%', mix(c, BLANCO, 0.25)], ['70%', c], ['100%', mix(c, INK, 0.45)]]));
+
+  const G = {
+    hoja: linear('gHoja', [['0%', '#9fd776'], ['55%', '#4f9d3f'], ['100%', '#2f7433']]),
+    hojaCitrico: linear('gHojaCit', [['0%', '#7fcb5e'], ['50%', '#3f8f3a'], ['100%', '#23602a']]),
+    jitomate: radial('gJitomate', [['0%', '#ff9d85'], ['35%', '#ec3b2c'], ['80%', '#b3161b'], ['100%', '#7d0d12']], { r: '58%' }),
+    pulpa: radial('gPulpa', [['0%', '#ff8a70'], ['60%', '#f04b36'], ['100%', '#d8302a']], { fx: '50%', fy: '50%' }),
+    gel: radial('gGel', [['0%', '#ffd0b0'], ['100%', '#ff9468']], { fx: '50%', fy: '50%' }),
+    naranja: radial('gNaranja', [['0%', '#ffd48a'], ['30%', '#ffa42e'], ['75%', '#f0760c'], ['100%', '#b8500a']], { r: '60%' }),
+    gajo: radial('gGajo', [['0%', '#ffe3a3'], ['55%', '#ffb84a'], ['100%', '#f79a1e']], { cx: '0%', cy: '50%', r: '100%', fx: '0%', fy: '50%' }),
+    lima: radial('gLima', [['0%', '#e9f8b0'], ['35%', '#a8d84a'], ['80%', '#5f9c1c'], ['100%', '#3d6e12']], { r: '60%' }),
+    petalo: linear('gPetalo', [['0%', '#ffffff'], ['100%', '#ece8f8']], { x1: 0, y1: 1, x2: 0, y2: 0 }),
+    sepalo: linear('gSepalo', [['0%', '#cfe8b8'], ['100%', '#f7fbf1']], { x1: 0, y1: 1, x2: 0, y2: 0 }),
+    antera: radial('gAntera', [['0%', '#fff3a6'], ['60%', '#f2c82f'], ['100%', '#b98c06']]),
+    columna: radial('gColumna', [['0%', '#eefad6'], ['70%', '#9fce5a'], ['100%', '#5f8f2a']]),
+    xyloCuerpo: radial('gXylo', [['0%', '#5a5a78'], ['35%', '#26243a'], ['100%', '#07070c']], { r: '62%', fx: '30%', fy: '28%' }),
+    xyloAla: linear('gXyloAla', [['0%', '#2b2440', 0.9], ['40%', '#5b3fd6', 0.72], ['70%', '#1f6f9a', 0.62], ['100%', '#2b2440', 0.85]]),
+    papilioAla: linear('gPapilio', [['0%', '#3a2d20'], ['100%', '#15100b']]),
+    crisopaAbd: linear('gCrisopa', [['0%', '#b2f2bb'], ['100%', '#37b24d']], { x1: 0, y1: 0, x2: 0, y2: 1 }),
+    sombra: radial('gSombra', [['0%', '#1b1f2a', 0.2], ['100%', '#1b1f2a', 0]], { r: '50%', fx: '50%', fy: '50%' }),
+    halo: radial('gHaloCirc', [['0%', '#ede9fc', 0.95], ['70%', '#f5f3fd', 0.6], ['100%', '#ffffff', 0]], { cx: '50%', cy: '100%', r: '100%', fx: '50%', fy: '100%' }),
+    haloNube: radial('gHaloNube', [['0%', '#eef0fb', 0.95], ['60%', '#f4f5fc', 0.55], ['100%', '#ffffff', 0]], { r: '50%', fx: '50%', fy: '50%' }),
+    plano: linear('gPlano', [['0%', '#f1eefc', 0.85], ['100%', '#dcd5f7', 0.7]]),
+    barra: linear('gBarra', [['0%', '#8b73ee'], ['100%', '#4a31b8']], { x1: 0, y1: 0, x2: 0, y2: 1 })
+  };
+
+  el('rect', { x: 0, y: 0, width: W, height: H, fill: BLANCO });
+
+  /* ---------------------------------------------------------------- franjas: el color de cada parte del manual */
+  const BLOQUES = ['#1b1f2a', '#5b3fd6', '#0d9488', '#2f9e44', '#b7791f', '#c2410c', '#e0316f', '#1d74b5', '#334155', '#111111'];
+  BLOQUES.forEach((c, i) => {
+    el('rect', { x: f1(i * W / BLOQUES.length), y: 0, width: f1(W / BLOQUES.length + 0.5), height: 9, fill: c });
+    el('rect', { x: f1(i * W / BLOQUES.length), y: H - 5, width: f1(W / BLOQUES.length + 0.5), height: 5, fill: c });
+  });
+
+  /* ---------------------------------------------------------------- título */
+  const tb = el('g', { 'text-anchor': 'middle' });
+  const t1 = el('text', { x: W / 2, y: 130, fill: INK, 'font-family': 'Cormorant, serif', 'font-size': 104, 'font-weight': 700, 'letter-spacing': 0.6 }, tb);
+  el('tspan', {}, t1, 'PCA');
+  el('tspan', { fill: VIOLETA, 'font-style': 'italic', 'font-weight': 600 }, t1, 'Pro');
+  el('text', { x: W / 2, y: 208, fill: INK, 'font-family': 'Cormorant, serif', 'font-size': 50, 'font-weight': 600, 'letter-spacing': 0.8 }, tb, 'Manual de usuario');
+  el('text', { x: W / 2, y: 252, fill: VIOLETA, 'font-family': 'Cormorant, serif', 'font-size': 46, 'font-style': 'italic', 'font-weight': 500, 'letter-spacing': 0.6 }, tb, 'User Manual');
+  /* adorno: un pequeño gráfico de sedimentación entre dos filetes */
+  const oy = 280;
+  el('rect', { x: W / 2 - 170, y: oy - 0.5, width: 134, height: 1, fill: INK });
+  el('rect', { x: W / 2 + 36, y: oy - 0.5, width: 134, height: 1, fill: INK });
+  [13, 8.5, 5, 3.2, 2.2].forEach((h, i) => el('rect', { x: f1(W / 2 - 17.5 + i * 7.4), y: f1(oy + 4 - h), width: 5, height: f1(h), rx: 1, fill: i < 2 ? VIOLETA : '#b9aef0' }));
+  el('text', { x: W / 2, y: 305, fill: GRIS, 'font-family': 'Jost, sans-serif', 'font-size': 11.5, 'font-weight': 400, 'letter-spacing': 3.4 }, tb, 'ANÁLISIS DE COMPONENTES PRINCIPALES · PRINCIPAL COMPONENT ANALYSIS');
+
+  /* ---------------------------------------------------------------- disposición del biplot */
+  const O = [425, 712];                         /* origen del círculo = centroide de la nube */
+  const R_TIP = 222, R_ORG = 330;
+  const PLANTA = '#2f9e44', INSECTO = '#e8890c';
+  const ORG = [
+    { draw: tomato, ang: -162, name: 'Solanum lycopersicum', dot: '#e03131', c: 0.9, kind: PLANTA, dy: 78 },
+    { draw: orange, ang: -138, name: 'Citrus sinensis', dot: '#f76707', c: 0.83, kind: PLANTA, dy: 74 },
+    { draw: lime, ang: -114, name: 'Citrus aurantiifolia', dot: '#74b816', c: 0.93, kind: PLANTA },
+    { draw: passiflora, ang: -90, name: 'Passiflora edulis', dot: '#7048e8', c: 0.97, kind: PLANTA, dy: 80, ro: 318 },
+    { draw: xylocopa, ang: -66, name: 'Xylocopa sp.', dot: '#4263eb', c: 0.88, kind: INSECTO },
+    { draw: papilio, ang: -42, name: 'Papilio cresphontes', dot: '#f59f00', c: 0.8, kind: INSECTO, dy: 70 },
+    { draw: chrysoperla, ang: -18, name: 'Chrysoperla carnea', dot: '#37b24d', c: 0.91, kind: INSECTO, dy: 76 }
+  ];
+
+  /* ---------------------------------------------------------------- nube de individuos en 3D */
+  (function cloud() {
+    const C = [425, 884], S = 58;
+    /* cámara: el plano CP1–CP2 es una mesa vista desde arriba y de lado (giro ψ, inclinación φ);
+       CP3 queda vertical. Pantalla: x a la derecha, y hacia abajo; z hacia quien mira. */
+    const psi = rad(-25), phi = rad(38);
+    const proj = (X, Y, Z) => {
+      const x1 = X * Math.cos(psi) + Z * Math.sin(psi), z1 = -X * Math.sin(psi) + Z * Math.cos(psi);
+      return [x1, -(Y * Math.cos(phi) + z1 * Math.sin(phi)), -z1 * Math.cos(phi) + Y * Math.sin(phi)];
+    };
+    const e1 = proj(1, 0, 0), e2 = proj(0, 0, 1), e3 = proj(0, 1, 0);
+    const P = (a, b, c) => [C[0] + S * (a * e1[0] + b * e2[0] + c * e3[0]), C[1] + S * (a * e1[1] + b * e2[1] + c * e3[1]), a * e1[2] + b * e2[2] + c * e3[2]];
+    const frente = c => c * e3[2] > 0;          /* del lado del plano que da a quien mira */
+
+    const GRUPOS = [
+      { m: [-1.5, 0.35, 0.38], s: [0.42, 0.36, 0.34], col: '#5b3fd6' },
+      { m: [0.1, -0.55, -0.34], s: [0.46, 0.38, 0.32], col: '#0d9488' },
+      { m: [1.45, 0.45, 0.12], s: [0.4, 0.36, 0.33], col: '#e0316f' }
+    ];
+    const pts = [];
+    GRUPOS.forEach((g, gi) => { for (let i = 0; i < 62; i++) pts.push({ a: g.m[0] + g.s[0] * gauss(), b: g.m[1] + g.s[1] * gauss(), c: g.m[2] + g.s[2] * gauss(), g: gi }); });
+    pts.forEach(p => { const q = P(p.a, p.b, p.c); p.x = q[0]; p.y = q[1]; p.z = q[2]; });
+    const zs = pts.map(p => p.z), zmin = Math.min(...zs), zmax = Math.max(...zs);
+
+    el('ellipse', { cx: C[0], cy: C[1] - 4, rx: 205, ry: 150, fill: G.haloNube });
+    el('ellipse', { cx: C[0] + 4, cy: 1000, rx: 165, ry: 11, fill: G.sombra });
+
+    /* el tallo que une el centroide con el origen del círculo */
+    el('path', { d: `M${O[0]} ${O[1] + 6} L${f1(C[0])} ${f1(C[1])}`, stroke: INK, 'stroke-width': 1, 'stroke-dasharray': '2 3', opacity: 0.35 });
+
+    const arrow = (p0, p1, color, w, g) => {
+      const dx = p1[0] - p0[0], dy = p1[1] - p0[1], n = Math.hypot(dx, dy), u = [dx / n, dy / n], nn = [-u[1], u[0]];
+      el('path', { d: `M${f1(p0[0])} ${f1(p0[1])} L${f1(p1[0] - u[0] * 8)} ${f1(p1[1] - u[1] * 8)}`, stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' }, g);
+      el('path', { d: poly([p1, [p1[0] - 10 * u[0] + 4.2 * nn[0], p1[1] - 10 * u[1] + 4.2 * nn[1]], [p1[0] - 10 * u[0] - 4.2 * nn[0], p1[1] - 10 * u[1] - 4.2 * nn[1]]]) + 'Z', fill: color }, g);
+    };
+    const lambda = (x, y, k, g) => {
+      const t = el('text', { x: f1(x), y: f1(y), 'text-anchor': 'middle', fill: INK, stroke: BLANCO, 'stroke-width': 3.2, 'paint-order': 'stroke', 'font-family': 'Cormorant, serif', 'font-style': 'italic', 'font-weight': 600, 'font-size': 19 }, g);
+      el('tspan', {}, t, 'λ');
+      el('tspan', { dy: 5, 'font-size': 10.5, 'font-style': 'normal', 'font-family': 'Jost, sans-serif', 'font-weight': 500 }, t, String(k));
+    };
+    const darkness = p => Math.round((1 - (p.z - zmin) / (zmax - zmin)) * 3) / 3 * 0.38;
+    const drawPt = (p, g) => {
+      const col = GRUPOS[p.g].col, t = (p.z - zmin) / (zmax - zmin);
+      el('circle', { cx: f1(p.x), cy: f1(p.y), r: f1(2.7 + 1.5 * t), fill: sphere(mix(col, INK, darkness(p))) }, g);
+    };
+
+    const gBack = el('g'), gPlane = el('g'), gFront = el('g');
+
+    /* eje 3: la mitad que queda detrás del plano, antes que todo */
+    const a3 = [P(0, 0, -1.25), P(0, 0, 0), P(0, 0, 1.55)];
+    const eje3Frente = frente(1);
+    el('path', { d: `M${f1((eje3Frente ? a3[0] : a3[2])[0])} ${f1((eje3Frente ? a3[0] : a3[2])[1])} L${f1(a3[1][0])} ${f1(a3[1][1])}`, stroke: INK, 'stroke-width': 1.6, opacity: 0.55 }, gBack);
+
+    pts.filter(p => !frente(p.c)).sort((p, q) => p.z - q.z).forEach(p => drawPt(p, gBack));
+
+    /* el plano de los dos primeros componentes */
+    const A = 2.6, B = 1.55;
+    const esq = [P(-A, -B, 0), P(A, -B, 0), P(A, B, 0), P(-A, B, 0)];
+    el('path', { d: poly(esq) + 'Z', fill: G.plano, stroke: '#b3a8ea', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, gPlane);
+    [-2, -1, 0, 1, 2].forEach(a => { const p = P(a, -B, 0), q = P(a, B, 0); el('path', { d: poly([p, q]), stroke: '#c9bff3', 'stroke-width': 0.7, opacity: 0.8 }, gPlane); });
+    [-0.8, 0, 0.8].forEach(b => { const p = P(-A, b, 0), q = P(A, b, 0); el('path', { d: poly([p, q]), stroke: '#c9bff3', 'stroke-width': 0.7, opacity: 0.8 }, gPlane); });
+
+    /* sombra de cada individuo sobre el plano, y la proyección de algunos, a la vista */
+    pts.forEach(p => { const q = P(p.a, p.b, 0); el('circle', { cx: f1(q[0]), cy: f1(q[1]), r: 1.4, fill: GRUPOS[p.g].col, opacity: 0.32 }, gPlane); });
+    pts.forEach((p, i) => {
+      if (i % 4 || Math.abs(p.c) < 0.25) return;
+      const q = P(p.a, p.b, 0);
+      el('path', { d: `M${f1(p.x)} ${f1(p.y)} L${f1(q[0])} ${f1(q[1])}`, stroke: GRUPOS[p.g].col, 'stroke-width': 0.7, 'stroke-dasharray': '1.2 1.8', opacity: 0.7 }, frente(p.c) ? gFront : gBack);
+    });
+
+    /* elipse de concentración de cada grupo, dibujada en el plano */
+    GRUPOS.forEach((g, gi) => {
+      const sub = pts.filter(p => p.g === gi), n = sub.length;
+      const ma = sub.reduce((s, p) => s + p.a, 0) / n, mb = sub.reduce((s, p) => s + p.b, 0) / n;
+      let saa = 0, sbb = 0, sab = 0;
+      sub.forEach(p => { saa += (p.a - ma) ** 2; sbb += (p.b - mb) ** 2; sab += (p.a - ma) * (p.b - mb); });
+      saa /= n - 1; sbb /= n - 1; sab /= n - 1;
+      const tr = saa + sbb, det = saa * sbb - sab * sab, disc = Math.sqrt(Math.max(0, tr * tr / 4 - det));
+      const l1 = tr / 2 + disc, l2 = tr / 2 - disc, th = 0.5 * Math.atan2(2 * sab, saa - sbb);
+      const k = Math.sqrt(4.605);
+      const ring = [];
+      for (let i = 0; i <= 72; i++) {
+        const t = i / 72 * 2 * Math.PI, u = k * Math.sqrt(l1) * Math.cos(t), v = k * Math.sqrt(l2) * Math.sin(t);
+        ring.push(P(ma + u * Math.cos(th) - v * Math.sin(th), mb + u * Math.sin(th) + v * Math.cos(th), 0));
+      }
+      el('path', { d: poly(ring) + 'Z', fill: g.col, 'fill-opacity': 0.1, stroke: g.col, 'stroke-width': 1.5, 'stroke-opacity': 0.85 }, gPlane);
+    });
+
+    /* ejes 1 y 2, en el plano */
+    arrow(P(-2.9, 0, 0), P(3.0, 0, 0), INK, 1.7, gPlane);
+    arrow(P(0, -1.85, 0), P(0, 2.0, 0), INK, 1.5, gPlane);
+    { const q = P(3.0, 0, 0); lambda(q[0] + 16, q[1] + 4, 1, gPlane); }
+    { const q = P(0, 2.45, 0); lambda(q[0] - 4, q[1] - 2, 2, gFront); }
+
+    pts.filter(p => frente(p.c)).sort((p, q) => p.z - q.z).forEach(p => drawPt(p, gFront));
+
+    /* eje 3: la mitad de delante, con su punta */
+    const tip3 = eje3Frente ? a3[2] : a3[0];
+    arrow(a3[1], tip3, INK, 1.6, gFront);
+    lambda(tip3[0] + 13, tip3[1] + 8, 3, gFront);
+    el('circle', { cx: f1(C[0]), cy: f1(C[1]), r: 3.4, fill: BLANCO, stroke: INK, 'stroke-width': 1.5 }, gFront);
+  })();
+
+  /* ---------------------------------------------------------------- círculo de correlaciones */
+  (function corrCircle() {
+    const g = el('g');
+    const [ox, oy0] = O;
+    el('path', { d: `M${ox - R_TIP} ${oy0} A${R_TIP} ${R_TIP} 0 0 1 ${ox + R_TIP} ${oy0} Z`, fill: G.halo }, g);
+    el('path', { d: `M${ox - R_TIP} ${oy0} A${R_TIP} ${R_TIP} 0 0 1 ${ox + R_TIP} ${oy0}`, fill: 'none', stroke: '#aea2e6', 'stroke-width': 1.4 }, g);
+    const r2 = R_TIP * Math.SQRT1_2;
+    el('path', { d: `M${f1(ox - r2)} ${oy0} A${f1(r2)} ${f1(r2)} 0 0 1 ${f1(ox + r2)} ${oy0}`, fill: 'none', stroke: '#cdc5f1', 'stroke-width': 1, 'stroke-dasharray': '3 4' }, g);
+    el('path', { d: `M${ox - R_TIP - 30} ${oy0} L${ox + R_TIP + 30} ${oy0}`, stroke: INK, 'stroke-width': 1, 'stroke-dasharray': '5 4', opacity: 0.45 }, g);
+    [-1, -0.5, 0.5, 1].forEach(v => el('path', { d: `M${f1(ox + v * R_TIP)} ${oy0 - 4} L${f1(ox + v * R_TIP)} ${oy0 + 4}`, stroke: INK, 'stroke-width': 1, opacity: 0.55 }, g));
+    [[-1, '−1'], [1, '1']].forEach(([v, s]) => el('text', { x: f1(ox + v * R_TIP), y: oy0 + 19, 'text-anchor': 'middle', fill: GRIS, 'font-family': 'Jost, sans-serif', 'font-size': 10 }, g, s));
+
+    /* los vectores: cada organismo es una variable; su longitud, la correlación con el plano */
+    ORG.forEach(o => {
+      const [tx, ty] = pol(ox, oy0, R_TIP * o.c, o.ang), [cx, cy] = pol(ox, oy0, R_TIP, o.ang);
+      const u = [Math.cos(rad(o.ang)), Math.sin(rad(o.ang))], nn = [-u[1], u[0]];
+      el('path', { d: `M${f1(tx + u[0] * 3)} ${f1(ty + u[1] * 3)} L${f1(cx)} ${f1(cy)}`, stroke: o.kind, 'stroke-width': 1.2, 'stroke-dasharray': '1.5 3', 'stroke-linecap': 'round', opacity: 0.8 }, g);
+      el('path', { d: `M${f1(ox + u[0] * 7)} ${f1(oy0 + u[1] * 7)} L${f1(tx - u[0] * 9)} ${f1(ty - u[1] * 9)}`, stroke: o.kind, 'stroke-width': 2.6, 'stroke-linecap': 'round' }, g);
+      el('path', { d: poly([[tx, ty], [tx - 12 * u[0] + 5 * nn[0], ty - 12 * u[1] + 5 * nn[1]], [tx - 12 * u[0] - 5 * nn[0], ty - 12 * u[1] - 5 * nn[1]]]) + 'Z', fill: o.kind }, g);
+      el('circle', { cx: f1(cx), cy: f1(cy), r: 5.4, fill: sphere(o.dot), stroke: BLANCO, 'stroke-width': 1.5 }, g);
+    });
+    el('circle', { cx: ox, cy: oy0, r: 5, fill: BLANCO, stroke: INK, 'stroke-width': 2 }, g);
+
+    ORG.forEach(o => {
+      const [x, y] = pol(ox, oy0, o.ro || R_ORG, o.ang);
+      o.draw(el('g', { transform: `translate(${f1(x)} ${f1(y)})` }));
+      el('text', { x: f1(x), y: f1(y + (o.dy || 66)), 'text-anchor': 'middle', fill: '#3d4658', 'font-family': 'Cormorant, serif', 'font-style': 'italic', 'font-size': 14.5, 'font-weight': 500 }, null, o.name);
+    });
+  })();
+
+  /* ================================================================= ilustraciones */
+  function tendril(g, x, y, r0, turns, dir, color, w) {
+    const pts = [];
+    for (let t = 0; t <= turns * 2 * Math.PI; t += 0.15) {
+      const r = r0 * (1 - t / (turns * 2 * Math.PI * 1.08));
+      pts.push([x + dir * r * Math.cos(t), y + r * Math.sin(t)]);
+    }
+    el('path', { d: poly(pts), fill: 'none', stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' }, g);
+  }
+
+  /* hoja de maracuyá: tres lóbulos con el margen aserrado, base en el origen, apunta hacia arriba */
+  function leaf3(g, x, y, S, rot) {
+    const a = el('g', { transform: `translate(${x} ${y}) rotate(${rot})` }, g);
+    const lobes = [[-90, 1], [-138, 0.8], [-42, 0.8]];
+    const pts = [[0, 0]];
+    for (let d = -200; d <= 20; d += 1) {
+      let m = 0;
+      lobes.forEach(([c, L]) => { m = Math.max(m, L * Math.exp(-Math.pow((d - c) / 21, 2))); });
+      const saw = 1 + 0.05 * Math.pow(((d + 200) / 7) % 1, 1.5);
+      const r = S * (0.1 + 0.9 * m) * saw;
+      pts.push([r * Math.cos(rad(d)), r * Math.sin(rad(d))]);
+    }
+    el('path', { d: poly(pts) + 'Z', fill: G.hoja, stroke: '#2f6b32', 'stroke-width': 0.8, 'stroke-linejoin': 'round' }, a);
+    lobes.forEach(([c, L]) => { const [ex, ey] = pol(0, 0, S * L * 0.88, c); el('path', { d: `M0 0 L${f1(ex)} ${f1(ey)}`, stroke: '#e6f4d2', 'stroke-width': 1, opacity: 0.85 }, a); });
+    el('path', { d: 'M0 0 L0 12', stroke: '#4f8a3a', 'stroke-width': 2.2, 'stroke-linecap': 'round' }, a);
+  }
+
+  /* folíolo aserrado que apunta hacia arriba desde su base */
+  function leaflet(g, x, y, len, wid, rot) {
+    const a = el('g', { transform: `translate(${x} ${y}) rotate(${rot})` }, g);
+    const right = [], left = [];
+    for (let i = 0; i <= 48; i++) {
+      const t = i / 48, saw = t > 0.12 && t < 0.9 ? 0.14 * Math.pow((t * 8) % 1, 1.6) : 0;
+      const w = wid * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.8)), 0.9) * (1 + saw);
+      right.push([w, -len * t]); left.push([-w, -len * t]);
+    }
+    el('path', { d: poly(right.concat(left.reverse())) + 'Z', fill: G.hoja, stroke: '#2f6b32', 'stroke-width': 0.6, 'stroke-linejoin': 'round' }, a);
+    el('path', { d: `M0 -1 L0 ${f1(-len * 0.88)}`, stroke: '#e1f1cb', 'stroke-width': 0.7, opacity: 0.8 }, a);
+  }
+
+  /* hoja de cítrico: entera, lustrosa, con el pecíolo alado */
+  function citrusLeaf(g, x, y, len, wid, rot, wing) {
+    const a = el('g', { transform: `translate(${x} ${y}) rotate(${rot})` }, g);
+    if (wing) el('path', { d: `M0 0 C ${f1(-wing)} -3 ${f1(-wing)} -9 0 -12 C ${f1(wing)} -9 ${f1(wing)} -3 0 0 Z`, fill: '#4f9d3f', stroke: '#2b6a2e', 'stroke-width': 0.5 }, a);
+    const b = wing ? -11 : 0, right = [], left = [];
+    for (let i = 0; i <= 40; i++) {
+      const t = i / 40, w = wid * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.85)), 0.85);
+      right.push([w, b - len * t]); left.push([-w, b - len * t]);
+    }
+    el('path', { d: poly(right.concat(left.reverse())) + 'Z', fill: G.hojaCitrico, stroke: '#1f5a26', 'stroke-width': 0.6, 'stroke-linejoin': 'round' }, a);
+    el('path', { d: `M0 ${f1(b)} L0 ${f1(b - len * 0.92)}`, stroke: '#d9f0c4', 'stroke-width': 0.8, opacity: 0.8 }, a);
+    for (let k = 1; k <= 4; k++) {
+      const t = k / 5, y0 = b - len * t, w = wid * 0.7 * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.85)), 0.85);
+      [-1, 1].forEach(s => el('path', { d: `M0 ${f1(y0)} Q ${f1(s * w * 0.5)} ${f1(y0 - 3)} ${f1(s * w)} ${f1(y0 - 7)}`, fill: 'none', stroke: '#d9f0c4', 'stroke-width': 0.5, opacity: 0.6 }, a));
+    }
+    el('ellipse', { cx: f1(-wid * 0.35), cy: f1(b - len * 0.4), rx: f1(wid * 0.18), ry: f1(len * 0.18), fill: BLANCO, opacity: 0.18 }, a);
+  }
+
+  /* azahar: flor blanca de cinco pétalos carnosos con muchos estambres */
+  function blossom(g, x, y, s, rot) {
+    const a = el('g', { transform: `translate(${x} ${y}) rotate(${rot || 0}) scale(${s})` }, g);
+    for (let k = 0; k < 5; k++) {
+      const p = el('g', { transform: `rotate(${k * 72})` }, a);
+      el('path', { d: 'M0 -3 C 5 -6 6 -15 2 -20 C 0 -22 -2 -22 -3 -20 C -7 -15 -5 -6 0 -3 Z', fill: G.petalo, stroke: '#d6d0e6', 'stroke-width': 0.6 }, p);
+    }
+    for (let k = 0; k < 16; k++) {
+      const [x2, y2] = pol(0, 0, 7.5, k * 22.5);
+      el('path', { d: `M0 0 L${f1(x2)} ${f1(y2)}`, stroke: '#e9e4b8', 'stroke-width': 0.6 }, a);
+      el('circle', { cx: f1(x2), cy: f1(y2), r: 1.1, fill: '#f2c82f' }, a);
+    }
+    el('circle', { cx: 0, cy: 0, r: 2.4, fill: '#9fce5a', stroke: '#5f8f2a', 'stroke-width': 0.5 }, a);
+  }
+
+  /* jitomate: un fruto entero y otro partido que enseña los lóculos y las semillas */
+  function tomato(g) {
+    const a = el('g', { transform: 'translate(0 4)' }, g);
+    el('path', { d: 'M-44 -40 C -28 -49 -4 -52 14 -48', fill: 'none', stroke: '#3f8f3a', 'stroke-width': 2.8, 'stroke-linecap': 'round' }, a);
+    leaflet(a, -44, -40, 22, 6, -70); leaflet(a, -32, -47, 17, 4.8, -18); leaflet(a, -12, -50, 13, 4.2, -40);
+    el('path', { d: 'M14 -48 C 19 -40 22 -34 22 -28', fill: 'none', stroke: '#3f8f3a', 'stroke-width': 2.2, 'stroke-linecap': 'round' }, a);
+
+    /* fruto entero, detrás */
+    const cx = 20, cy = -6, R = 23, pts = [];
+    for (let i = 0; i <= 120; i++) { const t = i / 120 * 2 * Math.PI, k = 1 + 0.02 * Math.cos(5 * t); pts.push([cx + R * 1.08 * k * Math.cos(t), cy + R * 0.9 * k * Math.sin(t)]); }
+    el('path', { d: poly(pts) + 'Z', fill: G.jitomate, stroke: '#7d0d12', 'stroke-width': 0.6 }, a);
+    el('ellipse', { cx: cx + 8, cy: cy - 8, rx: 6, ry: 2.6, fill: BLANCO, opacity: 0.55, transform: `rotate(-28 ${cx + 8} ${cy - 8})` }, a);
+    const cal = el('g', { transform: `translate(${cx} ${cy - R * 0.8})` }, a);
+    for (let k = 0; k < 5; k++) {
+      const ang = rad(-90 + k * 72 + 10), L = 13, tip = [L * Math.cos(ang), 0.45 * L * Math.sin(ang) + 3];
+      const n = Math.hypot(...tip), px = -tip[1] / n * 2.4, py = tip[0] / n * 2.4;
+      el('path', { d: `M0 0 Q ${f1(tip[0] / 2 + px)} ${f1(tip[1] / 2 + py)} ${f1(tip[0])} ${f1(tip[1])} Q ${f1(tip[0] / 2 - px)} ${f1(tip[1] / 2 - py)} 0 0 Z`, fill: '#3a9a3f', stroke: '#1f6b2a', 'stroke-width': 0.5 }, cal);
+    }
+
+    /* fruto partido, delante: grosor, pericarpio, lóculos con gel y semillas, columela */
+    const X = -12, Y = 14, Rc = 27;
+    el('circle', { cx: X + 2, cy: Y + 3, r: Rc, fill: '#8e1014' }, a);
+    el('circle', { cx: X, cy: Y, r: Rc, fill: '#c2191c' }, a);
+    el('circle', { cx: X, cy: Y, r: Rc * 0.92, fill: G.pulpa }, a);
+    for (let k = 0; k < 4; k++) {
+      const c = 45 + k * 90, r1 = Rc * 0.36, r2 = Rc * 0.78, half = 31;
+      const pts2 = [];
+      for (let d = -half; d <= half; d += 4) pts2.push(pol(X, Y, r2 - 3 * Math.pow(Math.abs(d) / half, 3), c + d));
+      for (let d = half; d >= -half; d -= 4) pts2.push(pol(X, Y, r1 + 2 * Math.pow(Math.abs(d) / half, 2), c + d * 0.8));
+      el('path', { d: poly(pts2) + 'Z', fill: G.gel, stroke: '#ffb49a', 'stroke-width': 1.4, 'stroke-linejoin': 'round' }, a);
+      [[0.5, -16], [0.5, 16], [0.62, -4], [0.66, 12], [0.58, 2], [0.44, 0]].forEach(([rr, dd]) => {
+        const [sx, sy] = pol(X, Y, Rc * rr, c + dd);
+        el('ellipse', { cx: f1(sx), cy: f1(sy), rx: 2.2, ry: 1.35, fill: '#f6e7b9', stroke: '#c9a45e', 'stroke-width': 0.4, transform: `rotate(${f1(c + dd)} ${f1(sx)} ${f1(sy)})` }, a);
+      });
+    }
+    el('circle', { cx: X, cy: Y, r: Rc * 0.3, fill: '#ff8a70', stroke: '#f7a28c', 'stroke-width': 0.8 }, a);
+    el('path', { d: `M${f1(X - Rc * 0.62)} ${f1(Y - Rc * 0.62)} A${Rc} ${Rc} 0 0 1 ${f1(X + Rc * 0.1)} ${f1(Y - Rc * 0.98)}`, fill: 'none', stroke: BLANCO, 'stroke-width': 1.6, opacity: 0.5, 'stroke-linecap': 'round' }, a);
+  }
+
+  /* naranja: fruto entero con la cáscara punteada, una rodaja y hojas con azahar */
+  function orange(g) {
+    const a = el('g', { transform: 'translate(0 -4)' }, g);
+    el('path', { d: 'M22 -34 C 16 -40 8 -46 -2 -50', fill: 'none', stroke: '#6b7f2a', 'stroke-width': 2.4, 'stroke-linecap': 'round' }, a);
+    citrusLeaf(a, 8, -44, 30, 9, -62, 3.2);
+    citrusLeaf(a, 14, -40, 26, 8, 38, 3);
+    blossom(a, -18, -46, 0.85, 10);
+    /* fruto entero */
+    const cx = 18, cy = -6, R = 25;
+    el('circle', { cx, cy, r: R, fill: G.naranja, stroke: '#a3470a', 'stroke-width': 0.6 }, a);
+    for (let i = 0; i < 46; i++) {
+      const ang = rng() * 2 * Math.PI, rr = Math.sqrt(rng()) * R * 0.9;
+      el('circle', { cx: f1(cx + rr * Math.cos(ang)), cy: f1(cy + rr * Math.sin(ang)), r: 0.6, fill: '#9c3f06', opacity: 0.25 }, a);
+    }
+    el('ellipse', { cx: cx - 8, cy: cy - 9, rx: 7, ry: 3.4, fill: BLANCO, opacity: 0.45, transform: `rotate(-35 ${cx - 8} ${cy - 9})` }, a);
+    el('circle', { cx: cx + 2, cy: cy - R + 3, r: 2.6, fill: '#6b8f2a' }, a);
+    /* rodaja */
+    const X = -14, Y = 16, Rr = 23;
+    const sl = el('g', { transform: `translate(${X} ${Y}) rotate(-12) scale(1 0.94)` }, a);
+    el('circle', { cx: 1.5, cy: 2.5, r: Rr, fill: '#c95f08' }, sl);
+    el('circle', { cx: 0, cy: 0, r: Rr, fill: '#f28b12' }, sl);
+    el('circle', { cx: 0, cy: 0, r: Rr * 0.88, fill: '#fff3dd' }, sl);
+    for (let k = 0; k < 10; k++) {
+      const a0 = k * 36 + 3, a1 = a0 + 30, r1 = Rr * 0.12, r2 = Rr * 0.8, pts = [];
+      for (let d = a0; d <= a1; d += 3) pts.push(pol(0, 0, r2, d));
+      pts.push(pol(0, 0, r1, a1 - 12)); pts.push(pol(0, 0, r1, a0 + 12));
+      el('path', { d: poly(pts) + 'Z', fill: G.gajo, stroke: '#ffcf85', 'stroke-width': 0.8, 'stroke-linejoin': 'round', transform: '' }, sl);
+      for (let v = 0; v < 3; v++) {
+        const dd = a0 + 8 + v * 7, [x1, y1] = pol(0, 0, Rr * 0.35, dd), [x2, y2] = pol(0, 0, Rr * 0.68, dd);
+        el('path', { d: `M${f1(x1)} ${f1(y1)} L${f1(x2)} ${f1(y2)}`, stroke: '#ffe2ad', 'stroke-width': 0.6, opacity: 0.7 }, sl);
+      }
+    }
+    el('circle', { cx: 0, cy: 0, r: Rr * 0.1, fill: '#fff3dd' }, sl);
+  }
+
+  /* limón mexicano: ramita con espina, hojas, azahar y dos frutos */
+  function lime(g) {
+    const a = el('g', { transform: 'translate(0 4)' }, g);
+    el('path', { d: 'M-40 -38 C -20 -40 4 -40 34 -46', fill: 'none', stroke: '#6b7f2a', 'stroke-width': 2.6, 'stroke-linecap': 'round' }, a);
+    el('path', { d: 'M-8 -40 L -5 -48 L -3 -40 Z', fill: '#6b7f2a' }, a);
+    citrusLeaf(a, -34, -38, 26, 8, -58, 2.4);
+    citrusLeaf(a, 26, -44, 28, 8.5, 62, 2.4);
+    citrusLeaf(a, 8, -42, 22, 7, 10, 2.2);
+    blossom(a, 34, -46, 0.8, -8);
+    el('path', { d: 'M-16 -39 C -18 -30 -19 -22 -18 -14', fill: 'none', stroke: '#6b7f2a', 'stroke-width': 1.8, 'stroke-linecap': 'round' }, a);
+    el('path', { d: 'M12 -41 C 14 -30 15 -20 14 -8', fill: 'none', stroke: '#6b7f2a', 'stroke-width': 1.8, 'stroke-linecap': 'round' }, a);
+    const fruit = (cx, cy, R, rot) => {
+      const f = el('g', { transform: `translate(${cx} ${cy}) rotate(${rot})` }, a);
+      el('path', { d: `M0 ${-R} C ${R * 0.9} ${-R} ${R} ${-R * 0.25} ${R * 0.92} ${R * 0.3} C ${R * 0.8} ${R * 0.85} ${R * 0.25} ${R * 1.02} 0 ${R * 1.12} C ${-R * 0.25} ${R * 1.02} ${-R * 0.8} ${R * 0.85} ${-R * 0.92} ${R * 0.3} C ${-R} ${-R * 0.25} ${-R * 0.9} ${-R} 0 ${-R} Z`, fill: G.lima, stroke: '#3d6e12', 'stroke-width': 0.6 }, f);
+      for (let i = 0; i < 26; i++) { const ang = rng() * 2 * Math.PI, rr = Math.sqrt(rng()) * R * 0.8; el('circle', { cx: f1(rr * Math.cos(ang)), cy: f1(rr * Math.sin(ang)), r: 0.55, fill: '#2f5c0e', opacity: 0.3 }, f); }
+      el('ellipse', { cx: f1(-R * 0.35), cy: f1(-R * 0.35), rx: f1(R * 0.28), ry: f1(R * 0.13), fill: BLANCO, opacity: 0.5, transform: `rotate(-40 ${f1(-R * 0.35)} ${f1(-R * 0.35)})` }, f);
+      el('circle', { cx: 0, cy: f1(-R + 1.5), r: 2, fill: '#5a7a22' }, f);
+    };
+    fruit(-17, 4, 18, 10);
+    fruit(15, 14, 20, -8);
+  }
+
+  /* flor de maracuyá: sépalos y pétalos blancos, corona de filamentos bandeados, androginóforo */
+  function passiflora(g) {
+    const a = el('g', { transform: 'translate(0 -2) scale(1.18)' }, g);
+    leaf3(a, -36, 26, 34, -72);
+    leaf3(a, 38, 28, 29, 76);
+    tendril(a, 52, -34, 9, 1.8, 1, '#6aa84f', 1.3);
+    el('path', { d: 'M40 -22 C 46 -26 50 -30 52 -34', fill: 'none', stroke: '#6aa84f', 'stroke-width': 1.3, 'stroke-linecap': 'round' }, a);
+
+    const f = el('g', {}, a);
+    const tepal = (ang, len, wid, fill, stroke, keel) => {
+      const t = el('g', { transform: `rotate(${ang + 90})` }, f);
+      el('path', { d: `M0 -4 C ${wid} -8 ${wid * 1.05} ${-len * 0.7} ${wid * 0.5} ${-len * 0.95} C ${wid * 0.2} ${-len * 1.02} ${-wid * 0.2} ${-len * 1.02} ${-wid * 0.5} ${-len * 0.95} C ${-wid * 1.05} ${-len * 0.7} ${-wid} -8 0 -4 Z`, fill, stroke, 'stroke-width': 0.7 }, t);
+      if (keel) el('path', { d: `M0 -8 L0 ${-len * 0.9}`, stroke: '#9fc98a', 'stroke-width': 0.8, opacity: 0.7 }, t);
+      el('path', { d: `M${-wid * 0.3} -12 C ${-wid * 0.35} ${-len * 0.5} ${-wid * 0.2} ${-len * 0.8} 0 ${-len * 0.9}`, stroke: '#ffffff', 'stroke-width': 0.8, fill: 'none', opacity: 0.6 }, t);
+    };
+    for (let k = 0; k < 5; k++) tepal(-90 + 36 + k * 72, 47, 7.5, G.sepalo, '#a9c893', true);
+    for (let k = 0; k < 5; k++) tepal(-90 + k * 72, 44, 7, G.petalo, '#cbc3e6', false);
+
+    /* corona: filamentos ondulados, morado oscuro en la base, banda blanca, violeta, puntas claras */
+    const N = 92;
+    for (let i = 0; i < N; i++) {
+      const base = i / N * 360 + (rng() - 0.5) * 2, r1 = 37 + rng() * 5, ph = rng() * 6;
+      const at = r => base + (r > 22 ? Math.sin(r * 0.55 + ph) * (r - 22) * 0.16 : 0);
+      const seg = (ra, rb, color, w) => {
+        const pts = [];
+        for (let r = ra; r <= rb + 0.01; r += 1) pts.push(pol(0, 0, r, at(r)));
+        el('path', { d: poly(pts), fill: 'none', stroke: color, 'stroke-width': w, 'stroke-linecap': 'round' }, f);
+      };
+      seg(9, 17, '#3b1260', 1.6);
+      seg(17, 22.5, '#ffffff', 1.5);
+      seg(22.5, r1 - 6, i % 2 ? '#7b3fb8' : '#8f55c8', 1.35);
+      seg(r1 - 6, r1, '#efe4fb', 1.1);
+    }
+    el('circle', { cx: 0, cy: 0, r: 9.5, fill: '#4a1f6e' }, f);
+    el('circle', { cx: 0, cy: 0, r: 6.8, fill: G.columna }, f);
+    /* cinco estambres con anteras versátiles */
+    for (let k = 0; k < 5; k++) {
+      const ang = -90 + 36 + k * 72, [x2, y2] = pol(0, 0, 15, ang);
+      el('path', { d: `M0 0 L${f1(x2)} ${f1(y2)}`, stroke: '#8ab04a', 'stroke-width': 1.7, 'stroke-linecap': 'round' }, f);
+      el('ellipse', { cx: f1(x2), cy: f1(y2), rx: 6.6, ry: 2.5, fill: G.antera, stroke: '#a67c05', 'stroke-width': 0.5, transform: `rotate(${ang + 90} ${f1(x2)} ${f1(y2)})` }, f);
+    }
+    el('ellipse', { cx: 0, cy: 0, rx: 4.2, ry: 5, fill: '#cfe99a', stroke: '#6f9a34', 'stroke-width': 0.6 }, f);
+    /* tres estilos con sus estigmas */
+    [-90, 30, 150].forEach(ang => {
+      const [x2, y2] = pol(0, 0, 13, ang), [xc, yc] = pol(0, 0, 8, ang + 18);
+      el('path', { d: `M0 0 Q ${f1(xc)} ${f1(yc)} ${f1(x2)} ${f1(y2)}`, fill: 'none', stroke: '#6d3a7e', 'stroke-width': 1.9, 'stroke-linecap': 'round' }, f);
+      el('circle', { cx: f1(x2), cy: f1(y2), r: 2.9, fill: '#dcd37a', stroke: '#8f8a3a', 'stroke-width': 0.5 }, f);
+    });
+  }
+
+  /* abeja carpintera, vista desde arriba en vuelo: negra, lustrosa, alas iridiscentes */
+  function xylocopa(g) {
+    const a = el('g', { transform: 'rotate(-14) scale(1.12)' }, g);
+    for (const s of [1, -1]) {
+      el('path', { d: `M${s * 8} 2 L${s * 18} 12 L${s * 21} 25 M${s * 8} 8 L${s * 15} 22 L${s * 14} 36 M${s * 7} -6 L${s * 17} -3 L${s * 23} 5`, fill: 'none', stroke: '#111116', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, a);
+      [[18, 12, 21, 25], [15, 22, 14, 36]].forEach(([x1, y1, x2, y2]) => {
+        for (let t = 0.2; t < 1; t += 0.2) { const px = s * (x1 + (x2 - x1) * t), py = y1 + (y2 - y1) * t; el('path', { d: `M${f1(px)} ${f1(py)} l${s * 2.2} -1`, stroke: '#2a2a33', 'stroke-width': 0.7 }, a); }
+      });
+    }
+    for (const s of [1, -1]) {
+      const w = el('g', { transform: `scale(${s} 1)` }, a);
+      el('path', { d: 'M7 -1 C 24 -2 43 4 42 14 C 40 22 20 17 7 5 Z', fill: G.xyloAla, stroke: '#2b2440', 'stroke-width': 0.7 }, w);
+      el('path', { d: 'M6 -8 C 20 -31 51 -38 60 -27 C 64 -19 46 -8 8 -3 Z', fill: G.xyloAla, stroke: '#2b2440', 'stroke-width': 0.7 }, w);
+      el('path', { d: 'M8 -6 C 22 -19 38 -24 52 -24 M12 -7 C 24 -12 36 -14 46 -13 L 52 -24 M26 -12 L 33 -25 M10 3 C 20 3 30 6 36 10', fill: 'none', stroke: '#a99ee0', 'stroke-width': 0.6, opacity: 0.55 }, w);
+    }
+    el('ellipse', { cx: 0, cy: 21, rx: 14, ry: 21, fill: G.xyloCuerpo }, a);
+    [10, 18, 26, 33].forEach(y => el('path', { d: `M${-13 + Math.abs(y - 21) * 0.2} ${y} Q 0 ${y + 3.5} ${13 - Math.abs(y - 21) * 0.2} ${y}`, fill: 'none', stroke: '#000000', 'stroke-width': 0.9, opacity: 0.55 }, a));
+    el('ellipse', { cx: -5, cy: 13, rx: 3, ry: 9, fill: '#8ea6ff', opacity: 0.32 }, a);
+    el('circle', { cx: 0, cy: -4, r: 11.5, fill: '#15151c' }, a);
+    for (let i = 0; i < 40; i++) {
+      const ang = i / 40 * 2 * Math.PI, r1 = 9 + rng() * 1.5, r2 = 11.5 + rng() * 2;
+      el('path', { d: `M${f1(r1 * Math.cos(ang))} ${f1(-4 + r1 * Math.sin(ang))} L${f1(r2 * Math.cos(ang))} ${f1(-4 + r2 * Math.sin(ang))}`, stroke: '#3a3a46', 'stroke-width': 0.9, 'stroke-linecap': 'round' }, a);
+    }
+    el('ellipse', { cx: -3, cy: -7, rx: 4, ry: 3, fill: '#5d63a0', opacity: 0.45 }, a);
+    el('ellipse', { cx: 0, cy: -19, rx: 8.5, ry: 7, fill: '#101015' }, a);
+    [-1, 1].forEach(s => {
+      el('ellipse', { cx: s * 5.4, cy: -19.5, rx: 3, ry: 4.4, fill: '#23232e' }, a);
+      el('circle', { cx: s * 5.4 - 0.9, cy: -21, r: 0.9, fill: BLANCO, opacity: 0.6 }, a);
+      el('path', { d: `M${s * 2} -25 L${s * 4} -31 L${s * 11} -37`, fill: 'none', stroke: '#111116', 'stroke-width': 1.2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, a);
+    });
+  }
+
+  /* mariposa de los cítricos: alas pardo oscuro con la banda amarilla, colas y ocelo */
+  function papilio(g) {
+    const a = el('g', { transform: 'rotate(8) scale(0.98)' }, g);
+    for (const s of [1, -1]) {
+      const w = el('g', { transform: `scale(${s} 1)` }, a);
+      const fw = 'M3 -4 C 14 -26 38 -44 60 -45 C 62 -38 58 -24 50 -12 C 40 -6 22 -1 4 1 Z';
+      const hw = 'M4 1 C 20 -1 40 2 45 12 C 47 20 42 27 36 32 C 34 38 36 46 33 55 C 29 50 28 43 24 40 C 16 42 8 34 3 16 Z';
+      const idc = 'clipPap' + (s > 0 ? 'D' : 'I');
+      const cp = el('clipPath', { id: idc }, defs);
+      el('path', { d: fw }, cp); el('path', { d: hw }, cp);
+      el('path', { d: hw, fill: G.papilioAla, stroke: '#0f0b07', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, w);
+      el('path', { d: fw, fill: G.papilioAla, stroke: '#0f0b07', 'stroke-width': 1.2, 'stroke-linejoin': 'round' }, w);
+      const sp = el('g', { 'clip-path': `url(#${idc})` }, w);
+      /* banda diagonal del ala anterior y banda del ala posterior */
+      [[50, -38, 4.6, 2.6, -40], [43, -31, 4.8, 2.8, -40], [36, -24, 5, 3, -42], [29, -17, 5.2, 3.1, -45], [22, -10, 5, 3, -50], [15, -5, 4.2, 2.6, -60]]
+        .forEach(([x, y, rx, ry, r]) => el('ellipse', { cx: x, cy: y, rx, ry, fill: '#f2c94c', transform: `rotate(${r} ${x} ${y})` }, sp));
+      [[12, 8, 5, 3.4, -20], [20, 11, 5.4, 3.6, -10], [28, 14, 5.2, 3.4, 0], [35, 19, 4.6, 3.2, 20]]
+        .forEach(([x, y, rx, ry, r]) => el('ellipse', { cx: x, cy: y, rx, ry, fill: '#f2c94c', transform: `rotate(${r} ${x} ${y})` }, sp));
+      /* puntos submarginales */
+      [[56, -30], [53, -21], [47, -13], [40, 25], [34, 31], [26, 36]].forEach(([x, y]) => el('circle', { cx: x, cy: y, r: 1.6, fill: '#f2c94c' }, sp));
+      el('ellipse', { cx: 33.4, cy: 49, rx: 1.6, ry: 3.4, fill: '#f2c94c', transform: 'rotate(8 33.4 49)' }, sp);
+      /* ocelo del ángulo anal: media luna azul sobre mancha rojiza */
+      el('circle', { cx: 9, cy: 30, r: 3.6, fill: '#e8590c' }, sp);
+      el('path', { d: 'M5.6 27 Q 9 23.6 12.6 27', fill: 'none', stroke: '#4dabf7', 'stroke-width': 1.6, 'stroke-linecap': 'round' }, sp);
+    }
+    el('ellipse', { cx: 0, cy: 17, rx: 2.8, ry: 14, fill: '#1a140d' }, a);
+    el('path', { d: 'M-1.4 6 L-1.4 29 M1.4 6 L1.4 29', stroke: '#f2c94c', 'stroke-width': 0.8, opacity: 0.8 }, a);
+    el('ellipse', { cx: 0, cy: -3, rx: 3.8, ry: 7.4, fill: '#1a140d' }, a);
+    el('circle', { cx: 0, cy: -12.4, r: 3.2, fill: '#1a140d' }, a);
+    [-1, 1].forEach(s => {
+      el('path', { d: `M${s * 1} -15 C ${s * 3} -24 ${s * 6} -32 ${s * 9} -40`, fill: 'none', stroke: '#1a140d', 'stroke-width': 1 }, a);
+      el('ellipse', { cx: s * 9.2, cy: -40.5, rx: 1.4, ry: 2.1, fill: '#1a140d' }, a);
+    });
+  }
+
+  /* crisopa: alas transparentes con nervadura en red, cuerpo verde y ojos dorados */
+  function chrysoperla(g) {
+    const a = el('g', { transform: 'rotate(10) scale(1.08)' }, g);
+    /* los dos pares de alas de cada lado, y el cuerpo encima */
+    for (const s of [1, -1]) wingSide(el('g', { transform: `scale(${s} 1)` }, a));
+    function wingSide(sc) {
+      const w1 = el('g', { transform: 'translate(3 -2) rotate(-24)' }, sc), w2 = el('g', { transform: 'translate(3 5) rotate(14)' }, sc);
+      [[w1, 56, 11], [w2, 50, 10]].forEach(([wg, L, Wd]) => {
+        const up = [], dn = [];
+        for (let i = 0; i <= 40; i++) { const t = i / 40, h = Wd * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.62)), 0.9); up.push([L * t, -h * 0.9]); dn.push([L * t, h * 0.75]); }
+        el('path', { d: poly(up.concat(dn.reverse())) + 'Z', fill: '#d3f9d8', 'fill-opacity': 0.5, stroke: '#2f9e44', 'stroke-width': 0.9, 'stroke-linejoin': 'round' }, wg);
+        [-0.45, 0, 0.4].forEach(k => {
+          const pts = [];
+          for (let i = 2; i <= 36; i++) { const t = i / 40, h = Wd * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.62)), 0.9); pts.push([L * t, k * h]); }
+          el('path', { d: poly(pts), fill: 'none', stroke: '#40c057', 'stroke-width': 0.55, opacity: 0.85 }, wg);
+        });
+        for (let i = 4; i <= 36; i += 2.6) {
+          const t = i / 40, h = Wd * Math.pow(Math.sin(Math.PI * Math.pow(t, 0.62)), 0.9);
+          el('path', { d: `M${f1(L * t)} ${f1(-h * 0.88)} L${f1(L * t + 1.2)} ${f1(h * 0.72)}`, stroke: '#40c057', 'stroke-width': 0.4, opacity: 0.7 }, wg);
+        }
+      });
+      el('path', { d: 'M2 2 L10 10 L12 20 M2 6 L8 18 L7 28 M2 -3 L9 -1 L14 4', fill: 'none', stroke: '#8ce99a', 'stroke-width': 0.9, 'stroke-linecap': 'round' }, sc);
+      el('path', { d: 'M1.4 -12 C 6 -24 12 -36 22 -48', fill: 'none', stroke: '#a9e3b0', 'stroke-width': 0.8, 'stroke-linecap': 'round' }, sc);
+    }
+    el('ellipse', { cx: 0, cy: 22, rx: 3, ry: 18, fill: G.crisopaAbd }, a);
+    [10, 16, 22, 28, 34].forEach(y => el('path', { d: `M-2.6 ${y} Q 0 ${y + 1.2} 2.6 ${y}`, fill: 'none', stroke: '#2b8a3e', 'stroke-width': 0.5, opacity: 0.7 }, a));
+    el('ellipse', { cx: 0, cy: -1, rx: 3.8, ry: 7, fill: '#69db7c', stroke: '#2f9e44', 'stroke-width': 0.4 }, a);
+    el('path', { d: 'M0 -7 L0 5', stroke: '#fff3bf', 'stroke-width': 0.9, opacity: 0.8 }, a);
+    el('circle', { cx: 0, cy: -10.5, r: 3.6, fill: '#8ce99a' }, a);
+    [-1, 1].forEach(s => el('circle', { cx: s * 3.4, cy: -11, r: 2.5, fill: sphere('#e0a82e') }, a));
+  }
+
+  /* ================================================================= paneles laterales */
+  /* gráfico de sedimentación: valores propios, Kaiser y análisis paralelo */
+  (function scree(x0, y0, w, h) {
+    const g = el('g');
+    const lam = [3.62, 2.04, 0.93, 0.55, 0.34, 0.24, 0.17, 0.11];
+    const horn = [1.55, 1.33, 1.17, 1.04, 0.93, 0.82, 0.72, 0.61];
+    const ymax = 4, n = lam.length, bw = w / n;
+    const Y = v => y0 - v / ymax * h, X = i => x0 + (i + 0.5) * bw;
+    [1, 2, 3, 4].forEach(v => el('path', { d: `M${x0} ${f1(Y(v))} L${x0 + w} ${f1(Y(v))}`, stroke: '#e6e8ef', 'stroke-width': 0.8 }, g));
+    lam.forEach((v, i) => el('rect', { x: f1(X(i) - bw * 0.32), y: f1(Y(v)), width: f1(bw * 0.64), height: f1(y0 - Y(v)), rx: 2, fill: i < 2 ? G.barra : '#d8d1f6' }, g));
+    el('path', { d: `M${x0} ${f1(Y(1))} L${x0 + w} ${f1(Y(1))}`, stroke: INSECTO, 'stroke-width': 1.4, 'stroke-dasharray': '5 3' }, g);
+    const tk = el('text', { x: x0 + w, y: f1(Y(1) - 6), 'text-anchor': 'end', fill: '#b85f06', 'font-family': 'Cormorant, serif', 'font-style': 'italic', 'font-size': 14, 'font-weight': 600 }, g, null);
+    el('tspan', {}, tk, 'λ = ');
+    el('tspan', { 'font-family': 'Jost, sans-serif', 'font-style': 'normal', 'font-size': 10.5, 'font-weight': 500 }, tk, '1');
+    el('path', { d: poly(horn.map((v, i) => [X(i), Y(v)])), fill: 'none', stroke: '#0d9488', 'stroke-width': 1.4, 'stroke-dasharray': '3 3' }, g);
+    horn.forEach((v, i) => el('circle', { cx: f1(X(i)), cy: f1(Y(v)), r: 2.2, fill: BLANCO, stroke: '#0d9488', 'stroke-width': 1.1 }, g));
+    el('path', { d: poly(lam.map((v, i) => [X(i), Y(v)])), fill: 'none', stroke: INK, 'stroke-width': 1.6 }, g);
+    lam.forEach((v, i) => el('circle', { cx: f1(X(i)), cy: f1(Y(v)), r: 4, fill: sphere(i < 2 ? VIOLETA : '#8f86b8'), stroke: BLANCO, 'stroke-width': 1 }, g));
+    el('path', { d: `M${x0} ${f1(y0 - h - 8)} L${x0} ${y0} L${x0 + w} ${y0}`, fill: 'none', stroke: INK, 'stroke-width': 1.1 }, g);
+    lam.forEach((v, i) => el('text', { x: f1(X(i)), y: y0 + 14, 'text-anchor': 'middle', fill: GRIS, 'font-family': 'Jost, sans-serif', 'font-size': 8.5 }, g, String(i + 1)));
+    [0, 2, 4].forEach(v => el('text', { x: x0 - 6, y: f1(Y(v) + 3), 'text-anchor': 'end', fill: GRIS, 'font-family': 'Jost, sans-serif', 'font-size': 8.5 }, g, String(v)));
+    el('text', { x: x0 + 9, y: f1(y0 - h - 2), fill: INK, 'font-family': 'Cormorant, serif', 'font-style': 'italic', 'font-weight': 600, 'font-size': 18 }, g, 'λ');
+  })(58, 972, 176, 170);
+
+  /* dendrograma del agrupamiento sobre los ejes, con el corte en tres grupos */
+  (function dendro(x0, yb, w, h) {
+    const g = el('g', { fill: 'none', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+    const cols = ['#5b3fd6', '#0d9488', '#e0316f'], sizes = [9, 7, 8];
+    const NT = sizes.reduce((s, v) => s + v, 0), dx = w / (NT - 1);
+    let leaf = 0;
+    const grow = (n, hmax, c) => {
+      if (n === 1) return { x: x0 + (leaf++) * dx, h: 0, c, kids: [] };
+      const k = 1 + Math.floor(rng() * (n - 1)), hh = hmax * (0.62 + 0.33 * rng());
+      const L = grow(k, hh * 0.85, c), R = grow(n - k, hh * 0.85, c);
+      return { x: (L.x + R.x) / 2, h: hh, c, kids: [L, R] };
+    };
+    const cl = sizes.map((n, i) => grow(n, 0.3, i));
+    const ab = { x: (cl[0].x + cl[1].x) / 2, h: 0.6, c: null, kids: [cl[0], cl[1]] };
+    const root = { x: (ab.x + cl[2].x) / 2, h: 1, c: null, kids: [ab, cl[2]] };
+    const Y = v => yb - v * h;
+    (function draw(nd) {
+      if (!nd.kids.length) return;
+      const col = nd.c == null ? INK : cols[nd.c];
+      const [L, R] = nd.kids;
+      el('path', { d: `M${f1(L.x)} ${f1(Y(L.h))} L${f1(L.x)} ${f1(Y(nd.h))} L${f1(R.x)} ${f1(Y(nd.h))} L${f1(R.x)} ${f1(Y(R.h))}`, stroke: col, 'stroke-width': nd.c == null ? 1.7 : 1.4 }, g);
+      nd.kids.forEach(draw);
+    })(root);
+    el('path', { d: `M${f1(root.x)} ${f1(Y(1))} L${f1(root.x)} ${f1(Y(1) - 10)}`, stroke: INK, 'stroke-width': 1.7 }, g);
+    const cut = Y(0.45);
+    el('path', { d: `M${x0 - 10} ${f1(cut)} L${x0 + w + 10} ${f1(cut)}`, stroke: INSECTO, 'stroke-width': 1.4, 'stroke-dasharray': '5 3' }, g);
+    const lv = [];
+    (function tips(nd) { if (!nd.kids.length) lv.push(nd); else nd.kids.forEach(tips); })(root);
+    lv.forEach(t => el('circle', { cx: f1(t.x), cy: yb + 5, r: 2.7, fill: sphere(cols[t.c]) }, svg));
+    let start = 0;
+    sizes.forEach((n, i) => {
+      el('rect', { x: f1(x0 + start * dx - 3.5), y: yb + 12, width: f1((n - 1) * dx + 7), height: 5, rx: 2.5, fill: cols[i] }, svg);
+      start += n;
+    });
+  })(626, 952, 170, 156);
+
+  /* ---------------------------------------------------------------- autor */
+  const au = el('g', { 'text-anchor': 'middle' });
+  el('text', { x: W / 2, y: 1044, fill: INK, 'font-family': 'Cormorant, serif', 'font-size': 33, 'font-weight': 600, 'letter-spacing': 1.4 }, au, 'Luis Ángel Barrera-Guzmán');
+  el('text', { x: W / 2, y: 1072, fill: GRIS, 'font-family': 'Jost, sans-serif', 'font-size': 10.5, 'font-weight': 400, 'letter-spacing': 4 }, au, 'VERSIÓN 1.1 · VERSION 1.1 · 2026');
+})();
+</script>
+</body>
+</html>
