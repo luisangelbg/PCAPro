@@ -203,7 +203,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 }
 .verdict .grade small { display: block; font-size: 0.66rem; font-weight: 600; letter-spacing: .08em; color: var(--text-muted); text-transform: uppercase; }
 .verdict .v-text { flex: 1; min-width: 240px; font-size: 0.92rem; }
-.grade.g-a { color: var(--success); } .grade.g-b { color: var(--accent); }
+.grade.g-a { color: var(--success); } .grade.g-b { color: var(--accent-text); }
 .grade.g-c { color: var(--warning); } .grade.g-d { color: var(--danger); }
 
 /* ---------- Figuras ---------- */
