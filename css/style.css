@@ -70,7 +70,7 @@ main { max-width: 1140px; margin: 0 auto; padding: 0 20px 80px; }
 .acc .acc-body p { margin: 0 0 10px; }
 .acc .acc-body ul, .acc .acc-body ol { margin: 0 0 12px; padding-left: 20px; }
 .acc .acc-body li { margin-bottom: 6px; }
-.acc .acc-body table { margin: 8px 0 14px; }
+.acc .acc-body table { margin: 8px 0 14px; display: block; max-width: 100%; overflow-x: auto; }   /* tablas anchas de la teoría: se desplazan dentro de su caja */
 
 .formula {
   font-family: var(--mono); background: var(--bg-soft); border: 1px solid var(--border);
