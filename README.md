@@ -51,14 +51,14 @@ Opening `index.html` by double-clicking also works, but the bundled example data
 
 ### Requirements
 
-A current browser (Chrome, Edge, Firefox or Safari). Nothing else.
+An up-to-date web browser. Nothing else, and no internet connection.
 
-### Third-party dependency
+### Third-party component
 
-The only third-party code is **SheetJS** (`xlsx` 0.18.5, Apache-2.0), used solely to read
-`.xlsx` workbooks. It is loaded once from a CDN. For a fully offline installation, download
-`xlsx.full.min.js` into `js/vendor/` and change the corresponding `<script src>` in
-`index.html`; everything else already works with no network access.
+The only third-party code is a spreadsheet-reading library (`xlsx` 0.18.5, Apache-2.0),
+used solely to read `.xlsx` and `.xls` workbooks. It ships inside the application, unmodified,
+in `vendor/xlsx.full.min.js`, with its licence in `vendor/THIRD-PARTY-NOTICES.txt`, so
+PCAPro works entirely offline.
 
 ---
 
