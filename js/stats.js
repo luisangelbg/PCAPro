@@ -11,7 +11,7 @@
 
 /* PCAPro — motor numerico.
    Algebra lineal + estadistica necesarias para ACP, escritas a mano para que
-   todo corra en el navegador sin dependencias ni Python. */
+   todo corra en el navegador sin dependencias. */
 
 const S = {};
 
@@ -39,7 +39,7 @@ S.mad = a => {                    // desviacion absoluta mediana, escalada a sig
 };
 S.iqr = a => S.quantile(a, 0.75) - S.quantile(a, 0.25);
 
-/* asimetria muestral (g1 con correccion de sesgo, tipo SPSS/Excel) */
+/* asimetria muestral (g1 con correccion de sesgo, la de los programas de estadistica habituales) */
 S.skewness = a => {
   const n = a.length; if (n < 3) return NaN;
   const m = S.mean(a), s = S.sd(a);
@@ -47,7 +47,7 @@ S.skewness = a => {
   const g1 = a.reduce((acc, x) => acc + Math.pow((x - m) / s, 3), 0) / n;
   return Math.sqrt(n * (n - 1)) / (n - 2) * g1;
 };
-/* curtosis en exceso (G2, tipo SPSS/Excel) */
+/* curtosis en exceso (G2, la de los programas de estadistica habituales) */
 S.kurtosis = a => {
   const n = a.length; if (n < 4) return NaN;
   const m = S.mean(a), sd = S.sd(a);

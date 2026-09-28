@@ -423,7 +423,7 @@ Fig.mount = (host, spec) => {
     if (!current) return;
     const w = +current.dataset.w, h = +current.dataset.h, k = +res.value;
     info.textContent = fmt.value === 'svg'
-      ? 'Vectorial: se puede escalar sin perder nitidez y editar en Inkscape o Illustrator.'
+      ? 'Vectorial: se puede escalar sin perder nitidez y editar en cualquier programa de dibujo vectorial.'
       : `${Math.round(w * k)} × ${Math.round(h * k)} px`;
   }
   fmt.addEventListener('change', updateInfo);

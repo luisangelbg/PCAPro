@@ -196,7 +196,7 @@ function readFile(file) {
         loadSheet(wb.SheetNames[0], file.name);
       } catch (err) {
         clearMessages('dataMessages');
-        showMessage('dataMessages', 'error', tt('No se pudo leer el archivo de Excel: ') + err.message);
+        showMessage('dataMessages', 'error', tt('No se pudo leer la hoja de cálculo: ') + err.message);
       }
     };
     reader.readAsArrayBuffer(file);

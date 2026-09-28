@@ -53,7 +53,7 @@
         <h1 data-i18n-html="Encuentra los &lt;span class=&quot;accent&quot;&gt;ejes que ordenan&lt;/span&gt; tus datos">Encuentra los <span class="accent">ejes que ordenan</span> tus datos</h1>
         <p class="lead" data-i18n-auto>Del archivo crudo a una figura lista para publicar: comprueba si tus datos <b>admiten un ACP</b>,
           decide <b>cuántos componentes retener</b> con ocho criterios en lugar de uno, rota si hace falta,
-          lee los mapas factoriales y exporta un <b>informe completo</b>. Sin R, sin Python y sin instalar nada.</p>
+          lee los mapas factoriales y exporta un <b>informe completo</b>. Sin programar y sin instalar nada.</p>
         <div class="hero-cta">
           <button class="btn btn-primary btn-lg" id="startBtn" data-i18n="Empezar con mis datos →">Empezar con mis datos →</button>
           <button class="btn btn-secondary btn-lg" id="demoBtn" data-i18n="Ver el ejemplo de iris">Ver el ejemplo de iris</button>
@@ -432,7 +432,7 @@
             variable es asimétrica. Declara siempre cuántas celdas imputaste.</li>
           <li><b>Imputación por regresión o por vecinos más cercanos (kNN).</b> Conserva mejor la estructura de
             correlación.</li>
-          <li><b>ACP iterativo regularizado</b> (paquete <code>missMDA</code>, función <code>imputePCA</code> en R).
+          <li><b>ACP iterativo regularizado</b> (Josse y Husson, 2012).
             Es la opción recomendada en la literatura cuando hay más de un 10 % de vacíos: estima los valores faltantes
             usando la propia estructura de componentes, de forma iterativa.</li>
         </ol>
@@ -452,7 +452,7 @@
             variable is skewed. Always report how many cells you imputed.</li>
           <li><b>Regression or nearest-neighbour (kNN) imputation.</b> It preserves the correlation structure
             better.</li>
-          <li><b>Regularised iterative PCA</b> (package <code>missMDA</code>, function <code>imputePCA</code> in R).
+          <li><b>Regularised iterative PCA</b> (Josse &amp; Husson, 2012).
             This is the option recommended in the literature when more than 10% of the values are missing: it estimates the missing values
             iteratively, using the component structure itself.</li>
         </ol>
@@ -543,7 +543,7 @@
       <summary data-i18n-auto>8 · Variables e individuos activos frente a suplementarios</summary>
       <div class="acc-body" data-lang="es">
         <p>Distinción central en la escuela francesa de análisis de datos (Benzécri, Lebart, Escofier–Pagès), que es la
-          que implementan <code>FactoMineR</code> y <code>factoextra</code>:</p>
+          que sigue esta plataforma:</p>
         <ul>
           <li><b>Variables activas.</b> Construyen los ejes. Son las que entran en el cálculo de los valores propios.</li>
           <li><b>Variables cuantitativas suplementarias.</b> No participan en el cálculo, pero se proyectan después sobre
@@ -560,7 +560,7 @@
       </div>
       <div class="acc-body" data-lang="en" hidden>
         <p>A central distinction in the French school of data analysis (Benzécri, Lebart, Escofier–Pagès), the one
-          implemented by <code>FactoMineR</code> and <code>factoextra</code>:</p>
+          followed by this platform:</p>
         <ul>
           <li><b>Active variables.</b> They build the axes. They are the ones entering the eigenvalue computation.</li>
           <li><b>Supplementary quantitative variables.</b> They take no part in the computation, but are projected afterwards onto
@@ -862,7 +862,7 @@
           <option value="dot" data-i18n="Punto (12.34)">Punto (12.34)</option>
           <option value="comma" data-i18n="Coma (12,34)">Coma (12,34)</option>
         </select>
-        <span class="field-help" data-i18n-auto>Importante si tu Excel está en configuración regional en español.</span>
+        <span class="field-help" data-i18n-auto>Importante si tu hoja de cálculo usa configuración regional en español.</span>
       </div>
       <div class="field">
         <label data-i18n="Separador de columnas (CSV)">Separador de columnas (CSV)</label>
@@ -1458,7 +1458,7 @@
           cada carga hacia 0 o hacia ±1. Es, con diferencia, la rotación más reportada en la literatura.</p>
         <p><b>Normalización de Kaiser.</b> Antes de rotar, cada fila de la matriz de cargas se divide entre su
           comunalidad (se lleva a longitud 1) y después se restaura. Así las variables mal representadas no pesan menos
-          en la rotación. Es el comportamiento por defecto de SPSS y de <code>stats::varimax</code> en R, y aquí también.</p>
+          en la rotación. Es el comportamiento por defecto habitual en los programas de estadística, y aquí también.</p>
       </div>
       <div class="acc-body" data-lang="en" hidden>
         <p>They keep the axes perpendicular, so the components remain uncorrelated. They all maximise
@@ -1481,7 +1481,7 @@
           each loading towards 0 or towards ±1. It is by far the most reported rotation in the literature.</p>
         <p><b>Kaiser normalisation.</b> Before rotating, each row of the loading matrix is divided by its
           communality (brought to length 1) and afterwards restored. That way poorly represented variables do not count for less
-          in the rotation. It is the default behaviour of SPSS and of <code>stats::varimax</code> in R, and here as well.</p>
+          in the rotation. It is the usual default in statistical software, and here as well.</p>
       </div>
     </details>
 
@@ -1540,7 +1540,7 @@
         <p>Al rotar componentes principales se pierden dos propiedades: los componentes dejan de maximizar varianza
           individualmente y dejan de estar ordenados por λ. Lo que <b>sí</b> se conserva es la varianza total del
           subconjunto retenido y las comunalidades.</p>
-        <p>La práctica está muy extendida y es aceptada —SPSS, SAS y <code>psych::principal</code> la ofrecen por
+        <p>La práctica está muy extendida y es aceptada —los principales programas de estadística la ofrecen por
           defecto— siempre que se declare con claridad. Fórmula habitual en la sección de métodos:</p>
         <div class="callout"><i>«Se realizó un análisis de componentes principales sobre la matriz de correlaciones.
           Se retuvieron k componentes con base en el análisis paralelo y el gráfico de sedimentación, que explican
@@ -1558,7 +1558,7 @@
         <p>When principal components are rotated, two properties are lost: the components no longer maximise variance
           individually and they are no longer ordered by λ. What <b>is</b> preserved is the total variance of the
           retained subset and the communalities.</p>
-        <p>The practice is very widespread and accepted —SPSS, SAS and <code>psych::principal</code> offer it by
+        <p>The practice is very widespread and accepted —the main statistical packages offer it by
           default— provided it is clearly declared. The usual wording in the methods section:</p>
         <div class="callout"><i>"A principal component analysis was carried out on the correlation matrix.
           k components were retained on the basis of parallel analysis and the scree plot, explaining
@@ -1639,7 +1639,7 @@
       <div class="field" id="normField">
         <label data-i18n="Normalización">Normalización</label>
         <label class="checkbox-label"><input type="checkbox" id="rotNormalize" checked> <span data-i18n="Normalización de Kaiser">Normalización de Kaiser</span></label>
-        <span class="field-help" data-i18n-auto>Iguala el peso de las variables durante la rotación. Es el comportamiento de SPSS y de R.</span>
+        <span class="field-help" data-i18n-auto>Iguala el peso de las variables durante la rotación. Es el comportamiento habitual de los programas de estadística.</span>
       </div>
     </div>
     <p class="hint" data-i18n-auto id="rotHint"></p>
@@ -2095,8 +2095,8 @@
     <details class="acc">
       <summary data-i18n-auto>2 · El valor test (v.test): cómo se caracteriza un eje con categorías</summary>
       <div class="acc-body" data-lang="es">
-        <p>Es el estadístico de la escuela francesa de análisis de datos, el que usa <code>dimdesc()</code> de
-          FactoMineR. Responde a: <i>¿el centroide de esta categoría está más lejos del origen de lo que cabría
+        <p>Es el estadístico de la escuela francesa de análisis de datos, el que se usa en la descripción automática de
+          dimensiones (Lebart et al., 2006). Responde a: <i>¿el centroide de esta categoría está más lejos del origen de lo que cabría
           esperar por azar?</i></p>
         <div class="formula">v = ( x̄_categoría − x̄_global ) / √[ (s² / n_q) · (N − n_q)/(N − 1) ]</div>
         <p>Bajo la hipótesis nula de que los <i>n_q</i> individuos de la categoría son una muestra al azar del total,
@@ -2110,8 +2110,8 @@
           porque se puede ordenar: las categorías con |v| más alto son las que mejor caracterizan el eje.</p>
       </div>
       <div class="acc-body" data-lang="en" hidden>
-        <p>This is the statistic of the French school of data analysis, the one used by <code>dimdesc()</code> in
-          FactoMineR. It answers: <i>is the centroid of this category further from the origin than one would
+        <p>This is the statistic of the French school of data analysis, the one used in the automatic
+          description of dimensions (Lebart et al., 2006). It answers: <i>is the centroid of this category further from the origin than one would
           expect by chance?</i></p>
         <div class="formula">v = ( x̄_category − x̄_overall ) / √[ (s² / n_q) · (N − n_q)/(N − 1) ]</div>
         <p>Under the null hypothesis that the <i>n_q</i> individuals of the category are a random sample of the whole,

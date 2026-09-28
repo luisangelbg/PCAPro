@@ -73,8 +73,8 @@ I18N.en = {
     'Multivariate statistics for biology, ecology and agronomy',
   'Encuentra los <span class="accent">ejes que ordenan</span> tus datos':
     'Find the <span class="accent">axes that order</span> your data',
-  'Del archivo crudo a una figura lista para publicar: comprueba si tus datos <b>admiten un ACP</b>, decide <b>cuántos componentes retener</b> con ocho criterios en lugar de uno, rota si hace falta, lee los mapas factoriales y exporta un <b>informe completo</b>. Sin R, sin Python y sin instalar nada.':
-    'From the raw file to a publication-ready figure: check whether your data <b>support a PCA</b>, decide <b>how many components to retain</b> using eight criteria instead of one, rotate if you need to, read the factor maps and export a <b>complete report</b>. No R, no Python and nothing to install.',
+  'Del archivo crudo a una figura lista para publicar: comprueba si tus datos <b>admiten un ACP</b>, decide <b>cuántos componentes retener</b> con ocho criterios en lugar de uno, rota si hace falta, lee los mapas factoriales y exporta un <b>informe completo</b>. Sin programar y sin instalar nada.':
+    'From the raw file to a publication-ready figure: check whether your data <b>support a PCA</b>, decide <b>how many components to retain</b> using eight criteria instead of one, rotate if you need to, read the factor maps and export a <b>complete report</b>. No programming and nothing to install.',
   'Empezar con mis datos →':
     'Start with my data →',
   'Ver el ejemplo de iris':
@@ -445,8 +445,8 @@ I18N.en = {
   'Muy alta · 6× (~450 ppp)': 'Very high · 6× (~450 dpi)',
   'Publicación · 8× (~600 ppp)': 'Publication · 8× (~600 dpi)',
   'Máxima · 12× (~900 ppp)': 'Maximum · 12× (~900 dpi)',
-  'Vectorial: se puede escalar sin perder nitidez y editar en Inkscape o Illustrator.':
-    'Vector: scales without loss and can be edited in Inkscape or Illustrator.',
+  'Vectorial: se puede escalar sin perder nitidez y editar en cualquier programa de dibujo vectorial.':
+    'Vector: scales without loss and can be edited in any vector-drawing program.',
 
   /* ---------- figure controls ---------- */
   'Título': 'Title', 'Subtítulo': 'Subtitle', 'Tamaño título': 'Title size',
@@ -802,8 +802,8 @@ I18N.en = {
   'Formato <b>.xlsx</b>, <b>.xls</b> o <b>.csv</b>. La <b>primera fila</b> debe contener los nombres de las variables y cada fila siguiente una observación (una planta, una parcela, un individuo, una muestra…). Una sola tabla por hoja, sin filas ni columnas en blanco intercaladas y sin celdas combinadas.':
     '<b>.xlsx</b>, <b>.xls</b> or <b>.csv</b>. The <b>first row</b> must hold the variable names, and every row below it one observation (a plant, a plot, an individual, a sample…). One single table per sheet, with no blank rows or columns in between and no merged cells.',
   '.xlsx · .xls · .csv · .tsv · .txt': '.xlsx · .xls · .csv · .tsv · .txt',
-  'Importante si tu Excel está en configuración regional en español.':
-    'Matters if your Excel uses a locale where the comma is the decimal mark.',
+  'Importante si tu hoja de cálculo usa configuración regional en español.':
+    'Matters if your spreadsheet uses a locale where the comma is the decimal mark.',
   'Solo aplica a archivos de texto plano.': 'Applies to plain text files only.',
   'Tu archivo tiene varias hojas.': 'Your file has several sheets.',
   'PCAPro detectó el tipo de cada columna. Revísalo: <b>solo las variables numéricas marcadas como «Activa» construirán los componentes</b>. Una columna numérica con pocos valores enteros (un código de tratamiento, un año, un identificador) casi siempre debe ser <b>cualitativa</b>, no activa.':
@@ -868,8 +868,8 @@ I18N.en = {
   '0 = quartimin. Negativo → más ortogonal; positivo → más oblicuo.':
     '0 = quartimin. Negative → closer to orthogonal; positive → more oblique.',
   '4 es el valor estándar. Más alto = más oblicuo.': '4 is the standard value. Higher = more oblique.',
-  'Iguala el peso de las variables durante la rotación. Es el comportamiento de SPSS y de R.':
-    'Equalises the weight of the variables during rotation. This is what SPSS and R do.',
+  'Iguala el peso de las variables durante la rotación. Es el comportamiento habitual de los programas de estadística.':
+    'Equalises the weight of the variables during rotation. This is what most statistical software does.',
   'Correlación simple entre cada variable y cada componente. Con rotación oblicua es distinta de la matriz de patrón: aquí sí influyen los demás componentes, por eso los valores son más altos.':
     'The simple correlation between each variable and each component. Under oblique rotation it differs from the pattern matrix: here the other components do contribute, which is why the values are larger.',
   'Redacción automática a partir de las cargas que superan el umbral. Úsala como punto de partida: el nombre final de cada eje lo pones tú, con la teoría de tu disciplina en la mano.':
@@ -1199,7 +1199,7 @@ I18N.en = {
   'Leyendo archivo…': 'Reading file…', 'Cargando ejemplo…': 'Loading example…',
   'Calculando…': 'Computing…',
   'No se pudo leer el CSV: ': 'The CSV could not be read: ',
-  'No se pudo leer el archivo de Excel: ': 'The Excel file could not be read: ',
+  'No se pudo leer la hoja de cálculo: ': 'The spreadsheet file could not be read: ',
   'La hoja está vacía.': 'The sheet is empty.',
   'Error en el cálculo: ': 'Error during the computation: ',
   'Quedan menos de 3 filas completas. Prueba con imputación por media/mediana o revisa las variables activas.':
