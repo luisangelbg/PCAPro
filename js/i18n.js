@@ -1703,6 +1703,14 @@ I18N.en = {
     'The test values of the clustering describe the partition, they do not test it: the clusters were built to maximise those differences.',
   'La rotación no se aplica a este método: el paso siguiente son los mapas factoriales del bloque 4, después la interpretación, el agrupamiento opcional y el informe.':
     'Rotation does not apply to this method: the next step is the factor maps of Block 4, then the interpretation, the optional clustering and the report.',
+  /* barra común de la LABG Suite */
+  'Saltar al contenido': 'Skip to content',
+  'Inicio de PCAPro': 'PCAPro home',
+  'análisis factorial guiado': 'guided factor analysis',
+  'Volver al portal de la LABG Suite': 'Back to the LABG Suite portal',
+  'Atajos de teclado (?)': 'Keyboard shortcuts (?)',
+  'Anterior': 'Previous',
+  'Siguiente': 'Next',
 };
 
 /* ============================================================
@@ -1770,14 +1778,20 @@ I18N.set = function (lang) {
 I18N.init = function () {
   let saved = null;
   try { saved = localStorage.getItem('pcapro.lang'); } catch (e) { /* ignore */ }
-  const guess = (navigator.language || 'es').toLowerCase().startsWith('en') ? 'en' : 'es';
-  I18N.lang = I18N.supported.includes(saved) ? saved : guess;
+  /* español por omisión, como en toda la suite; el usuario elige después */
+  I18N.lang = I18N.supported.includes(saved) ? saved : 'es';
 
   const sel = document.getElementById('langSelect');
   if (sel) {
     sel.value = I18N.lang;
     sel.addEventListener('change', () => I18N.set(sel.value));
   }
+  /* conmutador ES | EN de la barra común */
+  const seg = () => document.querySelectorAll('.lang-seg button').forEach(b =>
+    b.setAttribute('aria-pressed', b.dataset.lang === I18N.lang ? 'true' : 'false'));
+  document.querySelectorAll('.lang-seg button').forEach(b => b.addEventListener('click', () => I18N.set(b.dataset.lang)));
+  I18N.onChange.push(seg);
+  seg();
   I18N.apply();
 };
 

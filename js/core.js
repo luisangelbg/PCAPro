@@ -78,6 +78,8 @@ function showMessage(container, type, text) {
   if (typeof container === 'string') container = el(container);
   if (!container) return null;
   const div = mk('div', { class: 'msg msg-' + type }, text);
+  /* errores y avisos se anuncian al lector de pantalla */
+  if (window.LABG) LABG.messageRole(div, type);
   container.appendChild(div);
   return div;
 }
@@ -185,16 +187,91 @@ function slug(s) {
     .replace(/[^\w\-]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 60) || 'pcapro';
 }
 
-/* ---------------- navegacion por pasos ---------------- */
+/* ---------------- navegacion por pasos ----------------
+   Orden de lectura de los bloques: el 5b (data-step 7) va entre el 5 y el 6. */
+const STEP_ORDER = ['0', '1', '2', '3', '4', '5', '7', '6'];
+const stepBtn = n => document.querySelector('.step-btn[data-step="' + n + '"]');
+const stepOn = n => { const b = stepBtn(n); return !!b && !b.disabled; };
+
 function goStep(n) {
+  n = String(n);
   els('.step-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + n));
-  els('.step-btn').forEach(b => b.classList.toggle('active', b.dataset.step === String(n)));
+  els('.step-btn').forEach(b => b.classList.toggle('active', b.dataset.step === n));
+  if (window.LABG) {
+    LABG.setCurrentStep(n);
+    const b = stepBtn(n);
+    if (b) LABG.announce(TT('Bloque: ', 'Block: ') + b.textContent.replace(/\s+/g, ' ').trim());
+  }
+  refreshStepFooters();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function enableStep(n, on) {
-  const b = document.querySelector('.step-btn[data-step="' + n + '"]');
+  const b = stepBtn(n);
   if (b) b.disabled = (on === false);
+  refreshStepMarks();
+  refreshStepFooters();
 }
+
+/* Un bloque queda «terminado» cuando ya se puede pasar a uno posterior. */
+function refreshStepMarks() {
+  if (!window.LABG) return;
+  STEP_ORDER.forEach((s, i) => {
+    if (s === '0') return;
+    const later = STEP_ORDER.slice(i + 1).some(stepOn);
+    LABG.markStep(s, stepOn(s) && later ? 'done' : null);
+  });
+}
+
+/* Pie de cada bloque: Anterior / Siguiente, con el nombre del bloque. */
+function stepLabel(n) {
+  const b = stepBtn(n); if (!b) return '';
+  const num = b.querySelector('.step-num').textContent.trim();
+  const name = (b.querySelector('[data-i18n]') || b).textContent.replace(/\s+/g, ' ').trim();
+  return (num === '◆' ? '' : num + ' · ') + name;
+}
+function refreshStepFooters() {
+  els('.step-panel').forEach(p => {
+    const n = p.id.replace('panel-', '');
+    const i = STEP_ORDER.indexOf(n);
+    if (i < 0) return;
+    let f = p.querySelector(':scope > .step-footer');
+    if (!f) {
+      f = mk('nav', { class: 'step-footer no-print' });
+      f.innerHTML = '<button type="button" class="btn btn-secondary prev"></button><button type="button" class="btn btn-primary next"></button>';
+      f.addEventListener('click', e => { const b = e.target.closest('button[data-go]'); if (b && !b.disabled) goStep(b.dataset.go); });
+      p.appendChild(f);
+    }
+    f.setAttribute('aria-label', TT('Bloques', 'Blocks'));
+    const prev = STEP_ORDER.slice(0, i).reverse().find(stepOn);
+    const next = STEP_ORDER.slice(i + 1).find(s => stepBtn(s));
+    const bp = f.querySelector('.prev'), bn = f.querySelector('.next');
+    bp.hidden = !prev;
+    if (prev) { bp.dataset.go = prev; bp.innerHTML = `← <span><small>${tt('Anterior')}</small>${stepLabel(prev)}</span>`; }
+    bn.hidden = !next;
+    if (next) {
+      bn.dataset.go = next; bn.disabled = !stepOn(next);
+      bn.innerHTML = `<span><small>${tt('Siguiente')}</small>${stepLabel(next)}</span> →`;
+    }
+  });
+}
+
+/* Barra común: tema, atajos, aviso al salir y teclado. Solo en la app
+   (las pruebas cargan core.js sin labg-core.js). */
+document.addEventListener('DOMContentLoaded', () => {
+  if (!window.LABG) return;
+  LABG.theme.init('pcapro.theme');
+  const tb = el('themeBtn');
+  if (tb) tb.addEventListener('click', () => LABG.theme.toggle());
+  const hb = el('helpBtn');
+  if (hb) hb.addEventListener('click', () => LABG.showShortcuts());
+  LABG.shortcuts([]);
+  LABG.bindStepKeys(goStep);
+  LABG.guardUnload(() => !!state.fileName);
+  LABG.setCurrentStep((document.querySelector('.step-btn.active') || {}).dataset?.step || '0');
+  if (window.I18N) I18N.onChange.push(() => { LABG.theme.paint(); refreshStepFooters(); });
+  refreshStepMarks();
+  refreshStepFooters();
+});
 
 /* Copia al portapapeles y confirma en el propio boton. Guarda el rotulo previo
    en lugar de reescribirlo: con una cadena fija, el boton se quedaba en el

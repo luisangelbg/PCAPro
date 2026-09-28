@@ -6,42 +6,58 @@
 <title>PCAPro — Análisis de Componentes Principales</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>try{var t=localStorage.getItem("pcapro.theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="stylesheet" href="css/labg-base.css">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<a class="skip-link" href="#main" data-i18n="Saltar al contenido">Saltar al contenido</a>
 <header class="topbar">
-  <a class="brand" href="#" id="brandLink">
-    <svg class="brand-mark" viewBox="0 0 512 512" aria-hidden="true">
-      <rect width="512" height="512" rx="112" fill="#5b3fd6"/>
-      <rect x="102" y="126" width="68" height="260" rx="22" fill="#ffffff"/>
-      <rect x="190" y="214" width="68" height="172" rx="22" fill="#ffffff"/>
-      <rect x="278" y="288" width="68" height="98"  rx="22" fill="#2dd4bf"/>
-      <rect x="366" y="330" width="68" height="56"  rx="22" fill="#2dd4bf"/>
-    </svg>
-    <span class="brand-name">PCAPro<span class="dot">.</span></span>
-  </a>
-  <label class="inline-label" for="langSelect">
-    <span aria-hidden="true">🌐</span>
-    <select id="langSelect" aria-label="Language / Idioma">
-      <option value="es" data-i18n="Español">Español</option>
-      <option value="en" data-i18n="English">English</option>
-    </select>
-  </label>
+  <div class="topbar-inner">
+    <div class="topbar-row">
+      <a class="brand" href="#" id="brandLink" data-i18n-title="Inicio de PCAPro" title="Inicio de PCAPro">
+        <svg class="brand-mark" viewBox="0 0 512 512" aria-hidden="true">
+          <rect width="512" height="512" rx="112" fill="var(--primary)"/>
+          <rect x="102" y="126" width="68" height="260" rx="22" fill="#ffffff"/>
+          <rect x="190" y="214" width="68" height="172" rx="22" fill="#ffffff"/>
+          <rect x="278" y="288" width="68" height="98"  rx="22" fill="#2dd4bf"/>
+          <rect x="366" y="330" width="68" height="56"  rx="22" fill="#2dd4bf"/>
+        </svg>
+        <span class="brand-name">PCAPro<span class="dot">.</span></span>
+        <span class="brand-sub">· <span data-i18n="análisis factorial guiado">análisis factorial guiado</span></span>
+      </a>
+      <div class="top-tools">
+        <a class="suite-link" href="https://luisangelbg.github.io/" data-i18n-title="Volver al portal de la LABG Suite" title="Volver al portal de la LABG Suite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          <span class="suite-text">LABG Suite</span>
+        </a>
+        <div class="seg lang-seg" role="group" aria-label="Idioma / Language">
+          <button type="button" data-lang="es" title="Español">ES</button><button type="button" data-lang="en" title="English">EN</button>
+        </div>
+        <button type="button" class="icon-btn theme-btn" id="themeBtn">
+          <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+          <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>
+        </button>
+        <button type="button" class="icon-btn" id="helpBtn" data-i18n-title="Atajos de teclado (?)" title="Atajos de teclado (?)" aria-label="Atajos de teclado">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6"/><circle cx="12" cy="17" r=".6" fill="currentColor"/></svg>
+        </button>
+      </div>
+    </div>
+    <nav class="stepper" id="stepper" aria-label="Bloques">
+      <button type="button" class="step-btn active" data-step="0"><span class="step-num">◆</span> <span data-i18n="Inicio">Inicio</span></button>
+      <button type="button" class="step-btn" data-step="1"><span class="step-num">1</span> <span data-i18n="Datos y supuestos">Datos y supuestos</span></button>
+      <button type="button" class="step-btn" data-step="2" disabled><span class="step-num">2</span> <span data-i18n="Extracción">Extracción</span></button>
+      <button type="button" class="step-btn" data-step="3" disabled><span class="step-num">3</span> <span data-i18n="Rotación">Rotación</span></button>
+      <button type="button" class="step-btn" data-step="4" disabled><span class="step-num">4</span> <span data-i18n="Gráficos factoriales">Gráficos factoriales</span></button>
+      <button type="button" class="step-btn" data-step="5" disabled><span class="step-num">5</span> <span data-i18n="Interpretación">Interpretación</span></button>
+      <button type="button" class="step-btn" data-step="7" disabled><span class="step-num">5b</span> <span data-i18n="Agrupamiento">Agrupamiento</span></button>
+      <button type="button" class="step-btn" data-step="6" disabled><span class="step-num">6</span> <span data-i18n="Informe">Informe</span></button>
+    </nav>
+  </div>
 </header>
 
-<nav class="stepper" id="stepper">
-  <button class="step-btn active" data-step="0"><span class="step-num">◆</span> <span data-i18n="Inicio">Inicio</span></button>
-  <button class="step-btn" data-step="1"><span class="step-num">1</span> <span data-i18n="Datos y supuestos">Datos y supuestos</span></button>
-  <button class="step-btn" data-step="2" disabled><span class="step-num">2</span> <span data-i18n="Extracción">Extracción</span></button>
-  <button class="step-btn" data-step="3" disabled><span class="step-num">3</span> <span data-i18n="Rotación">Rotación</span></button>
-  <button class="step-btn" data-step="4" disabled><span class="step-num">4</span> <span data-i18n="Gráficos factoriales">Gráficos factoriales</span></button>
-  <button class="step-btn" data-step="5" disabled><span class="step-num">5</span> <span data-i18n="Interpretación">Interpretación</span></button>
-  <button class="step-btn" data-step="7" disabled><span class="step-num">5b</span> <span data-i18n="Agrupamiento">Agrupamiento</span></button>
-  <button class="step-btn" data-step="6" disabled><span class="step-num">6</span> <span data-i18n="Informe">Informe</span></button>
-</nav>
-
-<main>
+<main id="main" tabindex="-1">
 
 <!-- ==================== PASO 1 ==================== -->
 <section class="step-panel active" id="panel-0">
@@ -2671,6 +2687,7 @@ R̂ = P · Φ · Pᵀ      (oblique rotation)</div>
 </dialog>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/labg-core.js"></script>
 <script src="js/i18n.js"></script>
 <script src="js/core.js"></script>
 <script src="js/stats.js"></script>
