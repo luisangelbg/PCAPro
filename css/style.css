@@ -26,7 +26,7 @@ main { max-width: 1140px; margin: 0 auto; padding: 0 20px 80px; }
 .topbar-inner { max-width: 1140px; }
 .brand-mark { width: 30px; height: 30px; border-radius: 8px; display: block; }
 .brand-name { font-size: 1.16rem; font-weight: 700; letter-spacing: -0.5px; }
-.brand-name .dot { color: var(--primary); }
+.brand-name .dot { color: var(--primary-text); }
 .step-panel { padding-top: 18px; }
 
 .badge {
@@ -61,11 +61,11 @@ main { max-width: 1140px; margin: 0 auto; padding: 0 20px 80px; }
 }
 .acc > summary::-webkit-details-marker { display: none; }
 .acc > summary::before {
-  content: "▸"; color: var(--primary); font-size: 0.85rem; transition: transform .15s;
+  content: "▸"; color: var(--primary-text); font-size: 0.85rem; transition: transform .15s;
   display: inline-block; width: 12px;
 }
 .acc[open] > summary::before { transform: rotate(90deg); }
-.acc > summary:hover { color: var(--primary); }
+.acc > summary:hover { color: var(--primary-text); }
 .acc .acc-body { padding: 2px 4px 18px 26px; font-size: 0.9rem; }
 .acc .acc-body p { margin: 0 0 10px; }
 .acc .acc-body ul, .acc .acc-body ol { margin: 0 0 12px; padding-left: 20px; }
@@ -118,7 +118,7 @@ input[type=color] {
   background: var(--bg-soft); transition: border-color .15s, background .15s;
 }
 .drop-zone:hover, .drop-zone.dragover { border-color: var(--primary); background: var(--primary-soft); }
-.drop-zone .dz-icon { font-size: 2rem; color: var(--primary); line-height: 1; margin-bottom: 6px; }
+.drop-zone .dz-icon { font-size: 2rem; color: var(--primary-text); line-height: 1; margin-bottom: 6px; }
 .drop-zone p { margin: 4px 0; font-size: 0.92rem; }
 
 /* ---------- Mensajes ---------- */
@@ -228,7 +228,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
   font-family: var(--mono); font-size: 0.74rem; color: var(--text);
   background: var(--bg-soft); border-radius: 5px; padding: 1px 5px; min-width: 34px; text-align: center;
 }
-details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(--primary); padding: 4px 0; }
+details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(--primary-text); padding: 4px 0; }
 
 /* ---------- Varios ---------- */
 .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -280,7 +280,7 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
   align-items: center; padding: 46px 44px 38px;
 }
 .hero h1 { font-size: 2.85rem; line-height: 1.06; margin: 0 0 14px; letter-spacing: -1.4px; font-weight: 800; }
-.hero h1 .accent { color: var(--primary); }
+.hero h1 .accent { color: var(--primary-text); }
 .hero .lead { font-size: 1.1rem; color: var(--text-muted); margin: 0 0 22px; max-width: 580px; }
 .hero .lead b { color: var(--text); font-weight: 600; }
 .hero .badge-row { justify-content: flex-start; margin-top: 18px; }
@@ -290,7 +290,7 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
 .eyebrow {
   display: inline-flex; align-items: center; gap: 9px; margin-bottom: 14px;
   font-size: 0.72rem; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; color: var(--primary);
+  text-transform: uppercase; color: var(--primary-text);
 }
 .eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--primary); border-radius: 2px; }
 
@@ -310,7 +310,7 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
 .wf-step:first-child { border-radius: 10px 0 0 10px; }
 .wf-step:last-child { border-radius: 0 10px 10px 0; }
 .wf-step:hover { background: var(--primary-soft); }
-.wf-n { font-size: 0.66rem; color: var(--primary); font-weight: 700; letter-spacing: .09em; }
+.wf-n { font-size: 0.66rem; color: var(--primary-text); font-weight: 700; letter-spacing: .09em; }
 .wf-t { font-weight: 600; font-size: 0.86rem; margin: 2px 0 1px; }
 .wf-d { font-size: 0.74rem; color: var(--text-muted); }
 
@@ -325,7 +325,7 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
 .feat-n {
   flex: 0 0 auto; width: 28px; height: 28px; border-radius: 8px;
   display: grid; place-items: center; font-size: 0.82rem; font-weight: 700;
-  background: var(--primary-soft); color: var(--primary);
+  background: var(--primary-soft); color: var(--primary-text);
 }
 .feat-t { display: block; font-weight: 600; margin-bottom: 3px; }
 .feat-d { display: block; font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
@@ -337,7 +337,7 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
 }
 .closing h3 { margin: 0 0 8px; font-size: 1.06rem; }
 .closing p { margin: 0; color: var(--text-muted); font-size: 0.92rem; line-height: 1.62; }
-.cite-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
+.cite-label { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary-text); margin-bottom: 8px; }
 .closing-cite .cite-ref { font-size: 0.8rem; margin-bottom: 10px; }
 
 @media (max-width: 900px) {
@@ -359,7 +359,7 @@ details.fig-editor > summary { cursor: pointer; font-size: 0.82rem; color: var(-
 .met.sel { border-color: var(--primary); background: var(--primary-soft); box-shadow: 0 0 0 3px var(--primary-soft); }
 .met[disabled] { opacity: .55; cursor: not-allowed; }
 .met-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.met-sigla { font-weight: 800; letter-spacing: .04em; color: var(--primary); }
+.met-sigla { font-weight: 800; letter-spacing: .04em; color: var(--primary-text); }
 .met-nombre { font-weight: 600; font-size: .92rem; }
 .met-razon { font-size: .8rem; color: var(--text-muted); line-height: 1.5; }
 .pill.mut { background: var(--bg-soft); color: var(--text-muted); border-color: var(--border); }
@@ -373,7 +373,7 @@ table.mini input[type=text] { width: 140px; padding: 3px 8px; }
 .eje-box { padding: 12px 0; border-top: 1px solid var(--border); }
 .eje-box:first-child { border-top: none; }
 .eje-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
-.eje-dim { font-weight: 700; color: var(--primary); }
+.eje-dim { font-weight: 700; color: var(--primary-text); }
 .eje-head .mut { color: var(--text-muted); font-size: .84rem; }
 .ejeNombre { flex: 1; min-width: 200px; padding: 4px 10px; }
 .eje-box p { margin: 0; font-size: .9rem; line-height: 1.6; }
