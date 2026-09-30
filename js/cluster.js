@@ -147,9 +147,10 @@ Clu.renderConfig = function () {
    ============================================================ */
 Clu.run = function () {
   const btn = el('runCluBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Agrupando…');
+  btn.disabled = true;
   clearMessages('cluMessages');
-  setTimeout(() => {
+  const w = pcaWork('Agrupando…', 'Clustering…');
+  pcaAfterPaint(() => {
     try {
       const S0 = Clu.solucion();
       const ejes = Math.max(1, Math.min(S0.K, +el('cluEjes').value || 2));
@@ -177,7 +178,7 @@ Clu.run = function () {
       console.error(err);
     }
     btn.disabled = false; btn.textContent = tt('Agrupar los individuos →');
-  }, 30);
+  }, w);
 };
 
 /* Nombre visible de un grupo. */

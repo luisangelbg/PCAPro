@@ -106,9 +106,10 @@ Interp.sugiereNombre = function (eje, thr) {
    ============================================================ */
 Interp.run = function () {
   const btn = el('runIntBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Interpretando…');
+  btn.disabled = true;
   clearMessages('intMessages');
-  setTimeout(() => {
+  const w = pcaWork('Interpretando…', 'Interpreting…');
+  pcaAfterPaint(() => {
     try {
       const P = state.pca;
       const thr = +el('intThr').value * 100 / P.p;    // el umbral de carga se traduce a % de contribución
@@ -130,7 +131,7 @@ Interp.run = function () {
       console.error(err);
     }
     btn.disabled = false; btn.textContent = tt('Interpretar componentes →');
-  }, 30);
+  }, w);
 };
 
 Interp.render = function (P) {

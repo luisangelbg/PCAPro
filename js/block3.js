@@ -38,9 +38,10 @@ function run() {
     kappa: +el('rotKappa').value,
   };
   const btn = el('runRotBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Rotando…');
+  btn.disabled = true;
   clearMessages('rotMessages');
-  setTimeout(() => {
+  const w = pcaWork('Rotando…', 'Rotating…');
+  pcaAfterPaint(() => {
     try {
       const A = currentA();
       const res = Rot.rotate(A, method, opts);
@@ -65,7 +66,7 @@ function run() {
       console.error(err);
     }
     btn.disabled = false; btn.textContent = tt('Aplicar rotación →');
-  }, 30);
+  }, w);
 }
 
 /* ============================================================

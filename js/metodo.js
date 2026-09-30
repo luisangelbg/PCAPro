@@ -275,9 +275,10 @@ Metodo.contenedor = function () {
 
 Metodo.ejecutarYRenderizar = function () {
   const btn = el('runPcaBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Calculando…');
+  btn.disabled = true;
   clearMessages('pcaMessages');
-  setTimeout(() => {
+  const w = pcaWork('Calculando…', 'Computing…');
+  pcaAfterPaint(() => {
     try {
       const P = Metodo.correr();
       state.pca = P;
@@ -300,7 +301,7 @@ Metodo.ejecutarYRenderizar = function () {
       console.error(err);
     }
     btn.disabled = false; Metodo.actualizaBoton();
-  }, 30);
+  }, w);
 };
 
 Metodo.renderBloque2 = function (P) {

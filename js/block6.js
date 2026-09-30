@@ -240,8 +240,25 @@ async function downloadPackage() {
   if (!ready()) return;
   const btn = el('repZip');
   btn.disabled = true;
-  const setLabel = t => { btn.innerHTML = t; };
   clearMessages('repMessages');
+  /* Con la base común, el avance va en una barra en línea bajo los botones
+     (termina en palomita) y el botón conserva su rótulo; sin ella (pruebas),
+     el rótulo del botón sigue contando como antes. */
+  let bar = null;
+  if (window.LABG && LABG.progressBar) {
+    let host = el('repZipProgress');
+    if (!host) {
+      host = mk('div', { id: 'repZipProgress', style: 'margin-top:10px' });
+      el('repMessages').parentNode.insertBefore(host, el('repMessages'));
+    }
+    host.style.display = '';
+    bar = LABG.progressBar(host, { label: tt('⬇ Descargar paquete completo (ZIP)') });
+  }
+  const setLabel = (t, f) => {
+    if (bar) bar.update(f, t);
+    else btn.innerHTML = '<span class="loading"></span> ' + t;
+  };
+  const yieldPaint = () => (window.LABG ? LABG.nextPaint() : Promise.resolve());
   try {
     const entries = [];
     const fmt = el('repFigFormat').value;
@@ -251,7 +268,7 @@ async function downloadPackage() {
     /* figuras */
     for (let i = 0; i < figs.length; i++) {
       const f = figs[i];
-      setLabel(`<span class="loading"></span> ` + TT(`Figura ${i + 1} de ${figs.length}…`, `Figure ${i + 1} of ${figs.length}…`));
+      setLabel(TT(`Figura ${i + 1} de ${figs.length}…`, `Figure ${i + 1} of ${figs.length}…`), 0.85 * i / Math.max(1, figs.length));
       const num = String(i + 1).padStart(2, '0');
       if (fmt === 'svg' || fmt === 'ambos') {
         entries.push({ name: TT('figuras/', 'figures/') + `${num}_${f.fileName}.svg`, data: Rep.text(Fig.serialize(f.svg)) });
@@ -265,14 +282,17 @@ async function downloadPackage() {
     }
 
     /* tablas e informe */
-    setLabel('<span class="loading"></span> ' + tt('Tablas e informe…'));
+    setLabel(tt('Tablas e informe…'), 0.85);
+    await yieldPaint();
     tableEntries().forEach(e => entries.push(e));
     entries.push({ name: TT('informe_ACP.html', 'PCA_report.html'), data: Rep.text(Rep.build(opts())) });
     entries.push({ name: 'CITATION.bib', data: Rep.text(Rep.CITATION.bibtex + '\n') });
     entries.push({ name: TT('LEEME.txt', 'README.txt'), data: Rep.text(readme(figs, entries.length)) });
 
-    setLabel('<span class="loading"></span> ' + tt('Comprimiendo…'));
+    setLabel(tt('Comprimiendo…'), 0.93);
+    await yieldPaint();
     const blob = Rep.zip(entries);
+    if (bar) bar.done(TT(`Listo · ${entries.length} archivos`, `Done · ${entries.length} files`));
     download(blob, slug(state.fileName) + TT('_ACP_completo.zip', '_PCA_complete.zip'));
     showMessage('repMessages', 'success',
       TT(`Paquete generado: <b>${entries.length}</b> archivos (${figs.length} figura(s) en ${fmt === 'ambos' ? 'SVG y PNG' : fmt.toUpperCase()}` +
@@ -282,11 +302,12 @@ async function downloadPackage() {
       `${fmt !== 'svg' ? ` at ${scale}×` : ''}, ${tableEntries().length} table(s) and the HTML report), ` +
       `${(blob.size / 1048576).toFixed(1)} MB.`));
   } catch (err) {
+    if (bar) bar.fail(tt('No se pudo generar el paquete: ') + err.message);
     showMessage('repMessages', 'error', tt('No se pudo generar el paquete: ') + err.message);
     console.error(err);
   }
   btn.disabled = false;
-  setLabel(tt('⬇ Descargar paquete completo (ZIP)'));
+  btn.textContent = tt('⬇ Descargar paquete completo (ZIP)');
 }
 
 function readme(figs) {

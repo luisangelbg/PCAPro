@@ -137,9 +137,10 @@ function run() {
     return;
   }
   const btn = el('runIntBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Analizando…');
+  btn.disabled = true;
   clearMessages('intMessages');
-  setTimeout(() => {
+  const w = pcaWork('Analizando…', 'Analysing…');
+  pcaAfterPaint(() => {
     try {
       const G = state.fac;
       const thr = +el('intThr').value;
@@ -163,7 +164,7 @@ function run() {
       console.error(err);
     }
     btn.disabled = false; btn.textContent = tt('Interpretar componentes →');
-  }, 30);
+  }, w);
 }
 
 /* Llena el selector de grupos en cuanto existen los mapas factoriales, para que

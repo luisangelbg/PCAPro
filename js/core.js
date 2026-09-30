@@ -76,6 +76,8 @@ function mk(tag, attrs, html) {
 
 function showMessage(container, type, text) {
   if (typeof container === 'string') container = el(container);
+  /* un error durante un cálculo cierra la ventana de espera sin palomita */
+  if (type === 'error' && pcaWork.current) pcaWork.current._failed = true;
   if (!container) return null;
   const div = mk('div', { class: 'msg msg-' + type }, text);
   /* errores y avisos se anuncian al lector de pantalla */
@@ -86,6 +88,28 @@ function showMessage(container, type, text) {
 function clearMessages(container) {
   if (typeof container === 'string') container = el(container);
   if (container) container.innerHTML = '';
+}
+
+/* ---------------- Ventana de espera (LABG.work) ----------------
+   pcaWork abre la ventana animada común (con demora de 300 ms: un cálculo
+   rápido termina antes de que se vea). pcaAfterPaint deja que el navegador
+   pinte, ejecuta el cálculo tal cual y cierra la ventana con palomita, o sin
+   ella si el cálculo lanzó una excepción o mostró un error. Sin labg-core
+   (pruebas) todo sigue funcionando: la ventana es null y solo se cede el hilo. */
+function pcaWork(es, en) {
+  if (!window.LABG || !LABG.work) return null;
+  const w = LABG.work({ title: LABG.t(es, en || es), delay: 300 });
+  pcaWork.current = w;
+  return w;
+}
+pcaWork.current = null;
+function pcaAfterPaint(f, w) {
+  const done = () => {
+    if (pcaWork.current === w) pcaWork.current = null;
+    if (w && !w.ended) { if (w._failed) w.close(); else w.done(); }
+  };
+  return (window.LABG ? LABG.nextPaint() : new Promise(r => setTimeout(r, 30)))
+    .then(f).then(done, e => { console.error(e); if (w) w._failed = true; done(); });
 }
 
 function statTiles(container, tiles) {
@@ -259,6 +283,17 @@ function refreshStepFooters() {
    (las pruebas cargan core.js sin labg-core.js). */
 document.addEventListener('DOMContentLoaded', () => {
   if (!window.LABG) return;
+  if (LABG.work) {
+    LABG.work.scene = 'fit';
+    LABG.work.tips = [
+      ['El análisis paralelo de Horn compara cada valor propio con el percentil 95 de matrices aleatorias simuladas.',
+        'Horn\'s parallel analysis compares each eigenvalue with the 95th percentile of simulated random matrices.'],
+      ['El número de componentes que PCAPro recomienda es el consenso de ocho criterios, no de uno solo.',
+        'The number of components PCAPro recommends is the consensus of eight criteria, not of a single one.'],
+      ['Con n < 100 conviene interpretar solo las cargas con |carga| ≥ 0.55.',
+        'With n < 100 it is wise to interpret only loadings with |loading| ≥ 0.55.'],
+    ];
+  }
   LABG.theme.init('pcapro.theme');
   const tb = el('themeBtn');
   if (tb) tb.addEventListener('click', () => LABG.theme.toggle());
@@ -289,5 +324,5 @@ function copyToClipboard(btnId, text) {
 Object.assign(window, {
   el, els, mk, showMessage, clearMessages, statTiles, buildTable,
   fmtNum, fmtP, fmtPLabel, fmtPct, csvEscape, matrixToCSV, download, slug, goStep, enableStep,
-  tt, TT, cp, cpr, copyToClipboard,
+  tt, TT, cp, cpr, copyToClipboard, pcaWork, pcaAfterPaint,
 });

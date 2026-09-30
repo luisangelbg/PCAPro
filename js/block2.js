@@ -187,14 +187,16 @@ function run() {
   const mr = el('metodoResults');
   if (mr) mr.style.display = 'none';
   const btn = el('runPcaBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Extrayendo componentes…');
+  btn.disabled = true;
   clearMessages('pcaMessages');
-  setTimeout(() => {
+  const w = pcaWork('Extrayendo componentes…', 'Extracting components…');
+  pcaAfterPaint(() => {
     try {
       const pca = computePCA();
       const B = +el('paIterSel').value;
       const method = el('paMethodSel').value;
-      const horn = parallelAnalysis(state.X, B, method);
+      if (w) w.message(TT(`Análisis paralelo de Horn: ${B} matrices aleatorias…`, `Horn's parallel analysis: ${B} random matrices…`));
+      const horn = parallelAnalysis(state.X, B, method, w ? f => w.update(f) : undefined);
       const bs = brokenStick(pca.p, pca.total);
       const Rcorr = S.corrMatrix(state.X);
       const map = velicerMAP(Rcorr);
@@ -221,7 +223,7 @@ function run() {
       console.error(err);
     }
     btn.disabled = false; btn.textContent = tt('Extraer componentes →');
-  }, 30);
+  }, w);
 }
 
 function renderBlock2() {

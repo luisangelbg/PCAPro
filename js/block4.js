@@ -17,7 +17,8 @@ function run() {
   /* Los mapas de los métodos distintos del ACP los dibuja mapas.js; el ACP
      conserva la ruta de abajo. */
   if (typeof Mapas !== 'undefined' && state.pca && state.pca.method && state.pca.method !== 'pca') {
-    Mapas.renderBloque4(state.pca);
+    const wm = pcaWork('Construyendo mapas…', 'Building maps…');
+    pcaAfterPaint(() => Mapas.renderBloque4(state.pca), wm);
     return;
   }
   const mp = el('mapasResults');
@@ -33,9 +34,10 @@ function run() {
     return;
   }
   const btn = el('runFacBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Construyendo mapas…');
+  btn.disabled = true;
   clearMessages('facMessages');
-  setTimeout(() => {
+  const w = pcaWork('Construyendo mapas…', 'Building maps…');
+  pcaAfterPaint(() => {
     try {
       const useRot = el('facSolution').value === 'rotada';
       state.fac = Fac.build(useRot);
@@ -51,7 +53,7 @@ function run() {
       console.error(err);
     }
     btn.disabled = false; btn.textContent = tt('Generar mapas factoriales →');
-  }, 30);
+  }, w);
 }
 
 function currentGroup() {

@@ -170,9 +170,15 @@ function readFile(file) {
   const name = file.name.toLowerCase();
   const reader = new FileReader();
   clearMessages('dataMessages');
-  showMessage('dataMessages', 'info', '<span class="loading"></span> ' + tt('Leyendo archivo…'));
+  const w = pcaWork('Leyendo archivo…', 'Reading file…');
+  if (!w) showMessage('dataMessages', 'info', tt('Leyendo archivo…'));
+  reader.onerror = () => {
+    clearMessages('dataMessages');
+    showMessage('dataMessages', 'error', TT('No se pudo leer el archivo.', 'The file could not be read.'));
+    if (w) { w._failed = true; pcaAfterPaint(() => {}, w); }
+  };
   if (name.endsWith('.csv') || name.endsWith('.tsv') || name.endsWith('.txt')) {
-    reader.onload = e => {
+    reader.onload = e => pcaAfterPaint(() => {
       try {
         const rows = parseCSV(e.target.result, el('delimSel').value || null);
         const hdr = rows.shift().map(h => String(h).trim());
@@ -181,10 +187,10 @@ function readFile(file) {
         clearMessages('dataMessages');
         showMessage('dataMessages', 'error', tt('No se pudo leer el CSV: ') + err.message);
       }
-    };
+    }, w);
     reader.readAsText(file, 'UTF-8');
   } else {
-    reader.onload = e => {
+    reader.onload = e => pcaAfterPaint(() => {
       try {
         const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array', cellDates: true });
         state.sheets = wb.SheetNames;
@@ -198,7 +204,7 @@ function readFile(file) {
         clearMessages('dataMessages');
         showMessage('dataMessages', 'error', tt('No se pudo leer la hoja de cálculo: ') + err.message);
       }
-    };
+    }, w);
     reader.readAsArrayBuffer(file);
   }
 }
@@ -1036,10 +1042,11 @@ function init() {
   el('processBtn').addEventListener('click', () => {
     clearMessages('prepMessages');
     const btn = el('processBtn');
-    btn.disabled = true; btn.innerHTML = '<span class="loading"></span> ' + tt('Calculando…');
-    setTimeout(() => {
+    btn.disabled = true;
+    const w = pcaWork('Preparando la matriz y diagnosticando…', 'Preparing the matrix and diagnosing…');
+    pcaAfterPaint(() => {
       try {
-        if (prepare()) {
+        if (!prepare()) { if (w) w._failed = true; } else {
           if (state.transWarn.length) showMessage('prepMessages', 'warning',
             TT(`La transformación pedida requiere valores positivos; se desplazaron automáticamente las variables <b>${state.transWarn.join(', ')}</b> sumando una constante antes de transformar.`,
             `The requested transformation requires positive values; the variables <b>${state.transWarn.join(', ')}</b> were automatically shifted by a constant before transforming.`));
@@ -1052,7 +1059,7 @@ function init() {
         console.error(err);
       }
       btn.disabled = false; btn.textContent = tt('Preparar matriz y diagnosticar →');
-    }, 30);
+    }, w);
   });
 
   el('goStep2').addEventListener('click', () => goStep(2));
@@ -1079,7 +1086,8 @@ function init() {
 
 function loadExample(path, name) {
   clearMessages('dataMessages');
-  showMessage('dataMessages', 'info', '<span class="loading"></span> ' + tt('Cargando ejemplo…'));
+  const w = pcaWork('Cargando ejemplo…', 'Loading example…');
+  if (!w) showMessage('dataMessages', 'info', tt('Cargando ejemplo…'));
   fetch(path).then(r => {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.text();
@@ -1092,7 +1100,7 @@ function loadExample(path, name) {
     showMessage('dataMessages', 'error',
       TT('No se pudo cargar el ejemplo (' + e.message + '). Si abriste el archivo con doble clic, usa <b>servidor.ps1</b> para servir la carpeta por http://localhost:8790.',
       'The example could not be loaded (' + e.message + '). If you opened the file by double-clicking it, use <b>servidor.ps1</b> to serve the folder at http://localhost:8790.'));
-  });
+  }).then(() => { if (w) pcaAfterPaint(() => {}, w); });   // cierra la ventana (sin palomita si hubo error)
 }
 
 /* Conjunto SIMULADO (no son datos reales): 120 individuos, 3 factores latentes
