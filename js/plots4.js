@@ -88,6 +88,12 @@
     });
   }
 
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot) y cada entrada de la leyenda (data-li); la leyenda va
+     en un grupo data-role="legend" y una barra de color en uno data-legend */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
+  const li = (n, i) => { n.setAttribute('data-li', i); return n; };
+
   /* barra de color continua */
   function colorbar(svg, cfg, t, font, x, y, h, cmap, lo, hi, title) {
     const w = 15;
@@ -96,10 +102,27 @@
     const g = F.el('linearGradient', { id, x1: '0', y1: '1', x2: '0', y2: '0' });
     for (let i = 0; i <= 20; i++) g.appendChild(F.el('stop', { offset: (i * 5) + '%', 'stop-color': cmap(i / 20) }));
     defs.appendChild(g); svg.appendChild(defs);
-    svg.appendChild(F.el('rect', { x, y, width: w, height: h, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
+    const cb = svg.appendChild(F.g({ 'data-legend': 'colorbar' }));
+    cb.appendChild(F.el('rect', { x, y, width: w, height: h, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
     [[hi, y], [(lo + hi) / 2, y + h / 2], [lo, y + h]].forEach(([v, yy]) =>
-      svg.appendChild(F.text(x + w + 5, yy, F.fmtTick(+v.toPrecision(2)), { role: 'legend', size: 10, fill: t.muted, baseline: 'middle', font })));
-    svg.appendChild(F.text(x + w / 2, y - 10, title, { size: 10.5, fill: t.fg, anchor: 'middle', font }));
+      cb.appendChild(F.text(x + w + 5, yy, F.fmtTick(+v.toPrecision(2)), { role: 'legend', size: 10, fill: t.muted, baseline: 'middle', font })));
+    cb.appendChild(F.text(x + w / 2, y - 10, title, { size: 10.5, fill: t.fg, anchor: 'middle', font }));
+    return cb;
+  }
+  /* la leyenda de grupos (título, un punto y un nombre por grupo) en (x, y);
+     devuelve el grupo y el renglón que sigue */
+  function groupLegend(svg, cfg, t, font, x, y, groups, withN) {
+    const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+    let ly = y;
+    lg.appendChild(F.text(x, ly, groups.name, { size: 11.5, fill: t.fg, weight: '700', font }));
+    ly += 18 * F.fs('label');
+    groups.levels.forEach((lv, gi) => {
+      lg.appendChild(F.el('circle', { cx: x + 7, cy: ly - 4, r: 5, fill: F.color(cfg.palette, gi), 'data-li': gi }));
+      lg.appendChild(li(F.text(x + 18, ly, withN ? `${lv.level} (${lv.idx.length})` : lv.level,
+        { size: 11, fill: t.fg, baseline: 'middle', font }), gi));
+      ly += 19 * F.fs('label');
+    });
+    return { lg, ly };
   }
 
   /* =========================================================
@@ -187,13 +210,18 @@
     });
 
     if (cfg.showLabels) stackLabels(svg, labelItems, t, font, labSize, m.top, m.top + size);
+    if (cfg.legend !== false && (metric || (cfg.showSupp && data.supp.length))) plotArea(svg, m.left, m.top, size, size);
     if (metric && cfg.legend !== false) {
       colorbar(svg, cfg, t, font, m.left + size + labPad - 40, m.top + 20, Math.min(size - 60, 220),
         cmap, lo, hi, cfg.colorBy === 'cos2' ? 'cos²' : 'contrib. %');
     }
     if (cfg.showSupp && data.supp.length && cfg.legend !== false) {
-      svg.appendChild(F.el('line', { x1: m.left + 8, y1: m.top + 14, x2: m.left + 28, y2: m.top + 14, stroke: cfg.suppColor, 'stroke-dasharray': '6 3', 'stroke-width': 1.6 }));
-      svg.appendChild(F.text(m.left + 33, m.top + 14, 'suplementaria', { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }));
+      /* con barra de color, la leyenda de la figura es la barra; sin ella, esta clave */
+      const tag = !metric;
+      const lg = svg.appendChild(F.g(tag ? { 'data-role': 'legend' } : {}));
+      lg.appendChild(F.el('line', { x1: m.left + 8, y1: m.top + 14, x2: m.left + 28, y2: m.top + 14, stroke: cfg.suppColor, 'stroke-dasharray': '6 3', 'stroke-width': 1.6, 'data-li': tag ? 0 : null }));
+      const tx = lg.appendChild(F.text(m.left + 33, m.top + 14, 'suplementaria', { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }));
+      if (tag) li(tx, 0);
     }
     return svg;
   }
@@ -305,9 +333,10 @@
         cfg.labelMode === 'top' ? (+cfg.labelTopN || 10) : 0);
     }
 
-    /* leyenda */
+    /* leyenda: la de grupos manda; la barra de color, cuando va sola */
     if (cfg.legend !== false) {
       let ly0 = m.top + 16;
+      if (metric || groups) plotArea(svg, m.left, m.top, size, size);
       if (metric) {
         const bh = Math.min(size - 60, 200);
         colorbar(svg, cfg, t, font, m.left + size + 18, m.top + 20, bh,
@@ -315,33 +344,17 @@
         ly0 = m.top + 20 + bh + 34;      // la leyenda de grupos va debajo de la barra
       }
       if (groups && shapes.length) {
-        let ly = ly0;
-        svg.appendChild(F.text(m.left + size + 18, ly, groups.name, { size: 11.5, fill: t.fg, weight: '700', font }));
-        ly += 18 * F.fs('label');
-        groups.levels.forEach((lv, gi) => {
-          svg.appendChild(F.el('circle', { cx: m.left + size + 25, cy: ly - 4, r: 5, fill: F.color(cfg.palette, gi) }));
-          svg.appendChild(F.text(m.left + size + 36, ly, `${lv.level} (${lv.idx.length})`,
-            { size: 11, fill: t.fg, baseline: 'middle', font }));
-          ly += 19 * F.fs('label');
-        });
+        let { lg, ly } = groupLegend(svg, cfg, t, font, m.left + size + 18, ly0, groups, true);
         ly += 6 * F.fs('label');
-        svg.appendChild(F.text(m.left + size + 18, ly, cfg.shape === 'envolvente' ? 'envolvente convexa'
+        lg.appendChild(F.text(m.left + size + 18, ly, cfg.shape === 'envolvente' ? 'envolvente convexa'
           : cfg.shape === 'media' ? `elipse de la media ${Math.round((+cfg.level || 0.95) * 100)} %`
             : `elipse de concentración ${Math.round((+cfg.level || 0.95) * 100)} %`,
           { size: 9.5, fill: t.muted, font }));
       } else if (!metric && groups) {
-        let ly = ly0;
-        svg.appendChild(F.text(m.left + size + 18, ly, groups.name, { size: 11.5, fill: t.fg, weight: '700', font }));
-        ly += 18 * F.fs('label');
-        groups.levels.forEach((lv, gi) => {
-          svg.appendChild(F.el('circle', { cx: m.left + size + 25, cy: ly - 4, r: 5, fill: F.color(cfg.palette, gi) }));
-          svg.appendChild(F.text(m.left + size + 36, ly, `${lv.level} (${lv.idx.length})`,
-            { size: 11, fill: t.fg, baseline: 'middle', font }));
-          ly += 19 * F.fs('label');
-        });
+        let { lg, ly } = groupLegend(svg, cfg, t, font, m.left + size + 18, ly0, groups, true);
         if (cfg.shape !== 'ninguna') {
           ly += 6 * F.fs('label');
-          svg.appendChild(F.text(m.left + size + 18, ly, cfg.shape === 'envolvente' ? 'envolvente convexa'
+          lg.appendChild(F.text(m.left + size + 18, ly, cfg.shape === 'envolvente' ? 'envolvente convexa'
             : cfg.shape === 'media' ? `elipse de la media ${Math.round((+cfg.level || 0.95) * 100)} %`
               : `elipse de concentración ${Math.round((+cfg.level || 0.95) * 100)} %`,
             { size: 9.5, fill: t.muted, font }));
@@ -431,14 +444,8 @@
     if (cfg.showVarLabels) stackLabels(svg, items, t, font, labSize, m.top, m.top + size);
 
     if (groups && cfg.legend !== false) {
-      let ly = m.top + 16;
-      svg.appendChild(F.text(m.left + size + 18, ly, groups.name, { size: 11.5, fill: t.fg, weight: '700', font }));
-      ly += 18 * F.fs('label');
-      groups.levels.forEach((lv, gi) => {
-        svg.appendChild(F.el('circle', { cx: m.left + size + 25, cy: ly - 4, r: 5, fill: F.color(cfg.palette, gi) }));
-        svg.appendChild(F.text(m.left + size + 36, ly, lv.level, { size: 11, fill: t.fg, baseline: 'middle', font }));
-        ly += 19 * F.fs('label');
-      });
+      plotArea(svg, m.left, m.top, size, size);
+      groupLegend(svg, cfg, t, font, m.left + size + 18, m.top + 16, groups, false);
     }
     return svg;
   }
@@ -537,8 +544,11 @@
       { size: Math.min(12, rh * 0.56), fill: t.fg, anchor: 'end', baseline: 'middle', font })));
     data.labels.forEach((l, j) => svg.appendChild(F.text(m.left + j * cw + cw / 2, m.top - 11, l,
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', weight: '600', font })));
-    if (cfg.legend !== false) colorbar(svg, cfg, t, font, m.left + k * cw + 24, m.top,
-      Math.min(p * rh, 230), cmap, 0, vmax, cfg.legendTitle || 'cos²');
+    if (cfg.legend !== false) {
+      plotArea(svg, m.left, m.top, k * cw, p * rh);
+      colorbar(svg, cfg, t, font, m.left + k * cw + 24, m.top,
+        Math.min(p * rh, 230), cmap, 0, vmax, cfg.legendTitle || 'cos²');
+    }
     return svg;
   }
 

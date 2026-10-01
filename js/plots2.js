@@ -27,20 +27,27 @@
     if (cfg.subtitle) svg.appendChild(F.text(w / 2, cfg.title ? 49 : 30, cfg.subtitle,
       { role: 'subtitle', size: 11.5, fill: t.muted, anchor: 'middle', font }));
   }
-  /* leyenda compacta: items = [{label, color, type:'line'|'box'|'dash'}] */
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot) y cada entrada de la leyenda (data-li) */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
+  /* leyenda compacta: items = [{label, color, type:'line'|'box'|'dash'}],
+     en un grupo data-role="legend" */
   function legend(svg, items, x, y, t, font, size) {
     size = size || 11;
     let yy = y;
-    items.forEach(it => {
-      if (it.type === 'box') svg.appendChild(F.el('rect', { x, y: yy - 8, width: 12, height: 11, fill: it.color, opacity: it.opacity || 1 }));
-      else svg.appendChild(F.el('line', {
+    const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+    items.forEach((it, i) => {
+      if (it.type === 'box') lg.appendChild(F.el('rect', { x, y: yy - 8, width: 12, height: 11, fill: it.color, opacity: it.opacity || 1, 'data-li': i }));
+      else lg.appendChild(F.el('line', {
         x1: x, y1: yy - 3, x2: x + 14, y2: yy - 3, stroke: it.color, 'stroke-width': it.width || 2,
-        'stroke-dasharray': it.type === 'dash' ? '5 3' : null,
+        'stroke-dasharray': it.type === 'dash' ? '5 3' : null, 'data-li': i,
       }));
-      if (it.point) svg.appendChild(F.el('circle', { cx: x + 7, cy: yy - 3, r: 3, fill: it.color }));
-      svg.appendChild(F.text(x + 20, yy - 2, it.label, { size, fill: t.fg, baseline: 'middle', font }));
+      if (it.point) lg.appendChild(F.el('circle', { cx: x + 7, cy: yy - 3, r: 3, fill: it.color, 'data-li': i }));
+      const tx = lg.appendChild(F.text(x + 20, yy - 2, it.label, { size, fill: t.fg, baseline: 'middle', font }));
+      tx.setAttribute('data-li', i);
       yy += (size + 7) * F.fs('label');   // el interlineado debe crecer con la letra
     });
+    return lg;
   }
 
   /* =========================================================
@@ -152,7 +159,10 @@
     svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || (mode === 'eigen' ? 'Valor propio (λ)' : 'Porcentaje de varianza explicada (%)'),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
 
-    if (cfg.legend !== false && leg.length) legend(svg, leg, m.left + pw - 190, m.top + 20, t, font);
+    if (cfg.legend !== false && leg.length) {
+      plotArea(svg, m.left, m.top, pw, ph);
+      legend(svg, leg, m.left + pw - 190, m.top + 20, t, font);
+    }
     return svg;
   }
 
@@ -328,7 +338,10 @@
       { label: 'Percentil 95 aleatorio', color: cfg.hornColor, type: 'dash' },
     ];
     if (cfg.showMean) leg.push({ label: 'Media aleatoria', color: cfg.hornColor, type: 'dash' });
-    if (cfg.legend !== false) legend(svg, leg, m.left + pw - 200, m.top + 20, t, font);
+    if (cfg.legend !== false) {
+      plotArea(svg, m.left, m.top, pw, ph);
+      legend(svg, leg, m.left + pw - 200, m.top + 20, t, font);
+    }
     return svg;
   }
 

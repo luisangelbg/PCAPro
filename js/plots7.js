@@ -19,6 +19,11 @@ const Plots7 = (function () {
   /* Igual que en mapas.js: figure.js puede cargarse después que este archivo. */
   const F = new Proxy({}, { get: (_, k) => Fig[k] });
   const H = () => Plots4._h;
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot) y cada entrada de la leyenda (data-li), que va en un
+     grupo data-role="legend" */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
+  const li = (n, i) => { n.setAttribute('data-li', i); return n; };
 
   /* ------------------------------------------------------------
      Del registro de fusiones al árbol dibujable
@@ -184,14 +189,17 @@ const Plots7 = (function () {
 
     /* --- leyenda --- */
     if (cfg.legend !== false && data.grupo) {
+      if (vertical) plotArea(svg, m.left, m.top, anchoHojas, anchoAlt);
+      else plotArea(svg, m.left, m.top, anchoAlt, anchoHojas);
       const q2 = Math.max(...data.grupo) + 1;
       const lx = vertical ? w - m.right + 16 : w - 140;
       let ly = m.top + 8;
-      svg.appendChild(F.text(lx, ly, tt('Grupos'), { role: 'legend', size: 11.5, weight: '600', fill: t.fg, font })); ly += 17;
+      const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+      lg.appendChild(F.text(lx, ly, tt('Grupos'), { role: 'legend', size: 11.5, weight: '600', fill: t.fg, font })); ly += 17;
       for (let g = 0; g < q2; g++) {
         const ng = data.grupo.reduce((a, x) => a + (x === g ? 1 : 0), 0);
-        svg.appendChild(F.el('rect', { x: lx, y: ly - 8, width: 11, height: 11, rx: 2.5, fill: F.color(cfg.palette, g) }));
-        svg.appendChild(F.text(lx + 17, ly, `${TT('Grupo', 'Cluster')} ${g + 1} (n = ${ng})`, { role: 'legend', size: 11, fill: t.fg, font }));
+        lg.appendChild(F.el('rect', { x: lx, y: ly - 8, width: 11, height: 11, rx: 2.5, fill: F.color(cfg.palette, g), 'data-li': g }));
+        lg.appendChild(li(F.text(lx + 17, ly, `${TT('Grupo', 'Cluster')} ${g + 1} (n = ${ng})`, { role: 'legend', size: 11, fill: t.fg, font }), g));
         ly += 17;
       }
     }

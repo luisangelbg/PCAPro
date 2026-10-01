@@ -25,6 +25,9 @@
     if (cfg.subtitle) svg.appendChild(F.text(w / 2, cfg.title ? 49 : 30, cfg.subtitle,
       { role: 'subtitle', size: 11.5, fill: t.muted, anchor: 'middle', font }));
   }
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot); la barra de color va en un grupo data-legend */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
 
   /* =========================================================
      1) Perfil de los componentes por grupo
@@ -154,18 +157,20 @@
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', weight: '600', font })));
 
     if (cfg.legend !== false) {
+      plotArea(svg, m.left, m.top, k * cw, p * rh);
       const bx = m.left + k * cw + 26, by = m.top, bh = Math.min(p * rh, 230), bwd = 15;
       const defs = F.el('defs');
       const id = 'vt' + Math.random().toString(36).slice(2, 8);
       const g = F.el('linearGradient', { id, x1: '0', y1: '1', x2: '0', y2: '0' });
       for (let i = 0; i <= 20; i++) g.appendChild(F.el('stop', { offset: (i * 5) + '%', 'stop-color': cmap(i / 20) }));
       defs.appendChild(g); svg.appendChild(defs);
-      svg.appendChild(F.el('rect', { x: bx, y: by, width: bwd, height: bh, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
+      const cb = svg.appendChild(F.g({ 'data-legend': 'colorbar' }));
+      cb.appendChild(F.el('rect', { x: bx, y: by, width: bwd, height: bh, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
       [[`+${lim}`, by], ['0', by + bh / 2], [`−${lim}`, by + bh]].forEach(([s, yy]) =>
-        svg.appendChild(F.text(bx + bwd + 5, yy, s, { size: 10, fill: t.muted, baseline: 'middle', font })));
-      svg.appendChild(F.text(bx + bwd / 2, by - 12, cfg.legendTitle || 'v.test', { size: 10.5, fill: t.fg, anchor: 'middle', font }));
-      svg.appendChild(F.text(bx, by + bh + 22, '* |v| ≥ 1.96', { size: 9.5, fill: t.muted, font }));
-      svg.appendChild(F.text(bx, by + bh + 34, '** |v| ≥ 2.58', { size: 9.5, fill: t.muted, font }));
+        cb.appendChild(F.text(bx + bwd + 5, yy, s, { size: 10, fill: t.muted, baseline: 'middle', font })));
+      cb.appendChild(F.text(bx + bwd / 2, by - 12, cfg.legendTitle || 'v.test', { size: 10.5, fill: t.fg, anchor: 'middle', font }));
+      cb.appendChild(F.text(bx, by + bh + 22, '* |v| ≥ 1.96', { size: 9.5, fill: t.muted, font }));
+      cb.appendChild(F.text(bx, by + bh + 34, '** |v| ≥ 2.58', { size: 9.5, fill: t.muted, font }));
     }
     return svg;
   }
@@ -270,16 +275,18 @@
       { size: 11, fill: t.fg, font }));
 
     if (cfg.legend !== false) {
+      plotArea(svg, m.left, m.top, p * cell, p * cell);
       const bx = m.left + p * cell + 26, by = m.top, bh = Math.min(p * cell, 220), bwd = 15;
       const defs = F.el('defs');
       const id = 'rs' + Math.random().toString(36).slice(2, 8);
       const g = F.el('linearGradient', { id, x1: '0', y1: '1', x2: '0', y2: '0' });
       for (let i = 0; i <= 20; i++) g.appendChild(F.el('stop', { offset: (i * 5) + '%', 'stop-color': cmap(i / 20) }));
       defs.appendChild(g); svg.appendChild(defs);
-      svg.appendChild(F.el('rect', { x: bx, y: by, width: bwd, height: bh, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
+      const cb = svg.appendChild(F.g({ 'data-legend': 'colorbar' }));
+      cb.appendChild(F.el('rect', { x: bx, y: by, width: bwd, height: bh, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
       [[`+${lim}`, by], ['0', by + bh / 2], [`−${lim}`, by + bh]].forEach(([s, yy]) =>
-        svg.appendChild(F.text(bx + bwd + 5, yy, s, { size: 10, fill: t.muted, baseline: 'middle', font })));
-      svg.appendChild(F.text(bx + bwd / 2, by - 12, 'residuo', { size: 10.5, fill: t.fg, anchor: 'middle', font }));
+        cb.appendChild(F.text(bx + bwd + 5, yy, s, { size: 10, fill: t.muted, baseline: 'middle', font })));
+      cb.appendChild(F.text(bx + bwd / 2, by - 12, 'residuo', { size: 10.5, fill: t.fg, anchor: 'middle', font }));
     }
     return svg;
   }

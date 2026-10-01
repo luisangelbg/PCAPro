@@ -33,6 +33,11 @@
     if (sub) svg.appendChild(F.text(w / 2, y, sub, { role: 'subtitle', size: 11.5, fill: t.muted, anchor: 'middle', font }));
     return y;
   }
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot) y cada entrada de la leyenda (data-li); la leyenda va
+     en un grupo data-role="legend" y una barra de color en uno data-legend */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
+  const li = (n, i) => { n.setAttribute('data-li', i); return n; };
 
   /* =========================================================
      1) Mapa de datos faltantes
@@ -89,11 +94,13 @@
       { role: 'axis', size: 12, fill: t.fg, anchor: 'middle', font }));
 
     // leyenda
+    plotArea(svg, m.left, m.top, plotW, vars.length * rowH);
     const lx = m.left, ly = m.top - 14;
-    svg.appendChild(F.el('rect', { x: lx, y: ly - 9, width: 11, height: 11, fill: cfg.colorPresent }));
-    svg.appendChild(F.text(lx + 16, ly, 'dato presente', { size: 11, fill: t.muted, baseline: 'middle', font }));
-    svg.appendChild(F.el('rect', { x: lx + 120, y: ly - 9, width: 11, height: 11, fill: cfg.colorMissing }));
-    svg.appendChild(F.text(lx + 136, ly, 'dato faltante', { size: 11, fill: t.muted, baseline: 'middle', font }));
+    const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+    lg.appendChild(F.el('rect', { x: lx, y: ly - 9, width: 11, height: 11, fill: cfg.colorPresent, 'data-li': 0 }));
+    lg.appendChild(li(F.text(lx + 16, ly, 'dato presente', { size: 11, fill: t.muted, baseline: 'middle', font }), 0));
+    lg.appendChild(F.el('rect', { x: lx + 120, y: ly - 9, width: 11, height: 11, fill: cfg.colorMissing, 'data-li': 1 }));
+    lg.appendChild(li(F.text(lx + 136, ly, 'dato faltante', { size: 11, fill: t.muted, baseline: 'middle', font }), 1));
     return svg;
   }
 
@@ -219,17 +226,19 @@
 
     // barra de color
     if (cfg.legend !== false) {
+      plotArea(svg, m.left, m.top, p * cell, p * cell);
       const bx = m.left + p * cell + 26, by = m.top, bh = Math.min(p * cell, 260), bw = 15;
       const defs = F.el('defs');
       const grad = F.el('linearGradient', { id: 'cbar', x1: '0', y1: '1', x2: '0', y2: '0' });
       for (let k = 0; k <= 20; k++) grad.appendChild(F.el('stop', { offset: (k / 20 * 100) + '%', 'stop-color': cmap(k / 20) }));
       defs.appendChild(grad); svg.appendChild(defs);
-      svg.appendChild(F.el('rect', { x: bx, y: by, width: bw, height: bh, fill: 'url(#cbar)', stroke: t.axis, 'stroke-width': 0.6 }));
+      const cb = svg.appendChild(F.g({ 'data-legend': 'colorbar' }));
+      cb.appendChild(F.el('rect', { x: bx, y: by, width: bw, height: bh, fill: 'url(#cbar)', stroke: t.axis, 'stroke-width': 0.6 }));
       [[-1, by + bh], [0, by + bh / 2], [1, by]].forEach(([v, y]) => {
-        svg.appendChild(F.text(bx + bw + 5, y, v === 0 ? '0' : (v > 0 ? '+1' : '−1'),
+        cb.appendChild(F.text(bx + bw + 5, y, v === 0 ? '0' : (v > 0 ? '+1' : '−1'),
           { size: 10.5, fill: t.muted, baseline: 'middle', font }));
       });
-      svg.appendChild(F.text(bx + bw / 2, by - 12, cfg.legendTitle || 'r',
+      cb.appendChild(F.text(bx + bw / 2, by - 12, cfg.legendTitle || 'r',
         { size: 11.5, fill: t.fg, anchor: 'middle', font, italic: true }));
     }
     return svg;

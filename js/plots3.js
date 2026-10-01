@@ -19,6 +19,11 @@
     const t = F.themes[cfg.theme] || F.themes.claro;
     return { svg: F.svg(w, h, cfg.theme), t, font: F.fonts[cfg.font] || F.fonts.sans };
   }
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot) y cada entrada de la leyenda (data-li); la leyenda va
+     en un grupo data-role="legend" y una barra de color en uno data-legend */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
+  const li = (n, i) => { n.setAttribute('data-li', i); return n; };
   function addTitle(svg, cfg, t, font, w) {
     if (cfg.title) svg.appendChild(F.text(w / 2, 30, cfg.title,
       { role: 'title', size: +cfg.titleSize || 17, weight: '600', fill: t.fg, anchor: 'middle', font }));
@@ -81,16 +86,18 @@
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', weight: '600', font })));
 
     if (cfg.legend !== false) {
+      plotArea(svg, m.left, m.top, k * cw, p * rh);
       const bx = m.left + k * cw + 26, by = m.top, bh = Math.min(p * rh, 240), bw = 15;
       const defs = F.el('defs');
       const gid = 'cbar3_' + Math.random().toString(36).slice(2, 8);
       const grad = F.el('linearGradient', { id: gid, x1: '0', y1: '1', x2: '0', y2: '0' });
       for (let q = 0; q <= 20; q++) grad.appendChild(F.el('stop', { offset: (q * 5) + '%', 'stop-color': cmap(q / 20) }));
       defs.appendChild(grad); svg.appendChild(defs);
-      svg.appendChild(F.el('rect', { x: bx, y: by, width: bw, height: bh, fill: `url(#${gid})`, stroke: t.axis, 'stroke-width': 0.6 }));
+      const cb = svg.appendChild(F.g({ 'data-legend': 'colorbar' }));
+      cb.appendChild(F.el('rect', { x: bx, y: by, width: bw, height: bh, fill: `url(#${gid})`, stroke: t.axis, 'stroke-width': 0.6 }));
       [['+1', by], ['0', by + bh / 2], ['−1', by + bh]].forEach(([s, y]) =>
-        svg.appendChild(F.text(bx + bw + 5, y, s, { size: 10.5, fill: t.muted, baseline: 'middle', font })));
-      svg.appendChild(F.text(bx + bw / 2, by - 12, cfg.legendTitle || 'carga',
+        cb.appendChild(F.text(bx + bw + 5, y, s, { size: 10.5, fill: t.muted, baseline: 'middle', font })));
+      cb.appendChild(F.text(bx + bw / 2, by - 12, cfg.legendTitle || 'carga',
         { size: 11, fill: t.fg, anchor: 'middle', font }));
     }
     return svg;
@@ -221,8 +228,10 @@
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
 
     if (cfg.showUnrotated && cfg.legend !== false) {
-      svg.appendChild(F.el('line', { x1: m.left + 6, y1: m.top + 12, x2: m.left + 24, y2: m.top + 12, stroke: cfg.unrotColor, 'stroke-dasharray': '4 3', 'stroke-width': 1.4 }));
-      svg.appendChild(F.text(m.left + 29, m.top + 12, 'sin rotar', { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }));
+      plotArea(svg, m.left, m.top, size, size);
+      const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+      lg.appendChild(F.el('line', { x1: m.left + 6, y1: m.top + 12, x2: m.left + 24, y2: m.top + 12, stroke: cfg.unrotColor, 'stroke-dasharray': '4 3', 'stroke-width': 1.4, 'data-li': 0 }));
+      lg.appendChild(li(F.text(m.left + 29, m.top + 12, 'sin rotar', { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }), 0));
     }
     return svg;
   }
@@ -271,9 +280,11 @@
     svg.appendChild(F.text(16, m.top + ph / 2, cfg.ylab || '% de la varianza total', { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
 
     if (cfg.legend !== false) {
-      [[cfg.colorBefore, 'Sin rotar', 0], [cfg.colorAfter, 'Rotada', 108]].forEach(([c, lab, off]) => {
-        svg.appendChild(F.el('rect', { x: m.left + off, y: m.top - 18, width: 12, height: 11, fill: c }));
-        svg.appendChild(F.text(m.left + off + 17, m.top - 12, lab, { size: 11, fill: t.fg, baseline: 'middle', font }));
+      plotArea(svg, m.left, m.top, pw, ph);
+      const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+      [[cfg.colorBefore, 'Sin rotar', 0], [cfg.colorAfter, 'Rotada', 108]].forEach(([c, lab, off], i) => {
+        lg.appendChild(F.el('rect', { x: m.left + off, y: m.top - 18, width: 12, height: 11, fill: c, 'data-li': i }));
+        lg.appendChild(li(F.text(m.left + off + 17, m.top - 12, lab, { size: 11, fill: t.fg, baseline: 'middle', font }), i));
       });
     }
     return svg;

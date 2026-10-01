@@ -23,11 +23,16 @@ const Plots6 = (function () {
 
   const glifo = (svg, x, y, r, tipo, fill, stroke, op) => {
     const base = { fill, stroke, 'stroke-width': stroke ? 1 : 0, opacity: op == null ? 0.9 : op };
-    if (tipo === 'square') svg.appendChild(F.el('rect', Object.assign({ x: x - r, y: y - r, width: 2 * r, height: 2 * r, rx: r * 0.25 }, base)));
-    else if (tipo === 'triangle') svg.appendChild(F.el('path', Object.assign({ d: `M${x},${y - r * 1.15} L${x + r * 1.05},${y + r * 0.75} L${x - r * 1.05},${y + r * 0.75} Z` }, base)));
-    else if (tipo === 'diamond') svg.appendChild(F.el('path', Object.assign({ d: `M${x},${y - r * 1.2} L${x + r * 1.2},${y} L${x},${y + r * 1.2} L${x - r * 1.2},${y} Z` }, base)));
-    else svg.appendChild(F.el('circle', Object.assign({ cx: x, cy: y, r }, base)));
+    if (tipo === 'square') return svg.appendChild(F.el('rect', Object.assign({ x: x - r, y: y - r, width: 2 * r, height: 2 * r, rx: r * 0.25 }, base)));
+    if (tipo === 'triangle') return svg.appendChild(F.el('path', Object.assign({ d: `M${x},${y - r * 1.15} L${x + r * 1.05},${y + r * 0.75} L${x - r * 1.05},${y + r * 0.75} Z` }, base)));
+    if (tipo === 'diamond') return svg.appendChild(F.el('path', Object.assign({ d: `M${x},${y - r * 1.2} L${x + r * 1.2},${y} L${x},${y + r * 1.2} L${x - r * 1.2},${y} Z` }, base)));
+    return svg.appendChild(F.el('circle', Object.assign({ cx: x, cy: y, r }, base)));
   };
+  /* marcas para el estudio de figuras y el editor ✎ comunes: el área de la
+     gráfica (data-plot) y cada entrada de la leyenda (data-li), que va en un
+     grupo data-role="legend" */
+  const plotArea = (svg, x, y, w, h) => svg.setAttribute('data-plot', [x, y, w, h].map(v => +(+v).toFixed(2)).join(' '));
+  const li = (n, i) => { n.setAttribute('data-li', i); return n; };
 
   /* ------------------------------------------------------------
      Mapa genérico de series de puntos.
@@ -95,12 +100,14 @@ const Plots6 = (function () {
     }
 
     if (cfg.legend && data.series.length) {
+      plotArea(svg, m.left, m.top, pw, ph);
       let ly = m.top + 6;
       const lx = m.left + pw + 18;
+      const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
       data.series.forEach((s, si) => {
         const col = s.color || F.color(cfg.palette, si);
-        glifo(svg, lx + 5, ly - 4, 4.5, s.glyph, col, t.bg, 1);
-        svg.appendChild(F.text(lx + 16, ly, s.name, { size: 11, fill: t.fg, font }));
+        li(glifo(lg, lx + 5, ly - 4, 4.5, s.glyph, col, t.bg, 1), si);
+        lg.appendChild(li(F.text(lx + 16, ly, s.name, { size: 11, fill: t.fg, font }), si));
         ly += 17;
       });
     }
@@ -156,12 +163,14 @@ const Plots6 = (function () {
         t, font, +cfg.labelSize || 10.5, 0);
     }
     if (cfg.legend) {
+      plotArea(svg, m.left, m.top, pw, ph);
       let ly = m.top + 6; const lx = m.left + pw + 18;
-      glifo(svg, lx + 5, ly - 4, 4.5, 'diamond', t.fg, t.bg, 1);
-      svg.appendChild(F.text(lx + 16, ly, tt('punto global'), { size: 11, fill: t.fg, font })); ly += 17;
+      const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
+      li(glifo(lg, lx + 5, ly - 4, 4.5, 'diamond', t.fg, t.bg, 1), 0);
+      lg.appendChild(li(F.text(lx + 16, ly, tt('punto global'), { size: 11, fill: t.fg, font }), 0)); ly += 17;
       data.grupos.forEach((g, gi) => {
-        glifo(svg, lx + 5, ly - 4, 4, 'circle', colG(gi), t.bg, 1);
-        svg.appendChild(F.text(lx + 16, ly, g.nombre, { size: 11, fill: t.fg, font })); ly += 17;
+        li(glifo(lg, lx + 5, ly - 4, 4, 'circle', colG(gi), t.bg, 1), gi + 1);
+        lg.appendChild(li(F.text(lx + 16, ly, g.nombre, { size: 11, fill: t.fg, font }), gi + 1)); ly += 17;
       });
     }
     return svg;
