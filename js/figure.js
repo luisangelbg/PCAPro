@@ -176,6 +176,8 @@ Fig.text = (x, y, str, o) => {
     'stroke-linejoin': o.halo ? 'round' : null,
     'paint-order': o.halo ? 'stroke fill' : null,
     x, y,
+    'data-role': o.role === 'tick' ? 'tick' : o.role === 'axis' ? 'lab' : null,
+    'data-li': o.li != null ? o.li : null,
     'font-family': o.font || Fig.fonts.sans,
     'font-size': +size.toFixed(2),
     'font-weight': o.weight || 'normal',
