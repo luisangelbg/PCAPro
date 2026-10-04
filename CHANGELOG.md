@@ -7,6 +7,19 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Four short micro-interactions.** The block bar — the app's own one and the side list drawn by
+  the shared navigator — keeps a single rectangle behind the active block that travels to the next
+  one instead of appearing and disappearing; a block that has just been unlocked beats twice and
+  stops; the tick of a finished block is drawn rather than popped in; and the result tiles come in
+  in reading order (45 ms apart), with their figures counting up. They all hang off the
+  `lfx-motion` class, so the «Animations» button of `labg-fx` and the system's «reduce motion»
+  switch them off as before; only `transform` and `opacity` are animated. The sliding rectangle is
+  added by the script once it can measure it, so without JavaScript the active block keeps the
+  background it always had. In a background tab the counter writes the final figure straight away,
+  since the browser freezes animation frames there.
+
 ### Fixed
 
 - **Column coordinates in CA and MCA were multiplied by the column mass.** The shared core

@@ -112,15 +112,54 @@ function pcaAfterPaint(f, w) {
     .then(f).then(done, e => { console.error(e); if (w) w._failed = true; done(); });
 }
 
+/* El número de un indicador sube hasta su valor en poco menos de medio
+   segundo. Solo con cifras simples: si el indicador trae texto («4 de 12»,
+   «—», una etiqueta), se queda como está. El último fotograma escribe el
+   texto original, así que lo que queda en pantalla nunca difiere de lo
+   calculado. */
+function pcaCuenta(nodo, retraso) {
+  if (!nodo) return;
+  const texto = nodo.textContent.trim();
+  const m = texto.match(/^(-?[\d.,]+)(\s*%?)$/);
+  if (!m) return;
+  const crudo = m[1].replace(/,/g, ''), suf = m[2] || '';
+  const punto = crudo.lastIndexOf('.');
+  const dec = punto >= 0 ? crudo.length - punto - 1 : 0;
+  const fin = Number(crudo);
+  if (!isFinite(fin) || dec > 6) return;
+  /* en una pestaña de fondo el navegador congela los fotogramas: el número se
+     quedaría en cero hasta que alguien la mirara, así que ahí no se anima */
+  if (document.hidden) return;
+  const fmt = { minimumFractionDigits: dec, maximumFractionDigits: dec };
+  const dur = 420, t0 = performance.now() + (retraso || 0);
+  nodo.textContent = (0).toLocaleString('es-MX', fmt) + suf;
+  /* red de seguridad: si la cuenta se interrumpe a medias —la pestaña se va al
+     fondo, el equipo se atasca— el valor verdadero se escribe de todos modos */
+  setTimeout(() => { if (nodo.textContent !== texto) nodo.textContent = texto; }, (retraso || 0) + dur + 300);
+  const paso = t => {
+    if (t < t0) { requestAnimationFrame(paso); return; }
+    const k = Math.min(1, (t - t0) / dur);
+    if (k >= 1) { nodo.textContent = texto; return; }
+    nodo.textContent = (fin * (1 - Math.pow(1 - k, 3))).toLocaleString('es-MX', fmt) + suf;
+    requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
+}
+
 function statTiles(container, tiles) {
   if (typeof container === 'string') container = el(container);
   container.innerHTML = '';
-  tiles.forEach(t => {
+  /* lfx-motion la pone labg-fx: sin ella (botón «Animaciones» apagado o
+     «reducir movimiento» del sistema) los indicadores salen de golpe */
+  const anima = document.documentElement.classList.contains('lfx-motion');
+  tiles.forEach((t, i) => {
     const [label, value, sub, level] = Array.isArray(t) ? t : [t.label, t.value, t.sub, t.level];
-    const d = mk('div', { class: 'stat-tile' + (level ? ' ' + level : '') });
+    const d = mk('div', { class: 'stat-tile' + (level ? ' ' + level : '') + (anima ? ' pca-entra' : '') });
+    if (anima) d.style.setProperty('--pca-i', i);
     d.innerHTML = `<div class="stat-label">${tt(label)}</div><div class="stat-value">${value}</div>` +
       (sub ? `<div class="stat-sub">${tt(sub)}</div>` : '');
     container.appendChild(d);
+    if (anima) pcaCuenta(d.querySelector('.stat-value'), i * 45);
   });
 }
 
@@ -217,10 +256,72 @@ const STEP_ORDER = ['0', '1', '2', '3', '4', '5', '7', '6'];
 const stepBtn = n => document.querySelector('.step-btn[data-step="' + n + '"]');
 const stepOn = n => { const b = stepBtn(n); return !!b && !b.disabled; };
 
+/* La corredera: un rectángulo que se queda detrás del bloque activo y viaja
+   hasta el siguiente al cambiar de bloque, en lugar de aparecer y desaparecer.
+   Va en los dos sitios donde se listan los bloques: la barra horizontal propia
+   de la app y la lista lateral que dibuja el navegador compartido. Se mide con
+   offsetLeft y offsetTop, no con la posición en pantalla, para que siga en su
+   sitio cuando la barra está desplazada. Si no encuentra el bloque activo —o
+   todavía no se ve— no hace nada y el bloque activo conserva su fondo de
+   siempre: la clase pca-corre, que es la que apaga ese fondo, solo se pone
+   cuando la corredera ya pudo medirse. */
+function pcaCorredera(caja, selActivo) {
+  if (!caja) return;
+  const activo = caja.querySelector(selActivo);
+  if (!activo || !activo.offsetHeight) return;
+  let pill = caja.querySelector(':scope > .pca-pill');
+  if (!pill) {
+    pill = mk('span', { class: 'pca-pill', 'aria-hidden': 'true' });
+    caja.insertBefore(pill, caja.firstChild);
+    caja.classList.add('pca-corre');
+  }
+  pill.style.width = activo.offsetWidth + 'px';
+  pill.style.height = activo.offsetHeight + 'px';
+  pill.style.transform = `translate(${activo.offsetLeft}px, ${activo.offsetTop}px)`;
+}
+
+function pcaPill() {
+  pcaCorredera(el('stepper'), '.step-btn.active');
+  pcaCorredera(document.querySelector('.lnav-list'), '.lnav-item.on');
+}
+
+/* Al cambiar de bloque, la app y el navegador compartido se reparten el
+   trabajo y no siempre en el mismo orden: se vuelve a medir en cuanto el
+   navegador suelta el hilo y otra vez un momento después, ya con todo pintado. */
+function pcaPillPronto() {
+  setTimeout(pcaPill, 0);
+  setTimeout(pcaPill, 160);
+}
+
+/* La lista lateral la rehace el navegador compartido cuando cambia de bloque,
+   de idioma o de ancho, y no avisa: se vigila el DOM y se vuelve a medir. */
+function pcaVigilaBloques() {
+  pcaPill();
+  window.addEventListener('resize', pcaPill);
+  const nav = el('stepper');
+  if (nav && window.ResizeObserver) new ResizeObserver(pcaPill).observe(nav);
+  if (!window.MutationObserver) return;
+  const esperar = () => {
+    const lista = document.querySelector('.lnav-list');
+    if (!lista) return false;
+    new MutationObserver(pcaPillPronto)
+      .observe(lista, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
+    if (window.ResizeObserver) new ResizeObserver(pcaPill).observe(lista);
+    pcaPill();
+    return true;
+  };
+  if (esperar()) return;
+  /* el navegador se carga con defer: se espera a que aparezca su lista */
+  const ob = new MutationObserver(() => { if (esperar()) ob.disconnect(); });
+  ob.observe(document.body, { childList: true, subtree: true });
+  setTimeout(() => ob.disconnect(), 10000);
+}
+
 function goStep(n) {
   n = String(n);
   els('.step-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + n));
   els('.step-btn').forEach(b => b.classList.toggle('active', b.dataset.step === n));
+  pcaPill(); pcaPillPronto();
   if (window.LABG) {
     LABG.setCurrentStep(n);
     const b = stepBtn(n);
@@ -231,6 +332,15 @@ function goStep(n) {
 }
 function enableStep(n, on) {
   const b = stepBtn(n);
+  /* un bloque que se acaba de abrir da dos latidos: es la respuesta a
+     «¿ya puedo seguir?», y se apaga solo. El mismo aviso va en la lista
+     lateral, donde los bloques van en el orden de la barra. */
+  if (b && b.disabled && on !== false) {
+    const i = els('.step-btn').indexOf(b);
+    const lat = [b, i >= 0 ? document.querySelector(`.lnav-item[data-n="${i}"]`) : null];
+    lat.forEach(x => { if (x) x.classList.add('pca-nuevo'); });
+    setTimeout(() => lat.forEach(x => { if (x) x.classList.remove('pca-nuevo'); }), 2400);
+  }
   if (b) b.disabled = (on === false);
   refreshStepMarks();
   refreshStepFooters();
@@ -282,6 +392,7 @@ function refreshStepFooters() {
 /* Barra común: tema, atajos, aviso al salir y teclado. Solo en la app
    (las pruebas cargan core.js sin labg-core.js). */
 document.addEventListener('DOMContentLoaded', () => {
+  pcaVigilaBloques();
   if (!window.LABG) return;
   if (LABG.work) {
     LABG.work.scene = 'fit';

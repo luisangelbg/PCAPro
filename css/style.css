@@ -378,3 +378,67 @@ table.mini input[type=text] { width: 140px; padding: 3px 8px; }
 .ejeNombre { flex: 1; min-width: 200px; padding: 4px 10px; }
 .eje-box p { margin: 0; font-size: .9rem; line-height: 1.6; }
 .eje-box .mut { color: var(--text-muted); }
+
+/* ============================================================
+   Micro-interacciones
+   ============================================================
+   Cuatro movimientos cortos que dicen algo: dónde estás, qué bloque
+   acabas de terminar, cuál se acaba de abrir y en qué orden leer los
+   indicadores. Todos cuelgan de html.lfx-motion, la clase que pone el
+   botón «Animaciones» de labg-fx: apagadas las animaciones —o con
+   «reducir movimiento» del sistema— la app se ve exactamente igual que
+   antes, sin un solo desplazamiento. Solo se animan transform y opacity,
+   que el navegador resuelve sin volver a maquetar la página. */
+
+/* 1 · la barra de bloques: el fondo del bloque activo viaja hasta el nuevo.
+   La clase pca-corre la pone el guion solo cuando pudo medir y colocar la
+   corredera; sin ella, el fondo del bloque activo sigue siendo el de siempre. */
+.stepper.pca-corre { position: relative; }
+.stepper.pca-corre .pca-pill {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 0; box-sizing: border-box;
+  border-radius: 9px; background: var(--btn-oro-suave); border: 1px solid rgba(212, 168, 72, 0.45);
+  pointer-events: none;
+}
+.stepper.pca-corre .step-btn { z-index: 1; }
+.stepper.pca-corre .step-btn.active { background: transparent; border-color: transparent; }
+html.lfx-motion .stepper.pca-corre .pca-pill {
+  transition: transform var(--dur-slow) var(--ease), width var(--dur-slow) var(--ease);
+}
+
+/* 2 · el bloque terminado: la palomita se dibuja en lugar de aparecer */
+html.lfx-motion .step-btn.done .step-num::before {
+  display: inline-block; animation: pca-palomita 320ms var(--ease) both;
+}
+@keyframes pca-palomita { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+
+/* 3 · el bloque que se acaba de abrir: dos latidos y se queda quieto */
+html.lfx-motion .step-btn.pca-nuevo::before {
+  content: ""; position: absolute; inset: -2px; border-radius: 11px; pointer-events: none;
+  border: 2px solid var(--btn-oro); opacity: 0; animation: pca-latido 1100ms var(--ease) 2;
+}
+@keyframes pca-latido { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(1.05); } }
+
+/* 4 · los indicadores entran en el orden en que se leen */
+html.lfx-motion .stat-tile.pca-entra {
+  animation: pca-sube 260ms var(--ease) both; animation-delay: calc(var(--pca-i, 0) * 45ms);
+}
+@keyframes pca-sube { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+
+/* La misma corredera en la lista lateral de bloques que dibuja el navegador
+   compartido. Se apoya en sus clases sin modificar el módulo: si algún día
+   cambian, el fondo del bloque activo vuelve a ser el suyo y no se rompe nada. */
+.lnav-list.pca-corre { position: relative; }
+.lnav-list.pca-corre .pca-pill {
+  position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 0; box-sizing: border-box;
+  border-radius: 10px; background: var(--lnav-oro-suave); border: 1px solid var(--lnav-oro-borde);
+  pointer-events: none;
+}
+.lnav-list.pca-corre .lnav-item.on { background: transparent; border-color: transparent; }
+html.lfx-motion .lnav-list.pca-corre .pca-pill {
+  transition: transform var(--dur-slow) var(--ease), height var(--dur-slow) var(--ease), width var(--dur-slow) var(--ease);
+}
+html.lfx-motion .lnav-item.pca-nuevo::before {
+  content: ""; position: absolute; inset: -2px; border-radius: 12px; pointer-events: none;
+  border: 2px solid var(--lnav-oro); opacity: 0; animation: pca-latido 1100ms var(--ease) 2;
+}
+html.lfx-motion .lnav-item.is-done .lnav-num::before { display: inline-block; animation: pca-palomita 320ms var(--ease) both; }
