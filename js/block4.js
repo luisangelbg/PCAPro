@@ -72,7 +72,7 @@ function renderBlock4() {
   const sel = el('facGroup');
   const prev = sel.value;
   sel.innerHTML = '';
-  sel.appendChild(mk('option', { value: '' }, 'Sin agrupar'));
+  sel.appendChild(mk('option', { value: '' }, tt('Sin agrupar')));
   G.suppCat.forEach(s => sel.appendChild(mk('option', { value: s.name }, s.name + ` (${s.levels.length} niveles)`)));
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
 

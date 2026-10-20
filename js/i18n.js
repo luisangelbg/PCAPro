@@ -985,6 +985,8 @@ I18N.en = {
   'excelente': 'excellent', 'inaceptable': 'unacceptable',
 
   /* ---------- figure titles and subtitles ---------- */
+  'Observación (fila del archivo)': 'Observation (row in the file)',
+  'Valor escalado': 'Scaled value',
   'Comparación de escalas después del preprocesamiento': 'Scale comparison after preprocessing',
   'Perfil de escalas de las variables activas': 'Scale profile of the active variables',
   'Dispersión original de cada variable': 'Original spread of each variable',
@@ -1199,6 +1201,8 @@ I18N.en = {
   'Leyendo archivo…': 'Reading file…', 'Cargando ejemplo…': 'Loading example…',
   'Calculando…': 'Computing…',
   'No se pudo leer el CSV: ': 'The CSV could not be read: ',
+  'No se pudo exportar: ': 'The figure could not be exported: ',
+  'un solo eje': 'single axis',
   'No se pudo leer la hoja de cálculo: ': 'The spreadsheet file could not be read: ',
   'La hoja está vacía.': 'The sheet is empty.',
   'Error en el cálculo: ': 'Error during the computation: ',

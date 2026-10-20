@@ -22,6 +22,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Five strings stayed in Spanish when the interface was in English.** Four were missing from the
+  dictionary — the figure-export error, the single-axis label of the factor maps, and the axis
+  captions of the missing-data map and of the box plots — and one, the "No grouping" option of the
+  grouping selector in Block 4, was written straight into the `<option>` instead of going through
+  `tt()`. An audit of the 733 translatable strings now reports no gaps, and a complete run of the app
+  in English — data, diagnosis, extraction, rotation, maps, interpretation, clustering and report —
+  leaves no Spanish text on screen.
+
 - **Column coordinates in CA and MCA were multiplied by the column mass.** The shared core
   (`js/gsvd.js`) received the chi-square metric `1/c` as the only column weight and returned
   `c·G` instead of Greenacre's principal coordinates `G = Dc^(-1/2)·V·Dσ`. On the smoking table the
