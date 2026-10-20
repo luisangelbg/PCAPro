@@ -9,6 +9,12 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **The app now opens in the reader's language.** The interface language is decided, in this order,
+  by `?lang=es|en` in the address — which is how the suite portal links to the app in one language,
+  and which is remembered afterwards — then by whatever the reader chose before on that computer,
+  and only then by the browser's own language, which selects English when it is English. Spanish
+  remains the default of the suite for every other case.
+
 - **Four short micro-interactions.** The block bar — the app's own one and the side list drawn by
   the shared navigator — keeps a single rectangle behind the active block that travels to the next
   one instead of appearing and disappearing; a block that has just been unlocked beats twice and

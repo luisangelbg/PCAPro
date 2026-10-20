@@ -1782,8 +1782,25 @@ I18N.set = function (lang) {
 I18N.init = function () {
   let saved = null;
   try { saved = localStorage.getItem('pcapro.lang'); } catch (e) { /* ignore */ }
-  /* español por omisión, como en toda la suite; el usuario elige después */
-  I18N.lang = I18N.supported.includes(saved) ? saved : 'es';
+
+  /* Tres fuentes, en este orden:
+       1. ?lang= en la dirección, que es como el portal de la suite enlaza la app
+          en un idioma concreto; se guarda, para que siga valiendo al navegar.
+       2. lo que el usuario eligió antes en esta computadora.
+       3. el idioma del navegador: solo si es inglés se abre en inglés.
+     El español sigue siendo el valor por omisión de la suite: se usa para
+     cualquier otro idioma y cuando no hay ninguna pista. */
+  let url = null;
+  try { url = new URLSearchParams(location.search).get('lang'); } catch (e) { /* dirección rara */ }
+  if (I18N.supported.includes(url)) {
+    I18N.lang = url;
+    try { localStorage.setItem('pcapro.lang', url); } catch (e) { /* private mode */ }
+  } else if (I18N.supported.includes(saved)) {
+    I18N.lang = saved;
+  } else {
+    const nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    I18N.lang = /^en\b/i.test(nav) ? 'en' : 'es';
+  }
 
   const sel = document.getElementById('langSelect');
   if (sel) {
