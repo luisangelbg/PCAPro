@@ -9,6 +9,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **The example data and the workshop material now exist in English too.** The five practice files
+  live in `datos/en/` with their columns and category labels in English — the figures are
+  byte-for-byte the same, which was checked against R: the same dimensions, the same missing values
+  and a maximum numerical difference of zero. `datos/LEEME.md` lists the equivalences, file by file
+  and column by column, so a row can be traced from one set to the other. The simulated
+  leaf-morphometry example, which the app generates rather than reads, now follows the interface
+  language as well. The workshop (`curso/en/`) is translated whole: participant manual, data page,
+  instructor guide, certificate and index; its screen wording was taken from the app's own
+  dictionary, so the manual says exactly what a participant sees on screen. The instructor's
+  material stays out of the repository, in English as in Spanish.
+
 - **The app now opens in the reader's language.** The interface language is decided, in this order,
   by `?lang=es|en` in the address — which is how the suite portal links to the app in one language,
   and which is remembered afterwards — then by whatever the reader chose before on that computer,

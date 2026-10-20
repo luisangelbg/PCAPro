@@ -1115,10 +1115,15 @@ function loadSimulated() {
     while (u === 0) u = rnd(); while (v === 0) v = rnd();
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
   };
-  const grupos = ['Sitio A', 'Sitio B', 'Sitio C'];
-  const header = ['ID', 'Sitio', 'Largo_hoja_mm', 'Ancho_hoja_mm', 'Area_foliar_mm2',
-    'Peso_seco_g', 'Grosor_lamina_um', 'Densidad_estomas_mm2', 'Longitud_peciolo_mm',
-    'Clorofila_SPAD', 'Altura_planta_cm'];
+  /* los nombres siguen al idioma de la interfaz: quien trabaja en inglés no
+     tiene por qué adivinar qué mide cada columna */
+  const grupos = [TT('Sitio A', 'Site A'), TT('Sitio B', 'Site B'), TT('Sitio C', 'Site C')];
+  const header = ['ID', TT('Sitio', 'Site'),
+    TT('Largo_hoja_mm', 'Leaf_length_mm'), TT('Ancho_hoja_mm', 'Leaf_width_mm'),
+    TT('Area_foliar_mm2', 'Leaf_area_mm2'), TT('Peso_seco_g', 'Dry_weight_g'),
+    TT('Grosor_lamina_um', 'Blade_thickness_um'), TT('Densidad_estomas_mm2', 'Stomatal_density_mm2'),
+    TT('Longitud_peciolo_mm', 'Petiole_length_mm'), TT('Clorofila_SPAD', 'Chlorophyll_SPAD'),
+    TT('Altura_planta_cm', 'Plant_height_cm')];
   const rows = [];
   for (let i = 0; i < 120; i++) {
     const g = Math.floor(i / 40);
@@ -1142,7 +1147,7 @@ function loadSimulated() {
     if (i === 88) r[5] = 'NA';
     rows.push(r);
   }
-  afterLoad(header, rows, 'ejemplo_simulado_morfometria.csv');
+  afterLoad(header, rows, TT('ejemplo_simulado_morfometria.csv', 'simulated_leaf_morphometry.csv'));
   showMessage('dataMessages', 'warning',
     tt('Ojo: este conjunto es <b>simulado</b> (generado por la propia app a partir de 3 factores latentes). Sirve para explorar la plataforma, no para reportar resultados.'));
 }

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instructor's guide — PCA workshop with PCAPro</title>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="stylesheet" href="../css/curso.css">
+</head>
+<body>
+<div class="pagina">
+
+<nav class="nav-curso no-imprimir">
+  <a href="index.html">← Workshop index</a>
+  <a href="participant_manual.html">Participant's manual</a>
+  <a href="assessment.html">Assessment</a>
+  <a href="INSTRUCTOR_KEYS.md">Data keys</a>
+</nav>
+
+<header class="portada">
+  <div class="institucion">Universidad Autónoma Chapingo · Continuing Education</div>
+  <h1>Instructor's guide</h1>
+  <p class="subtitulo">Principal Component Analysis workshop with PCAPro · 20 hours</p>
+  <div class="ficha">
+    <div><b>Use:</b> Internal document, do not hand out</div>
+    <div><b>Companion file:</b> <code>INSTRUCTOR_KEYS.md</code></div>
+    <div><b>Suggested group:</b> 12 to 20 participants</div>
+  </div>
+</header>
+
+<div class="caja alto"><b>Confidential document</b>
+  It contains the answers to every practical and the assessment criteria. Together with
+  <code>INSTRUCTOR_KEYS.md</code> and the answers section of <code>assessment.html</code>,
+  it must not be handed to the participants.</div>
+
+<h2>Preparation beforehand</h2>
+
+<h3>A week before</h3>
+<ol>
+  <li>Run <code>curso/generar_datos.ps1</code> and <b>work through the five practicals yourself</b>
+      in PCAPro before you teach them. Check them against <code>INSTRUCTOR_KEYS.md</code>.</li>
+  <li>Confirm that the laboratory computers allow PowerShell scripts to run.
+      If institutional policy blocks them, test this alternative beforehand:
+      opening <code>index.html</code> with a double click works for everything <b>except</b> loading
+      the example files from <code>datos/en/</code>; in that case hand out the CSV files and have them
+      drag them in.</li>
+  <li>Prepare a USB stick or a shared folder with: the complete <code>PCAPro</code> folder,
+      the manual as a PDF and the five loose CSV files.</li>
+  <li>Take the screenshots marked in the manual at the resolution of the classroom projector.</li>
+</ol>
+
+<h3>On the day of the workshop</h3>
+<ul>
+  <li>Arrive 30 minutes early: setting up on 20 computers always takes longer than planned.</li>
+  <li>Keep a spare computer, already set up, to hand.</li>
+  <li>Write the address <code>http://localhost:8790</code> on the board: they will ask for it several times.</li>
+</ul>
+
+<div class="caja aviso"><b>About the black PowerShell window</b>
+  It is what confuses people most on the first day. Make it clear from minute one: <b>that window is
+  the program</b>. If they close it, the page stops working. Several of them will close it ‘to tidy
+  up the screen’ and will not understand why everything went down.</div>
+
+<h2>Timing</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Session 1 · Fundamentals and loading data (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Activity</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–20</td><td>Introductions and expectations</td><td>Ask what data each of them works with: you will use it all week for examples</td></tr>
+    <tr><td class="num">20–45</td><td>Guided installation</td><td>Budget twice as long as you think</td></tr>
+    <tr><td class="num">45–90</td><td>What PCA is and what it is not</td><td>Hammer home ‘it is not a hypothesis test’ and ‘it is not there to separate groups’</td></tr>
+    <tr><td class="num">90–105</td><td><b>Break</b></td><td></td></tr>
+    <tr><td class="num">105–140</td><td>The minimum maths</td><td>No proofs. Make sure they understand what a λ is and what a loading is</td></tr>
+    <tr><td class="num">140–160</td><td>How the data must be laid out</td><td>Show a badly built Excel sheet; they always recognise their own</td></tr>
+    <tr><td class="num">160–220</td><td><b>Practical 1 · Soils</b></td><td>Make sure everyone reaches the verdict before moving on</td></tr>
+    <tr><td class="num">220–240</td><td>Group discussion and self-assessment</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Session 2 · Assumptions, scaling and diagnostics (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Activity</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–15</td><td>Recap and questions</td><td></td></tr>
+    <tr><td class="num">15–55</td><td>The assumptions, one by one</td><td>Use the table in the manual as your script</td></tr>
+    <tr><td class="num">55–85</td><td>Bartlett and KMO</td><td>Explain KMO through the idea of partial correlation, without the formula</td></tr>
+    <tr><td class="num">85–100</td><td><b>Break</b></td><td></td></tr>
+    <tr><td class="num">100–150</td><td><b>Practical 2 · Disparate scales</b></td><td>The ‘100%’ on PC1 without scaling is the teaching moment of the session</td></tr>
+    <tr><td class="num">150–215</td><td><b>Practical 3 · Seeds</b></td><td>Work in pairs: let <b>them</b> find the three traps</td></tr>
+    <tr><td class="num">215–240</td><td>Discussion of the traps</td><td>See the discussion questions below</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Session 3 · Extraction and retention (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Activity</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–15</td><td>Recap</td><td></td></tr>
+    <tr><td class="num">15–50</td><td>What extraction produces</td><td>Draw a clear line between loading and score: it is the number one confusion</td></tr>
+    <tr><td class="num">50–100</td><td>The eight criteria</td><td>Spend real time on parallel analysis: that is the one they should use</td></tr>
+    <tr><td class="num">100–115</td><td><b>Break</b></td><td></td></tr>
+    <tr><td class="num">115–165</td><td><b>Practical 4 · No structure</b></td><td><b>The session turns on this.</b> Do not cut it short</td></tr>
+    <tr><td class="num">165–215</td><td><b>Practical 5 · Soils and seeds</b></td><td></td></tr>
+    <tr><td class="num">215–240</td><td>How the decision is justified in a paper</td><td>Draft the full sentence with them on the board</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Session 4 · Rotation and factor maps (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Activity</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–15</td><td>Recap</td><td></td></tr>
+    <tr><td class="num">15–60</td><td>Why rotate; simple structure</td><td>Show the loading plane with ‘show unrotated’ switched on: the turn is <b>visible</b></td></tr>
+    <tr><td class="num">60–90</td><td>Orthogonal versus oblique</td><td>Pattern, structure and Φ. Only the essentials</td></tr>
+    <tr><td class="num">90–105</td><td><b>Break</b></td><td></td></tr>
+    <tr><td class="num">105–140</td><td>How to read the two maps</td><td>Distances versus angles. Keep stressing the short vectors</td></tr>
+    <tr><td class="num">140–160</td><td>cos² and contributions</td><td>They are not the same thing</td></tr>
+    <tr><td class="num">160–225</td><td><b>Practical 6 · Rotation and maps on seeds</b></td><td>Have them try the three group envelopes</td></tr>
+    <tr><td class="num">225–240</td><td>Conventions for publishing a figure</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Session 5 · Interpretation, report and project (240 min)</caption>
+  <thead><tr><th class="num">min</th><th>Activity</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td class="num">0–35</td><td>Naming an axis</td><td>Board exercise with the seed loadings</td></tr>
+    <tr><td class="num">35–60</td><td>Test values and supplementary elements</td><td></td></tr>
+    <tr><td class="num">60–85</td><td>Comparing groups and the circularity trap</td><td><b>Do not skip this part.</b> It is the difference between using the tool well and using it badly</td></tr>
+    <tr><td class="num">85–100</td><td><b>Break</b></td><td></td></tr>
+    <tr><td class="num">100–120</td><td>Fit: residuals and RMSR</td><td></td></tr>
+    <tr><td class="num">120–200</td><td><b>Integrated project</b></td><td>Individual work. Walk around the room: this is where you see who has understood</td></tr>
+    <tr><td class="num">200–225</td><td>Generating the report and the package</td><td></td></tr>
+    <tr><td class="num">225–240</td><td>Closing, submission and workshop evaluation</td><td></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Mistakes participants typically make</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Mistake</th><th>How it shows up</th><th>How to correct it</th></tr></thead>
+  <tbody>
+    <tr><td><b>Leaving the ID as an active variable</b></td>
+      <td>A very odd component appears, dominated by the record number</td>
+      <td>Head it off in session 1. Always ask ‘is this a measurement or a label?’</td></tr>
+
+    <tr><td><b>Leaving numeric treatment codes active</b></td>
+      <td>1, 2, 3 go in as if they were a continuous scale</td>
+      <td>PCAPro flags them with ‘group?’. Teach them to look for that signal</td></tr>
+
+    <tr><td><b>Not standardising</b></td>
+      <td>PC1 explains 95% and is dominated by the variable with the largest numbers</td>
+      <td>That is what practical 2 is for. Go back to it when it happens</td></tr>
+
+    <tr><td><b>Confusing a loading with a score</b></td>
+      <td>They try to interpret the table of scores variable by variable</td>
+      <td>Mnemonic: <b>loadings = variables, scores = individuals</b></td></tr>
+
+    <tr><td><b>Interpreting short vectors</b></td>
+      <td>‘This variable is related to that one’, pointing at two tiny arrows</td>
+      <td>Colour the circle by cos² and set the rule: if it is pale, it is not interpreted</td></tr>
+
+    <tr><td><b>Reading distances in the biplot between points and arrows</b></td>
+      <td>‘This individual is close to this variable’</td>
+      <td>Remind them that the scale of the arrows is arbitrary; what you read is the <b>projection</b></td></tr>
+
+    <tr><td><b>Retaining too many components</b></td>
+      <td>They settle for whatever Kaiser says</td>
+      <td>Practical 4 is the vaccine. Refer back to it every time</td></tr>
+
+    <tr><td><b>Interpreting a component they cannot name</b></td>
+      <td>‘PC3 is… well, variables 4 and 7’</td>
+      <td>If it has no name, it is not retained. Be strict about this</td></tr>
+
+    <tr><td><b>Forgetting that the sign is arbitrary</b></td>
+      <td>They are alarmed because their axis came out ‘the other way round’ from their neighbour's</td>
+      <td>Show that multiplying by −1 changes nothing; it only has to be stated</td></tr>
+
+    <tr><td><b>Concluding that the PCA ‘proved’ differences between treatments</b></td>
+      <td>In the final report</td>
+      <td>Session 5. It is the most serious conceptual mistake and the most frequent</td></tr>
+
+    <tr><td><b>Leaving the response variable active</b></td>
+      <td>In the integrated project, with Yield</td>
+      <td>Explain the circularity: if yield builds the axis, you cannot say that the axis explains yield</td></tr>
+
+    <tr><td><b>Closing the PowerShell window</b></td>
+      <td>‘My page has gone down’</td>
+      <td>Warn them about it on the first day and repeat it on the second</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>Discussion questions</h2>
+
+<h3>Session 1</h3>
+<ul>
+  <li>If PCA does not test hypotheses, what use is it in a thesis? Which section of the paper does it go in?</li>
+  <li>Can a PCA ‘go wrong’? What would that look like?</li>
+  <li>Someone measures 40 variables on 25 individuals. What would you tell them?</li>
+</ul>
+
+<h3>Session 2</h3>
+<ul>
+  <li>The KMO for seeds is 0.556 and for soils 0.752. Both have a sufficient n. Where does the difference come from?</li>
+  <li>Why is including the area computed from length and width a problem, if it is a variable that really is measured in practice?</li>
+  <li>If you drop <code>Moisture_pct</code> because its MSA is low, are you losing real information? What would you say to a reviewer who questions it?</li>
+  <li>The three outliers in seeds are possible values, not data-entry errors. Would you remove them?</li>
+</ul>
+
+<h3>Session 3</h3>
+<ul>
+  <li>Kaiser extracted three components from pure noise. Why is it still the most widely used criterion?</li>
+  <li>What would you do if parallel analysis says 2, broken stick says 1 and Kaiser says 4?</li>
+  <li>Is it legitimate to retain one component more than the criteria indicate just so you can draw a plot in the plane?</li>
+</ul>
+
+<h3>Session 4</h3>
+<ul>
+  <li>If rotation preserves the total variance, what exactly do we gain by rotating?</li>
+  <li>When should you NOT rotate?</li>
+  <li>In your field, is it reasonable for the dimensions to be correlated? Does that point to oblique rotation?</li>
+</ul>
+
+<h3>Session 5</h3>
+<ul>
+  <li>Two confidence ellipses of the mean do not overlap. Can you conclude that the groups differ? And if they were concentration ellipses?</li>
+  <li>If the PCA did not use the treatment to build the axes, why is an ANOVA on the scores still optimistic?</li>
+  <li>How does what you can claim with a PCA differ from what you can claim with a discriminant analysis?</li>
+</ul>
+
+<h2>Adaptations of the workshop</h2>
+
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th>Format</th><th>What to keep</th><th>What to cut</th></tr></thead>
+  <tbody>
+    <tr><td><b>Short 8-hour workshop</b></td>
+      <td>Sessions 1 and 3 in full; practical 4 complete; a reduced version of session 4 (basic rotation)</td>
+      <td>Practicals 2 and 6; oblique rotations; the whole of Block 5</td></tr>
+    <tr><td><b>30-hour course</b></td>
+      <td>Everything above, with more time for practice</td>
+      <td>—</td></tr>
+    <tr><td><b>Module within a diploma programme</b></td>
+      <td>Everything, plus a session with each participant's own data</td>
+      <td>—</td></tr>
+    <tr><td><b>Synchronous online</b></td>
+      <td>Everything, in 2-hour sessions</td>
+      <td>Stretch the installation into a support session beforehand</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="caja clave"><b>If participants bring their own data</b>
+  It is what they value most, but it can derail the workshop: formatting problems come up and eat
+  hours. Recommendation: give it <b>only</b> the last hour of session 5, after everyone has
+  finished the integrated project, and say from the start that the analysis of their own data is
+  indicative, not exhaustive.</div>
+
+<p class="pie">Instructor's guide · PCA workshop with PCAPro · Universidad Autónoma Chapingo.
+Internal document.</p>
+
+</div>
+</body>
+</html>

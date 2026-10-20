@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Participant's manual — PCA workshop with PCAPro</title>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<link rel="stylesheet" href="../css/curso.css">
+</head>
+<body>
+<div class="pagina">
+
+<nav class="nav-curso no-imprimir">
+  <a href="index.html">← Workshop index</a>
+  <a href="#s1">Session 1</a><a href="#s2">Session 2</a><a href="#s3">Session 3</a>
+  <a href="#s4">Session 4</a><a href="#s5">Session 5</a><a href="#glosario">Glossary</a>
+</nav>
+
+<header class="portada">
+  <div class="institucion">Universidad Autónoma Chapingo · Continuing Education</div>
+  <h1>Principal component analysis applied to the biological sciences</h1>
+  <p class="subtitulo">Participant's manual · Hands-on workshop with the PCAPro platform</p>
+  <div class="ficha">
+    <div><b>Duration:</b> 20 hours (5 sessions of 4 h)</div>
+    <div><b>Format:</b> Hands-on, at the computer</div>
+    <div><b>Prerequisites:</b> Basic statistics; no programming required</div>
+    <div><b>Instructor:</b> <span class="marcador">[name]</span></div>
+    <div><b>Dates:</b> <span class="marcador">[dates]</span></div>
+    <div><b>Venue:</b> <span class="marcador">[classroom / laboratory]</span></div>
+  </div>
+</header>
+
+<h2>Before you start</h2>
+
+<h3>What you will be able to do by the end</h3>
+<ol>
+  <li>Decide <b>whether your data are suitable</b> for a principal component analysis, using verifiable criteria rather than intuition.</li>
+  <li>Prepare a data matrix: type the variables, handle missing values and choose the right scaling.</li>
+  <li>Decide <b>how many components to retain</b> by combining several criteria, and justify the decision.</li>
+  <li>Apply and choose a <b>rotation</b> when the solution is not interpretable.</li>
+  <li>Read a correlation circle, a map of individuals and a biplot correctly.</li>
+  <li>Name the axes and write up methods and results with the right vocabulary.</li>
+  <li>Produce publication-quality figures and a reproducible report.</li>
+</ol>
+
+<h3>Installation</h3>
+<ol class="pasos">
+  <li>Copy the whole <code>PCAPro</code> folder to your computer (do not leave it on a USB stick: it will be slow).</li>
+  <li>Go into the folder, <b>right-click</b> <code>servidor.ps1</code> and choose
+      <span class="ui">Run with PowerShell</span>.</li>
+  <li>Your browser will open by itself at <code>http://localhost:8790</code>. If it does not, type
+      that address by hand in Chrome or Edge.</li>
+  <li>Leave the black PowerShell window open while you work: it is the server. Closing it shuts the application down.</li>
+</ol>
+
+<div class="caja"><b>Your data never leaves your computer</b>
+  PCAPro computes everything inside the browser. There is no remote server, nothing is uploaded to the internet and it works
+  offline. You can use it with unpublished or confidential data at no risk whatsoever.</div>
+
+<div class="caja aviso"><b>If the port is busy</b>
+  Open PowerShell in the folder and type:
+  <code>powershell -ExecutionPolicy Bypass -File servidor.ps1 -Port 9001</code>, then go to
+  <code>http://localhost:9001</code>.</div>
+
+<h3>The workshop data</h3>
+<p>Every practice uses <b>simulated</b> data sets: they are not real measurements, but they are built
+with a known structure that the instructor planted on purpose. That gives you something you almost never
+have with real data: <b>the chance to check that you reached the right result</b>. At the end of each practice
+you will find a green “Check your result” box with the figures you should be getting.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Practice data sets for the workshop. They are all in the <code>curso/datos/en</code> folder.</caption>
+  <thead><tr><th>File</th><th class="num">n</th><th class="num">Variables</th><th>What it is for</th></tr></thead>
+  <tbody>
+    <tr><td><code>practice1_soils.csv</code></td><td class="num">90</td><td class="num">6 + site</td>
+      <td>A first complete analysis. Everything comes out clean.</td></tr>
+    <tr><td><code>practice2_seeds.csv</code></td><td class="num">120</td><td class="num">9 + species</td>
+      <td>It has planted problems: redundancy, noise and outliers.</td></tr>
+    <tr><td><code>practice3_scales.csv</code></td><td class="num">100</td><td class="num">7 + plot</td>
+      <td>Wildly different units: it shows why you have to standardise.</td></tr>
+    <tr><td><code>practice4_no_structure.csv</code></td><td class="num">80</td><td class="num">6 + batch</td>
+      <td>It has no structure. It teaches when <i>not</i> to run a PCA.</td></tr>
+    <tr><td><code>integrated_project_agronomy.csv</code></td><td class="num">150</td><td class="num">12 + 2 groups + 1 supplementary</td>
+      <td>Final project: a complete analysis from start to finish.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s1">
+  <div class="etiqueta">Session 1</div>
+  <h2>Fundamentals and loading the data</h2>
+  <div class="duracion">4 hours · Block 1 of PCAPro (first part)</div>
+</div>
+
+<h3>1.1 · What PCA is and what it is not</h3>
+<p>Principal component analysis condenses the information held in many correlated quantitative
+variables into a few new variables —the <b>principal components</b>— which are linear
+combinations of the originals, are uncorrelated with one another and are ordered by the
+amount of variance they retain.</p>
+
+<p>It was formulated by <b>Karl Pearson in 1901</b> as the problem of finding the line that best fits
+a cloud of points, and rediscovered by <b>Harold Hotelling in 1933</b> from the maximisation of
+variance. Both routes arrive at the same place: the principal axes are the <b>eigenvectors</b> of
+the covariance or correlation matrix.</p>
+
+<div class="caja clave"><b>The idea in one sentence</b>
+  PCA does not invent information: it <b>reorganises</b> it. The total variance does not change, it is
+  merely redistributed across axes ordered from largest to smallest. If the variables are not correlated, there is
+  nothing to summarise.</div>
+
+<p><b>What it is used for:</b> reducing dimensions, visualising on a plane what lives in many
+dimensions, discovering groups of variables that behave together, building composite indices,
+detecting outliers and generating orthogonal predictors for regression.</p>
+
+<p><b>What it is NOT used for:</b> PCA <b>is not a hypothesis test</b> and <b>does not set out to separate
+groups</b>. It is an unsupervised technique: it ignores any treatment variable completely. If your
+question is “do my treatments differ?”, the tool is a discriminant analysis, a MANOVA or a
+PERMANOVA, not a PCA.</p>
+
+<h3>1.2 · The minimum mathematics you need</h3>
+<p>We start from a matrix <b>X</b> with <i>n</i> rows (individuals) and <i>p</i> columns (variables). Each
+column is centred by subtracting its mean and, almost always, divided by its standard deviation. From that
+the covariance (or correlation) matrix <b>S</b> is computed, and this is solved:</p>
+<p style="text-align:center"><code>S · v<sub>k</sub> = λ<sub>k</sub> · v<sub>k</sub></code></p>
+<ul>
+  <li><b>λ<sub>k</sub></b> (eigenvalue): the variance captured by component <i>k</i>. They all sum to
+    the total variance; with a correlation matrix that sum is exactly <i>p</i>.</li>
+  <li><b>v<sub>k</sub></b> (eigenvector): the direction of the component.</li>
+  <li><b>Score</b> of an individual: its coordinate on the new axis.</li>
+  <li><b>Loading</b> of a variable: its correlation with the component. <b>It is what you interpret.</b></li>
+</ul>
+
+<h3>1.3 · How your data have to be laid out</h3>
+<ul>
+  <li>First row: the <b>names</b> of the variables. No leading spaces, no merged cells.</li>
+  <li>Every row after that: <b>one observation</b> (one plant, one plot, one sample).</li>
+  <li>One table per sheet. No blank rows or columns in between, no totals at the bottom.</li>
+  <li>Gaps genuinely empty, or marked as <code>NA</code>. Never with zeros.</li>
+</ul>
+
+<h3>Practice 1 · Your first analysis: soils</h3>
+<p>A fertility study at three positions on a hillside. Six soil properties were measured at
+90 sampling sites.</p>
+
+<ol class="pasos">
+  <li>Open PCAPro. You are in <span class="ui">1 Data and assumptions</span>.</li>
+  <li>Before loading anything, expand the <b>3 · Postulates and assumptions of PCA</b> section of the
+      theoretical framework and read it all the way through. It is the reference you will use all week.</li>
+  <li>Drag <code>practice1_soils.csv</code> onto the drop zone, or click to choose it.</li>
+  <li>Go over the <span class="ui">1.2 Set the role of each variable</span> section. Check that
+      PCAPro detected <b>6 active numeric variables</b> and that <code>Site</code> was left as
+      <b>Qualitative / group</b> and <code>ID</code> as <b>Row identifier</b>.</li>
+  <li>Look at the row of <b>quick selection</b> tick boxes: all six numeric variables should be ticked.</li>
+  <li>In <span class="ui">1.3 Preparing the matrix</span> leave the missing values on “Delete incomplete rows”,
+      no transformation, and the scaling on <b>z standardisation</b>.</li>
+  <li>Press <span class="ui">Prepare matrix and run diagnostics →</span>.</li>
+  <li>Read the <b>verdict</b> and work through the <span class="ui">1.7 Recommendations</span> section point by point.</li>
+</ol>
+
+<div class="captura"><b>[SCREENSHOT 1.1]</b>
+  Full screen of section 1.2 with the variable table and the roles already assigned.</div>
+
+<div class="verifica">
+  <h4>✔ Check your result — Practice 1</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Indicator</th><th class="num">You should get</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>Observations × active variables</td><td class="num">90 × 6</td><td>No rows lost: there are no missing values</td></tr>
+      <tr><td>Ratio n:p</td><td class="num">15.0 : 1</td><td>Well above the 5:1 minimum</td></tr>
+      <tr><td>Overall KMO</td><td class="num">0.752</td><td>Acceptable</td></tr>
+      <tr><td>Bartlett</td><td class="num">p &lt; 0.0001</td><td>There are correlations to summarise</td></tr>
+      <tr><td>Determinant of R</td><td class="num">5.79 × 10⁻³</td><td>No singularity problems</td></tr>
+      <tr><td>Lowest MSA</td><td class="num">0.695 (Clay_pct)</td><td>No variable below 0.5</td></tr>
+      <tr><td>Most correlated pair</td><td class="num">OM – Total_N: r = 0.891</td><td>High but below 0.90</td></tr>
+      <tr class="total"><td>Verdict</td><td class="num">A or B</td><td>The data set is suitable</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<h4>Self-assessment questions</h4>
+<ol>
+  <li>Why must <code>ID</code> not go in as an active variable, given that they are numbers?</li>
+  <li>The KMO came out at 0.752. What exactly does that number mean? What would happen if it were 0.45?</li>
+  <li>If the OM–Total_N pair had given r = 0.97, what would the application have warned you about, and why is it a problem?</li>
+</ol>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s2">
+  <div class="etiqueta">Session 2</div>
+  <h2>Assumptions, scaling and diagnostics</h2>
+  <div class="duracion">4 hours · Block 1 of PCAPro (second part)</div>
+</div>
+
+<h3>2.1 · The assumptions that do matter</h3>
+<p>PCA is descriptive: it posits no probability model. But for the result to be
+interpretable and reproducible these conditions have to hold:</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Assumptions of PCA and how PCAPro checks them.</caption>
+  <thead><tr><th>Assumption</th><th>How it is checked</th><th>Criterion</th></tr></thead>
+  <tbody>
+    <tr><td>Quantitative variables</td><td>Typing in 1.2</td><td>Interval or ratio</td></tr>
+    <tr><td>Linear relationships</td><td>Correlation matrix, skewness</td><td>|g₁| &lt; 1 ideally</td></tr>
+    <tr><td>Enough correlation</td><td>Bartlett, KMO, mean |r|</td><td>p &lt; 0.05; KMO ≥ 0.60</td></tr>
+    <tr><td>Adequate sample</td><td>Ratio n:p and absolute n</td><td>≥ 5:1, better 10:1; n ≥ 100</td></tr>
+    <tr><td>No extreme multicollinearity</td><td>Pairs with |r| ≥ 0.90; determinant</td><td>det &gt; 10⁻⁵</td></tr>
+    <tr><td>Comparable scales</td><td>Ratio of the largest to the smallest SD</td><td>If not, standardise</td></tr>
+    <tr><td>No influential outliers</td><td>Mahalanobis distance</td><td>D² &lt; χ²₀.₉₉₉</td></tr>
+    <tr><td>Missing values handled</td><td>Missing-data map</td><td>State the method</td></tr>
+    <tr><td>Multivariate normality</td><td>—</td><td><b>Not required</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>2.2 · The two adequacy tests</h3>
+<p><b>Bartlett's test of sphericity.</b> It tests whether the correlation matrix is the identity, that is,
+whether the variables are uncorrelated. You want to <b>reject</b>: p &lt; 0.05. Watch out: with a large n it almost
+always comes out significant, so it is necessary but not sufficient.</p>
+
+<p><b>The KMO index.</b> It compares the observed correlations with the partial ones. If the variables share
+common factors, the partial correlations are small and the KMO high.</p>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>Kaiser's scale for the KMO.</caption>
+  <thead><tr><th class="num">KMO</th><th>Rating</th><th>Decision</th></tr></thead>
+  <tbody>
+    <tr><td class="num">≥ 0.90</td><td>Excellent</td><td>Go ahead</td></tr>
+    <tr><td class="num">0.80 – 0.89</td><td>Meritorious</td><td>Go ahead</td></tr>
+    <tr><td class="num">0.70 – 0.79</td><td>Acceptable</td><td>Go ahead</td></tr>
+    <tr><td class="num">0.60 – 0.69</td><td>Mediocre</td><td>With reservations</td></tr>
+    <tr><td class="num">0.50 – 0.59</td><td>Low</td><td>Review the variables</td></tr>
+    <tr><td class="num">&lt; 0.50</td><td>Unacceptable</td><td><b>Do not run a PCA</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>The same calculation variable by variable gives its <b>MSA</b>. Variables with MSA &lt; 0.50 are removed
+<b>one at a time</b>, recalculating after each removal.</p>
+
+<h3>2.3 · Scaling: the most important decision</h3>
+<div class="caja clave"><b>Rule of thumb</b>
+  If your variables are in different units —and in biology they almost always are— the answer is
+  <b>z standardisation</b>, which amounts to running the PCA on the correlation matrix. You only
+  work unscaled when every variable shares the same unit and their variances are comparable.</div>
+
+<h3>Practice 2 · Mismatched scales</h3>
+<p>This data set has seven variables in units ranging from pH (values around 6.5) to
+a volume in mm³ (hundreds of thousands). You are going to run the same analysis twice.</p>
+
+<ol class="pasos">
+  <li>Load <code>practice3_scales.csv</code>.</li>
+  <li>Mark the 7 numeric variables as active and <code>Plot</code> as qualitative.</li>
+  <li><b>First run:</b> for the scaling choose <span class="ui">Unscaled</span> and process.
+      Note down the percentage of variance of PC1 in section 1.5.</li>
+  <li>Look at the <b>Scale profile</b> figure: note the ratio of the largest to the smallest standard deviation.</li>
+  <li><b>Second run:</b> switch to <span class="ui">z standardisation</span> and process again.</li>
+  <li>Compare the two results and explain the difference.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Check your result — Practice 2</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Scaling</th><th class="num">PC1</th><th class="num">PC2</th><th>What is going on</th></tr></thead>
+    <tbody>
+      <tr><td>Unscaled</td><td class="num">100.0 %</td><td class="num">0.0 %</td>
+        <td><code>Volume_mm3</code> has an SD of about 55,000 and hogs <b>all</b> the variance. The PCA is not describing the data: it is describing the unit of measurement.</td></tr>
+      <tr><td>z standardisation</td><td class="num">41.9 %</td><td class="num">35.0 %</td>
+        <td>The two real factors come through: size (height, weight, volume) and chemistry (conductivity, pH, chlorophyll). KMO = 0.757.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0"><b>Parallel analysis with z:</b> 2 components. <b>Density</b> is left almost
+  unrepresented: it is independent of the two factors, and that is how it was built.</p>
+</div>
+
+<h3>Practice 3 · A data set with problems: seeds</h3>
+<p>120 seeds from two species, with nine variables. This data set has <b>three problems planted on
+purpose</b>. Your job is to find them.</p>
+
+<ol class="pasos">
+  <li>Load <code>practice2_seeds.csv</code>, mark the 9 numeric variables as active,
+      <code>Species</code> as qualitative, and process with z standardisation.</li>
+  <li>Read every recommendation in section 1.7. <b>Three</b> of them point to problems.</li>
+  <li>In the per-variable MSA table, identify which one is below 0.50.</li>
+  <li>Open the <b>Correlation matrix</b> figure and switch on <span class="ui">Reorder by similarity</span>.</li>
+  <li>Note down which individuals show up as multivariate outliers.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Check your result — Practice 3</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Planted problem</th><th class="num">Evidence</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td><b>Redundant variable.</b> <code>Area_mm2</code> was computed as π/4 × Length × Width: it adds no new information</td>
+        <td class="num">Width–Area: r = 0.934<br>det R = 2.84 × 10⁻⁴</td>
+        <td>Remove it, or keep it and drop Length and Width</td></tr>
+      <tr><td><b>Variable with no structure.</b> <code>Moisture_pct</code> is pure noise</td>
+        <td class="num">MSA = 0.388</td>
+        <td>Remove it: it is below 0.50</td></tr>
+      <tr><td><b>Multivariate outliers</b>, planted</td>
+        <td class="num">G017, G058, G101<br>(D² = 75.5, 58.7, 58.4; cut-off 27.9)</td>
+        <td>Check whether they are errors; run with and without them</td></tr>
+      <tr class="total"><td>Overall KMO</td><td class="num">0.556</td><td>Low, precisely because of the first two problems</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0">The app detects a fourth outlier, <b>G106</b>, which was not planted.
+  It is an extreme case that turned up by chance: a good reminder that the criterion flags the most
+  distant 0.1 %, whether or not there is a real reason behind it.</p>
+</div>
+
+<h4>Self-assessment questions</h4>
+<ol>
+  <li>Including <code>Area_mm2</code> alongside <code>Length</code> and <code>Width</code> is a classic mistake.
+      What does it do to the first component, and why?</li>
+  <li>Remove <code>Moisture_pct</code> and process again. How much does the KMO rise?</li>
+  <li>Why does the determinant of R fall so much when there are redundant variables?</li>
+</ol>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s3">
+  <div class="etiqueta">Session 3</div>
+  <h2>Extraction and the number of components</h2>
+  <div class="duracion">4 hours · Block 2 of PCAPro</div>
+</div>
+
+<h3>3.1 · What extraction produces</h3>
+<ul>
+  <li><b>Eigenvalues</b>: how much variance each axis captures.</li>
+  <li><b>Scores</b>: the new, reduced data set, which you can download and use in another analysis.</li>
+  <li><b>Loadings</b>: the correlation of each variable with each component.</li>
+  <li><b>Communality</b>: what proportion of a variable's variance the retained components pick up.
+    Below 0.50, that variable is poorly represented.</li>
+</ul>
+
+<h3>3.2 · The eight retention criteria</h3>
+<div class="tabla-envoltura">
+<table>
+  <caption>Criteria computed by PCAPro, ordered by reliability.</caption>
+  <thead><tr><th>Criterion</th><th>How it works</th><th>Behaviour</th></tr></thead>
+  <tbody>
+    <tr><td><b>Parallel analysis (Horn)</b></td>
+      <td>Compares your λ with those of hundreds of structureless matrices of the same size</td>
+      <td><b>The best rated.</b> Very reliable</td></tr>
+    <tr><td><b>Velicer's MAP</b></td>
+      <td>Minimum of the mean squared partial correlation</td><td>Very good</td></tr>
+    <tr><td><b>Broken stick</b></td>
+      <td>Compares with the random division of a segment broken at random</td><td>Conservative</td></tr>
+    <tr><td><b>Kaiser–Guttman (λ &gt; 1)</b></td>
+      <td>Retains those that explain more than one variable</td><td><b>Overestimates</b>, especially with a large p</td></tr>
+    <tr><td><b>Jolliffe (λ &gt; 0.7)</b></td><td>A relaxed version of Kaiser</td><td>Overestimates even more</td></tr>
+    <tr><td><b>Scree elbow</b></td><td>The point where the fall flattens out</td><td>Visual, somewhat subjective</td></tr>
+    <tr><td><b>Cumulative variance</b></td><td>Up to 70 % or 80 %</td><td>Never as the only criterion</td></tr>
+    <tr><td><b>Interpretability</b></td><td>Your judgement</td><td><b>The decisive one</b></td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="caja clave"><b>How the decision is made in practice</b>
+  Run every criterion, see where they agree and, within that range, pick the number that gives the
+  <b>most interpretable</b> solution. In the paper you write it like this: “k components were retained on the
+  basis of parallel analysis, the scree plot and interpretability, explaining X % of
+  the variance”.</div>
+
+<h3>Practice 4 · When NOT to run a PCA</h3>
+<p>This is the most important data set of the workshop, even if it looks like the dullest.</p>
+
+<ol class="pasos">
+  <li>Load <code>practice4_no_structure.csv</code> and process with z standardisation.</li>
+  <li>Read the verdict and the recommendations. <b>Do not go any further yet.</b></li>
+  <li>Even so, go to Block 2 and extract the components with 500 replications.</li>
+  <li>Compare what <b>Kaiser</b> says with what <b>parallel analysis</b> says in the criteria figure.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Check your result — Practice 4</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <tbody>
+      <tr><td>Overall KMO</td><td class="num">0.465</td><td>Unacceptable (&lt; 0.50)</td></tr>
+      <tr><td>Bartlett</td><td class="num">p = 0.86</td><td><b>Not significant:</b> R does not differ from the identity</td></tr>
+      <tr><td>Determinant of R</td><td class="num">0.885</td><td>Close to 1: there is nothing to summarise</td></tr>
+      <tr><td>Largest |r| between pairs</td><td class="num">0.169</td><td>No usable correlation</td></tr>
+      <tr class="total"><td><b>Kaiser (λ &gt; 1)</b></td><td class="num"><b>3 components</b></td>
+        <td><b>From data with no structure at all!</b></td></tr>
+      <tr class="total"><td><b>Parallel analysis</b></td><td class="num"><b>0 components</b></td>
+        <td>The right answer</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0"><b>This is the lesson of the session:</b> Kaiser's criterion, the one that
+  is used most and the default in many programs, extracts three components out of pure noise. If your
+  only criterion had been λ &gt; 1, you would have published an interpretation of nothing.</p>
+</div>
+
+<h3>Practice 5 · Extraction on soils and seeds</h3>
+<ol class="pasos">
+  <li>Go back to <code>practice1_soils.csv</code>, process and extract the components.</li>
+  <li>Study the scree plot: switch on the Kaiser, parallel analysis and broken stick lines.</li>
+  <li>Repeat with <code>practice2_seeds.csv</code> and compare what each criterion says.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Check your result — Practice 5</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Data set</th><th class="num">λ₁, λ₂, λ₃</th><th class="num">Kaiser</th><th class="num">Horn</th><th class="num">Variance PC1+PC2</th></tr></thead>
+    <tbody>
+      <tr><td>Soils</td><td class="num">3.298 · 1.934 · 0.295</td><td class="num">2</td><td class="num">2</td><td class="num">87.2 %</td></tr>
+      <tr><td>Seeds</td><td class="num">3.478 · 1.738 · 1.492</td><td class="num">4</td><td class="num">3</td><td class="num">57.9 %</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0">With soils every criterion agrees on 2: the fall between λ₂ = 1.93 and
+  λ₃ = 0.30 is huge and the elbow is unmistakable. With seeds Kaiser retains 4 and parallel analysis 3:
+  there are three real factors, and the fourth, λ = 1.005, barely grazes the threshold of 1.</p>
+</div>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s4">
+  <div class="etiqueta">Session 4</div>
+  <h2>Rotation and factor maps</h2>
+  <div class="duracion">4 hours · Blocks 3 and 4 of PCAPro</div>
+</div>
+
+<h3>4.1 · Why rotate</h3>
+<p>The axes that come out of a PCA maximise variance, not interpretability. The typical result is that almost
+every variable loads strongly on PC1 and the remaining components are left as contrasts that are hard to
+name. <b>Rotation</b> turns the retained axes within the same subspace in search of Thurstone's
+<b>simple structure</b>: each variable loading strongly on a single component.</p>
+
+<div class="caja"><b>What is preserved and what changes</b>
+  <b>Preserved:</b> the total variance of the set of retained components and the communalities.<br>
+  <b>Changed:</b> how that variance is shared between axes, the loadings, and the order. After rotation the axes no longer run
+  from largest to smallest λ; that is why PCAPro renames them RPC1, RPC2…</div>
+
+<div class="tabla-envoltura">
+<table>
+  <caption>The rotations available in PCAPro.</caption>
+  <thead><tr><th>Method</th><th>Type</th><th>When to use it</th></tr></thead>
+  <tbody>
+    <tr><td><b>Varimax</b></td><td>Orthogonal</td><td><b>The default choice.</b> Well-differentiated, independent components</td></tr>
+    <tr><td>Quartimax</td><td>Orthogonal</td><td>When you expect a dominant general factor</td></tr>
+    <tr><td>Equamax / Parsimax</td><td>Orthogonal</td><td>Compromises; less stable</td></tr>
+    <tr><td><b>Promax</b></td><td>Oblique</td><td>Fast; large samples</td></tr>
+    <tr><td>Oblimin / Quartimin</td><td>Oblique</td><td>When it is reasonable for the dimensions to be correlated</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="caja aviso"><b>Orthogonal or oblique?</b>
+  Use an <b>orthogonal</b> rotation if you need independent components or if on theoretical grounds you expect
+  unrelated dimensions. Use an <b>oblique</b> one if it is reasonable for them to be correlated, which is the usual case with
+  biological phenomena. With an oblique rotation you interpret the <b>pattern</b> matrix, and you have to look at Φ: if the
+  largest correlation between components is below 0.15, the obliquity gained you nothing and it is worth
+  going back to varimax.</div>
+
+<h3>4.2 · How to read the maps</h3>
+<div class="tabla-envoltura">
+<table>
+  <thead><tr><th></th><th>Cloud of individuals</th><th>Cloud of variables</th></tr></thead>
+  <tbody>
+    <tr><td>What is drawn</td><td>One point per observation</td><td>One vector per variable</td></tr>
+    <tr><td>What you read</td><td><b>Distances</b>: nearby points, similar profiles</td><td><b>Angles</b> with respect to the origin</td></tr>
+    <tr><td>Scale</td><td>That of the scores</td><td>Always between −1 and 1</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p><b>Rules for the correlation circle:</b> vectors pointing the same way, variables positively
+correlated; opposite, negative correlation; perpendicular, uncorrelated <i>in that plane</i>.
+A <b>short</b> vector does not mean the variable is unimportant, but that its information lies on
+other axes: <b>do not interpret its direction</b>.</p>
+
+<p><b>cos²</b> measures how well a point is represented (≥ 0.7 very good, 0.5–0.7 acceptable,
+&lt; 0.3 not interpretable). The <b>contribution</b> measures how much weight that element carries in building the axis; its
+benchmark is 100/p for variables and 100/n for individuals.</p>
+
+<h3>Practice 6 · Rotation and maps on seeds</h3>
+<ol class="pasos">
+  <li>Load <code>practice2_seeds.csv</code>. This time <b>get rid of the traps</b>: clear
+      <code>Area_mm2</code> and <code>Moisture_pct</code> with the quick selection tick boxes (they become
+      supplementary, they are not lost).</li>
+  <li>Process with z standardisation and extract the components. Retain <b>3</b>.</li>
+  <li>Go to Block 3 and apply <b>varimax</b> with Kaiser normalisation and a threshold of 0.40.</li>
+  <li>Compare the “Did simple structure improve?” card before and after.</li>
+  <li>Try <b>promax</b> as well and check the Φ matrix: was the obliquity justified?</li>
+  <li>Go to Block 4, build the maps with the <b>rotated</b> solution and group by <code>Species</code>.</li>
+  <li>On the map of individuals try the three envelope types and explain what each one says.</li>
+</ol>
+
+<div class="captura"><b>[SCREENSHOT 4.1]</b>
+  Correlation circle for the seeds with the rotated solution, coloured by cos².</div>
+<div class="captura"><b>[SCREENSHOT 4.2]</b>
+  Map of individuals grouped by species, with 95 % concentration ellipses.</div>
+
+<div class="verifica">
+  <h4>✔ Check your result — Practice 6</h4>
+  <p>Once <code>Area_mm2</code> and <code>Moisture_pct</code> are out, varimax with 3 components should
+  group the variables like this:</p>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Component</th><th>Variables with a high loading</th><th>A reasonable name</th></tr></thead>
+    <tbody>
+      <tr><td>RPC1</td><td>Length, Width, Weight</td><td>Seed size</td></tr>
+      <tr><td>RPC2</td><td>Thickness, Hardness</td><td>Robustness / hardness</td></tr>
+      <tr><td>RPC3</td><td>Oil (+), Protein (−)</td><td>Composition: a contrast axis</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:8px 0 0">The KMO should <b>rise</b> from the 0.556 of practice 3. RPC3 is a
+  <b>contrast axis</b>: seeds with more oil have less protein, and that is how they were built.</p>
+</div>
+
+<!-- ================================================================= -->
+<div class="sesion" id="s5">
+  <div class="etiqueta">Session 5</div>
+  <h2>Interpretation, report and project</h2>
+  <div class="duracion">4 hours · Blocks 5 and 6 of PCAPro</div>
+</div>
+
+<h3>5.1 · Naming an axis</h3>
+<ol>
+  <li>Look at the variables with |loading| above your threshold.</li>
+  <li>Separate the positive ones from the negative ones. If both signs are there, it is a <b>contrast axis</b>.</li>
+  <li>Look for what they have in common: size? an acquisitive versus a conservative strategy? an environmental gradient?</li>
+  <li>Give it a short, substantive name. <b>If you cannot name it, you probably should not be retaining it.</b></li>
+  <li>Confirm it with the supplementary elements and the extreme individuals.</li>
+</ol>
+
+<h3>5.2 · The test value</h3>
+<p>It answers this: is the centroid of this category further from the origin than you would expect by
+chance? Under the null hypothesis it follows a standard normal distribution, so <b>|v| ≥ 1.96</b> is equivalent to
+p &lt; 0.05 and <b>|v| ≥ 2.58</b> to p &lt; 0.01. The sign tells you which side of the axis the category falls on.</p>
+
+<div class="caja alto"><b>The warning you must not forget</b>
+  PCAPro lets you compare groups on the components with an ANOVA. That is legitimate because the PCA did not use
+  the grouping variable to build the axes. But: you are running <i>k</i> tests without correcting
+  for multiple comparisons, and the axes were chosen <i>a posteriori</i> for maximising variance, so
+  the p value is optimistic. <b>Use it as description, not as a confirmatory test.</b> If your research
+  question is whether the groups differ, the right answer is a MANOVA, a PERMANOVA or a
+  discriminant analysis on the original variables.</div>
+
+<h3>5.3 · Goodness of fit</h3>
+<p>The retained components let you rebuild the correlation matrix. The difference from the
+observed one is the <b>residuals</b>, summarised in the <b>RMSR</b>: below 0.05 is a good fit, between 0.05
+and 0.08 acceptable, and above 0.08 you are losing structure.</p>
+
+<h3>Integrated project</h3>
+<p>An agronomic experiment: 150 plots, four treatments (control, irrigation, fertilisation and both),
+three blocks, twelve response variables and the final yield.</p>
+
+<ol class="pasos">
+  <li>Load <code>integrated_project_agronomy.csv</code>.</li>
+  <li><b>Careful:</b> PCAPro will mark <code>Yield_kg_ha</code> as active because it is numeric.
+      Change it to <b>Supplementary quantitative</b>: it is the outcome variable and must not build the axes.</li>
+  <li>Check that <code>Treatment</code> and <code>Block</code> are left as qualitative and
+      <code>Plot</code> as the identifier.</li>
+  <li>Look at the missing-data map: there are six empty cells. Decide how to handle them and justify it.</li>
+  <li>Process with z standardisation and work through the whole diagnostic.</li>
+  <li>Extract the components, decide how many to retain and justify it with at least three criteria.</li>
+  <li>Apply varimax and name each component.</li>
+  <li>Build the maps grouping by <code>Treatment</code>. Note where Yield falls in the circle.</li>
+  <li>In Block 5 compare the treatments on each component and read the test values.</li>
+  <li>Generate the full report in Block 6 and download the ZIP package.</li>
+</ol>
+
+<div class="verifica">
+  <h4>✔ Check your result — Integrated project</h4>
+  <div class="tabla-envoltura">
+  <table>
+    <tbody>
+      <tr><td>Observations after deleting incomplete rows</td><td class="num">144 of 150</td></tr>
+      <tr><td>Active variables</td><td class="num">12</td></tr>
+      <tr><td>Overall KMO</td><td class="num">0.783</td></tr>
+      <tr><td>Kaiser and parallel analysis</td><td class="num">Both: 4 components</td></tr>
+      <tr><td>Cumulative variance with 4 components</td><td class="num">87.2 %</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:12px 0 6px"><b>Varimax should recover exactly these four groups</b>
+  (every dominant loading between 0.91 and 0.95):</p>
+  <div class="tabla-envoltura">
+  <table>
+    <thead><tr><th>Component</th><th class="num">% variance</th><th>Variables</th><th>Expected name</th></tr></thead>
+    <tbody>
+      <tr><td>RPC1</td><td class="num">35.0</td><td>Height, Biomass, Leaf area, Stem diameter</td><td>Vegetative vigour</td></tr>
+      <tr><td>RPC2</td><td class="num">21.9</td><td>Leaf N, Chlorophyll, Leaf P</td><td>Nutritional status</td></tr>
+      <tr><td>RPC3</td><td class="num">16.7</td><td>Conductance (+), Water potential (+), Leaf temperature (−)</td><td>Water status</td></tr>
+      <tr><td>RPC4</td><td class="num">13.5</td><td>Days to flowering, Days to maturity</td><td>Phenology</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="margin:10px 0 0"><b>Yield (supplementary)</b> should correlate
+  <b>0.81 with RPC1</b> and <b>0.65 with RPC2</b>, and practically zero with RPC3 (0.16) and RPC4 (−0.11).
+  In other words: yield is accounted for by vigour and nutrition, not by phenology. In the correlation
+  circle its vector should fall between axes 1 and 2.</p>
+</div>
+
+<h3>Workshop deliverable</h3>
+<p>A report with your own analysis of the integrated project, covering: verification of the assumptions,
+justification of the number of components with at least three criteria, the rotated solution with the axes
+named, the correlation circle and the map of individuals with their percentages in the labels, the
+reading of where yield sits, and a methods paragraph and a results paragraph written by you
+—not the automatically generated ones, although you may start from them—.</p>
+
+<!-- ================================================================= -->
+<h2 id="glosario">Glossary</h2>
+<div class="tabla-envoltura">
+<table>
+  <tbody>
+    <tr><td><b>Eigenvalue (λ)</b></td><td>Variance captured by a component.</td></tr>
+    <tr><td><b>Eigenvector</b></td><td>Direction of the component in the space of the variables.</td></tr>
+    <tr><td><b>Loading</b> (<i>carga</i>)</td><td>Correlation between a variable and a component. It is what you interpret.</td></tr>
+    <tr><td><b>Score</b> (<i>puntuación</i>)</td><td>Coordinate of an individual on a component.</td></tr>
+    <tr><td><b>Communality</b></td><td>Proportion of the variance of a variable explained by the retained components.</td></tr>
+    <tr><td><b>cos²</b></td><td>Quality of representation of a point on an axis or a plane.</td></tr>
+    <tr><td><b>Contribution</b></td><td>Percentage share of an element in building an axis.</td></tr>
+    <tr><td><b>Simple structure</b></td><td>The ideal situation after rotation: each variable loads on a single component.</td></tr>
+    <tr><td><b>KMO / MSA</b></td><td>Sampling adequacy, overall and per variable.</td></tr>
+    <tr><td><b>RMSR</b></td><td>Root mean square residual between the observed matrix and the reproduced one.</td></tr>
+    <tr><td><b>Test value</b></td><td>Departure of the centroid of a category from the origin, in standard normal units.</td></tr>
+    <tr><td><b>Supplementary element</b></td><td>A variable or an individual projected without having built the axes.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>How to cite PCAPro</h2>
+<p>If you publish a paper, a thesis or a report with results obtained on this platform,
+cite the software. It is not a formality: it is what keeps the work of maintaining and improving it
+going, and what lets others trace what your analyses were done with.</p>
+
+<div class="caja clave">
+  <p><b>Reference</b></p>
+  <p>Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided principal component analysis</i> (version 1.1.0) [software]. Zenodo. https://doi.org/10.5281/zenodo.22649709</p>
+  <p><b>In the text:</b> “The analysis was carried out in PCAPro (Barrera-Guzmán, 2026)”.</p>
+</div>
+
+<p>The identifier <b>10.5281/zenodo.22649709</b> is permanent and always points to the most
+recent version. If you need to cite the exact version you used, every release also has its own
+DOI, shown on the deposit page.</p>
+
+<p>The same reference appears in section <b>6.4</b> of the platform, with buttons to copy it
+in APA or in BibTeX; in the methods paragraph of the report it generates; and in the
+<span class="marcador">CITATION.bib</span> file of the results ZIP package.</p>
+
+<h2>Further reading</h2>
+
+<ul>
+  <li>Jolliffe, I. T. (2002). <i>Principal Component Analysis</i> (2nd ed.). Springer. — The canonical reference.</li>
+  <li>Kassambara, A. (2017). <i>Practical Guide to Principal Component Methods in R</i>. STHDA. — Very visual; cos², contributions and supplementary elements.</li>
+  <li>Lebart, L., Morineau, A. and Piron, M. <i>Statistique exploratoire multidimensionnelle</i>. Dunod. — The French school; test values.</li>
+  <li>Hair, J. F. et al. <i>Multivariate Data Analysis</i>. — Rules of thumb for sample size and loading thresholds.</li>
+  <li>Horn, J. L. (1965). A rationale and test for the number of factors in factor analysis. <i>Psychometrika</i>, 30, 179–185.</li>
+  <li>Kaiser, H. F. (1958). The varimax criterion for analytic rotation in factor analysis. <i>Psychometrika</i>, 23, 187–200.</li>
+</ul>
+
+<p class="pie">Participant's manual · Principal Component Analysis workshop with PCAPro ·
+Universidad Autónoma Chapingo. The data sets are simulated and for teaching use only.</p>
+
+</div>
+</body>
+</html>
