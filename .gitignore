@@ -38,3 +38,8 @@ curso/evaluacion.html
 
 # Documento de trabajo interno del envío a JOSS
 paper/LISTA_DE_ENVIO.md
+
+# Versión de escritorio con Tauri: vive solo en el equipo, no se publica en el
+# repositorio (decisión del 20 oct 2026). Su propio .gitignore ya excluye app/,
+# node_modules/ y los directorios de compilación de Rust.
+escritorio/
