@@ -39,6 +39,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **Three more strings stayed in Spanish when the interface was in English**, found by walking the
+  whole app in English a second time. The accessible name of the help button (`aria-label`) had no
+  way of being translated at all: the apply pass handled `data-i18n-title` and `data-i18n-ph` but
+  not the accessible name, so `data-i18n-aria` was added for the buttons that carry only an icon.
+  The "Scaling · key decision" heading of Block 1 is split by a `<span>`, so it is now marked
+  `data-i18n-auto` and translated whole. And the citation on the home screen and in the report read
+  "(versión 1.1.0) [software]": `Rep.CITATION.apa` was a fixed string built when the file loaded,
+  before the language was decided, and is now a getter, so it also follows the switch without a
+  reload.
+
 - **Five strings stayed in Spanish when the interface was in English.** Four were missing from the
   dictionary — the figure-export error, the single-axis label of the factor maps, and the axis
   captions of the missing-data map and of the box plots — and one, the "No grouping" option of the

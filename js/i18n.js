@@ -1414,6 +1414,8 @@ I18N.en = {
   '2 · La matemática, en una página': '2 · The mathematics, in one page',
   '3 · Postulados y supuestos del ACP <span class="pill" style="margin-left:6px">esencial</span>':
     '3 · Postulates and assumptions of PCA <span class="pill" style="margin-left:6px">essential</span>',
+  'Estandarización <span class="pill" style="font-size:.68rem">decisión clave</span>':
+    'Scaling <span class="pill" style="font-size:.68rem">key decision</span>',
   '4 · Pruebas previas obligatorias: Bartlett, KMO, determinante':
     '4 · Mandatory preliminary tests: Bartlett, KMO, determinant',
   '5 · Tamaño de muestra: cuánta gente / cuántas parcelas hacen falta':
@@ -1713,6 +1715,7 @@ I18N.en = {
   'análisis factorial guiado': 'guided factor analysis',
   'Volver al portal de la LABG Suite': 'Back to the LABG Suite portal',
   'Atajos de teclado (?)': 'Keyboard shortcuts (?)',
+  'Atajos de teclado': 'Keyboard shortcuts',
   'Anterior': 'Previous',
   'Siguiente': 'Next',
 };
@@ -1768,6 +1771,10 @@ I18N.apply = function () {
   });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => {
     el.placeholder = t(el.getAttribute('data-i18n-ph'));
+  });
+  /* el nombre accesible, para los botones que sólo llevan un ícono */
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
   });
 };
 

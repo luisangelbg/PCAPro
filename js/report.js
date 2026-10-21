@@ -98,9 +98,14 @@ Rep.blobBytes = blob => blob.arrayBuffer().then(b => new Uint8Array(b));
 /* La referencia vive aquí y en CITATION.cff; al publicarse el artículo hay que
    actualizar las dos. El DOI de concepto apunta siempre a la última versión. */
 Rep.CITATION = {
-  apa: 'Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided ' +
-       'principal component analysis</i> (versión 1.1.0) [software]. Zenodo. ' +
-       'https://doi.org/10.5281/zenodo.22649709',
+  /* se lee cada vez, no al cargar el archivo: así sigue al conmutador de idioma
+     sin recargar la página, y no depende de que el idioma ya esté decidido */
+  get apa() {
+    return 'Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided ' +
+      'principal component analysis</i> ' +
+      TT('(versión 1.1.0) [software]. Zenodo. ', '(version 1.1.0) [software]. Zenodo. ') +
+      'https://doi.org/10.5281/zenodo.22649709';
+  },
   bibtex: [
     '@software{pcapro,',
     '  author    = {Barrera-Guzm\u00e1n, Luis \u00c1ngel},',
