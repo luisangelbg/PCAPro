@@ -1762,8 +1762,11 @@ I18N.apply = function () {
     if (el.dataset.es == null) el.dataset.es = el.innerHTML.replace(/\s+/g, ' ').trim();
     el.innerHTML = lang === 'es' ? el.dataset.es : t(el.dataset.es);
   });
-  /* whole blocks written once per language (long theory sections) */
-  document.querySelectorAll('[data-lang]').forEach(el => {
+  /* whole blocks written once per language (long theory sections).
+     The buttons of the ES | EN switch also carry data-lang —that is how they say
+     which language they select— so they are left out: hiding the inactive one
+     left a single button in the bar instead of the suite's two-button pill. */
+  document.querySelectorAll('[data-lang]:not(.lang-seg > button)').forEach(el => {
     el.hidden = el.getAttribute('data-lang') !== lang;
   });
   document.querySelectorAll('[data-i18n-title]').forEach(el => {

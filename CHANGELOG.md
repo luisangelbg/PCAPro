@@ -39,6 +39,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **The language switch showed one button instead of the suite's ES | EN pill.** The pass that
+  shows or hides the theory blocks written once per language selected them with `[data-lang]`, and
+  the two buttons of the switch carry `data-lang` as well —that is how each one says which language
+  it selects— so the button of the inactive language was hidden and the bar was left with a single
+  one. The selector now leaves those buttons out. PCAPro was the only app of the suite affected,
+  because it is the only one with `data-lang` blocks: its forty theory topics are written in both
+  languages rather than translated through the dictionary.
+
 - **Three more strings stayed in Spanish when the interface was in English**, found by walking the
   whole app in English a second time. The accessible name of the help button (`aria-label`) had no
   way of being translated at all: the apply pass handled `data-i18n-title` and `data-i18n-ph` but
