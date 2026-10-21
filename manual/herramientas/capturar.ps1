@@ -12,17 +12,22 @@ param(
 )
 $edge = 'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
 $img = Join-Path (Split-Path $PSScriptRoot -Parent) "img\$Nombre.png"
+# -Nombre puede llevar carpeta (en\app-inicio, para el manual en inglés): se crea si falta
+$carpeta = Split-Path $img -Parent
+if (-not (Test-Path $carpeta)) { New-Item -ItemType Directory -Force -Path $carpeta | Out-Null }
 $receta = $Receta.Replace('#', '%23').Replace(' ', '%20')
 $url = "http://localhost:8790/manual/herramientas/captura.html?w=$Ancho&h=$Alto&do=$receta"
 
 & $edge --headless=new --disable-gpu --hide-scrollbars "--window-size=$Ancho,$Alto" --force-device-scale-factor=2 "--virtual-time-budget=$Tiempo" "--screenshot=$img" $url 2>$null | Out-Null
 if (Test-Path $img) { Write-Output "captura: $img" } else { Write-Output "NO se generó la captura" }
 
-if ($Receta -match 'marks:') {
-  # la salida de --dump-dom solo se recoge bien pasando por un archivo
-  $tmp = Join-Path $env:TEMP "pcapro_marcas_$Nombre.html"
+# siempre se lee el informe: trae las marcas y, sobre todo, los pasos que fallaron
+if ($Receta) {
+  # la salida de --dump-dom solo se recoge bien pasando por un archivo; el nombre va sin carpetas
+  $tmp = Join-Path $env:TEMP ("pcapro_marcas_" + ($Nombre -replace '[\\/]', '_') + ".html")
   & $edge --headless=new --disable-gpu --hide-scrollbars "--window-size=$Ancho,$Alto" "--virtual-time-budget=$Tiempo" --dump-dom $url 2>$null | Out-File -FilePath $tmp -Encoding utf8
   # el comentario de captura.html también menciona <pre id="marcas">: se busca el elemento real
   $m = [regex]::Match((Get-Content $tmp -Raw), '</iframe>\s*<pre id="marcas">([\s\S]*?)</pre>')
-  if ($m.Success) { Write-Output ([System.Net.WebUtility]::HtmlDecode($m.Groups[1].Value)) } else { Write-Output 'sin marcas' }
+  if ($m.Success -and $m.Groups[1].Value.Trim()) { Write-Output ([System.Net.WebUtility]::HtmlDecode($m.Groups[1].Value)) }
+  elseif ($Receta -match 'marks:') { Write-Output 'sin marcas' }
 }

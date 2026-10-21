@@ -11,10 +11,10 @@
               "http://localhost:8790/manual/herramientas/captura.html?w=1400&h=860&do=lang:es;ex:iris;process;scroll:%23card19"
      Con --dump-dom en lugar de --screenshot, la receta deja en <pre id="marcas"> la posición de los
      elementos pedidos con marks:, en porcentaje de la captura, para colocar las marcas numeradas.
-     Pasos: lang:es|en · ex:iris|sim (carga un ejemplo) · file:archivo.csv (uno de datos/) ·
+     Pasos: lang:es|en · tema:light|dark · barra:abre|cierra · ex:iris|sim (carga un ejemplo) · file:archivo.csv (uno de datos/) ·
             uncheck:Variable (la desmarca en la selección rápida) · process (prepara la matriz y diagnostica) ·
             step:N (botón de la barra; el 5b es step:7) · run:idBoton (espera a que termine) · wait:ms ·
-            scroll:selector[,desfase] · click:selector · open:selector (abre un <details>) ·
+            scroll:selector[,desfase] · sec:1.5[,desfase] (tarjeta por número de sección) · click:selector · open:selector (abre un <details>) ·
             shut:selector (cierra todos los <details> que coincidan) ·
             bloques:Nombre=var1,var2|Nombre2=var3,var4 (bloques del AFM) ·
             select:selector=valor · hide:selector · top · marks:sel1|sel2|… -->
@@ -35,11 +35,25 @@
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const q = s => d.querySelector(s);
   await sleep(800);
+  /* un paso que falla ya no se lleva por delante el resto de la receta en silencio:
+     se anota en <pre id="marcas">, que es lo que imprime capturar.ps1 */
+  const fallos = [];
   for (const raw of (p.get('do') || '').split(';').filter(Boolean)) {
+   try {
     const i = raw.indexOf(':');
     const cmd = i < 0 ? raw : raw.slice(0, i), arg = i < 0 ? '' : decodeURIComponent(raw.slice(i + 1));
     /* el selector no se entera de un cambio hecho por código: se mueve a mano */
     if (cmd === 'lang') { w.I18N.set(arg); const s = q('#langSelect'); if (s) s.value = arg; await sleep(500); }
+    /* tema:light|dark — el navegador sin ventana sigue el tema del sistema, que suele ser oscuro;
+       las figuras del manual van en claro, así que se fija a mano */
+    else if (cmd === 'tema') { w.LABG.theme.set(arg); await sleep(600); }
+    /* barra:abre|cierra — la barra lateral de bloques del navegador común */
+    else if (cmd === 'barra') {
+      const b = q('.lnav-toggle, .lnav-collapse, [data-lnav-toggle]');
+      const col = d.documentElement.classList.contains('lnav-col') || d.body.classList.contains('lnav-col');
+      if (b && ((arg === 'cierra' && !col) || (arg === 'abre' && col))) b.click();
+      await sleep(600);
+    }
     else if (cmd === 'ex') { q(arg === 'sim' ? '#exampleSim' : '#exampleIris').click(); await sleep(2500); }
     /* file:nombre.csv — un archivo de datos/, entregado por el mismo selector que usa quien lo carga a mano */
     else if (cmd === 'file') {
@@ -66,6 +80,21 @@
       await sleep(300);
       const y = q(sel).getBoundingClientRect().top + w.scrollY - (+off || 12);
       f.style.top = -Math.max(0, y) + 'px'; await sleep(500);
+    }
+    /* sec:1.5[,desfase] — lleva a la tarjeta cuyo título empieza por ese número de sección.
+       El número no cambia con el idioma, así que la misma receta vale en español y en inglés. */
+    else if (cmd === 'sec') {
+      const [num, off] = arg.split(',');
+      const h = [...d.querySelectorAll('.panel:not([hidden]) h2, .card h2')]
+        .find(x => x.textContent.trim().replace(/\s+/g, ' ').startsWith(num + ' ·'));
+      if (h) {
+        const caja = h.closest('.card') || h;
+        f.style.height = Math.max(H, d.documentElement.scrollHeight + 50) + 'px';
+        await sleep(300);
+        const y = caja.getBoundingClientRect().top + w.scrollY - (+off || 12);
+        f.style.top = -Math.max(0, y) + 'px';
+      }
+      await sleep(500);
     }
     else if (cmd === 'click') { q(arg).click(); await sleep(800); }
     else if (cmd === 'open') { q(arg).open = true; await sleep(500); }
@@ -98,6 +127,11 @@
       });
       document.getElementById('marcas').textContent = out.join('\n');
     }
+   } catch (e) { fallos.push('PASO FALLIDO  ' + raw + '  →  ' + e.message); }
+  }
+  if (fallos.length) {
+    const n = document.getElementById('marcas');
+    n.textContent = fallos.join('\n') + (n.textContent ? '\n' + n.textContent : '');
   }
   document.title = 'ready';
 })();
