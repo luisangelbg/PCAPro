@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Chapter 4 · Block 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  /* fórmulas centradas */
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; }
+  td.si-voto { color: var(--negro); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b2" data-pestana="B2" data-orden="4" style="--acento: var(--b2)">
+  <div class="cap-apertura">
+    <div class="cap-num">4</div>
+    <div class="cap-etiqueta">Chapter four · Block 2</div>
+    <h1>Extraction</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">What extraction computes, how to read eigenvalues, variance and loadings, and how to decide how many components to keep with eight criteria that hardly ever agree. It ends with what Block 2 shows when the method is CA, MCA, FAMD or MFA, and with two complete analyses.</p>
+    <div class="cap-franja"><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span><span class="k2"></span></div>
+    <ul class="cap-contenido">
+      <li><b>4.1</b>Eigenvalues, variance and loadings</li>
+      <li><b>4.2</b>The eight retention criteria</li>
+      <li><b>4.3</b>The consensus and the decision</li>
+      <li><b>4.4</b>Tables, figures and downloads</li>
+      <li><b>4.5</b>Inertia and axes in CA, MCA, FAMD and MFA</li>
+      <li><b>4.6</b>Step by step: iris and seeds</li>
+    </ul>
+  </div>
+
+  <!-- 4.1 -->
+  <h2 id="s4-1"><span class="num">4.1</span>Eigenvalues, variance and loadings</h2>
+  <p class="lead">Block 2 does the central computation of PCA: it decomposes the prepared matrix into axes ordered from greatest to least variance. Everything you will see afterwards —rotation, maps, interpretation— is built from what comes out here.</p>
+  <p>The block opens from the step bar once you have prepared the matrix in Block 1. It has a theory card with three topics and, below it, the <span class="ui">2.1 · Extract the components</span> card, which recalls how many individuals and variables go in and on which matrix the computation will be made: the <b>correlation</b> matrix if you standardised, the <b>covariance</b> matrix with any other scaling.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>The four products of extraction</div>
+    <p>The spectral decomposition is computed on the correlation or covariance matrix. Four objects come out:</p>
+    <ul>
+      <li><b>Eigenvalues</b> λ₁ ≥ λ₂ ≥ … ≥ λ<sub>p</sub>: the variance each axis takes up. With correlations they add up to <i>p</i>, because each standardised variable contributes 1.</li>
+      <li><b>Eigenvectors</b>: the coefficients of the linear combination that defines each component.</li>
+      <li><b>Scores</b>: the position of each individual along each axis, the new reduced table.</li>
+      <li><b>Loadings</b>: the correlation between each variable and each component. That is what is interpreted.</li>
+    </ul>
+  </div>
+
+  <div class="formula">% of variance<sub>k</sub> = λ<sub>k</sub> / Σλ<br>loading<sub>jk</sub> = v<sub>jk</sub> · √λ<sub>k</sub> / s<sub>j</sub><br>communality<sub>j</sub> = Σ<sub>k retained</sub> loading<sub>jk</sub>²</div>
+
+  <table class="compacta">
+    <caption><b>Table 4.1.</b> The options of card 2.1.</caption>
+    <thead><tr><th style="width:30%">Option</th><th>Values</th><th style="width:36%">Advice</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Parallel analysis: data generation</span></td><td><span class="ui">Permutation of your data (recommended)</span> shuffles each column separately; <span class="ui">Random normal data (classic Horn)</span> simulates normal data.</td><td>Permutation assumes no normality and also works with covariances.</td></tr>
+      <tr><td><span class="ui">Repetitions</span></td><td>200 (fast), 500 (recommended) or 1000.</td><td>500 is a good balance; with 1000 the 95th percentile varies less from run to run.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The indicators of card 2.2</h3>
+  <table>
+    <caption><b>Table 4.2.</b> The six indicators of the extraction.</caption>
+    <thead><tr><th style="width:24%">Indicator</th><th>What it says</th><th style="width:28%">Colour</th></tr></thead>
+    <tbody>
+      <tr><td><b>Possible components</b></td><td>As many as there are active variables.</td><td>—</td></tr>
+      <tr><td><b>Total variance</b></td><td>Equal to <i>p</i> with correlations; in squared units with covariances.</td><td>—</td></tr>
+      <tr><td><b>PC1</b></td><td>Percentage of variance of the first axis and its λ₁.</td><td>—</td></tr>
+      <tr><td><b>PC1 + PC2</b></td><td>The variance of the factor plane that Block 4 will draw.</td><td>green ≥ 60 % · amber ≥ 45 % · red</td></tr>
+      <tr><td><b>Recommendation</b></td><td>The number of components given by the consensus of the eight criteria (section 4.3).</td><td>—</td></tr>
+      <tr><td><b>Retained now</b></td><td>Those you are keeping and how much variance they add up to. It starts equal to the recommendation.</td><td>green ≥ 70 % · amber ≥ 50 % · red</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b2-valores.png" alt="Cards 2.1 and 2.2 with the seeds file">
+      <span class="marca" style="left:27%;top:12.6%">1</span>
+      <span class="marca" style="left:63%;top:12.6%">2</span>
+      <span class="marca" style="left:23.2%;top:23.9%">3</span>
+      <span class="marca" style="left:63.6%;top:41%">4</span>
+      <span class="marca" style="left:79.8%;top:39%">5</span>
+      <span class="marca" style="left:95.1%;top:43.5%">6</span>
+      <span class="marca" style="left:60.4%;top:50.8%">7</span>
+      <span class="marca" style="left:81.8%;top:50.8%">8</span>
+      <span class="marca" style="left:87.2%;top:70.4%">9</span>
+    </div>
+    <figcaption><b>Figure 4.1.</b> Cards <span class="ui">2.1</span> and <span class="ui">2.2</span> with <code>practice2_seeds.csv</code>, its nine active variables and z standardisation.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>How the matrices of the parallel analysis are generated.</li>
+    <li><span class="n">2</span>How many random matrices are simulated.</li>
+    <li><span class="n">3</span>Launches the extraction.</li>
+    <li><span class="n">4</span>Variance of the 1–2 plane, in amber: 58 %.</li>
+    <li><span class="n">5</span>The number the consensus suggests.</li>
+    <li><span class="n">6</span>The components you are keeping now, in red: 38.6 %.</li>
+    <li><span class="n">7</span>95th percentile of the random eigenvalues.</li>
+    <li><span class="n">8</span>Which references each component exceeds.</li>
+    <li><span class="n">9</span>PC4 exceeds the broken stick, but the criterion already stopped at PC2.</li>
+  </ul>
+
+  <h3>The table of eigenvalues</h3>
+  <table class="compacta">
+    <caption><b>Table 4.3.</b> Columns of the table of eigenvalues.</caption>
+    <thead><tr><th style="width:26%">Column</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td>Eigenvalue λ</td><td>The variance of the component.</td></tr>
+      <tr><td>± approx. SE</td><td>Anderson's asymptotic standard error, λ·√(2/(n−1)), valid under multivariate normality.</td></tr>
+      <tr><td>% variance · % cumulative</td><td>λ divided by the total variance, and its sum up to that component.</td></tr>
+      <tr><td>λᵢ − λᵢ₊₁</td><td>The distance to the next eigenvalue.</td></tr>
+      <tr><td>random p95</td><td>The value that chance produces 5 % of the time (parallel analysis).</td></tr>
+      <tr><td>Broken stick</td><td>The variance expected if it were shared out at random.</td></tr>
+      <tr><td>Criteria that retain it</td><td>The labels <b>Kaiser</b> (λ &gt; 1, with correlations only), <b>Horn</b> (λ &gt; p95) and <b>stick</b> (λ &gt; broken stick), evaluated separately on each row.</td></tr>
+      <tr><td>Retained</td><td>✔ on the components you are keeping.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · the labels are not the criteria</div>
+    <p>The labels in the table compare each row with its reference; the criteria, by contrast, count components <b>consecutively from the first</b> and stop at the first one that fails. In figure 4.1, PC4 carries the “stick” label (1.0052 &gt; 0.9956), but PC2 no longer had it (1.7377 &lt; 1.829): the broken-stick criterion retains a single component. An isolated label after a gap does not count.</p>
+  </div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>When two axes cannot be told apart</div>
+    <p>If two consecutive eigenvalues differ by less than their standard error, the two axes are interchangeable: another sample could rotate them within their plane. With the seeds, λ₂ − λ₃ = 0.2456 and the SE of λ₂ is 0.2253: PC2 and PC3 are almost tied. The 2–3 plane is stable, but the orientation of each axis is not, and reading them separately is risky. It is a good reason to rotate in Block 3.</p>
+  </div>
+
+  <!-- 4.2 -->
+  <h2 id="s4-2"><span class="num">4.2</span>The eight retention criteria</h2>
+  <p>The <span class="ui">2.3 · How many components should be retained?</span> card computes eight published rules and shows, for each one, how many components it would retain and how much variance they would add up to. None is the right one on its own; each has a known bias.</p>
+
+  <table>
+    <caption><b>Table 4.4.</b> The eight criteria, in the order of the app, with their weight in the consensus.</caption>
+    <thead><tr><th style="width:24%">Criterion</th><th>The rule the app applies</th><th style="width:25%">Known bias</th><th class="c" style="width:7%">Weight</th></tr></thead>
+    <tbody>
+      <tr><td><b>Parallel analysis (Horn)</b></td><td>Consecutive components whose λ exceeds the 95th percentile of the λ of 200, 500 or 1000 matrices without structure.</td><td>The best rated in simulations.</td><td class="c">3</td></tr>
+      <tr><td><b>Kaiser–Guttman (λ &gt; 1)</b></td><td>λ &gt; 1. With covariances it becomes <b>Mean of the λ</b>: λ greater than the average.</td><td>It overestimates; it retains axes even in data without structure.</td><td class="c">1</td></tr>
+      <tr><td><b>Broken stick</b></td><td>Consecutive components whose λ exceeds b<sub>k</sub> = (total variance / p) · Σ<sub>i=k..p</sub> 1/i.</td><td>Conservative; common in ecology.</td><td class="c">2</td></tr>
+      <tr><td><b>Velicer's MAP</b></td><td>The number of components that minimises the mean squared partial correlation. It is always computed on correlations.</td><td>It tends to fall short with little data.</td><td class="c">2</td></tr>
+      <tr><td><b>Scree elbow (Cattell)</b></td><td>The component where the fall of λ changes slope the most (largest second difference), counting that component.</td><td>Visual by nature; it is worth looking at.</td><td class="c">1</td></tr>
+      <tr><td><b>Cumulative variance ≥ 70 %</b></td><td>The first <i>k</i> whose cumulative variance reaches 70 %.</td><td>It is always reached by adding axes.</td><td class="c">1</td></tr>
+      <tr><td><b>Cumulative variance ≥ 80 %</b></td><td>The same with 80 %.</td><td>A demanding threshold.</td><td class="c">1</td></tr>
+      <tr><td><b>Jolliffe (λ &gt; 0.7)</b></td><td>λ &gt; 0.7. With covariances it repeats the mean rule and the note says “does not apply without standardising”.</td><td>A relaxed version of Kaiser; it retains even more.</td><td class="c">1</td></tr>
+    </tbody>
+  </table>
+
+  <p>With the seeds the eight criteria spread out between 1 and 4 components. It is not an error of the app: it is what usually happens when there is one dominant axis —size, which brings four variables together— and other, weaker axes. The MAP table, below the list, shows why Velicer settles for one: the mean squared partial correlation falls from 0.136 to 0.0855 when the first is extracted and rises again with the second (0.115).</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · which criterion do I follow?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">If…</th><th>then</th></tr></thead>
+      <tbody>
+        <tr><td>Horn, broken stick and MAP <b>agree</b></td><td>That is the number. The other criteria only confirm it.</td></tr>
+        <tr><td>Horn gives <b>more</b> than the broken stick and the MAP</td><td>Stay within the range between the two and choose by interpretability (section 4.3).</td></tr>
+        <tr><td>Only Kaiser or Jolliffe ask for one more axis</td><td>Do not add it because of them: they are the ones that overestimate most.</td></tr>
+        <tr><td>The PCA is on <b>covariances</b></td><td>Ignore Kaiser and Jolliffe; the mean rule is their equivalent, but Horn by permutation is still valid.</td></tr>
+        <tr><td>An axis meets the numbers but <b>cannot be named</b></td><td>Do not retain it: the interpretability criterion prevails.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">The parallel analysis uses random numbers: on repeating the extraction the 95th percentile changes by a few hundredths (1.569, 1.578 and 1.555 for PC1 of the seeds in three runs). If a λ falls within 0.02 of its percentile, Horn's vote may change from run to run; raise it to 1000 repetitions before deciding.</p>
+  </div>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b2-criterios.png" alt="Card 2.3 with the eight criteria, the MAP and the decision">
+      <span class="marca" style="left:90%;top:6.9%">1</span>
+      <span class="marca" style="left:90%;top:18.6%">2</span>
+      <span class="marca" style="left:90%;top:30.2%">3</span>
+      <span class="marca" style="left:92%;top:66.1%">4</span>
+      <span class="marca" style="left:12.9%;top:86.9%">5</span>
+      <span class="marca" style="left:56.5%;top:95.9%">6</span>
+    </div>
+    <figcaption><b>Figure 4.2.</b> The <span class="ui">2.3 · How many components should be retained?</span> card with the seeds, right after extracting.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Horn: 3 components, 74.5 % of the variance.</li>
+    <li><span class="n">2</span>✔ on the criteria that agree with the retained number.</li>
+    <li><span class="n">3</span>Elbow: 2 components.</li>
+    <li><span class="n">4</span>The minimum of the MAP, with one component.</li>
+    <li><span class="n">5</span>Your decision: the number and the consensus button.</li>
+    <li><span class="n">6</span>Warnings about the variance kept.</li>
+  </ul>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b2-scree.png" alt="Scree plot of the seeds with Kaiser and parallel analysis">
+      <span class="marca" style="left:27.5%;top:18.7%">1</span>
+      <span class="marca" style="left:91.9%;top:60.6%">2</span>
+      <span class="marca" style="left:73.3%;top:66%">3</span>
+      <span class="marca" style="left:33.8%;top:87.6%">4</span>
+      <span class="marca" style="left:94.3%;top:95.1%">5</span>
+    </div>
+    <figcaption><b>Figure 4.3.</b> The scree plot of the seeds. <b>1</b> The band of the retained components. <b>2</b> Kaiser's line at λ = 1. <b>3</b> The 95th percentile of the parallel analysis: PC3 falls above it and PC4 below. <b>4</b> The editing panel. <b>5</b> Format, resolution, background and download.</figcaption>
+  </figure>
+
+  <!-- 4.3 -->
+  <h2 id="s4-3"><span class="num">4.3</span>The consensus and the decision</h2>
+  <p>The recommendation is a <b>weighted mode</b>: each criterion votes for its number of components with the weight in table 4.4 —Horn 3; broken stick and MAP 2; the rest 1— and the number with the most votes wins. If there is a tie, the <b>smaller</b> one wins.</p>
+
+  <table class="compacta">
+    <caption><b>Table 4.5.</b> The count of votes with the nine variables of the seeds.</caption>
+    <thead><tr><th class="c" style="width:12%">k</th><th>Criteria that propose it</th><th class="c" style="width:12%">Votes</th></tr></thead>
+    <tbody>
+      <tr><td class="c si-voto">1</td><td>Broken stick (2) · Velicer's MAP (2)</td><td class="c si-voto">4</td></tr>
+      <tr><td class="c">2</td><td>Scree elbow (1)</td><td class="c">1</td></tr>
+      <tr><td class="c si-voto">3</td><td>Parallel analysis (3) · Cumulative variance ≥ 70 % (1)</td><td class="c si-voto">4</td></tr>
+      <tr><td class="c">4</td><td>Kaiser (1) · Cumulative variance ≥ 80 % (1) · Jolliffe (1)</td><td class="c">3</td></tr>
+      <tr><td colspan="3">A tie between 1 and 3 with 4 votes: the app recommends <b>1</b>, the smaller one.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Your decision</h3>
+  <p>The <span class="ui">Components to retain:</span> field accepts any number between 1 and <i>p</i>. Changing it updates the indicators, the table of loadings, the four figures and the text below; the <span class="ui">Use the consensus recommendation</span> button returns to the suggested number. Three warnings can appear in that text:</p>
+  <table class="compacta">
+    <caption><b>Table 4.6.</b> Warnings about the decision.</caption>
+    <thead><tr><th style="width:36%">Situation</th><th>Warning</th></tr></thead>
+    <tbody>
+      <tr><td>The variance kept is below 50 %</td><td>In red: less than half the information is represented.</td></tr>
+      <tr><td>More than 95 % with more than two components</td><td>In amber: you are probably not reducing dimensions.</td></tr>
+      <tr><td>A single component</td><td>In amber: without a factor plane there is no rotation and there are no maps; it is usual to retain PC2 while stating how much it adds.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco"><img src="../img/en/app-b2-figcriterios.png" alt="Figure comparing the retention criteria"></div>
+    <figcaption><b>Figure 4.4.</b> The <b>Comparison of retention criteria</b> figure sums table 4.4 up in a single image: one point per criterion at the number it proposes and the red line of “your choice”. It updates when you change the number of components, and it is the one worth including as supplementary material of a paper.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · what changing the number erases</div>
+    <p>Changing the retained components <b>erases the rotation and the maps</b> computed afterwards: Blocks 3 and 4 have to be computed again with the new number. Pressing <span class="ui">Extract components →</span> again keeps the number you chose by hand; preparing the matrix again in Block 1 does not: the extraction starts from scratch with the recommendation.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · the ✔ marks of the list</div>
+    <p>The list of criteria marks with ✔ those that agree with the number retained <b>at the moment of extracting</b>. If you later change the number by hand, the list is not redrawn: the marks stay on the criteria of the previous number. Figure 4.4 and the indicators do update.</p>
+  </div>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>How to report the decision</div>
+    <p>“Three components were retained, explaining 74.5 % of the variance, on the basis of Horn's parallel analysis (500 permutations, 95th percentile) and the interpretability of the solution; the broken stick and Velicer's MAP suggested one, and the Kaiser criterion, four.” Naming the criteria that disagree is more honest than citing only the one that suits you.</p>
+  </div>
+
+  <!-- 4.4 -->
+  <h2 id="s4-4"><span class="num">4.4</span>Tables, figures and downloads</h2>
+  <p>The <span class="ui">2.4 · Extraction figures</span> card gathers four editable figures, and <span class="ui">2.5 · Component matrix (unrotated loadings)</span> holds the table of loadings and the downloads of the block.</p>
+
+  <p>The table has one column per retained component. The loadings that exceed the threshold are highlighted in colour —violet if positive, red if negative— and the rest are dimmed. <b>Dominant loading</b> indicates the component with the largest absolute loading. The threshold only changes the highlighting, not the computations.</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · which loading threshold do I use?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">If your sample has…</th><th>highlight from</th></tr></thead>
+      <tbody>
+        <tr><td>n ≥ 300</td><td>0.30 to 0.40</td></tr>
+        <tr><td>100 ≤ n &lt; 300</td><td>0.40 (the default value)</td></tr>
+        <tr><td>n &lt; 100</td><td>0.55, as the size recommendation of Block 1 asks</td></tr>
+        <tr><td>You want only what is very clear, for a summary</td><td>0.70: the variable shares half its variance with the axis</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">A loading of 0.40 amounts to 16 % of variance shared with the component; one of 0.70, to 49 %.</p>
+  </div>
+
+  <table>
+    <caption><b>Table 4.8.</b> The downloads of Block 2, in CSV.</caption>
+    <thead><tr><th style="width:34%">Button</th><th>Columns</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Eigenvalues (CSV)</span></td><td>Component, eigenvalue, SE, % of variance, % cumulative, difference, random p95, broken stick and whether it was retained.</td></tr>
+      <tr><td><span class="ui">⬇ Loadings (CSV)</span></td><td>The loadings of <b>every</b> component, not only the retained ones, and the communality with the retained ones.</td></tr>
+      <tr><td><span class="ui">⬇ Individual scores (CSV)</span></td><td>The identifier, the qualitative variables and the scores on every component.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · the scale of the scores</div>
+    <p>The downloaded scores are the projections of the prepared matrix onto the eigenvectors: their variance on each component is λ<sub>k</sub>, not 1. If you are going to use them in another analysis that needs them in standard units, divide each column by its standard deviation.</p>
+  </div>
+
+  <p>The <span class="ui">Go to rotation →</span> button leads to Block 3, which was unlocked when you extracted.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b2-cargas.png" alt="Card 2.5 with the loadings of three components">
+      <span class="marca" style="left:60.5%;top:15.1%">1</span>
+      <span class="marca" style="left:28%;top:19.2%">2</span>
+      <span class="marca" style="left:60.8%;top:26.6%">3</span>
+      <span class="marca" style="left:36.1%;top:62.7%">4</span>
+      <span class="marca" style="left:67%;top:72.9%">5</span>
+      <span class="marca" style="left:66.1%;top:94%">6</span>
+    </div>
+    <figcaption><b>Figure 4.5.</b> Card <span class="ui">2.5</span> with the seeds and three components retained.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Poorly represented variables (communality &lt; 0.5).</li>
+    <li><span class="n">2</span>Threshold for highlighting: 0.30 to 0.70.</li>
+    <li><span class="n">3</span>Communality with the retained components.</li>
+    <li><span class="n">4</span>A negative loading highlighted, in red.</li>
+    <li><span class="n">5</span>Moisture_pct: 0.014, almost none of its variance.</li>
+    <li><span class="n">6</span>Downloads and the step to Block 3.</li>
+  </ul>
+
+  <table>
+    <caption><b>Table 4.7.</b> The figures of Block 2.</caption>
+    <thead><tr><th style="width:28%">Figure</th><th>What it shows</th><th style="width:32%">Options of its own</th></tr></thead>
+    <tbody>
+      <tr><td><b>Scree plot</b></td><td>The λ as bars and a line, the band of the retained ones, Kaiser and Horn's 95th percentile.</td><td>Y axis in λ or in % of variance; show the broken stick; multicoloured bars.</td></tr>
+      <tr><td><b>Horn's parallel analysis</b></td><td>The observed λ against the random mean and 95th percentile.</td><td>Mean–p95 band and the line of the mean.</td></tr>
+      <tr><td><b>Cumulative variance</b></td><td>The cumulative curve with a threshold and your choice marked.</td><td>Threshold in % (80 by default), area under the curve.</td></tr>
+      <tr><td><b>Comparison of criteria</b></td><td>One point per criterion at the number it proposes (figure 4.4).</td><td>Notes, a single colour, a mark for your choice.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 4.5 -->
+  <h2 id="s4-5"><span class="num">4.5</span>Inertia and axes in CA, MCA, FAMD and MFA</h2>
+  <p>If on card 1.9 you chose another method, card 2.1 does not change in appearance, but its button says <span class="ui">Run MFA →</span> (or whichever abbreviation applies) and the results are different. In these methods one does not speak of variance but of <b>inertia</b>: the spread of the cloud measured with the metric belonging to each method.</p>
+
+  <table>
+    <caption><b>Table 4.9.</b> What is decomposed and how much the total inertia is worth.</caption>
+    <thead><tr><th style="width:10%">Method</th><th>What goes in</th><th style="width:36%">Total inertia</th></tr></thead>
+    <tbody>
+      <tr><td><b>CA</b></td><td>The contingency table of the two chosen qualitative variables.</td><td>φ² = χ²/n: how far the table departs from independence.</td></tr>
+      <tr><td><b>MCA</b></td><td>The disjunctive table of the ticked qualitative variables.</td><td>J/Q − 1 (J categories, Q variables), an artificial value.</td></tr>
+      <tr><td><b>FAMD</b></td><td>Standardised quantitative variables and categories divided by √p<sub>k</sub>.</td><td>Quantitative + (categories − qualitative).</td></tr>
+      <tr><td><b>MFA</b></td><td>The groups of standardised quantitative variables, each divided by its first eigenvalue.</td><td>The sum of the weighted inertias; no group contributes more than 1 to the first axis.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · FAMD and MFA ignore the scaling of Block 1</div>
+    <p>These two methods take the quantitative variables <b>after</b> the treatment of missing data but <b>before</b> the transformation and the scaling, and standardise them on their own, because their balance between types or groups requires it. Choosing Pareto or a logarithmic transformation on card 1.3 does not change their results. If you need a transformed variable, transform it in the sheet before loading it.</p>
+  </div>
+
+  <h3>What the block shows</h3>
+  <table>
+    <caption><b>Table 4.10.</b> The cards of Block 2 with a method other than PCA.</caption>
+    <thead><tr><th style="width:28%">Card</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><b>2.2 · Inertia and axes</b></td><td>Individuals or rows, columns, possible axes, total inertia, retained axes; in CA, the χ² of independence as well. A table of λ with % of inertia and cumulative, and a note on how to read the inertia of that method.</td></tr>
+      <tr><td><b>The card belonging to the method</b></td><td><b>CA</b>: the twelve cells that contribute most to the χ², with observed, expected and residual. <b>MCA</b>: Cramér's V between each pair of variables. <b>FAMD</b>: r² of each quantitative variable and η² of each qualitative one with each axis. <b>MFA</b>: the inertia of each group on each axis and the RV coefficient between groups.</td></tr>
+      <tr><td><b>2.3 · How many axes to retain?</b></td><td>Four criteria (table 4.11), the consensus and the number of axes.</td></tr>
+      <tr><td><b>2.4 · Extraction figures</b></td><td>The scree plot.</td></tr>
+      <tr><td><b>2.5 · Coordinates</b></td><td>Coordinates of the columns, categories or variables on the first four axes, their cos² on the 1–2 plane and their contribution to axis 1.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Table 4.11.</b> Retention criteria outside PCA. Horn and the MAP do not apply: they are designed for correlations.</caption>
+    <thead><tr><th style="width:36%">Criterion</th><th>Rule</th><th class="c" style="width:8%">Weight</th></tr></thead>
+    <tbody>
+      <tr><td><b>Axes above the mean inertia</b> (CA, FAMD, MFA)</td><td>λ greater than the total inertia divided by the number of axes.</td><td class="c">2</td></tr>
+      <tr><td><b>Axes above 1/Q (Benzécri)</b> (MCA)</td><td>λ &gt; 1/Q: only those axes have content.</td><td class="c">3</td></tr>
+      <tr><td><b>Cumulative inertia ≥ 70 %</b> and <b>≥ 80 %</b></td><td>In MCA, with Greenacre's adjusted inertia.</td><td class="c">1 and 1</td></tr>
+      <tr><td><b>Scree elbow</b></td><td>As in PCA; only with three axes or more.</td><td class="c">1</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Table 4.12.</b> What to watch out for in each method, with examples from the app.</caption>
+    <thead><tr><th style="width:10%">Method</th><th>What to watch out for</th><th style="width:40%">Example</th></tr></thead>
+    <tbody>
+      <tr><td><b>CA</b></td><td>The χ² of independence before the percentages: with an independent table the first axis can take up almost the whole of a minute inertia.</td><td>Treatment × Block of the integrated project: χ² = 0.78, df 6, p = 0.99, total inertia 0.0054, and even so Dim1 = 93.4 %. There is no map to read: it is a balanced design.</td></tr>
+      <tr><td><b>MCA</b></td><td>The raw percentages underestimate; read the <b>% adjusted (Greenacre)</b> column, which only exists for the axes with λ &gt; 1/Q.</td><td>The same two variables: Dim1 = 21.4 % raw and 93.45 % adjusted, the same as CA. Cramér's V of 0.052 warns that there is no association.</td></tr>
+      <tr><td><b>FAMD</b></td><td>That the total inertia matches quantitative + (categories − qualitative); r² and η² are compared on the same scale.</td><td>Iris with Species active: inertia 6 (4 + 3 − 1); Species has η² = 0.964 on axis 1 and 0.746 on axis 2. Two axes, 86.9 %, and the four criteria agree.</td></tr>
+      <tr><td><b>MFA</b></td><td>The RV between groups and that each group has at least two variables.</td><td>Figure 4.6.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b2-afm.png" alt="Table of axes and group card of an MFA">
+      <span class="marca" style="left:15.5%;top:48.1%">1</span>
+      <span class="marca" style="left:39.5%;top:64.7%">2</span>
+      <span class="marca" style="left:55.8%;top:68.1%">3</span>
+      <span class="marca" style="left:89.5%;top:92.4%">4</span>
+    </div>
+    <figcaption><b>Figure 4.6.</b> An MFA with <code>integrated_project_agronomy.csv</code>: 144 complete plots and four groups declared by hand —growth (4 variables), water (3), nutrition (3) and phenology (2)—, with yield as supplementary. <b>1</b> The note on the weighting. <b>2</b> The first eigenvalue of each group analysed on its own. <b>3</b> The inertia of growth on axis 1: 0.551, never more than 1. <b>4</b> The RV between groups: all below 0.07.</figcaption>
+  </figure>
+
+  <p>The reading of figure 4.6 is instructive: the RV close to 0 say that the four groups share almost no structure, and that is why no axis dominates —the first takes up only 31.4 % of the inertia— and four axes are needed to reach 87.5 %. The criteria disagree (mean 4, cumulative 70 % 3, cumulative 80 % 4, elbow 5) and the consensus settles on four.</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · interface details in these methods</div>
+    <p>With a method other than PCA, Block 2 offers no downloads, and the <span class="ui">Go to rotation →</span> button does not appear: you move to Block 4 with the <span class="chip k4">4</span> button of the step bar, which is unlocked when the method is run (number 3 goes dark, because rotation belongs to PCA). Three details of version 1.1: the indicators of card 2.2 stack in a column instead of forming a row; card 2.4 shows only the scree plot, which does not move the band of retained axes if you change their number; and the table of λ calls the axes PC1, PC2… in FAMD and MFA, while the table of coordinates calls them Dim1, Dim2…</p>
+  </div>
+
+  <!-- 4.6 -->
+  <h2 id="s4-6"><span class="num">4.6</span>Step by step: iris and seeds</h2>
+  <p>Two complete analyses of Block 2. In the first the criteria almost agree and the decision is about the plane; in the second they spread out and the decision has to be made with the interpretation. The figures are the ones from the app; Horn's percentiles vary slightly from run to run.</p>
+
+  <h3>Case 1 · Iris: a strong axis and a useful plane</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>iris.csv</code> · 150 flowers, four measurements, z standardisation</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Load the iris example, prepare the matrix in Block 1 and open Block 2. Leave permutation and 500 repetitions and press <span class="ui">Extract components →</span>.</li>
+      <li>The eigenvalues are 2.9185, 0.9140, 0.1468 and 0.0207. PC1 takes up <b>72.96 %</b>; PC1 + PC2, <b>95.81 %</b>.</li>
+      <li>Horn, Kaiser, broken stick, MAP and variance ≥ 70 % propose <b>1</b>; elbow, variance ≥ 80 % and Jolliffe propose 2. The count is 9 votes to 3: the recommendation is <b>1 component</b>.</li>
+      <li>With one component, the table of loadings warns that <b>Sepal.Width</b> is poorly represented: loading −0.460 and communality 0.212. The decision text recalls that without PC2 there will be no maps.</li>
+      <li>Write <b>2</b> in <span class="ui">Components to retain:</span>. The communality of Sepal.Width rises to <b>0.991</b>: PC2 is, almost exclusively, sepal width (loading 0.883).</li>
+    </ol>
+  </div>
+  <p><b>Reading.</b> Iris has one dominant dimension —the size of the flower, with loadings from 0.89 to 0.99 on three measurements— and a second that is a single variable. Retaining two is the usual practice: one states that PC2 adds 22.85 % and that it is defined by Sepal.Width. PC3 and PC4 together do not reach 4.2 %.</p>
+
+  <h3>Case 2 · Seeds: criteria spread out</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practice2_seeds.csv</code> · 120 seeds, nine variables, z standardisation</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>Load the file, leave the nine variables active, prepare and extract. PC1 takes up 38.65 % and the 1–2 plane, 57.96 %.</li>
+      <li>The criteria run from 1 to 4 (figure 4.2): broken stick and MAP, 1; elbow, 2; Horn and variance ≥ 70 %, 3; Kaiser, variance ≥ 80 % and Jolliffe, 4. The consensus ties 1 and 3 and recommends <b>1</b> (table 4.5).</li>
+      <li>With one component the warning is red: 38.6 % is kept and five variables are left poorly represented.</li>
+      <li>Retain <b>3</b>, which is what Horn asks for. 74.5 % is kept, and the table of loadings (figure 4.5) falls into three themes: PC1, <b>size</b> (length, width, area and weight, from 0.87 to 0.98); PC2, <b>firmness</b> (thickness 0.769 and hardness 0.786); PC3, <b>composition</b> (oil 0.764 against protein −0.691).</li>
+      <li>Moisture_pct is left with a communality of <b>0.014</b>: it belongs to none of the three themes, just as its MSA of 0.388 said in Block 1.</li>
+      <li>Review the table of eigenvalues: λ₂ − λ₃ = 0.2456 barely exceeds the SE of λ₂ (0.2253). PC2 and PC3 share loading on thickness, hardness, oil and protein; the rotation of Block 3 will separate them better.</li>
+    </ol>
+  </div>
+  <p><b>Reading.</b> Here the consensus does not help: it ties and resolves towards the smaller number, which leaves out two thirds of the information. The decision is taken by Horn —the most reliable criterion— and by the interpretation: three components with a clear name. Kaiser asked for a fourth axis with λ = 1.0052, which does not exceed the 95th percentile (1.14) and cannot be named. Compare with chapter 3: removing variables by MSA led to another solution, of a single size component, with six or four variables. Both are valid, but they answer different questions.</p>
+
+  <div class="caja dato">
+    <div class="dato-cifra">3 of 8</div>
+    <div class="dato-txt"><div class="caja-t">A majority that does not exist</div>With the seeds no number gathers more than three criteria. When that happens, the recommendation is a tie-break and not an agreement: <b>card 2.3 is read in full</b> before accepting the number on the indicator.</div>
+  </div>
+
+  <p style="margin-top:0.3in">With the number of components decided, the next chapter enters Block 3: rotating the solution so that each axis is easier to name.</p>
+</section>
+
+</body>
+</html>

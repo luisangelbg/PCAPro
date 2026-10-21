@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Front matter and introduction</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<!-- reparte el contenido en hojas tamaño carta, con encabezados, números de página e índice -->
+<script src="../paginar.js"></script>
+</head>
+<body>
+
+<!-- ====================================================================== CRÉDITOS -->
+<section class="preliminares creditos" id="creditos">
+  <div class="cred-titulo">PCAPro</div>
+  <div class="cred-sub">User’s Manual · Principal component analysis and factor methods</div>
+
+  <dl>
+    <dt>Author</dt><dd><b>Luis Ángel Barrera-Guzmán</b><br><span class="small">ORCID 0000-0001-8057-2583</span></dd>
+    <dt>Program</dt><dd>PCAPro, version 1.1.0 (September 2026)</dd>
+    <dt>Manual</dt><dd>First English edition, 2026. It describes version 1.1.0 of the program.</dd>
+    <dt>Program licence</dt><dd>GNU General Public License, version 3 or later (GPL-3.0-or-later).</dd>
+    <dt>Manual copyright</dt><dd>© 2026 Luis Ángel Barrera-Guzmán. All rights reserved.</dd>
+    <dt>Interface language</dt><dd>Spanish and English. This manual writes buttons, menus and titles exactly as they appear on screen with the interface in English, for example <span class="ui">Prepare matrix and run diagnostics →</span>.</dd>
+  </dl>
+
+  <h4>How to cite the program</h4>
+  <div class="cita">Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided principal component analysis</i> (version 1.1.0) [software]. Zenodo. https://doi.org/10.5281/zenodo.22649709</div>
+  <h4>How to cite this manual</h4>
+  <div class="cita">Barrera-Guzmán, L. Á. (2026). <i>PCAPro. User’s Manual</i> (1st ed.).</div>
+  <p class="small">The identifier in the citation of the program is the <b>concept DOI</b>: it always leads to the most recent version, so every citation accumulates in a single record. The same reference appears in the <span class="ui">How to cite</span> button of Block 1, in section 6.4 and in the automatic report.</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Privacy</div>
+    <p>PCAPro runs entirely inside your browser. The files you open are read on your own computer and <b>are never sent to any server</b>, not even when you use the online version. You can analyse unpublished data, or data under a confidentiality agreement, with no risk of it leaving your machine.</p>
+  </div>
+
+  <p class="small" style="margin-top:0.4in;color:#5d6472">The illustrations, diagrams and screenshots in this manual are original and were produced with the program itself or with code written for the manual. The iris data are those of Fisher (1936), measured by Anderson; the other example sets are simulations created for teaching and are described in section 1.7.</p>
+</section>
+
+<!-- ====================================================================== ÍNDICE -->
+<section class="preliminares indice" id="indice" data-nueva-hoja>
+  <h1>Contents</h1>
+  <div class="indice-sub">General contents of the manual</div>
+
+  <ol class="toc">
+    <li>
+      <div class="toc-cap"><span class="chip k0">P</span><a href="#como-leer">How to read this manual</a><a class="pag" href="#como-leer"></a></div>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k0">1</span><a href="#cap-intro">Introduction to PCAPro</a><a class="pag" href="#cap-intro"></a></div>
+      <ul>
+        <li><span class="n">1.1</span><a href="#s1-1"><span class="t">What is PCAPro?</span></a></li>
+        <li><span class="n">1.2</span><a href="#s1-2"><span class="t">Questions it answers</span></a></li>
+        <li><span class="n">1.3</span><a href="#s1-3"><span class="t">Five key ideas</span></a></li>
+        <li><span class="n">1.4</span><a href="#s1-4"><span class="t">The five methods and the data they accept</span></a></li>
+        <li><span class="n">1.5</span><a href="#s1-5"><span class="t">What you need and how to open it</span></a></li>
+        <li><span class="n">1.6</span><a href="#s1-6"><span class="t">A tour of the interface</span></a></li>
+        <li><span class="n">1.7</span><a href="#s1-7"><span class="t">The example data sets</span></a></li>
+        <li><span class="n">1.8</span><a href="#s1-8"><span class="t">Recommended workflow</span></a></li>
+        <li><span class="n">1.9</span><a href="#s1-9"><span class="t">Tests, thresholds and recommendations</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip ki">H</span><a href="#cap-inicio">Home, built-in theory and how to cite</a><a class="pag" href="#cap-inicio"></a></div>
+      <ul>
+        <li><span class="n">2.1</span><a href="#s2-1"><span class="t">The home screen of the app</span></a></li>
+        <li><span class="n">2.2</span><a href="#s2-2"><span class="t">The theory inside each block</span></a></li>
+        <li><span class="n">2.3</span><a href="#s2-3"><span class="t">Language and preferences</span></a></li>
+        <li><span class="n">2.4</span><a href="#s2-4"><span class="t">How to cite PCAPro</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k1">B1</span><a href="#cap-b1">Data and assumptions</a><a class="pag" href="#cap-b1"></a></div>
+      <ul>
+        <li><span class="n">3.1</span><a href="#s3-1"><span class="t">Preparing the data sheet</span></a></li>
+        <li><span class="n">3.2</span><a href="#s3-2"><span class="t">Loading a file and the preview</span></a></li>
+        <li><span class="n">3.3</span><a href="#s3-3"><span class="t">The role of each variable</span></a></li>
+        <li><span class="n">3.4</span><a href="#s3-4"><span class="t">Missing data, transformations and scaling</span></a></li>
+        <li><span class="n">3.5</span><a href="#s3-5"><span class="t">The diagnostics: Bartlett, KMO and MSA</span></a></li>
+        <li><span class="n">3.6</span><a href="#s3-6"><span class="t">Graphical exploration and recommendations</span></a></li>
+        <li><span class="n">3.7</span><a href="#s3-7"><span class="t">Which method applies</span></a></li>
+        <li><span class="n">3.8</span><a href="#s3-8"><span class="t">Step by step: four practice files</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k2">B2</span><a href="#cap-b2">Extraction</a><a class="pag" href="#cap-b2"></a></div>
+      <ul>
+        <li><span class="n">4.1</span><a href="#s4-1"><span class="t">Eigenvalues, variance and loadings</span></a></li>
+        <li><span class="n">4.2</span><a href="#s4-2"><span class="t">The eight retention criteria</span></a></li>
+        <li><span class="n">4.3</span><a href="#s4-3"><span class="t">The consensus and the decision</span></a></li>
+        <li><span class="n">4.4</span><a href="#s4-4"><span class="t">Tables, figures and downloads</span></a></li>
+        <li><span class="n">4.5</span><a href="#s4-5"><span class="t">Inertia and axes in CA, MCA, FAMD and MFA</span></a></li>
+        <li><span class="n">4.6</span><a href="#s4-6"><span class="t">Step by step: iris and seeds</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k3">B3</span><a href="#cap-b3">Rotation</a><a class="pag" href="#cap-b3"></a></div>
+      <ul>
+        <li><span class="n">5.1</span><a href="#s5-1"><span class="t">Why rotate and when not to</span></a></li>
+        <li><span class="n">5.2</span><a href="#s5-2"><span class="t">Orthogonal and oblique rotations</span></a></li>
+        <li><span class="n">5.3</span><a href="#s5-3"><span class="t">Quality of the simple structure</span></a></li>
+        <li><span class="n">5.4</span><a href="#s5-4"><span class="t">The loading threshold</span></a></li>
+        <li><span class="n">5.5</span><a href="#s5-5"><span class="t">Step by step: leaf morphometry</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k4">B4</span><a href="#cap-b4">Factor maps</a><a class="pag" href="#cap-b4"></a></div>
+      <ul>
+        <li><span class="n">6.1</span><a href="#s6-1"><span class="t">The two clouds: individuals and variables</span></a></li>
+        <li><span class="n">6.2</span><a href="#s6-2"><span class="t">cos² and contributions</span></a></li>
+        <li><span class="n">6.3</span><a href="#s6-3"><span class="t">Circle, map of individuals and biplot</span></a></li>
+        <li><span class="n">6.4</span><a href="#s6-4"><span class="t">Ellipses and supplementary elements</span></a></li>
+        <li><span class="n">6.5</span><a href="#s6-5"><span class="t">The maps of CA, MCA, FAMD and MFA</span></a></li>
+        <li><span class="n">6.6</span><a href="#s6-6"><span class="t">The figure editor</span></a></li>
+        <li><span class="n">6.7</span><a href="#s6-7"><span class="t">Step by step</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k5">B5</span><a href="#cap-b5">Interpretation</a><a class="pag" href="#cap-b5"></a></div>
+      <ul>
+        <li><span class="n">7.1</span><a href="#s7-1"><span class="t">Naming an axis</span></a></li>
+        <li><span class="n">7.2</span><a href="#s7-2"><span class="t">Dimension description and test values</span></a></li>
+        <li><span class="n">7.3</span><a href="#s7-3"><span class="t">Comparing groups without falling into circularity</span></a></li>
+        <li><span class="n">7.4</span><a href="#s7-4"><span class="t">Goodness of fit</span></a></li>
+        <li><span class="n">7.5</span><a href="#s7-5"><span class="t">The results draft</span></a></li>
+        <li><span class="n">7.6</span><a href="#s7-6"><span class="t">Interpreting CA, MCA, FAMD and MFA</span></a></li>
+        <li><span class="n">7.7</span><a href="#s7-7"><span class="t">Step by step</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k5b">B5b</span><a href="#cap-b5b">Clustering</a><a class="pag" href="#cap-b5b"></a></div>
+      <ul>
+        <li><span class="n">8.1</span><a href="#s8-1"><span class="t">Clustering on the axes</span></a></li>
+        <li><span class="n">8.2</span><a href="#s8-2"><span class="t">Ward's criterion and the dendrogram</span></a></li>
+        <li><span class="n">8.3</span><a href="#s8-3"><span class="t">How many clusters? Three rules</span></a></li>
+        <li><span class="n">8.4</span><a href="#s8-4"><span class="t">Consolidation and description of the clusters</span></a></li>
+        <li><span class="n">8.5</span><a href="#s8-5"><span class="t">What a clustering does not prove</span></a></li>
+        <li><span class="n">8.6</span><a href="#s8-6"><span class="t">Step by step</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip k6">B6</span><a href="#cap-b6">Report</a><a class="pag" href="#cap-b6"></a></div>
+      <ul>
+        <li><span class="n">9.1</span><a href="#s9-1"><span class="t">The state of the analysis</span></a></li>
+        <li><span class="n">9.2</span><a href="#s9-2"><span class="t">The report and its sections</span></a></li>
+        <li><span class="n">9.3</span><a href="#s9-3"><span class="t">The ZIP package</span></a></li>
+        <li><span class="n">9.4</span><a href="#s9-4"><span class="t">Writing the methods and citing</span></a></li>
+      </ul>
+    </li>
+    <li>
+      <div class="toc-cap"><span class="chip kx">A</span><a href="#apendices">Appendices</a><a class="pag" href="#apendices"></a></div>
+      <ul>
+        <li><span class="n">A</span><a href="#ap-a"><span class="t">File formats</span></a></li>
+        <li><span class="n">B</span><a href="#ap-b"><span class="t">Summary of decision rules</span></a></li>
+        <li><span class="n">C</span><a href="#ap-c"><span class="t">Glossary</span></a></li>
+        <li><span class="n">D</span><a href="#ap-d"><span class="t">Troubleshooting</span></a></li>
+        <li><span class="n">E</span><a href="#ap-e"><span class="t">Verification of the computations</span></a></li>
+        <li><span class="n">F</span><a href="#ap-f"><span class="t">References</span></a></li>
+      </ul>
+    </li>
+  </ol>
+</section>
+
+<!-- ====================================================================== CÓMO LEER ESTE MANUAL -->
+<section class="preliminares" id="como-leer" data-nueva-hoja style="--acento: var(--b0)">
+  <h2 style="margin-top:0.2in">How to read this manual</h2>
+  <p class="lead">The manual follows the same order as the app: the home screen and seven blocks that are worked through from left to right on the top bar. Each chapter explains one block, opens with just enough theory to decide well, describes what it computes and ends with a step-by-step example using the data that come with the program.</p>
+
+  <h3>One colour per block</h3>
+  <p>The colour of the block appears in the opening of its chapter, in the section numbers, in the theory boxes, in the tab on the edge of the sheet and in the contents. That way you know at a glance which part of the app you are in.</p>
+  <table class="compacta">
+    <thead><tr><th style="width:0.6in">Block</th><th style="width:30%">Name in the app</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip ki">H</span></td><td><span class="ui">Home</span></td><td>Home screen, guided route and the reference for citing</td></tr>
+      <tr><td><span class="chip k1">1</span></td><td><span class="ui">Data and assumptions</span></td><td>Loading, the role of the variables, preparation, diagnostics and choice of method</td></tr>
+      <tr><td><span class="chip k2">2</span></td><td><span class="ui">Extraction</span></td><td>Eigenvalues, explained variance and how many axes to retain</td></tr>
+      <tr><td><span class="chip k3">3</span></td><td><span class="ui">Rotation</span></td><td>Seven rotations and the quality of the simple structure (PCA only)</td></tr>
+      <tr><td><span class="chip k4">4</span></td><td><span class="ui">Factor maps</span></td><td>Correlation circle, map of individuals, biplot, cos² and contributions</td></tr>
+      <tr><td><span class="chip k5">5</span></td><td><span class="ui">Interpretation</span></td><td>Naming axes, test values, group comparison and results draft</td></tr>
+      <tr><td><span class="chip k5b">5b</span></td><td><span class="ui">Clustering</span></td><td>Hierarchical clustering on the axes (HCPC), optional</td></tr>
+      <tr><td><span class="chip k6">6</span></td><td><span class="ui">Report</span></td><td>HTML report, PDF by printing and ZIP package</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Kinds of boxes</h3>
+  <div class="dos">
+    <div class="caja nota" style="margin:0"><div class="caja-t"><span class="ico">i</span>Note</div><p>Clarifications and practical tips that save time.</p></div>
+    <div class="caja importante" style="margin:0"><div class="caja-t"><span class="ico">!</span>Important</div><p>What can change your conclusions if it is overlooked.</p></div>
+    <div class="caja teoria" style="margin:0"><div class="caja-t"><span class="ico">θ</span>Theory in brief</div><p>The idea behind an analysis, without unnecessary formulae.</p></div>
+    <div class="caja ejemplo" style="margin:0"><div class="caja-t"><span class="ico">▸</span>Example</div><p>A case using the data that come with the program.</p></div>
+  </div>
+  <div class="caja regla" style="margin-top:0.18in">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule</div>
+    <table class="compacta"><tbody>
+      <tr><td style="width:40%"><b>If</b> the value falls in this range…</td><td><b>then</b> this is the recommended reading.</td></tr>
+    </tbody></table>
+    <p class="regla-pie">They are guides for interpreting, not laws: what you know about your own study system always comes first.</p>
+  </div>
+  <div class="caja dato">
+    <div class="dato-cifra">12×</div>
+    <div class="dato-txt"><div class="caja-t">Key figure</div>A number or fact worth remembering; for example, the maximum enlargement at which it exports figures, some 900 dpi.</div>
+  </div>
+
+  <h3>Writing conventions</h3>
+  <table class="compacta">
+    <thead><tr><th style="width:38%">Written like this</th><th>Means</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Extract components →</span></td><td>A button, checkbox, menu or title of the app, exactly as it appears on screen.</td></tr>
+      <tr><td><span class="ruta">Block 4<span class="sep">›</span>4.3 · Correlation circle</span></td><td>A path: go to the first place and then to the second.</td></tr>
+      <tr><td><code>practice1_soils.csv</code></td><td>The name of a file, column or value, written exactly as it is.</td></tr>
+      <tr><td>λ, cos², PC1, KMO</td><td>Quantities and abbreviations; their meaning is explained the first time they appear and is gathered in the glossary (appendix C).</td></tr>
+      <tr><td><span class="si">●</span> <span class="parcial">◐</span> <span class="no">—</span></td><td>Available · partly available or available as an option · not applicable.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ====================================================================== CAPÍTULO 1 -->
+<section class="capitulo" id="cap-intro" data-pestana="1" data-orden="1" style="--acento: var(--b0)">
+  <div class="cap-apertura">
+    <div class="cap-num">1</div>
+    <div class="cap-etiqueta">Chapter one</div>
+    <h1>Introduction to PCAPro</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">What the program is, which questions it answers, what data it accepts and how it is worked through from beginning to end. It includes the ideas of factor analysis you need in order to make the most of the rest of the manual.</p>
+    <div class="cap-franja"><span class="ki"></span><span class="k1"></span><span class="k2"></span><span class="k3"></span><span class="k4"></span><span class="k5"></span><span class="k5b"></span><span class="k6"></span></div>
+    <ul class="cap-contenido">
+      <li><b>1.1</b>What is PCAPro?</li>
+      <li><b>1.2</b>Questions it answers</li>
+      <li><b>1.3</b>Five key ideas</li>
+      <li><b>1.4</b>The five methods and the data they accept</li>
+      <li><b>1.5</b>What you need and how to open it</li>
+      <li><b>1.6</b>A tour of the interface</li>
+      <li><b>1.7</b>The example data sets</li>
+      <li><b>1.8</b>Recommended workflow</li>
+      <li><b>1.9</b>Tests, thresholds and recommendations</li>
+    </ul>
+  </div>
+
+  <!-- 1.1 -->
+  <h2 id="s1-1"><span class="num">1.1</span>What is PCAPro?</h2>
+  <p class="lead">PCAPro is a platform for carrying out a <b>complete, well-grounded principal component analysis</b>: it takes the table that comes out of the field or the laboratory, checks whether it supports the analysis, helps decide how many axes to keep, draws the factor maps, interprets them and delivers a report ready to accompany a paper.</p>
+  <p>Computing a PCA is never the hard part: any statistical program returns the eigenvalues. What decides whether the analysis holds up are the decisions around it —how to treat missing data, whether to standardise, how many components to retain, which loadings to interpret—, and there the usual software computes the number and stops. PCAPro puts the methodological argument <b>next to the number that justifies it</b>, at the moment the decision has to be made, and leaves the decision in your hands.</p>
+  <p>Besides PCA, the same route serves four other factor methods —simple and multiple correspondence analysis, factor analysis of mixed data and multiple factor analysis— and, on top of any of them, clustering the individuals. Everything happens inside the web browser: there is nothing to install, no programming knowledge is required and the data never leave the computer.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-inicio.png" alt="Home screen of the PCAPro application">
+      <span class="marca" style="left:29.5%;top:10.1%">1</span>
+      <span class="marca" style="left:89%;top:3.7%">2</span>
+      <span class="marca" style="left:49.8%;top:41.2%">3</span>
+      <span class="marca" style="left:3.3%;top:75.2%">4</span>
+      <span class="marca" style="left:43.2%;top:75.2%">5</span>
+      <span class="marca" style="left:3.3%;top:81.9%">6</span>
+      <span class="marca" style="left:3.3%;top:90.5%">7</span>
+    </div>
+    <figcaption><b>Figure 1.1.</b> The home screen of the app, the <span class="ui">Home</span> step.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Step bar. The blocks in grey unlock when the previous one is finished.</li>
+    <li><span class="n">2</span>Language switch: Spanish or English.</li>
+    <li><span class="n">3</span>Three sample figures of what a PCA produces.</li>
+    <li><span class="n">4</span><span class="ui">Start with my data →</span> goes to Block 1 to load a file.</li>
+    <li><span class="n">5</span><span class="ui">See the iris example</span> loads the example and opens Block 1.</li>
+    <li><span class="n">6</span><span class="ui">Read the theory</span> opens the theoretical framework of Block 1.</li>
+    <li><span class="n">7</span>Guarantees: the computation is local and the program is free.</li>
+  </ul>
+
+  <div class="dos">
+    <div class="caja dato" style="margin:0">
+      <div class="dato-cifra">0</div>
+      <div class="dato-txt"><div class="caja-t">Installations</div>It opens with a double click on <code style="background:#24365f;color:#fff">index.html</code> or from its internet address. It requires no administrator rights.</div>
+    </div>
+    <div class="caja dato" style="margin:0">
+      <div class="dato-cifra">5</div>
+      <div class="dato-txt"><div class="caja-t">Factor methods</div>PCA, CA, MCA, FAMD and MFA, with clustering on the axes available for all five.</div>
+    </div>
+  </div>
+
+  <h3>What it does, in one table</h3>
+  <table>
+    <thead><tr><th style="width:24%">Stage</th><th>What you obtain</th><th class="c" style="width:12%">Block</th></tr></thead>
+    <tbody>
+      <tr><td><b>Data input</b></td><td>Reading of spreadsheets (.xlsx, .xls, .csv, .tsv, .txt) with detection of the separator and the decimal mark; type and role of each column: active, supplementary, qualitative, identifier or excluded.</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td><b>Preparation</b></td><td>Handling of missing data, four transformations and seven ways of scaling, with the choice between the correlation and the covariance matrix.</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td><b>Diagnostics</b></td><td>Bartlett's test of sphericity, KMO with per-variable MSA, determinant, multicollinearity, Mahalanobis outliers, skewness and the n:p ratio, with a grade from A to D and written recommendations.</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td><b>Choice of method</b></td><td>A recommender that reads the types of variables and the structure of the data and says which method applies, which is possible and which is not.</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td><b>Extraction</b></td><td>Eigenvalues with their standard error, explained variance and eight retention criteria side by side with a consensus recommendation.</td><td class="c"><span class="chip k2">2</span></td></tr>
+      <tr><td><b>Rotation</b></td><td>Varimax, quartimax, equamax, parsimax, promax, direct oblimin and quartimin, with pattern and structure matrices.</td><td class="c"><span class="chip k3">3</span></td></tr>
+      <tr><td><b>Maps</b></td><td>Correlation circle, map of individuals, biplot, cos², contributions, ellipses and supplementary elements; the maps that belong to each method.</td><td class="c"><span class="chip k4">4</span></td></tr>
+      <tr><td><b>Interpretation</b></td><td>Description of each axis, test values of the categories, group comparison, characteristic individuals, goodness of fit and a draft written with your own figures.</td><td class="c"><span class="chip k5">5</span></td></tr>
+      <tr><td><b>Clustering</b></td><td>Ward on the factor coordinates, three rules for the number of clusters, consolidation by k-means, dendrogram and description of each cluster.</td><td class="c"><span class="chip k5b">5b</span></td></tr>
+      <tr><td><b>Publication</b></td><td>Editable figures exportable to SVG, PNG, JPG or WEBP up to 12×; HTML report, PDF by printing and a ZIP package with figures, tables and the reference for citing.</td><td class="c"><span class="chip k6">6</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Who is it for?</h3>
+  <p>For anyone who measures several characteristics on the same plants, plots, soils, accessions or sites and needs to summarise them without losing rigour: undergraduate and postgraduate students starting out in multivariate statistics, researchers in agronomy, ecology, biology and soil science who have to justify every decision to a reviewer, and teachers who want to show in class what a PCA does and where it usually fails. Every result comes with a plain-language reading and the theory that supports it, so the app also works as a teaching tool.</p>
+
+  <!-- 1.2 -->
+  <h2 id="s1-2"><span class="num">1.2</span>Questions it answers</h2>
+  <p>A good analysis begins with a question. The table below translates the most frequent questions into the analysis that answers them and the block where it is found.</p>
+  <table>
+    <caption><b>Table 1.1.</b> From the question to the analysis.</caption>
+    <thead><tr><th style="width:38%">Question</th><th>The analysis that answers it</th><th class="c" style="width:13%">Block</th></tr></thead>
+    <tbody>
+      <tr><td>Do my data support a factor analysis?</td><td>Bartlett, KMO and per-variable MSA, determinant and a grade from A to D</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td>Which method fits my variables?</td><td>The recommender on the <span class="ui">1.9 · Which method applies</span> card</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td>Should I standardise my variables?</td><td>Scale profile, the seven scaling options and the correlations-or-covariances choice</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td>Are there redundant variables or outlying individuals?</td><td>Nearly collinear pairs, determinant and Mahalanobis distance</td><td class="c"><span class="chip k1">1</span></td></tr>
+      <tr><td>How many components do I keep?</td><td>Eight retention criteria and their consensus</td><td class="c"><span class="chip k2">2</span></td></tr>
+      <tr><td>Can I make the axes easier to read?</td><td>Orthogonal and oblique rotations, and the quality of the simple structure</td><td class="c"><span class="chip k3">3</span></td></tr>
+      <tr><td>Which variables define each axis?</td><td>Loadings, cos², contributions and the correlation circle</td><td class="c"><span class="chip k4">4</span> <span class="chip k5">5</span></td></tr>
+      <tr><td>How are my individuals, treatments or sites ordered?</td><td>Map of individuals, biplot and ellipses by group</td><td class="c"><span class="chip k4">4</span></td></tr>
+      <tr><td>Which categories characterise an axis?</td><td>Test values of the categories</td><td class="c"><span class="chip k5">5</span></td></tr>
+      <tr><td>Do my groups differ on the components?</td><td>ANOVA and Kruskal–Wallis per component, with their circularity warning</td><td class="c"><span class="chip k5">5</span></td></tr>
+      <tr><td>Which associations does a frequency table support?</td><td>Correspondence analysis with residuals and contributions to χ²</td><td class="c"><span class="chip k2">2</span> <span class="chip k4">4</span></td></tr>
+      <tr><td>How are the answers of a survey related?</td><td>Multiple correspondence analysis</td><td class="c"><span class="chip k2">2</span> <span class="chip k4">4</span> <span class="chip k5">5</span></td></tr>
+      <tr><td>Do my groups of variables —soil, climate, plant— tell the same story?</td><td>Multiple factor analysis: RV coefficients and partial points</td><td class="c"><span class="chip k2">2</span> <span class="chip k4">4</span></td></tr>
+      <tr><td>Do my individuals form natural clusters?</td><td>Hierarchical clustering on the axes and dendrogram</td><td class="c"><span class="chip k5b">5b</span></td></tr>
+      <tr><td>How do I report it in a paper?</td><td>Report, ZIP package and methods paragraph with the citation</td><td class="c"><span class="chip k6">6</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- 1.3 -->
+  <h2 id="s1-3"><span class="num">1.3</span>Five key ideas of factor analysis</h2>
+  <p>You do not need a prior course to use the app, but these five ideas appear in every chapter. Read them once and come back to them when you need to.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">1</span>Individuals, variables and the data table</div>
+    <p>Every factor analysis starts from a table. Each <b>row</b> is an individual —a plant, a plot, a soil sample, an accession— and each <b>column</b> is a variable measured on all of them. The <b>active</b> variables build the axes; the <b>supplementary</b> ones take no part in the computation, but are projected onto the maps afterwards to help read them. A design factor, such as the treatment or the site, usually goes in as supplementary.</p>
+  </div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">2</span>Correlation: the redundancy that is put to use</div>
+    <p>When two variables rise and fall together, they tell part of the same story. The length and the width of a leaf, for instance, both reflect size. The correlation coefficient <i>r</i>, between −1 and 1, measures that agreement. A PCA only has something to summarise if the variables are correlated: with independent variables, each one is its own axis and there is nothing to gain.</p>
+  </div>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">3</span>The components: new axes of maximum variance</div>
+    <p>A principal component is a combination of the original variables oriented in the direction in which the individuals spread out most. The first (PC1) takes up the largest possible variance; the second (PC2), the largest that remains, perpendicular to the first; and so on. The variance each component captures is its <b>eigenvalue</b>, λ.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" font-family="Jost, sans-serif" role="img" aria-label="Scatter of two correlated variables with the PC1 and PC2 axes, and the corresponding eigenvalues">
+      <defs><marker id="fl13" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1b1f2a"/></marker></defs>
+      <!-- ejes originales -->
+      <g stroke="#b9c3d6" stroke-width="1"><line x1="70" y1="118" x2="272" y2="118"/><line x1="170" y1="18" x2="170" y2="220"/></g>
+      <g font-size="9" fill="#5d6472"><text x="275" y="121">X₁</text><text x="165" y="13">X₂</text></g>
+      <!-- elipse de la nube -->
+      <ellipse cx="170" cy="118" rx="112" ry="40" transform="rotate(-45 170 118)" fill="#5b3fd6" fill-opacity="0.07" stroke="#5b3fd6" stroke-opacity="0.35" stroke-dasharray="4 3"/>
+      <!-- puntos: 45 individuos con r = 0.8 -->
+      <g fill="#1b1f2a" fill-opacity="0.72"><circle cx="173.0" cy="118.2" r="3.4"/><circle cx="141.7" cy="120.7" r="3.4"/><circle cx="116.3" cy="193.2" r="3.4"/><circle cx="185.7" cy="151.0" r="3.4"/><circle cx="200.0" cy="81.7" r="3.4"/><circle cx="153.3" cy="87.3" r="3.4"/><circle cx="165.3" cy="114.8" r="3.4"/><circle cx="212.8" cy="68.4" r="3.4"/><circle cx="213.8" cy="84.2" r="3.4"/><circle cx="199.5" cy="89.2" r="3.4"/><circle cx="134.5" cy="143.7" r="3.4"/><circle cx="168.7" cy="125.7" r="3.4"/><circle cx="113.3" cy="120.0" r="3.4"/><circle cx="173.6" cy="119.1" r="3.4"/><circle cx="190.6" cy="95.7" r="3.4"/><circle cx="197.8" cy="149.6" r="3.4"/><circle cx="252.6" cy="38.5" r="3.4"/><circle cx="168.1" cy="100.7" r="3.4"/><circle cx="196.1" cy="96.1" r="3.4"/><circle cx="179.8" cy="101.3" r="3.4"/><circle cx="174.6" cy="148.7" r="3.4"/><circle cx="150.8" cy="151.3" r="3.4"/><circle cx="155.2" cy="106.0" r="3.4"/><circle cx="178.3" cy="136.2" r="3.4"/><circle cx="211.4" cy="62.1" r="3.4"/><circle cx="161.7" cy="145.6" r="3.4"/><circle cx="158.7" cy="114.2" r="3.4"/><circle cx="144.2" cy="158.1" r="3.4"/><circle cx="115.1" cy="165.7" r="3.4"/><circle cx="153.1" cy="120.7" r="3.4"/><circle cx="152.0" cy="116.9" r="3.4"/><circle cx="142.5" cy="129.1" r="3.4"/><circle cx="172.3" cy="118.9" r="3.4"/><circle cx="163.8" cy="96.9" r="3.4"/><circle cx="187.4" cy="93.9" r="3.4"/><circle cx="96.2" cy="158.4" r="3.4"/><circle cx="155.1" cy="123.4" r="3.4"/><circle cx="128.6" cy="164.3" r="3.4"/><circle cx="168.2" cy="134.2" r="3.4"/><circle cx="156.2" cy="178.4" r="3.4"/><circle cx="151.6" cy="136.8" r="3.4"/><circle cx="192.9" cy="83.0" r="3.4"/><circle cx="159.2" cy="161.0" r="3.4"/><circle cx="185.6" cy="83.6" r="3.4"/></g>
+      <!-- un individuo proyectado sobre CP1: su puntuación -->
+      <line x1="197.9" y1="39.6" x2="223.2" y2="64.8" stroke="#e8890c" stroke-width="1.4" stroke-dasharray="2.5 2"/>
+      <circle cx="197.9" cy="39.6" r="4.6" fill="#e8890c"/>
+      <circle cx="223.2" cy="64.8" r="3.2" fill="#fff" stroke="#e8890c" stroke-width="1.6"/>
+      <text x="92" y="36" font-size="8.5" fill="#b85f06">score on PC1:</text>
+      <text x="92" y="47" font-size="8.5" fill="#b85f06">its shadow on the axis</text>
+      <!-- CP1 y CP2 -->
+      <line x1="86" y1="202" x2="260" y2="28" stroke="#5b3fd6" stroke-width="2.4" marker-end="url(#fl13)"/>
+      <line x1="210" y1="158" x2="126" y2="74" stroke="#0d9488" stroke-width="2" marker-end="url(#fl13)"/>
+      <text x="252" y="22" font-size="11" font-weight="600" fill="#5b3fd6">PC1</text>
+      <text x="96" y="70" font-size="11" font-weight="600" fill="#0d9488">PC2</text>
+      <text x="170" y="242" font-size="9" fill="#5d6472" text-anchor="middle">45 individuals · two standardised variables with r = 0.80</text>
+
+      <!-- valores propios -->
+      <line x1="380" y1="200" x2="560" y2="200" stroke="#1b1f2a"/>
+      <line x1="380" y1="30" x2="380" y2="200" stroke="#1b1f2a"/>
+      <g font-size="8.5" fill="#5d6472" text-anchor="end"><text x="375" y="203">0</text><text x="375" y="118">1</text><text x="375" y="33">2</text></g>
+      <g stroke="#e3e7ee"><line x1="380" y1="115" x2="560" y2="115"/><line x1="380" y1="30" x2="560" y2="30"/></g>
+      <rect x="410" y="47" width="46" height="153" rx="2" fill="#5b3fd6"/>
+      <rect x="486" y="183" width="46" height="17" rx="2" fill="#0d9488"/>
+      <g font-size="10" text-anchor="middle" fill="#1b1f2a"><text x="433" y="41" font-weight="600">λ₁ = 1.80</text><text x="509" y="177" font-weight="600">λ₂ = 0.20</text></g>
+      <g font-size="9" text-anchor="middle" fill="#5d6472"><text x="433" y="214">PC1 · 90 %</text><text x="509" y="214">PC2 · 10 %</text></g>
+      <text x="372" y="22" font-size="9" fill="#5d6472" text-anchor="end">λ</text>
+      <!-- cargas -->
+      <g font-size="9" fill="#1b1f2a">
+        <text x="580" y="60" font-weight="600">Loadings on PC1</text>
+        <text x="580" y="80">X₁ : 0.949</text><text x="580" y="95">X₂ : 0.949</text>
+        <text x="580" y="125" font-weight="600">cos² on PC1</text>
+        <text x="580" y="145">0.949² = 0.90</text>
+        <text x="580" y="160" fill="#5d6472">90 % of each variable</text>
+        <text x="580" y="172" fill="#5d6472">is kept in PC1</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 1.2.</b> What a PCA does. With two standardised, correlated variables, the cloud of individuals stretches out in one direction: that is PC1. Its eigenvalue is λ₁ = 1 + <i>r</i> = 1.80, 90 % of the total variance (which is 2, one per variable); PC2 takes up the remaining 10 %. The <b>score</b> of an individual is its position along the axis, the shadow it casts.</figcaption>
+  </figure>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">4</span>Loadings, cos² and contributions: what to pay attention to</div>
+    <p>Three quantities keep you from over-interpreting. The <b>loading</b> is the correlation between a variable and an axis: it says which variables define it and in which direction. The <b>cos²</b> measures how well represented a point —variable or individual— is on an axis or on a plane: a point with a low cos² appears near the centre of the map because it is poorly represented, not because it is average. The <b>contribution</b> says how much each element weighed in building the axis. A point far from the centre with a low cos² is misleading; one with a high contribution is what counts.</p>
+  </div>
+
+  <table>
+    <caption><b>Table 1.2.</b> The quantities you will see in every block.</caption>
+    <thead><tr><th style="width:18%">Quantity</th><th style="width:34%">What it measures</th><th style="width:15%">Range</th><th>How it is read</th></tr></thead>
+    <tbody>
+      <tr><td><b>Eigenvalue</b> λ</td><td>Variance captured by an axis</td><td>0 to <i>p</i></td><td>With correlations, λ &gt; 1 means the axis summarises more than a single variable.</td></tr>
+      <tr><td><b>% of variance</b></td><td>The share of the total information an axis takes up</td><td>0 to 100 %</td><td>The cumulative figure says how much you keep if you stay with <i>k</i> axes.</td></tr>
+      <tr><td><b>Loading</b></td><td>Correlation between variable and axis</td><td>−1 to 1</td><td>|loading| ≥ 0.40 is the usual threshold for interpreting; the sign indicates the side of the axis.</td></tr>
+      <tr><td><b>Communality</b></td><td>Variance of a variable taken up by the retained axes</td><td>0 to 1</td><td>Below 0.50 the variable is poorly represented.</td></tr>
+      <tr><td><b>cos²</b></td><td>Quality of representation of a point</td><td>0 to 1</td><td>The closer to 1, the more faithful its position on the map.</td></tr>
+      <tr><td><b>Contribution</b></td><td>Weight of an element in building the axis</td><td>0 to 100 %</td><td>Those above the mean contribution (100/<i>p</i> for variables) are the ones that define the axis.</td></tr>
+      <tr><td><b>Score</b></td><td>Position of an individual along an axis</td><td>unbounded, mean 0</td><td>Individuals with similar scores have similar profiles.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">5</span>Standardising decides the result</div>
+    <p>PCA looks for variance, and variance depends on the units. If one variable is in cubic millimetres and another is a pH, the first has a variance millions of times larger and takes the first component for itself, even if it is not the most important one. <b>Standardising</b> —subtracting the mean and dividing by the standard deviation— gives them all the same variance, 1, and amounts to working with the <b>correlation matrix</b>. Without standardising you work with the <b>covariance matrix</b>, which only makes sense when all the variables share a unit and a scale.</p>
+  </div>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Numerical example · figure 1.2 in figures</div>
+    <p>Two standardised variables have a variance of 1 each; the total variance is 2. With a correlation of <i>r</i> = 0.80, the eigenvalues of their correlation matrix are 1 + <i>r</i> = <b>1.80</b> and 1 − <i>r</i> = <b>0.20</b>: the first component keeps 90 % of the information. The loading of each variable on PC1 is √(1.80/2) = <b>0.949</b>, so its cos² on that axis is 0.949² = 0.90. With <i>r</i> = 0.10 the eigenvalues would be 1.10 and 0.90, and PC1 would summarise barely 55 %: the variables share almost nothing and PCA has little to offer.</p>
+  </div>
+
+  <!-- 1.4 -->
+  <h2 id="s1-4"><span class="num">1.4</span>The five methods and the data they accept</h2>
+  <p>The type of the active variables decides the method. All five share the same logic —finding a few axes that summarise a table—, but each one is designed for a class of data. PCAPro solves them with a single computational core, which is why they share the maps, the interpretation, the clustering and the report.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 262" xmlns="http://www.w3.org/2000/svg" font-family="Jost, sans-serif" role="img" aria-label="Five different data tables and the method that fits each one">
+      <!-- cada tarjeta mide 128 de ancho -->
+      <g font-size="7.5" fill="#5d6472" letter-spacing="1.2"><text x="8" y="12">YOUR TABLE</text></g>
+      <!-- ACP: cuatro columnas cuantitativas -->
+      <g transform="translate(8 20)">
+        <rect width="128" height="236" rx="8" fill="#fff" stroke="#d5dae4"/>
+        <g fill="#5b3fd6"><rect x="18" y="16" width="20" height="9" rx="1.5"/><rect x="42" y="16" width="20" height="9" rx="1.5"/><rect x="66" y="16" width="20" height="9" rx="1.5"/><rect x="90" y="16" width="20" height="9" rx="1.5"/></g>
+        <g fill="#5b3fd6" fill-opacity="0.22"><rect x="18" y="29" width="20" height="9"/><rect x="42" y="29" width="20" height="9"/><rect x="66" y="29" width="20" height="9"/><rect x="90" y="29" width="20" height="9"/><rect x="18" y="42" width="20" height="9"/><rect x="42" y="42" width="20" height="9"/><rect x="66" y="42" width="20" height="9"/><rect x="90" y="42" width="20" height="9"/><rect x="18" y="55" width="20" height="9"/><rect x="42" y="55" width="20" height="9"/><rect x="66" y="55" width="20" height="9"/><rect x="90" y="55" width="20" height="9"/><rect x="18" y="68" width="20" height="9"/><rect x="42" y="68" width="20" height="9"/><rect x="66" y="68" width="20" height="9"/><rect x="90" y="68" width="20" height="9"/></g>
+        <g font-size="6.5" fill="#1b1f2a" text-anchor="middle"><text x="28" y="36">4.9</text><text x="52" y="36">3.0</text><text x="76" y="36">1.4</text><text x="100" y="36">0.2</text><text x="28" y="49">6.4</text><text x="52" y="49">3.2</text><text x="76" y="49">4.5</text><text x="100" y="49">1.5</text></g>
+        <path d="M64 88 L64 104" stroke="#1b1f2a" stroke-width="1.2"/><path d="M60 100 L64 106 L68 100" fill="none" stroke="#1b1f2a" stroke-width="1.2"/>
+        <text x="64" y="132" font-size="21" font-weight="600" fill="#5b3fd6" text-anchor="middle">PCA</text>
+        <text x="64" y="147" font-size="8.2" fill="#1b1f2a" text-anchor="middle">principal components</text>
+        <g font-size="8" fill="#5d6472" text-anchor="middle"><text x="64" y="172">quantitative only</text><text x="64" y="184">measured on individuals</text></g>
+        <text x="64" y="214" font-size="7.5" fill="#1b1f2a" text-anchor="middle">morphometry, soils,</text><text x="64" y="225" font-size="7.5" fill="#1b1f2a" text-anchor="middle">yield</text>
+      </g>
+      <!-- AC: tabla de contingencia -->
+      <g transform="translate(146 20)">
+        <rect width="128" height="236" rx="8" fill="#fff" stroke="#d5dae4"/>
+        <g fill="#e8890c"><rect x="42" y="16" width="20" height="9" rx="1.5"/><rect x="66" y="16" width="20" height="9" rx="1.5"/><rect x="90" y="16" width="20" height="9" rx="1.5"/><rect x="18" y="29" width="20" height="9" rx="1.5"/><rect x="18" y="42" width="20" height="9" rx="1.5"/><rect x="18" y="55" width="20" height="9" rx="1.5"/><rect x="18" y="68" width="20" height="9" rx="1.5"/></g>
+        <g stroke="#d5dae4" fill="#fff"><rect x="42" y="29" width="68" height="48"/></g>
+        <g font-size="7" fill="#1b1f2a" text-anchor="middle"><text x="52" y="36">12</text><text x="76" y="36">3</text><text x="100" y="36">1</text><text x="52" y="49">5</text><text x="76" y="49">14</text><text x="100" y="49">4</text><text x="52" y="62">2</text><text x="76" y="62">6</text><text x="100" y="62">15</text><text x="52" y="75">8</text><text x="76" y="75">7</text><text x="100" y="75">9</text></g>
+        <path d="M64 88 L64 104" stroke="#1b1f2a" stroke-width="1.2"/><path d="M60 100 L64 106 L68 100" fill="none" stroke="#1b1f2a" stroke-width="1.2"/>
+        <text x="64" y="132" font-size="21" font-weight="600" fill="#e8890c" text-anchor="middle">CA</text>
+        <text x="64" y="147" font-size="8.2" fill="#1b1f2a" text-anchor="middle">correspondence</text>
+        <g font-size="8" fill="#5d6472" text-anchor="middle"><text x="64" y="172">two qualitative</text><text x="64" y="184">crossed as frequencies</text></g>
+        <text x="64" y="214" font-size="7.5" fill="#1b1f2a" text-anchor="middle">variety × class</text><text x="64" y="225" font-size="7.5" fill="#1b1f2a" text-anchor="middle">of damage</text>
+      </g>
+      <!-- ACM: varias cualitativas -->
+      <g transform="translate(284 20)">
+        <rect width="128" height="236" rx="8" fill="#fff" stroke="#d5dae4"/>
+        <g fill="#e8890c"><rect x="18" y="16" width="20" height="9" rx="1.5"/><rect x="42" y="16" width="20" height="9" rx="1.5"/><rect x="66" y="16" width="20" height="9" rx="1.5"/><rect x="90" y="16" width="20" height="9" rx="1.5"/></g>
+        <g fill="#e8890c" fill-opacity="0.2"><rect x="18" y="29" width="20" height="48"/><rect x="42" y="29" width="20" height="48"/><rect x="66" y="29" width="20" height="48"/><rect x="90" y="29" width="20" height="48"/></g>
+        <g font-size="6.5" fill="#1b1f2a" text-anchor="middle"><text x="28" y="36">irrig.</text><text x="52" y="36">ejido</text><text x="76" y="36">maize</text><text x="100" y="36">yes</text><text x="28" y="49">rainfed</text><text x="52" y="49">owned</text><text x="76" y="49">coffee</text><text x="100" y="49">no</text><text x="28" y="62">irrig.</text><text x="52" y="62">rented</text><text x="76" y="62">maize</text><text x="100" y="62">yes</text></g>
+        <path d="M64 88 L64 104" stroke="#1b1f2a" stroke-width="1.2"/><path d="M60 100 L64 106 L68 100" fill="none" stroke="#1b1f2a" stroke-width="1.2"/>
+        <text x="64" y="132" font-size="21" font-weight="600" fill="#c2410c" text-anchor="middle">MCA</text>
+        <text x="64" y="147" font-size="8.2" fill="#1b1f2a" text-anchor="middle">multiple correspondence</text>
+        <g font-size="8" fill="#5d6472" text-anchor="middle"><text x="64" y="172">several qualitative</text><text x="64" y="184">on the same individuals</text></g>
+        <text x="64" y="214" font-size="7.5" fill="#1b1f2a" text-anchor="middle">surveys, germplasm</text><text x="64" y="225" font-size="7.5" fill="#1b1f2a" text-anchor="middle">descriptors</text>
+      </g>
+      <!-- AFDM: mixtas -->
+      <g transform="translate(422 20)">
+        <rect width="128" height="236" rx="8" fill="#fff" stroke="#d5dae4"/>
+        <g fill="#5b3fd6"><rect x="18" y="16" width="20" height="9" rx="1.5"/><rect x="42" y="16" width="20" height="9" rx="1.5"/></g>
+        <g fill="#e8890c"><rect x="66" y="16" width="20" height="9" rx="1.5"/><rect x="90" y="16" width="20" height="9" rx="1.5"/></g>
+        <g fill="#5b3fd6" fill-opacity="0.22"><rect x="18" y="29" width="20" height="48"/><rect x="42" y="29" width="20" height="48"/></g>
+        <g fill="#e8890c" fill-opacity="0.2"><rect x="66" y="29" width="20" height="48"/><rect x="90" y="29" width="20" height="48"/></g>
+        <g font-size="6.5" fill="#1b1f2a" text-anchor="middle"><text x="28" y="36">142</text><text x="52" y="36">3.8</text><text x="76" y="36">red</text><text x="100" y="36">erect</text><text x="28" y="49">98</text><text x="52" y="49">2.1</text><text x="76" y="49">white</text><text x="100" y="49">creeping</text></g>
+        <path d="M64 88 L64 104" stroke="#1b1f2a" stroke-width="1.2"/><path d="M60 100 L64 106 L68 100" fill="none" stroke="#1b1f2a" stroke-width="1.2"/>
+        <text x="64" y="132" font-size="21" font-weight="600" fill="#0d9488" text-anchor="middle">FAMD</text>
+        <text x="64" y="147" font-size="8.2" fill="#1b1f2a" text-anchor="middle">factor analysis of mixed data</text>
+        <g font-size="8" fill="#5d6472" text-anchor="middle"><text x="64" y="172">quantitative and</text><text x="64" y="184">qualitative at once</text></g>
+        <text x="64" y="214" font-size="7.5" fill="#1b1f2a" text-anchor="middle">accessions with measurements</text><text x="64" y="225" font-size="7.5" fill="#1b1f2a" text-anchor="middle">and colour characters</text>
+      </g>
+      <!-- AFM: bloques -->
+      <g transform="translate(560 20)">
+        <rect width="132" height="236" rx="8" fill="#fff" stroke="#d5dae4"/>
+        <g fill="#5b3fd6"><rect x="12" y="16" width="16" height="9" rx="1.5"/><rect x="31" y="16" width="16" height="9" rx="1.5"/><rect x="50" y="16" width="16" height="9" rx="1.5"/></g>
+        <g fill="#1d74b5"><rect x="72" y="16" width="16" height="9" rx="1.5"/><rect x="91" y="16" width="16" height="9" rx="1.5"/><rect x="110" y="16" width="16" height="9" rx="1.5"/></g>
+        <g fill="#5b3fd6" fill-opacity="0.22"><rect x="12" y="29" width="16" height="48"/><rect x="31" y="29" width="16" height="48"/><rect x="50" y="29" width="16" height="48"/></g>
+        <g fill="#1d74b5" fill-opacity="0.2"><rect x="72" y="29" width="16" height="48"/><rect x="91" y="29" width="16" height="48"/><rect x="110" y="29" width="16" height="48"/></g>
+        <g fill="none" stroke="#1b1f2a" stroke-width="0.9"><path d="M12 11 L12 8 L66 8 L66 11"/><path d="M72 11 L72 8 L126 8 L126 11"/></g>
+        <g font-size="6.5" fill="#1b1f2a" text-anchor="middle"><text x="39" y="5">soil</text><text x="99" y="5">plant</text></g>
+        <path d="M66 88 L66 104" stroke="#1b1f2a" stroke-width="1.2"/><path d="M62 100 L66 106 L70 100" fill="none" stroke="#1b1f2a" stroke-width="1.2"/>
+        <text x="66" y="132" font-size="21" font-weight="600" fill="#1d74b5" text-anchor="middle">MFA</text>
+        <text x="66" y="147" font-size="8.2" fill="#1b1f2a" text-anchor="middle">multiple factor analysis</text>
+        <g font-size="8" fill="#5d6472" text-anchor="middle"><text x="66" y="172">variables gathered</text><text x="66" y="184">into thematic groups</text></g>
+        <text x="66" y="214" font-size="7.5" fill="#1b1f2a" text-anchor="middle">the same plots:</text><text x="66" y="225" font-size="7.5" fill="#1b1f2a" text-anchor="middle">soil, climate and plant</text>
+      </g>
+      <!-- leyenda -->
+      <g font-size="8" fill="#1b1f2a"><rect x="470" y="4" width="9" height="9" rx="1.5" fill="#5b3fd6"/><text x="483" y="12">quantitative</text><rect x="545" y="4" width="9" height="9" rx="1.5" fill="#e8890c"/><text x="558" y="12">qualitative</text><rect x="614" y="4" width="9" height="9" rx="1.5" fill="#1d74b5"/><text x="627" y="12">another group</text></g>
+    </svg>
+    <figcaption><b>Figure 1.3.</b> Five shapes of table and the method that fits each one. At the bottom of each card, a typical case in agronomy or biology. On top of any of the five, the individuals can afterwards be clustered (Block 5b).</figcaption>
+  </figure>
+
+  <table>
+    <caption><b>Table 1.3.</b> What distinguishes each method.</caption>
+    <thead><tr><th style="width:15%">Method</th><th style="width:26%">Active variables</th><th>What you obtain that no other gives</th><th style="width:22%">Watch out for</th></tr></thead>
+    <tbody>
+      <tr><td><b>PCA</b></td><td>Quantitative only</td><td>Eight retention criteria, rotation, loadings and communalities, goodness of fit with the reproduced matrix.</td><td>Mismatched units left unstandardised; outliers.</td></tr>
+      <tr><td><b>CA</b></td><td>Two qualitative, crossed in a frequency table</td><td>The χ² of independence, the residuals of each cell and a symmetric map of rows and columns.</td><td>Cells with an expected frequency below 5.</td></tr>
+      <tr><td><b>MCA</b></td><td>Several qualitative</td><td>Map of categories, Cramér's V between variables and the corrected percentages of Benzécri and Greenacre.</td><td>The raw percentages, biased downwards; rare categories.</td></tr>
+      <tr><td><b>FAMD</b></td><td>Quantitative and qualitative together</td><td>A map of variables where r² and η² are compared on the same scale.</td><td>Declaring a design factor as active.</td></tr>
+      <tr><td><b>MFA</b></td><td>Variables gathered into groups</td><td>Balance between groups, RV coefficients and partial points: how each group sees each individual.</td><td>Groups with a single variable.</td></tr>
+    </tbody>
+  </table>
+
+  <p>You do not have to decide blind. When the diagnostics are done, Block 1 shows the <span class="ui">1.9 · Which method applies</span> card, which reads your data and grades each method as <b>recommended</b>, <b>possible</b> or <b>not applicable</b>, with the reason and the figures behind it. Chapter 3 explains it in detail.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · design factor or characteristic</div>
+    <p>A qualitative variable can play two very different roles. If it is a <b>design factor</b> —the treatment, the block, the sampling site—, it must not build the axes: it goes in as supplementary, the method is PCA and the factor serves to colour the map and compare groups. If it is a <b>characteristic of the individual</b> that you want inside the structure —flower colour, growth habit—, it goes in as active and the method is FAMD. The app cannot guess the difference; you can.</p>
+  </div>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-metodo.png" alt="The method recommender card with the iris data">
+      <span class="marca" style="left:20.1%;top:14.2%">1</span>
+      <span class="marca" style="left:45%;top:14.2%">2</span>
+      <span class="marca" style="left:92.3%;top:14.2%">3</span>
+      <span class="marca" style="left:97.3%;top:84.1%">4</span>
+      <span class="marca" style="left:63.8%;top:87.4%">5</span>
+      <span class="marca" style="left:97.3%;top:91.3%">6</span>
+    </div>
+    <figcaption><b>Figure 1.4.</b> The recommender with the iris data: four quantitative measurements and one qualitative variable, the species.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>PCA, <b>recommended</b>: the species goes in as supplementary and colours the maps.</li>
+    <li><span class="n">2</span>CA and MCA <b>do not apply</b>: more than one qualitative variable is needed.</li>
+    <li><span class="n">3</span>FAMD and MFA, <b>possible</b>, with the condition that would justify them.</li>
+    <li><span class="n">4</span>Warnings with the figure behind them: Bartlett, χ² = 707.0, and a nearly redundant pair, <i>r</i> = 0.963.</li>
+    <li><span class="n">5</span>Clustering is offered after any method.</li>
+    <li><span class="n">6</span>The configuration the chosen method asks for.</li>
+  </ul>
+
+  <!-- 1.5 -->
+  <h2 id="s1-5"><span class="num">1.5</span>What you need and how to open PCAPro</h2>
+  <div class="dos">
+    <div>
+      <h4>Requirements</h4>
+      <ul>
+        <li>A computer with an <b>up-to-date browser</b>: Chrome, Edge, Firefox or Safari.</li>
+        <li>A screen at least 1280 pixels wide; the app adapts to smaller screens, but the tables and figures are better used on a large one.</li>
+        <li><b>No</b> installation and no administrator rights are needed.</li>
+        <li>An internet connection only in two cases: to use the online version and to read <b>.xlsx</b> files the first time, because the Excel sheet reader is downloaded when the app opens. The .csv files are always read offline.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contents of the folder</h4>
+      <table class="compacta" style="margin-top:0.04in">
+        <tbody>
+          <tr><td><code>index.html</code></td><td>The app. Open it with a double click.</td></tr>
+          <tr><td><code>servidor.ps1</code></td><td>Optional start-up with a local server.</td></tr>
+          <tr><td><code>datos/</code></td><td>The example and practice files.</td></tr>
+          <tr><td><code>js/</code>, <code>css/</code></td><td>The code of the program.</td></tr>
+          <tr><td><code>curso/</code></td><td>Material of the PCA workshop.</td></tr>
+          <tr><td><code>tests/</code>, <code>lib/</code></td><td>Verification of the computations.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>Three ways of opening it</h3>
+  <table>
+    <caption><b>Table 1.4.</b> Ways of opening PCAPro and how they differ.</caption>
+    <thead><tr><th style="width:24%">Way</th><th>How</th><th style="width:34%">Bear in mind</th></tr></thead>
+    <tbody>
+      <tr><td><b>Double click</b></td><td>Copy the whole <code>PCAPro</code> folder to your computer and double-click <code>index.html</code>.</td><td>Everything works except the <span class="ui">Real example: iris (150 × 4)</span> button: the browser does not allow reading files from the folder on its own. Load <code>datos/iris.csv</code> with the file picker.</td></tr>
+      <tr><td><b>Local server</b></td><td>Right-click <code>servidor.ps1</code> › <i>Run with PowerShell</i>, and open <code>http://localhost:8790</code> in the browser.</td><td>Everything works, examples included. The server is on your own computer: nothing goes out to the internet.</td></tr>
+      <tr><td><b>Online</b></td><td>Open <code>luisangelbg.github.io/PCAPro/</code> in the browser.</td><td>Always the most recent version. The computations still happen on your own machine.</td></tr>
+    </tbody>
+  </table>
+
+  <ol class="pasos">
+    <li><b>Open the app</b> by any of the three ways. You will see the home screen of figure 1.1.</li>
+    <li><b>Choose the language</b> with the switch in the top right-hand corner, if it is not already in English.</li>
+    <li><b>Press</b> <span class="ui">Start with my data →</span> to load a file, or <span class="ui">See the iris example</span> to practise.</li>
+  </ol>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · what the app remembers</div>
+    <p>The browser saves only the chosen language. The data and the results live while the tab is open: if you reload the page, the analysis starts from scratch. That is why it is worth downloading the report and the ZIP package of Block 6 before closing. Your original files are never modified.</p>
+  </div>
+
+  <!-- 1.6 -->
+  <h2 id="s1-6"><span class="num">1.6</span>A tour of the interface</h2>
+  <p>Every block shares the same layout, so it is enough to learn it once. At the top is the step bar; below it, the content of the active block, which always follows the same order.</p>
+  <table>
+    <thead><tr><th style="width:24%">Part</th><th>What it holds</th><th style="width:30%">How you recognise it</th></tr></thead>
+    <tbody>
+      <tr><td><b>Theory of the block</b></td><td>Expandable topics that explain what is computed and how to decide. In Block 1 it is the full theoretical framework, with thirteen topics.</td><td>A card with a violet rule on the left; each topic opens with a click.</td></tr>
+      <tr><td><b>Numbered cards</b></td><td>The steps of the block in order: settings, results, figures and downloads.</td><td>Titles such as <span class="ui">2.2 · Eigenvalues and explained variance</span>.</td></tr>
+      <tr><td><b>Main button</b></td><td>Runs the computation of the block with the chosen settings.</td><td>A violet button with an arrow, such as <span class="ui">Extract components →</span>.</td></tr>
+      <tr><td><b>Indicators</b></td><td>The figures that sum the result up.</td><td>Grey tiles; a green, amber or red border highlights what is favourable or what needs attention.</td></tr>
+      <tr><td><b>Checklists</b></td><td>Diagnostics and recommendations, each with the figure behind it.</td><td>Lines with a mark and a colour according to their severity.</td></tr>
+      <tr><td><b>Editable figures</b></td><td>Each figure with its editing panel and its export.</td><td><span class="ui">⚙ Edit figure (colours, titles, font size)</span></td></tr>
+      <tr><td><b>Next step</b></td><td>Takes you to the block that follows.</td><td>At the end of the block, such as <span class="ui">Go to Block 2: extraction →</span></td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-bloque2.png" alt="Upper part of Block 2 with the results of the iris example">
+      <span class="marca" style="left:35.8%;top:5%">1</span>
+      <span class="marca" style="left:24.8%;top:11.9%">2</span>
+      <span class="marca" style="left:26.5%;top:36.4%">3</span>
+      <span class="marca" style="left:22.8%;top:48.3%">4</span>
+      <span class="marca" style="left:73.7%;top:60.3%">5</span>
+      <span class="marca" style="left:85.6%;top:83.5%">6</span>
+    </div>
+    <figcaption><b>Figure 1.5.</b> The anatomy of a block: the upper part of Block 2 after extracting the components of the iris example.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>The theory of the block, always first.</li>
+    <li><span class="n">2</span>Each topic expands with a click.</li>
+    <li><span class="n">3</span>The settings, with the recommended option already chosen.</li>
+    <li><span class="n">4</span>The main button of the block.</li>
+    <li><span class="n">5</span>Indicators: the recommendation of the consensus, 1 component.</li>
+    <li><span class="n">6</span>In the table, which criteria retain each component.</li>
+  </ul>
+
+  <p>The figures of every block work the same way. Below each one there is an editing panel that opens with <span class="ui">⚙ Edit figure (colours, titles, font size)</span>. It gathers titles, which elements are drawn, colours, theme, typeface and four font-size sliders. The figure is redrawn at once with every change. At the foot are the format, the resolution, the background and the download button, with the resulting size in pixels.</p>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-figura.png" alt="Scree plot of the iris example with its editing panel open">
+      <span class="marca" style="left:15.1%;top:13.8%">1</span>
+      <span class="marca" style="left:32%;top:56.3%">2</span>
+      <span class="marca" style="left:15.1%;top:69.8%">3</span>
+      <span class="marca" style="left:25.5%;top:91.9%">4</span>
+      <span class="marca" style="left:39.9%;top:94.2%">5</span>
+      <span class="marca" style="left:91.6%;top:96.4%">6</span>
+    </div>
+    <figcaption><b>Figure 1.6.</b> The scree plot of iris with its editing panel open.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>The shaded area marks the retained components.</li>
+    <li><span class="n">2</span>Opens and closes the editing panel.</li>
+    <li><span class="n">3</span>Colours, visible elements, palette and theme.</li>
+    <li><span class="n">4</span>Font size: everything, titles, axes, labels.</li>
+    <li><span class="n">5</span>Format and resolution of the download, up to 12×.</li>
+    <li><span class="n">6</span>Download, with the final size in pixels.</li>
+  </ul>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · SVG or PNG</div>
+    <p>For a paper, download in <b>SVG</b> if the journal accepts vector figures: it enlarges without losing sharpness and can be retouched in Inkscape or Illustrator. If it asks for a bitmap, use <b>PNG</b> at 8× (some 600 dpi) or more. JPG and WEBP are for presentations and web pages.</p>
+  </div>
+
+  <!-- 1.7 -->
+  <h2 id="s1-7"><span class="num">1.7</span>The example data sets</h2>
+  <p>The program comes with two examples that load with a button from the <span class="ui">1.1 · Load your data set</span> card, and five practice files in the <code>datos/</code> folder, each designed to teach one lesson. The chapter of each block uses them in its step-by-step examples.</p>
+
+  <table>
+    <caption><b>Table 1.5.</b> Examples and practice files.</caption>
+    <thead><tr><th style="width:27%">Example or file</th><th style="width:15%">Size</th><th>Content and what it is for</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Real example: iris (150 × 4)</span></td><td>150 × 4 + species</td><td>Length and width of sepals and petals of three <i>Iris</i> species (Fisher, 1936). The classic example: it serves to check that the results agree with those of other programs.</td></tr>
+      <tr><td><span class="ui">Simulated example: leaf morphometry (120 × 9)</span></td><td>120 × 9 + site</td><td>Nine leaf and plant characters at three sites, simulated on three latent factors: size, thickness and physiology. It always works, double click included.</td></tr>
+      <tr><td><code>practice1_soils.csv</code></td><td>90 × 6 + site</td><td>Soil fertility at three positions on a slope. The first complete analysis: everything comes out clean.</td></tr>
+      <tr><td><code>practice2_seeds.csv</code></td><td>120 × 9 + species</td><td>Morphometry and composition of the seeds of two species, with problems planted in it: redundancy, noise and outliers.</td></tr>
+      <tr><td><code>practice3_scales.csv</code></td><td>100 × 7 + plot</td><td>Variables in widely differing units (mm³, µS/cm, pH…): it teaches why one has to standardise.</td></tr>
+      <tr><td><code>practice4_no_structure.csv</code></td><td>80 × 6 + batch</td><td>Environmental variables unrelated to one another: it teaches when <b>not</b> to run a PCA.</td></tr>
+      <tr><td><code>integrated_project_agronomy.csv</code></td><td>150 × 12 + 2 groups + 1 supplementary</td><td>An agronomic experiment with four treatments and three blocks: the complete analysis from beginning to end.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Your first analysis in two minutes</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>On the home screen press <span class="ui">See the iris example</span>. The app opens Block 1 with the four measurements marked as active and the species as qualitative.</li>
+      <li>Press <span class="ui">Prepare matrix and run diagnostics →</span>. The diagnostics show KMO = 0.540, low, and warn that Sepal.Width has an MSA of 0.270. Card 1.9 recommends PCA (figure 1.4).</li>
+      <li>Press <span class="ui">Go to Block 2: extraction →</span> and then <span class="ui">Extract components →</span>. PC1 has λ₁ = 2.9185 and takes up 72.96 % of the variance; PC1 and PC2 together, 95.8 %.</li>
+      <li>Read the recommendation: the consensus of the eight criteria retains <b>1 component</b>, even though the PC1–PC2 plane keeps almost all the information. That tension between criteria is exactly the decision the app puts in front of you, and chapter 4 teaches how to settle it.</li>
+    </ol>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · reproducible results</div>
+    <p>PCAPro's computations are checked against values published by independent programs, such as R. With iris, the eigenvalues agree with those of <code>prcomp</code> to six decimal places and the KMO with that of <code>psych</code> to three. Horn's parallel analysis uses resampling, so its 95th percentile may vary slightly in the last digit from one run to another; the eigenvalues do not. Appendix E describes the verification.</p>
+  </div>
+
+  <!-- 1.8 -->
+  <h2 id="s1-8"><span class="num">1.8</span>Recommended workflow</h2>
+  <p>The blocks are ordered the way a study is done: first you make sure the data support the analysis, then the axes are extracted, you decide whether to rotate them, you read the maps, you interpret them and, at the end, you report. Each method travels a different path along that sequence, like metro lines that stop only at some stations.</p>
+
+  <figure>
+    <svg viewBox="0 0 700 268" xmlns="http://www.w3.org/2000/svg" font-family="Jost, sans-serif" role="img" aria-label="Route map of each method through the blocks of the app">
+      <g font-size="9" text-anchor="middle" fill="#fff" font-weight="500">
+        <rect x="135" y="8" width="46" height="18" rx="3" fill="#0d9488"/><text x="158" y="21">1</text>
+        <rect x="215" y="8" width="46" height="18" rx="3" fill="#2f9e44"/><text x="238" y="21">2</text>
+        <rect x="295" y="8" width="46" height="18" rx="3" fill="#b7791f"/><text x="318" y="21">3</text>
+        <rect x="375" y="8" width="46" height="18" rx="3" fill="#c2410c"/><text x="398" y="21">4</text>
+        <rect x="455" y="8" width="46" height="18" rx="3" fill="#e0316f"/><text x="478" y="21">5</text>
+        <rect x="535" y="8" width="46" height="18" rx="3" fill="#1d74b5"/><text x="558" y="21">5b</text>
+        <rect x="615" y="8" width="46" height="18" rx="3" fill="#334155"/><text x="638" y="21">6</text>
+      </g>
+      <g font-size="7.5" text-anchor="middle" fill="#5d6472">
+        <text x="158" y="38">data</text><text x="238" y="38">extraction</text><text x="318" y="38">rotation</text><text x="398" y="38">maps</text><text x="478" y="38">interpretation</text><text x="558" y="38">clustering</text><text x="638" y="38">report</text>
+      </g>
+      <g stroke="#e3e7ee" stroke-dasharray="2 3"><line x1="158" y1="44" x2="158" y2="250"/><line x1="238" y1="44" x2="238" y2="250"/><line x1="318" y1="44" x2="318" y2="250"/><line x1="398" y1="44" x2="398" y2="250"/><line x1="478" y1="44" x2="478" y2="250"/><line x1="558" y1="44" x2="558" y2="250"/><line x1="638" y1="44" x2="638" y2="250"/></g>
+
+      <g font-size="10.5" fill="#1b1f2a" font-weight="600">
+        <text x="6" y="72">PCA</text><text x="6" y="114">CA</text><text x="6" y="156">MCA</text><text x="6" y="198">FAMD</text><text x="6" y="240">MFA</text>
+      </g>
+      <g font-size="7.5" fill="#5d6472">
+        <text x="6" y="84">principal components</text><text x="6" y="126">correspondence</text><text x="6" y="168">mult. correspondence</text><text x="6" y="210">mixed data</text><text x="6" y="252">multiple factor</text>
+      </g>
+
+      <g fill="none" stroke-linecap="round">
+        <path d="M158 70 H638" stroke="#1b1f2a" stroke-width="5"/>
+        <path d="M158 112 H638" stroke="#24365f" stroke-width="5"/>
+        <path d="M158 154 H638" stroke="#1b1f2a" stroke-width="5"/>
+        <path d="M158 196 H638" stroke="#24365f" stroke-width="5"/>
+        <path d="M158 238 H638" stroke="#1b1f2a" stroke-width="5"/>
+      </g>
+      <g stroke-width="2.4">
+        <!-- ACP: todas las estaciones -->
+        <circle cx="158" cy="70" r="8" fill="#0d9488" stroke="#fff"/><circle cx="238" cy="70" r="8" fill="#2f9e44" stroke="#fff"/><circle cx="318" cy="70" r="8" fill="#b7791f" stroke="#fff"/><circle cx="398" cy="70" r="8" fill="#c2410c" stroke="#fff"/><circle cx="478" cy="70" r="8" fill="#e0316f" stroke="#fff"/><circle cx="558" cy="70" r="8" fill="#fff" stroke="#1d74b5"/><circle cx="638" cy="70" r="8" fill="#334155" stroke="#fff"/>
+        <!-- los otros cuatro: pasan de largo por la rotación -->
+        <circle cx="158" cy="112" r="8" fill="#0d9488" stroke="#fff"/><circle cx="238" cy="112" r="8" fill="#2f9e44" stroke="#fff"/><circle cx="318" cy="112" r="4" fill="#fff" stroke="#b9c3d6"/><circle cx="398" cy="112" r="8" fill="#c2410c" stroke="#fff"/><circle cx="478" cy="112" r="8" fill="#e0316f" stroke="#fff"/><circle cx="558" cy="112" r="8" fill="#fff" stroke="#1d74b5"/><circle cx="638" cy="112" r="8" fill="#334155" stroke="#fff"/>
+        <circle cx="158" cy="154" r="8" fill="#0d9488" stroke="#fff"/><circle cx="238" cy="154" r="8" fill="#2f9e44" stroke="#fff"/><circle cx="318" cy="154" r="4" fill="#fff" stroke="#b9c3d6"/><circle cx="398" cy="154" r="8" fill="#c2410c" stroke="#fff"/><circle cx="478" cy="154" r="8" fill="#e0316f" stroke="#fff"/><circle cx="558" cy="154" r="8" fill="#fff" stroke="#1d74b5"/><circle cx="638" cy="154" r="8" fill="#334155" stroke="#fff"/>
+        <circle cx="158" cy="196" r="8" fill="#0d9488" stroke="#fff"/><circle cx="238" cy="196" r="8" fill="#2f9e44" stroke="#fff"/><circle cx="318" cy="196" r="4" fill="#fff" stroke="#b9c3d6"/><circle cx="398" cy="196" r="8" fill="#c2410c" stroke="#fff"/><circle cx="478" cy="196" r="8" fill="#e0316f" stroke="#fff"/><circle cx="558" cy="196" r="8" fill="#fff" stroke="#1d74b5"/><circle cx="638" cy="196" r="8" fill="#334155" stroke="#fff"/>
+        <circle cx="158" cy="238" r="8" fill="#0d9488" stroke="#fff"/><circle cx="238" cy="238" r="8" fill="#2f9e44" stroke="#fff"/><circle cx="318" cy="238" r="4" fill="#fff" stroke="#b9c3d6"/><circle cx="398" cy="238" r="8" fill="#c2410c" stroke="#fff"/><circle cx="478" cy="238" r="8" fill="#e0316f" stroke="#fff"/><circle cx="558" cy="238" r="8" fill="#fff" stroke="#1d74b5"/><circle cx="638" cy="238" r="8" fill="#334155" stroke="#fff"/>
+      </g>
+      <!-- leyenda -->
+      <g font-size="8.5" fill="#1b1f2a" transform="translate(154 262)">
+        <circle cx="6" cy="-3" r="6" fill="#1b1f2a"/><text x="16" y="0">compulsory stop</text>
+        <circle cx="146" cy="-3" r="6" fill="#fff" stroke="#1b1f2a" stroke-width="2.2"/><text x="156" y="0">optional</text>
+        <circle cx="236" cy="-3" r="3.5" fill="#fff" stroke="#b9c3d6" stroke-width="2.2"/><text x="246" y="0">the method passes straight by</text>
+      </g>
+    </svg>
+    <figcaption><b>Figure 1.7.</b> The route of each method through the blocks. All five start at Block 1 and end at the report. Rotation belongs to PCA: with the other four, the app jumps from Block 2 to Block 4. Clustering is optional for all of them.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 1.6.</b> What changes in each block according to the method.</caption>
+    <thead><tr><th style="width:11%">Block</th><th style="width:40%">PCA</th><th>CA, MCA, FAMD and MFA</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip k1">1</span></td><td>Loading, the role of the variables, preparation and diagnostics.</td><td>The same, and card 1.9 asks for the configuration of the method: rows and columns in CA, which qualitative variables go in for MCA and FAMD, the group of each variable in MFA.</td></tr>
+      <tr><td><span class="chip k2">2</span></td><td>Eigenvalues and the eight retention criteria.</td><td>Inertia of each axis and criteria of its own: mean inertia, cumulative percentage and elbow; in MCA, Benzécri and Greenacre as well.</td></tr>
+      <tr><td><span class="chip k3">3</span></td><td>Seven rotations.</td><td>Not applicable.</td></tr>
+      <tr><td><span class="chip k4">4</span></td><td>Correlation circle, individuals, biplot, cos² and contributions.</td><td>Maps of their own: symmetric in CA; categories and individuals in MCA; variables, categories and individuals in FAMD; groups, individuals and partial points in MFA.</td></tr>
+      <tr><td><span class="chip k5">5</span></td><td>Dimension description, test values, group comparison, fit and draft.</td><td>Reading of each axis by contributions, test values of the categories and draft.</td></tr>
+      <tr><td><span class="chip k5b">5b</span></td><td colspan="2">The same for all five: clustering works on the coordinates of the individuals, whichever method produced them.</td></tr>
+      <tr><td><span class="chip k6">6</span></td><td colspan="2">The same for all five: the report names the method and gathers its tables and figures.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · how many individuals are needed?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:26%">Criterion</th><th style="width:26%">Reference</th><th>What it says</th></tr></thead>
+      <tbody>
+        <tr><td><b>n:p ratio</b></td><td>Common consensus</td><td>Between 5 individuals per variable (minimum) and 20 (ideal); <b>10:1</b> is what is usually asked for.</td></tr>
+        <tr><td><b>Absolute number</b></td><td>Comrey and Lee</td><td>50 very poor, 100 poor, 200 fair, 300 good, 500 very good.</td></tr>
+        <tr><td><b>Strength of the structure</b></td><td>MacCallum and colleagues, 1999</td><td>With high communalities (&gt; 0.60) and three or four marker variables per component, 60 to 100 individuals may be enough; with low communalities (&lt; 0.40) more than 300 may be needed.</td></tr>
+        <tr><td><b>For interpreting</b></td><td>Rule of thumb</td><td>At least three variables with a high loading on each component you retain.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">The modern rule is the third: how strong the structure is matters more than the raw number of rows. The Block 1 diagnostics compute the n:p ratio of your data and grade it.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · the order does matter</div>
+    <p>Although you can go back to any block already unlocked, do not interpret an axis before reviewing the Block 1 diagnostics. A variable with a low MSA, an extreme outlier or unstandardised units change the components, and no map puts that right afterwards. If you change something in Block 1, press <span class="ui">Prepare matrix and run diagnostics →</span> again: the new preparation erases the previous extraction, and the extraction and the blocks that follow have to be redone from it.</p>
+  </div>
+
+  <!-- 1.9 -->
+  <h2 id="s1-9"><span class="num">1.9</span>How to read tests, thresholds and recommendations</h2>
+  <p>The app accompanies every decision with statistical tests, thresholds and recommendations. Understanding what each one says —and what it does not say— avoids the two most common mistakes: believing that a significant result is an important one, and believing that a recommendation is an order.</p>
+
+  <div class="dos">
+    <div class="caja teoria" style="margin:0">
+      <div class="caja-t"><span class="ico">P</span>The P value</div>
+      <p>It is the probability of observing a result as extreme as yours <b>if there were no effect</b>. In Bartlett's test, P &lt; 0.05 says the variables are correlated. But with many individuals it almost always comes out significant, so it is a necessary condition, not a sufficient one: the KMO says whether those correlations are enough.</p>
+    </div>
+    <div class="caja teoria" style="margin:0">
+      <div class="caja-t"><span class="ico">v</span>The test value</div>
+      <p>It measures how many standard deviations a category or a group departs from the centre. Above |1.96| the difference is not explained by chance (P &lt; 0.05). In Block 5 and in the clustering it is a <b>description</b>, not a test: the axes and the clusters were built to separate.</p>
+    </div>
+  </div>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · the KMO index</div>
+    <table class="compacta">
+      <thead><tr><th style="width:24%">KMO</th><th style="width:30%">Kaiser's grade</th><th>What to do</th></tr></thead>
+      <tbody>
+        <tr><td><b>≥ 0.90</b></td><td>Marvellous</td><td>Go ahead.</td></tr>
+        <tr><td><b>0.80 – 0.89</b></td><td>Meritorious</td><td>Go ahead.</td></tr>
+        <tr><td><b>0.70 – 0.79</b></td><td>Middling</td><td>Go ahead.</td></tr>
+        <tr><td><b>0.60 – 0.69</b></td><td>Mediocre</td><td>With reservations: state it when reporting.</td></tr>
+        <tr><td><b>0.50 – 0.59</b></td><td>Miserable</td><td>Review the variables with a low MSA.</td></tr>
+        <tr><td><b>&lt; 0.50</b></td><td>Unacceptable</td><td>Do not run the analysis with those variables.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">The same computation applied to each variable gives its MSA. Variables with MSA &lt; 0.50 are removed one at a time, recomputing after each removal, because taking one out changes those of the rest.</p>
+  </div>
+
+  <div class="caja dato">
+    <div class="dato-cifra">8</div>
+    <div class="dato-txt"><div class="caja-t">Criteria, not one</div>To decide how many components to retain, Block 2 does not trust a single rule: it computes <b>eight</b> —Horn, Kaiser, Jolliffe, broken stick, Velicer's MAP, elbow, 70 % and 80 %— and puts them side by side with the figure each one decides. The consensus is a recommendation; the number is yours to set, and the report states the decision.</div>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · significance and magnitude</div>
+    <p>With a lot of data, tiny differences come out significant. A component may separate two treatments with P &lt; 0.001 and yet explain a minimal fraction of the variance. Always ask yourself whether the magnitude matters for your question, not only whether the P value is small.</p>
+  </div>
+
+  <p style="margin-top:0.3in">With these foundations you are ready to work through the blocks. The next chapter introduces the home screen of the app, the theory that comes with each block and how to cite the program.</p>
+</section>
+
+</body>
+</html>

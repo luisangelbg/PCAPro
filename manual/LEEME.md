@@ -94,3 +94,21 @@ Son las franjas de la portada, en este orden, y el acento de cada capítulo (var
 Un degradado SVG usado como relleno de un `tspan`, o como trazo de una línea recta, se imprime como
 un rectángulo gigante. En esos casos hay que usar colores sólidos. En la portada los degradados solo
 rellenan figuras con área.
+
+## La versión en inglés
+
+`en/` lleva las mismas partes con los mismos nombres de archivo y, sobre todo, **el mismo marcado**:
+las mismas etiquetas, los mismos `id` y los mismos enlaces internos, de modo que el índice general y
+las referencias cruzadas valen en los dos idiomas. Lo único que cambia dentro de una parte es el
+texto, la pestaña del capítulo 2 (`I` de Inicio pasa a `H` de Home) y las rutas de las capturas, que
+apuntan a `img/en/`.
+
+- Los términos de pantalla no se inventan: salen del diccionario de la propia app (`js/i18n.js`),
+  que está indexado por la cadena española, así que el manual dice exactamente lo que el lector verá
+  si pone PCAPro en inglés.
+- Las siglas van en inglés: ACP → PCA, AC → CA, ACM → MCA, AFDM → FAMD, AFM → MFA, CP → PC.
+- Lo que no se traduce: los nombres de archivo del programa (`index.html`, `servidor.ps1`), los
+  binomios latinos de la portada y los nombres de las columnas de iris (Sepal.Length…), que son los
+  de Fisher. Los archivos de práctica sí cambian de nombre, porque existen traducidos en `datos/en/`.
+- Para comprobar una parte: `perl herramientas/unir-manual.pl en` y luego imprimir, igual que en
+  español. El PDF se hace **solo al final**, con todas las partes terminadas.
