@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Chapter 8 · Block 5b</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  figure.mini .marco { width: 58%; margin: 0 auto; }
+  figure.mini figcaption { margin-left: 21%; margin-right: 21%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b5b" data-pestana="B5b" data-orden="8" style="--acento: var(--b5b)">
+  <div class="cap-apertura">
+    <div class="cap-num">8</div>
+    <div class="cap-etiqueta">Chapter eight · Block 5b</div>
+    <h1>Clustering</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">The optional step that turns the cloud of individuals into a few named clusters: Ward's hierarchical clustering on the axes, three rules for deciding how many clusters, consolidation by k-means and the description of each cluster. It works with all five methods. It ends with what a clustering cannot prove.</p>
+    <div class="cap-franja"><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span><span class="k5b"></span></div>
+    <ul class="cap-contenido">
+      <li><b>8.1</b>Clustering on the axes</li>
+      <li><b>8.2</b>Ward's criterion and the dendrogram</li>
+      <li><b>8.3</b>How many clusters? Three rules</li>
+      <li><b>8.4</b>Consolidation and description of the clusters</li>
+      <li><b>8.5</b>What a clustering does not prove</li>
+      <li><b>8.6</b>Step by step</li>
+    </ul>
+  </div>
+
+  <!-- 8.1 -->
+  <h2 id="s8-1"><span class="num">8.1</span>Clustering on the axes</h2>
+  <p class="lead">Factor analysis orders the individuals in a continuous space. Clustering them is another operation, and it is optional: it answers the question “what types of individual are there?”, not “what dimensions order them?”.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>HCPC: why on the axes and not on the variables</div>
+    <p>HCPC —<i>hierarchical clustering on principal components</i>, from Husson, Josse and Pagès— clusters on the factor coordinates, not on the original table. It has two advantages:</p>
+    <ul>
+      <li><b>It removes the noise.</b> The axes you did not retain are, for the most part, variation without structure: clustering on the first ones is clustering on a clean version of the table.</li>
+      <li><b>It unifies the data types.</b> On the coordinates of an MCA or a FAMD the Euclidean distance is used even though the original variables are qualitative, with no need to choose a similarity coefficient.</li>
+    </ul>
+  </div>
+
+  <p>The block appears on the bar as <span class="ui">5b · Clustering</span> and is unlocked when the maps of Block 4 are built, together with Block 5. It has a theory card with six topics and the <span class="ui">5b.1 · Clustering settings</span> card. Pressing <span class="ui">Cluster the individuals →</span> brings up seven result cards and unlocks Block 6.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · come in through the Block 5 button</div>
+    <p>The settings card is filled in when the block is opened with the <span class="ui">Cluster the individuals (HCPC) →</span> button, which is at the end of Block 5, both in PCA and in the other methods. In version 1.1, if you arrive with the <span class="chip k5b">5b</span> button of the step bar, the card is left empty and pressing <span class="ui">Cluster the individuals →</span> gives an error. Press <span class="ui">Interpret components →</span> in Block 5 and use that button.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5b-config.png" alt="Cards 5b.1 and 5b.2 with iris">
+      <span class="marca" style="left:18.8%;top:16.2%">1</span>
+      <span class="marca" style="left:59.5%;top:16.2%">2</span>
+      <span class="marca" style="left:76.5%;top:16.2%">3</span>
+      <span class="marca" style="left:22.9%;top:28.1%">4</span>
+      <span class="marca" style="left:8%;top:48.5%">5</span>
+      <span class="marca" style="left:9%;top:79.5%">6</span>
+      <span class="marca" style="left:95%;top:94.4%">7</span>
+    </div>
+    <figcaption><b>Figure 8.1.</b> Cards <span class="ui">5b.1</span> and <span class="ui">5b.2 · Summary of the partition</span> with iris and two components.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>How many axes go in.</li>
+    <li><span class="n">2</span>Number of clusters: automatic or fixed.</li>
+    <li><span class="n">3</span>The consolidation by k-means.</li>
+    <li><span class="n">4</span>Launches the clustering.</li>
+    <li><span class="n">5</span>Clusters, in green if the criteria agree.</li>
+    <li><span class="n">6</span>The mean silhouette and its reading.</li>
+    <li><span class="n">7</span>What the consolidation did.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Table 8.1.</b> The options of card 5b.1.</caption>
+    <thead><tr><th style="width:26%">Option</th><th>Values</th><th style="width:36%">Advice</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Axes used</span></td><td>From 1 to the number of axes of the method. By default, those retained in Block 2 (at least 2 and at most 5). Below it you can read how much inertia they add up to.</td><td>Use the retained ones: few axes manufacture clean clusters that are not in the data; many bring the noise back.</td></tr>
+      <tr><td><span class="ui">Number of clusters</span></td><td><span class="ui">automatic (consensus of the three criteria)</span> or a number from 2 to 10.</td><td>Start on automatic and change it only with a reason from your discipline (section 8.3).</td></tr>
+      <tr><td><span class="ui">Consolidate by k-means</span></td><td>A checkbox, ticked.</td><td>Leave it ticked; untick it if you need the partition to match the tree exactly.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Table 8.2.</b> The indicators of card 5b.2.</caption>
+    <thead><tr><th style="width:26%">Indicator</th><th>What it says</th><th style="width:30%">Colour</th></tr></thead>
+    <tbody>
+      <tr><td><b>Clusters</b></td><td>The number of clusters and whether the three criteria agree.</td><td>green if they agree · amber</td></tr>
+      <tr><td><b>Axes used</b></td><td>How many and how much inertia they add up to.</td><td>—</td></tr>
+      <tr><td><b>Between-cluster inertia</b></td><td>The proportion of the inertia of the cloud the partition explains.</td><td>green ≥ 50 % · amber</td></tr>
+      <tr><td><b>Mean silhouette</b></td><td>Cohesion against separation (section 8.3).</td><td>green ≥ 0.50 “clear structure” · amber ≥ 0.25 “weak” · red “no appreciable structure”</td></tr>
+      <tr><td><b>Size of the clusters</b></td><td>Individuals in each cluster.</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p class="small">In version 1.1 the indicators of this card stack in a column instead of forming a row, as in Block 2 with methods other than PCA.</p>
+
+  <table class="compacta">
+    <caption><b>Table 8.3.</b> What is clustered with each method.</caption>
+    <thead><tr><th style="width:12%">Method</th><th>Individuals</th><th style="width:44%">What the clusters are described with</th></tr></thead>
+    <tbody>
+      <tr><td><b>PCA</b></td><td>The unrotated scores of the observations. An orthogonal rotation would not change the distances; with an oblique one the unrotated solution is clustered all the same.</td><td>Active variables in their original units, supplementary quantitative and qualitative ones.</td></tr>
+      <tr><td><b>CA</b></td><td>The <b>rows</b> of the contingency table, with their mass.</td><td>The profile of each row: how it is shared out as percentages among the columns.</td></tr>
+      <tr><td><b>MCA, FAMD, MFA</b></td><td>The individuals, without the rows discarded for being empty.</td><td>Quantitative and qualitative variables of the data, active and supplementary.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 8.2 -->
+  <h2 id="s8-2"><span class="num">8.2</span>Ward's criterion and the dendrogram</h2>
+  <p>The tree is built from the bottom up: each individual starts as a cluster and, at every step, the two clusters whose fusion adds the least within-cluster inertia are joined.</p>
+
+  <div class="formula">Δ(A, B) = [w<sub>A</sub> · w<sub>B</sub> / (w<sub>A</sub> + w<sub>B</sub>)] · d²(g<sub>A</sub>, g<sub>B</sub>)</div>
+  <p>g are the centres and w the masses of the clusters. Δ is the <b>height</b> at which the fusion appears on the dendrogram: a tall branch means that joining those two clusters came at a high price, that is, that they were different. Ward is the natural criterion here because, like factor analysis, it divides the total inertia into a between-cluster part and a within-cluster part.</p>
+
+  <figure>
+    <div class="marco"><img src="../img/en/app-b5b-dendro.png" alt="Ward dendrogram of iris cut into three clusters"></div>
+    <figcaption><b>Figure 8.2.</b> The <span class="ui">5b.4 · Dendrogram</span> card with iris cut into three clusters. The tallest fusion (2.5) separates setosa from the rest; the next (0.53) divides the large cluster in two. The orange line marks the cut and the band at the bottom colours the leaves according to the cluster of the cut. The note warns that the consolidation afterwards moved 6 individuals.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 8.4.</b> Options belonging to the dendrogram.</caption>
+    <thead><tr><th style="width:30%">Control</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td>Orientation</td><td>Leaves at the bottom or leaves on the left.</td></tr>
+      <tr><td>Colour the branches by cluster · Trunk colour</td><td>The branches of each cluster in its colour; what is above the cut, in grey.</td></tr>
+      <tr><td>Cut line · Cluster band</td><td>The height of the cut and a colour band under the leaves.</td></tr>
+      <tr><td>Square-root scale</td><td>It compresses the tall fusions so that the low ones can be seen better.</td></tr>
+      <tr><td>Leaf labels · Maximum labelled leaves</td><td>Names of the individuals (80 at most by default; with more they are hidden).</td></tr>
+      <tr><td>Width · Height of the heights</td><td>The size of the drawing in pixels.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 8.3 -->
+  <h2 id="s8-3"><span class="num">8.3</span>How many clusters? Three rules</h2>
+  <p>As with the number of components, there is no single answer. The <span class="ui">5b.3 · How many clusters</span> card computes three rules on the same tree, between 2 and 10 clusters, and shows whether they agree.</p>
+
+  <table>
+    <caption><b>Table 8.5.</b> The three rules.</caption>
+    <thead><tr><th style="width:28%">Rule</th><th>What it looks for</th><th style="width:28%">Character</th></tr></thead>
+    <tbody>
+      <tr><td><b>Largest height jump</b></td><td>The number of clusters whose next fusion would be the most costly in absolute terms.</td><td>It usually chooses few clusters: the first great division.</td></tr>
+      <tr><td><b>Largest relative loss of inertia</b></td><td>The same jump, divided by the previous height.</td><td>Husson and Josse's rule; it decides when the three disagree.</td></tr>
+      <tr><td><b>Maximum mean silhouette</b></td><td>The number with the best silhouette: for each individual, (b − a) / max(a, b), with a its mean distance to those of its own cluster and b the mean distance to the nearest neighbouring cluster.</td><td>It rewards compact, well-separated clusters.</td></tr>
+    </tbody>
+  </table>
+  <p>The <b>consensus</b> is the number proposed by most rules; if the three disagree, the relative loss prevails. With <span class="ui">automatic</span>, that is the number of clusters.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-b5b-corte.png" alt="Card 5b.3 with the three rules and the figure for choosing the number of clusters"></div>
+    <figcaption><b>Figure 8.3.</b> Card <span class="ui">5b.3</span> with iris. The three rules propose 2 clusters. In the figure, the bar of each number is what the fusion that would have to be undone to reach it costs: that of 2 clusters (2.5) is almost five times that of 3 (0.53). The editor allows the mean silhouette to be drawn instead of the loss.</figcaption>
+  </figure>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · how many clusters do I report?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">If…</th><th>then</th></tr></thead>
+      <tbody>
+        <tr><td>The three rules agree and the silhouette is ≥ 0.50</td><td>That number is a property of the data: report it as such.</td></tr>
+        <tr><td>They disagree, but one option makes sense in your discipline</td><td>Choose it in <span class="ui">Number of clusters</span> and say that it was a decision, with the numbers of each rule.</td></tr>
+        <tr><td>The silhouette of the best option is &lt; 0.25</td><td>There are no clusters to report: the cloud is continuous.</td></tr>
+        <tr><td>The jump chooses 2 and the other rules a high number with a low silhouette</td><td>Distrust the high number: it is usually the continuous cloud cut into slices (case 3 of section 8.6).</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">You do not cut at the tallest bar of the figure, but where the bars stop being tall: the last number that still “buys” inertia.</p>
+  </div>
+
+  <!-- 8.4 -->
+  <h2 id="s8-4"><span class="num">8.4</span>Consolidation and description of the clusters</h2>
+  <h3>The consolidation by k-means</h3>
+  <p>A fusion of the tree, once made, is not undone: an individual left on the wrong side at an early step stays there. The consolidation starts from the centres of the cut, reassigns each individual to the nearest centre and repeats, up to 30 times, until nobody moves. It never worsens the within-cluster inertia.</p>
+  <p>The text under the indicators says how many iterations it made and how the between-cluster inertia changed. If there was no change, it adds “the cut of the tree was already stable”.</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · the tree and the map may not match</div>
+    <p>The dendrogram is always coloured with the <b>cut of the tree</b>; the map, the tables and the downloads use the <b>consolidated</b> partition. If the consolidation moved individuals, card 5b.4 says how many. With iris and three clusters it moved 6: the tree has clusters of 50, 39 and 61 individuals, and the final partition of 50, 45 and 55. If you need them to match, untick the consolidation.</p>
+  </div>
+
+  <h3>The clusters on the plane</h3>
+  <figure class="mini">
+    <div class="marco"><img src="../img/en/app-b5b-mapa.png" alt="Map of the three clusters of iris on the factor plane"></div>
+    <figcaption><b>Figure 8.4.</b> The <span class="ui">5b.5 · The clusters on the factor plane</span> card: the same map of individuals as Block 4, coloured by cluster and with the same editor options. Here it does have the same scale on both axes by default. Cluster 1 is isolated; clusters 2 and 3 overlap in the centre.</figcaption>
+  </figure>
+
+  <h3>What characterises each cluster</h3>
+  <p>The <span class="ui">5b.6 · What characterises each cluster</span> card describes each cluster by what sets it apart from the whole, with <b>test values</b>: how many standard deviations the cluster departs from the overall mean, under the model that its individuals had been drawn at random and without replacement from the total.</p>
+
+  <figure class="mini">
+    <div class="marco"><img src="../img/en/app-b5b-perfil.png" alt="Profile of the clusters and description tables of iris"></div>
+    <figcaption><b>Figure 8.5.</b> Card <span class="ui">5b.6</span> with iris and three clusters. The figure shows, per cluster, the ten test values greater than |1.96|: in green what is above the mean, in orange what is below. Cluster 1 has small petals (−11.26) and is all setosa (50 of 50); cluster 2 is 75.6 % virginica; cluster 3, 70.9 % versicolor.</figcaption>
+  </figure>
+
+  <table>
+    <caption><b>Table 8.6.</b> The three description tables. Only values with |v| ≥ 1.96 are listed.</caption>
+    <thead><tr><th style="width:24%">Table</th><th>Columns</th><th style="width:30%">Reading</th></tr></thead>
+    <tbody>
+      <tr><td><b>Quantitative variables</b></td><td>Cluster, variable, mean of the cluster, overall mean, test value and p. The supplementary ones carry *.</td><td>A positive test value: the cluster is above the mean.</td></tr>
+      <tr><td><b>Categories</b></td><td>Cluster, category, n in the cluster / size of the cluster, % of the cluster, % of the total, test value and p.</td><td>Positive: the category is over-represented; negative: almost absent.</td></tr>
+      <tr><td><b>Position of each cluster on the axes</b></td><td>n and the mean of each axis used. Always complete.</td><td>Where the centre of the cluster lies on each dimension.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">With CA, the first table is called <b>Row profile by cluster</b> and compares the percentage of each column in the cluster with the overall one. Since the rows have very different masses, that test value is read as an order of importance, not as a probability.</p>
+
+  <h3>Paragons, specifics and the draft</h3>
+  <p>The <span class="ui">5b.7 · Individuals that represent each cluster</span> card gives, per cluster, the five <b>paragons</b> —those closest to its centre: the typical specimens— and the five <b>specifics</b> —those furthest from the other centres: the ones that cannot be confused with any other cluster—, with their distance. The paragons serve to explain what a cluster is; the specifics, to choose cases for a follow-up study.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-b5b-borrador.png" alt="Draft for the results section of the clustering"></div>
+    <figcaption><b>Figure 8.6.</b> The <span class="ui">5b.8 · Draft for the results section</span> card with iris and three clusters chosen by hand. The paragraph describes the axes and the method, the rules, the size of the clusters, the explained inertia and the silhouette, the descriptors of each cluster with its most typical specimen, and closes by warning that the test values describe, they do not prove.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · check the second sentence of the draft</div>
+    <p>If you choose a number of clusters other than the consensus and the three rules agreed, the draft says “they agreed on 2 clusters” and then goes on to describe 3. Correct that sentence: “The three rules indicated 2 clusters; 3 were retained because…”. The <b>Clusters</b> indicator has the same problem: it still says “the three criteria agree”. The list of rules on card 5b.3 does make it clear: “you chose 3”.</p>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Table 8.7.</b> The downloads of the block, in CSV.</caption>
+    <thead><tr><th style="width:38%">Button</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Cluster assignment (CSV)</span></td><td>Individual, cluster and its coordinates on the axes used. It serves to take the cluster into another analysis.</td></tr>
+      <tr><td><span class="ui">⬇ Cluster description (CSV)</span></td><td>Every test value —including the non-significant ones— of quantitative variables, categories and axes, with the value in the cluster, the overall value and p.</td></tr>
+    </tbody>
+  </table>
+  <p>The <span class="ui">Go to the report →</span> button opens Block 6, which includes the clustering if you ran it.</p>
+
+  <!-- 8.5 -->
+  <h2 id="s8-5"><span class="num">8.5</span>What a clustering does not prove</h2>
+  <p>The algorithm <b>always</b> returns clusters, including on data without structure. It is worth having three cautions written down before looking at the result.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · three cautions</div>
+    <ul>
+      <li><b>The test values describe, they do not prove.</b> The clusters were built to maximise those differences; presenting them as hypothesis tests is circular. With iris, every p is &lt; 0.0001, and it means nothing.</li>
+      <li><b>High inertia with a low silhouette is a cloud cut into slices.</b> The partition shares the variance out well, but the clusters are not separated.</li>
+      <li><b>Finding what you already knew is not a discovery.</b> If the clusters coincide with the treatment, the species or the site, say so: the clustering confirms that that variable orders the data, it does not discover it.</li>
+    </ul>
+  </div>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-b5b-ruido.png" alt="Summary and choice of clusters with data without structure"></div>
+    <figcaption><b>Figure 8.7.</b> The clustering of <code>practice4_no_structure.csv</code>, six independent variables with three components. The app proposes <b>8 clusters</b>, of 3 to 17 individuals, explaining 75.6 % of the inertia, in green. But the silhouette is 0.316, the rules disagree (2 and 8) and the figure falls continuously, with no clear step after the first.</figcaption>
+  </figure>
+
+  <div class="caja dato">
+    <div class="dato-cifra">75.6 %</div>
+    <div class="dato-txt"><div class="caja-t">Of inertia explained, on noise</div>With data generated with no relation whatsoever between variables, eight clusters explain three quarters of the inertia of the three axes. <b>Between-cluster inertia does not measure whether there are clusters</b>: it always grows when clusters are added. Look at the silhouette and at the agreement of the rules.</div>
+  </div>
+
+  <!-- 8.6 -->
+  <h2 id="s8-6"><span class="num">8.6</span>Step by step</h2>
+  <p>Three clusterings with very different results. The figures are the ones from the app; in all of them the block was entered with the button of Block 5.</p>
+
+  <h3>Case 1 · Iris: two clear clusters, three that make sense</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>iris.csv</code> · PCA with two components (95.8 %)</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>With the default values —2 axes, automatic, consolidation— the three rules choose <b>2 clusters</b>: silhouette 0.615 (“clear structure”), between-cluster inertia 65.7 %, sizes 50 and 100. The consolidation moved nobody.</li>
+      <li>Cluster 1 is all setosa (50 of 50, v = 12.21); cluster 2 gathers versicolor and virginica, 50 of each.</li>
+      <li>Since there are three species, choose <b>3</b> in <span class="ui">Number of clusters</span>. The silhouette falls to 0.511, still clear; the inertia rises to 80.0 %; the consolidation moved 6 individuals (figure 8.2).</li>
+      <li>Cluster 2: 34 of 45 are virginica (75.6 %), with long sepals (v = 9.18). Cluster 3: 39 of 55 are versicolor (70.9 %), with narrow sepals (v = −8.26).</li>
+    </ol>
+  </div>
+  <p><b>Reading.</b> The data have two clear types —setosa and the rest— and a third, blurred one. The partition into three recovers the species with errors at the border between versicolor and virginica, exactly where the map overlaps them. Reporting three clusters is legitimate if it is said that it was a decision, and that the rules indicated two.</p>
+
+  <h3>Case 2 · Integrated project: seven types of plot</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>integrated_project_agronomy.csv</code> · PCA with four components, yield supplementary</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>With 4 axes (87.2 %), the jump chooses 2 clusters; the relative loss and the silhouette, <b>7</b>. The consensus is 7, with sizes from 15 to 27 plots, between-cluster inertia of 60.4 % and a silhouette of 0.227: “no appreciable structure”.</li>
+      <li>The descriptors are sharp: cluster 7 (27 plots) has tall plants (v = 7.43) and high yield (v = 5.90), and 18 of its 27 plots are irrigation + fertilisation (v = 5.53). Cluster 3 (15) has high leaf nitrogen (v = 6.32) and 11 fertilisation plots (v = 4.66).</li>
+      <li>The consolidation moved 26 of the 144 plots: the tree had no natural cuts.</li>
+    </ol>
+  </div>
+  <p><b>Reading.</b> The clusters are described well because the four dimensions are real, but the silhouette says that the plots form a continuum on those dimensions and not separate types. It is a case for reporting the dimensions of chapter 7 and, at most, the clusters as a convenient way of summarising them, stating the silhouette.</p>
+
+  <h3>Case 3 · Data without structure</h3>
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span><code>practice4_no_structure.csv</code> · PCA with three components (58.7 %)</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>The app proposes <b>8 clusters</b>; one of them has 3 individuals. Between-cluster inertia: 75.6 %. Silhouette: 0.316.</li>
+      <li>The silhouettes from 2 to 10 clusters run from 0.226 to 0.304, with no marked maximum; the figure of card 5b.3 decreases with no steps (figure 8.7).</li>
+      <li>The consolidation moved 6 individuals.</li>
+    </ol>
+  </div>
+  <p><b>Reading.</b> It is the negative control: chapter 3 already diagnosed these data as having no structure (KMO = 0.465), and even so the algorithm returns eight clusters with a percentage of inertia that looks excellent. Nothing here should be reported as a typology. If your data look like this case, the honest answer is that there are no clusters.</p>
+
+  <p style="margin-top:0.3in">With the analysis complete, the next chapter presents Block 6: the report that gathers every decision, table and figure.</p>
+</section>
+
+</body>
+</html>

@@ -9,17 +9,23 @@ use strict; use warnings; use utf8;
 use open qw(:std :encoding(UTF-8));
 
 my $dir = shift or die "uso: perl herramientas/reunir-reglas.pl <carpeta del idioma>\n";
-my @caps = (
-  ['01-introduccion.html', 'k0',  '1',   'Introducción a PCAPro'],
-  ['02-inicio.html',       'ki',  'I',   'Inicio, teoría y cómo citar'],
-  ['03-bloque1.html',      'k1',  'B1',  'Datos y supuestos'],
-  ['04-bloque2.html',      'k2',  'B2',  'Extracción'],
-  ['05-bloque3.html',      'k3',  'B3',  'Rotación'],
-  ['06-bloque4.html',      'k4',  'B4',  'Gráficos factoriales'],
-  ['07-bloque5.html',      'k5',  'B5',  'Interpretación'],
-  ['08-bloque5b.html',     'k5b', 'B5b', 'Agrupamiento'],
-  ['09-bloque6.html',      'k6',  'B6',  'Informe'],
+# los nombres de los capítulos y las palabras del índice siguen al idioma de la carpeta
+my %L = (
+  es => { sec => 'Sección', pref => 'Regla de decisión · ', tab => 'I',
+          caps => ['Introducción a PCAPro', 'Inicio, teoría y cómo citar', 'Datos y supuestos',
+                   'Extracción', 'Rotación', 'Gráficos factoriales', 'Interpretación',
+                   'Agrupamiento', 'Informe'] },
+  en => { sec => 'Section', pref => 'Decision rule · ', tab => 'H',
+          caps => ['Introduction to PCAPro', 'Home, theory and how to cite', 'Data and assumptions',
+                   'Extraction', 'Rotation', 'Factor maps', 'Interpretation',
+                   'Clustering', 'Report'] },
 );
+my $L = $L{$dir} or die "no sé los rótulos del idioma «$dir»\n";
+my @archivos = qw(01-introduccion.html 02-inicio.html 03-bloque1.html 04-bloque2.html
+                  05-bloque3.html 06-bloque4.html 07-bloque5.html 08-bloque5b.html 09-bloque6.html);
+my @chips = ('k0', 'ki', 'k1', 'k2', 'k3', 'k4', 'k5', 'k5b', 'k6');
+my @rotulos = ('1', $L->{tab}, 'B1', 'B2', 'B3', 'B4', 'B5', 'B5b', 'B6');
+my @caps = map { [$archivos[$_], $chips[$_], $rotulos[$_], $L->{caps}[$_]] } 0 .. $#archivos;
 my @indice;
 my $cuerpo = '';
 my $n = 0;
@@ -49,10 +55,10 @@ for my $c (@caps) {
     my ($snum, $tit, $box) = @$r;
     $n++;
     $box =~ s/^<div class="caja regla"[^>]*>/<div class="caja regla">/;
-    $box =~ s{(<div class="caja-t"><span class="ico">✓</span>.*?)</div>}{$1<span class="sec-ref">Sección $snum</span></div>}s;
+    $box =~ s{(<div class="caja-t"><span class="ico">✓</span>.*?)</div>}{$1<span class="sec-ref">$L->{sec} $snum</span></div>}s;
     $box =~ s/\n    /\n  /g;
     $cuerpo .= "\n  $box\n";
-    (my $corto = $tit) =~ s/^Regla de decisión · //;
+    (my $corto = $tit) =~ s/^\Q$L->{pref}\E//;
     $corto =~ s/<[^>]+>//g;
     $corto = ucfirst $corto;
     $corto =~ s/^¿(\p{Ll})/'¿' . uc $1/e;

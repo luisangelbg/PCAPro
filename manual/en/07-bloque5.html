@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Chapter 7 · Block 5</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  figure.mini .marco { width: 58%; margin: 0 auto; }
+  figure.mini figcaption { margin-left: 21%; margin-right: 21%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b5" data-pestana="B5" data-orden="7" style="--acento: var(--b5)">
+  <div class="cap-apertura">
+    <div class="cap-num">7</div>
+    <div class="cap-etiqueta">Chapter seven · Block 5</div>
+    <h1>Interpretation</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">From the numbers to the sentences: how to name each component, which variables and categories describe it, how to compare groups without falling into circularity, how much of the structure the solution reproduces and how to turn it all into a draft of the results section.</p>
+    <div class="cap-franja"><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span><span class="k5"></span></div>
+    <ul class="cap-contenido">
+      <li><b>7.1</b>Naming an axis</li>
+      <li><b>7.2</b>Dimension description and test values</li>
+      <li><b>7.3</b>Comparing groups without falling into circularity</li>
+      <li><b>7.4</b>Goodness of fit</li>
+      <li><b>7.5</b>The results draft</li>
+      <li><b>7.6</b>Interpreting CA, MCA, FAMD and MFA</li>
+      <li><b>7.7</b>Step by step</li>
+    </ul>
+  </div>
+
+  <!-- 7.1 -->
+  <h2 id="s7-1"><span class="num">7.1</span>Naming an axis</h2>
+  <p class="lead">A component is a linear combination and, on its own, it means nothing. Interpreting it is finding the concept of your discipline that explains why those variables vary together, and giving it a short name that a reader understands without looking at the table of loadings.</p>
+
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>The procedure</div>
+    <ol>
+      <li>Look at the variables with |loading| above the threshold you set.</li>
+      <li>Separate them by sign. If there are both, the axis is a <b>contrast</b>: it opposes two sets of characteristics.</li>
+      <li>Look for what they have in common: size, vigour, an environmental gradient, a resource-use strategy.</li>
+      <li>Give it a <b>short, substantive</b> name. If you cannot name it, you probably should not have retained it.</li>
+      <li>Confirm it with the supplementary variables, the categories and the extreme individuals.</li>
+    </ol>
+  </div>
+
+  <p>Block 5 is unlocked when the maps of Block 4 are built and it works on the solution you chose there: unrotated or rotated. It has a theory card with five topics and the <span class="ui">5.1 · Settings</span> card, with two options. Pressing <span class="ui">Interpret components →</span> brings up seven result cards and unlocks Block 6.</p>
+
+  <table class="compacta">
+    <caption><b>Table 7.1.</b> The options of card 5.1.</caption>
+    <thead><tr><th style="width:30%">Option</th><th>Values</th><th style="width:34%">Note</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Interpretable loading threshold</span></td><td>0.30, 0.40 (by default), 0.50, 0.55 and 0.70.</td><td>It is independent of the Block 3 threshold: it is advisable to use the same one.</td></tr>
+      <tr><td><span class="ui">Compare groups on the components</span></td><td><span class="ui">Do not compare groups</span> or a qualitative variable from Block 1.</td><td>It adds card 5.5 with an ANOVA and a Kruskal–Wallis per component.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">Changing either of the two options interprets again at once. The names you wrote are kept as long as the number of components does not change.</p>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-config.png" alt="Cards 5.1 and 5.2 of the integrated project with the components named">
+      <span class="marca" style="left:24.1%;top:10.9%">1</span>
+      <span class="marca" style="left:79%;top:10.9%">2</span>
+      <span class="marca" style="left:24.8%;top:27.2%">3</span>
+      <span class="marca" style="left:38.6%;top:52%">4</span>
+      <span class="marca" style="left:56.9%;top:52%">5</span>
+      <span class="marca" style="left:21%;top:80.1%">6</span>
+      <span class="marca" style="left:14.5%;top:92.2%">7</span>
+    </div>
+    <figcaption><b>Figure 7.1.</b> Cards <span class="ui">5.1</span> and <span class="ui">5.2 · Summary</span> with the integrated project, varimax rotation and the four components already named.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>The loading threshold.</li>
+    <li><span class="n">2</span>The qualitative variable being compared.</li>
+    <li><span class="n">3</span>Launches the interpretation.</li>
+    <li><span class="n">4</span>RMSR in green: good fit.</li>
+    <li><span class="n">5</span>Poorly reproduced pairs, in amber.</li>
+    <li><span class="n">6</span>Component and its percentage.</li>
+    <li><span class="n">7</span>The app's suggestion, which is kept.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Table 7.2.</b> The indicators of card 5.2.</caption>
+    <thead><tr><th style="width:28%">Indicator</th><th>What it counts</th><th style="width:30%">Colour</th></tr></thead>
+    <tbody>
+      <tr><td><b>Components interpreted</b></td><td>How many, and whether the solution is rotated or unrotated.</td><td>—</td></tr>
+      <tr><td><b>RMSR</b></td><td>Root mean square residual (section 7.4).</td><td>green &lt; 0.05 · amber &lt; 0.08 · red</td></tr>
+      <tr><td><b>Residuals &gt; 0.05</b></td><td>Pairs of variables whose residual exceeds 0.05 in absolute value.</td><td>green &lt; 10 % · amber &lt; 25 % · red</td></tr>
+      <tr><td><b>Categories characterised</b></td><td>Categories with |v.test| ≥ 1.96 on some axis (section 7.2).</td><td>—</td></tr>
+      <tr><td><b>Variance retained</b></td><td>That of every interpreted axis.</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>The names</h3>
+  <p>Below the indicators, <b>Name each component</b> offers one field per component, filled in with a suggestion built from the loadings that exceed the threshold. Write the term of your discipline over it: the name passes to the reading of the components, to the results draft and to the Block 6 report. The original suggestion always stays visible below the field.</p>
+
+  <table class="compacta">
+    <caption><b>Table 7.3.</b> How the app builds the suggestion.</caption>
+    <thead><tr><th style="width:40%">If the loadings above the threshold are…</th><th>the suggestion is</th></tr></thead>
+    <tbody>
+      <tr><td>All positive</td><td>The three largest: “Height_cm, Stem_diameter_mm, Leaf_area_cm2”.</td></tr>
+      <tr><td>Of both signs</td><td>The two largest on each side: “Conductance_mmol + Water_potential_MPa against Leaf_temp_C”.</td></tr>
+      <tr><td>All negative</td><td>The three largest preceded by “Lower”.</td></tr>
+      <tr><td>None</td><td>“(no clear loading)”: the axis is not interpreted with that threshold.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · is it a good name?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">Question</th><th>If the answer is no…</th></tr></thead>
+      <tbody>
+        <tr><td>Does it sum up <b>all</b> the marker variables, not just the first?</td><td>Look for a more general term, or check whether two themes are mixed.</td></tr>
+        <tr><td>If it is a contrast, does it say what lies at <b>each end</b>?</td><td>Use the form “A against B”, or a gradient name: “blade thickness”.</td></tr>
+        <tr><td>Do the <b>supplementary</b> variables and the extreme individuals confirm it?</td><td>The name describes the loadings, but not the system: think again.</td></tr>
+        <tr><td>Would a reader understand it without seeing the table?</td><td>Avoid column names: “Growth”, not “Height_cm, Biomass_g”.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">The sign of an axis is arbitrary. Name the axis by its positive end and, if you invert the sign in one figure to read it better, do so in all of them and say so.</p>
+  </div>
+
+  <!-- 7.2 -->
+  <h2 id="s7-2"><span class="num">7.2</span>Dimension description and test values</h2>
+  <p>Two cards describe each axis from outside the loadings: <span class="ui">5.3 · Description of each dimension</span>, with the quantitative variables, and <span class="ui">5.4 · Characterisation by category (test values)</span>, with the qualitative ones. Together they amount to FactoMineR's <code>dimdesc()</code> function.</p>
+
+  <h3>Variables that describe the axis</h3>
+  <p>The <span class="ui">Axis to describe:</span> picker chooses the component for the table. The table orders every variable —active and supplementary quantitative— by the absolute value of its correlation with the scores of that axis. For the active ones, that correlation is the loading; for the supplementary ones, the same coordinate as on the Block 4 circle.</p>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-dimdesc.png" alt="Card 5.3 with the description of the first rotated component">
+      <span class="marca" style="left:21.5%;top:6%">1</span>
+      <span class="marca" style="left:81.2%;top:27.7%">2</span>
+      <span class="marca" style="left:46.4%;top:46.9%">3</span>
+      <span class="marca" style="left:94.4%;top:79%">4</span>
+    </div>
+    <figcaption><b>Figure 7.2.</b> Card <span class="ui">5.3</span> with RPC1 of the integrated project. <b>1</b> The axis being described. <b>2</b> Yield, supplementary, in teal and with †. <b>3</b> The reference lines at ±0.30. <b>4</b> The non-significant variables, marked n.s.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 7.4.</b> Columns of the description table.</caption>
+    <thead><tr><th style="width:28%">Column</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td>Type</td><td>active or supplementary.</td></tr>
+      <tr><td>Correlation with the axis · r²</td><td>The correlation and its square: the proportion of the variance of the variable that the axis takes up.</td></tr>
+      <tr><td>p and stars</td><td>A t test on the coefficient with n − 2 df (with the valid n, for supplementary variables): * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001, n.s.</td></tr>
+    </tbody>
+  </table>
+  <p>The <b>Dimension description</b> figure draws the same correlations as bars. Its editor has its own axis picker, ordering by magnitude or by sign, only the significant ones, only the largest N and the lines at ±0.30, which do not change with the threshold of card 5.1.</p>
+
+  <h3>Test values of the categories</h3>
+  <p>Each category of the qualitative variables of Block 1 is placed at the centroid of its individuals. The <b>test value</b> measures how far that centroid departs from the centre of the axis compared with what would be expected if the category were a random sample of the individuals.</p>
+
+  <div class="formula">v = ( x̄<sub>category</sub> − x̄<sub>overall</sub> ) / √[ (s² / n<sub>q</sub>) · (N − n<sub>q</sub>) / (N − 1) ]</div>
+
+  <figure class="mini">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-vtest.png" alt="Card 5.4 with the test values of treatment and block">
+      <span class="marca" style="left:15.3%;top:37.7%">1</span>
+      <span class="marca" style="left:21%;top:44.5%">2</span>
+      <span class="marca" style="left:79.6%;top:51.5%">3</span>
+      <span class="marca" style="left:86%;top:80.5%">4</span>
+    </div>
+    <figcaption><b>Figure 7.3.</b> Card <span class="ui">5.4</span> with the integrated project. <b>1</b> Irrigation + fertilisation, with v = 5.1 on RPC1: the category that characterises growth most. <b>2</b> The blocks, with no significant value. <b>3</b> The key to the stars. <b>4</b> Fertilisation also characterises phenology (v = 2.22).</figcaption>
+  </figure>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · how do I read a test value?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:30%">|v|</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td>&lt; 1.96</td><td>The category is not distinguishable from the centre on that axis (in grey).</td></tr>
+        <tr><td>≥ 1.96 (*)</td><td>It characterises the axis with p &lt; 0.05; the sign says on which side.</td></tr>
+        <tr><td>≥ 2.58 (**)</td><td>p &lt; 0.01.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Order by |v|: the categories with the highest value are the ones that best characterise the axis. With a large n almost any small difference goes above 1.96: look also at the distance of the centroid on the map.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · the p values of the active variables are circular</div>
+    <p>The axes were built with the active variables, so their correlation with the axis will be significant almost always: with n = 144, |r| ≥ 0.17 is enough. Those p values are a reading aid, not evidence. The p values of the <b>supplementary</b> variables do say something, because those variables took no part in the axes, although they carry no correction for multiple comparisons either.</p>
+  </div>
+
+  <h3>Characteristic individuals</h3>
+  <p>The <span class="ui">5.6 · Individuals that characterise each axis</span> card lists, for each component, the five individuals with the most negative coordinate and the five with the most positive. They serve to check the name: if you called RPC1 “Growth”, the plots at the positive end should be the most vigorous ones you know.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-b5-extremos.png" alt="Card 5.6 with the extreme individuals of each axis"></div>
+    <figcaption><b>Figure 7.4.</b> Card <span class="ui">5.6</span> with the integrated project. PAR005 and PAR058 appear at the negative end of RPC1 and of RPC2 at the same time: little growth and poor nutrition. PAR024 heads the positive side of RPC2 and of RPC3.</figcaption>
+  </figure>
+
+  <!-- 7.3 -->
+  <h2 id="s7-3"><span class="num">7.3</span>Comparing groups without falling into circularity</h2>
+  <p>If you chose a qualitative variable in <span class="ui">Compare groups on the components</span>, the <span class="ui">5.5 · Group comparison on the components</span> card appears. For each component it compares the scores of the groups with a one-way ANOVA and with the Kruskal–Wallis test. Only groups with at least two individuals go in.</p>
+
+  <table>
+    <caption><b>Table 7.5.</b> Columns of the comparison table.</caption>
+    <thead><tr><th style="width:22%">Column</th><th>Contents</th><th style="width:30%">Reference</th></tr></thead>
+    <tbody>
+      <tr><td>F, df, p (ANOVA)</td><td>The F test of a one-way ANOVA on the scores.</td><td>—</td></tr>
+      <tr><td>η²</td><td>Proportion of the variance of the component explained by the factor.</td><td>0.01 small · 0.06 medium · 0.14 large</td></tr>
+      <tr><td>ω²</td><td>A less biased version of η²; report it with small samples.</td><td>The same</td></tr>
+      <tr><td>H, p (Kruskal)</td><td>The alternative that assumes no normality.</td><td>—</td></tr>
+      <tr><td>Reading</td><td>“separates the groups” with the effect size if p &lt; 0.05; if not, “does not distinguish groups”.</td><td>By the ANOVA p</td></tr>
+    </tbody>
+  </table>
+  <p>Below are the <b>Scores by group</b> figure —box plots or means with 95 % CI, one panel per component with its F test— and the <b>Means by group</b> table, with n, mean, SD and the 95 % confidence interval of each mean.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · what can be claimed</div>
+    <p>These contrasts are <b>legitimate</b> because the qualitative variable took no part in the axes. But they have two limits that must be stated: they are <i>k</i> tests with no correction for multiple comparisons, and the axes were chosen <i>a posteriori</i> for maximising variance, so the p values are optimistic. Use them to describe <b>on which dimension</b> the groups differ. If your question is “do the groups differ?”, the answer is a MANOVA, a PERMANOVA or a discriminant analysis on the original variables.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · a free negative control</div>
+    <p>If your design has a factor that should not matter, compare it too. In the integrated project, with <code>Block</code> no component distinguishes the groups: F between 0.05 and 1.06, η² ≤ 0.015. It is the check that the differences between treatments are not an artefact of the terrain.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-grupos.png" alt="Card 5.5 with the comparison of treatments">
+      <span class="marca" style="left:93%;top:18.4%">1</span>
+      <span class="marca" style="left:49%;top:34.3%">2</span>
+      <span class="marca" style="left:47.4%;top:45.3%">3</span>
+      <span class="marca" style="left:60.5%;top:62.5%">4</span>
+      <span class="marca" style="left:46.7%;top:65.9%">5</span>
+    </div>
+    <figcaption><b>Figure 7.5.</b> Card <span class="ui">5.5</span> with the treatment. <b>1</b> RPC4, phenology, does not distinguish the treatments. <b>2</b> The F test of each panel, with η². <b>3</b> Irrigation + fertilisation, the only treatment with the median of RPC1 clearly above zero. <b>4</b> On RPC4 the boxes overlap almost completely. <b>5</b> Outlying scores, in red.</figcaption>
+  </figure>
+
+  <!-- 7.4 -->
+  <h2 id="s7-4"><span class="num">7.4</span>Goodness of fit</h2>
+  <p>The <i>k</i> retained components allow the correlation matrix to be reconstructed. The difference between the observed and the reproduced one are the <b>residuals</b>; if they are small, the components take up all the structure that matters.</p>
+
+  <div class="formula">R̂ = A · Aᵀ (unrotated or orthogonal) &nbsp;&nbsp;·&nbsp;&nbsp; R̂ = P · Φ · Pᵀ (oblique)<br>RMSR = √( Σ<sub>i&lt;j</sub> residual²<sub>ij</sub> / [p(p − 1)/2] )</div>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · did I retain enough components?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:30%">RMSR</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td>&lt; 0.05</td><td>Good fit: the solution reproduces the structure.</td></tr>
+        <tr><td>0.05 to 0.08</td><td>Acceptable.</td></tr>
+        <tr><td>&gt; 0.08</td><td>Structure is being lost: consider retaining one more component in Block 2.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">A complement: that fewer than 10 % of the pairs have a residual above 0.05. One particular pair with a large residual points to a relationship that no axis takes up. With the integrated project, 4 components give RMSR = 0.029 and 8 of 66 pairs; with 3, RMSR = 0.105 and 19 of 66: the fourth component is needed.</p>
+  </div>
+
+  <figure class="mini">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-residuos.png" alt="Heat map of the residuals with four components">
+      <span class="marca" style="left:84.9%;top:36.9%">1</span>
+      <span class="marca" style="left:54.5%;top:67.2%">2</span>
+      <span class="marca" style="left:71.4%;top:76.9%">3</span>
+      <span class="marca" style="left:75.5%;top:90.6%">4</span>
+      <span class="marca" style="left:55%;top:94.8%">5</span>
+    </div>
+    <figcaption><b>Figure 7.6.</b> The <span class="ui">5.7 · Goodness of fit</span> card with four components. <b>1</b> The scale is fitted to the largest residual. <b>2</b> Leaf temperature with conductance and water potential (0.08 and 0.09): the water axis does not quite take up that relation. <b>3</b> The negative residuals of the nutrition block. <b>4</b> Flowering and maturity (−0.09). <b>5</b> The summary: RMSR and pairs above 0.05.</figcaption>
+  </figure>
+
+  <p>The figure, <b>Residuals of the reproduced matrix</b>, shows the lower triangle by default —its editor allows the upper one or the full matrix— and marks in bold the residuals above 0.05. The <span class="ui">⬇ Residual matrix (CSV)</span> download gives the full matrix.</p>
+
+  <!-- 7.5 -->
+  <h2 id="s7-5"><span class="num">7.5</span>The results draft</h2>
+  <p>The last card, <span class="ui">5.8 · Reading the components</span>, gathers everything into two pieces of text that update when the names change.</p>
+
+  <table class="compacta">
+    <caption><b>Table 7.6.</b> What the reading of each component holds.</caption>
+    <thead><tr><th style="width:30%">Sentence</th><th>Where it comes from</th></tr></thead>
+    <tbody>
+      <tr><td>Heading</td><td>Component, name in quotation marks and percentage.</td></tr>
+      <tr><td>“High values on this axis correspond to…”</td><td>Variables with |r| above the threshold, active and supplementary (supp.), separated by sign.</td></tr>
+      <tr><td>“Categories that characterise it”</td><td>Up to six categories with |v| ≥ 1.96, from largest to smallest.</td></tr>
+      <tr><td>“Comparison between groups”</td><td>F, p and η² of the ANOVA, if you chose a qualitative variable.</td></tr>
+      <tr><td>Colour of the box</td><td>Green if at least two variables exceed the threshold; amber if not.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-lectura.png" alt="Card 5.8 with the reading of the components and the draft">
+      <span class="marca" style="left:36.8%;top:7.5%">1</span>
+      <span class="marca" style="left:87.2%;top:12.5%">2</span>
+      <span class="marca" style="left:69.5%;top:61.4%">3</span>
+      <span class="marca" style="left:1.2%;top:75.5%">4</span>
+      <span class="marca" style="left:90.4%;top:90.6%">5</span>
+    </div>
+    <figcaption><b>Figure 7.7.</b> Card <span class="ui">5.8</span> with the names written in. <b>1</b> The name, taken from the field on card 5.2. <b>2</b> The supplementary variables are marked (supp.). <b>3</b> Phenology does not separate the treatments. <b>4</b> The draft for the results section. <b>5</b> The step to the clustering; below it, to the report.</figcaption>
+  </figure>
+
+  <p>The <b>draft</b> is a paragraph with your own numbers: matrix, number of variables and observations, KMO and Bartlett, components and cumulative variance, rotation and normalisation, threshold, the name and percentage of each component, and the RMSR. <span class="ui">⧉ Copy paragraph</span> puts it on the clipboard.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · check these three things before pasting the draft</div>
+    <ul>
+      <li><b>The retention criterion.</b> The paragraph always says “on the basis of Horn's parallel analysis and the scree plot”, even if you chose the number by another criterion. Correct it with the criteria you actually used (section 4.3).</li>
+      <li><b>The names.</b> If you did not change them, the paragraph uses the suggestions, with column names.</li>
+      <li><b>What is missing.</b> It does not mention the treatment of missing data, the transformation or the scaling, which are in the Block 6 report, nor the group comparison.</li>
+    </ul>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Table 7.7.</b> The buttons of card 5.8.</caption>
+    <thead><tr><th style="width:40%">Button</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Dimension description (CSV)</span></td><td>For each axis, the variables with type, correlation, r² and p.</td></tr>
+      <tr><td><span class="ui">⬇ Test values (CSV)</span></td><td>Categories with n, v.test and p on each axis.</td></tr>
+      <tr><td><span class="ui">⬇ Residual matrix (CSV)</span></td><td>The full residual matrix.</td></tr>
+      <tr><td><span class="ui">Cluster the individuals (HCPC) →</span></td><td>Opens the clustering (chapter 8).</td></tr>
+      <tr><td><span class="ui">Go to the report →</span></td><td>Opens Block 6 (chapter 9).</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 7.6 -->
+  <h2 id="s7-6"><span class="num">7.6</span>Interpreting CA, MCA, FAMD and MFA</h2>
+  <p>With a method other than PCA, the same <span class="ui">Interpret components →</span> button opens different cards, because the correlation of each variable with each axis does not always exist. What describes an axis is the <b>contribution</b> of each element, with its sign.</p>
+
+  <table>
+    <caption><b>Table 7.8.</b> What describes each axis according to the method.</caption>
+    <thead><tr><th style="width:12%">Method</th><th>Elements of card 5.2 · Reading each axis</th></tr></thead>
+    <tbody>
+      <tr><td><b>CA</b></td><td>Rows and columns of the table, with their coordinate and contribution.</td></tr>
+      <tr><td><b>MCA</b></td><td>The categories, with the variable they belong to.</td></tr>
+      <tr><td><b>FAMD</b></td><td>The quantitative variables by their correlation with the axis and the categories by their coordinate.</td></tr>
+      <tr><td><b>MFA</b></td><td>The variables, with the group they belong to.</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Table 7.9.</b> The cards with these methods.</caption>
+    <thead><tr><th style="width:36%">Card</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><b>5.2 · Reading each axis</b></td><td>For each axis, its inertia, a field for naming it and the elements above the threshold, on the positive and the negative side, with their contribution.</td></tr>
+      <tr><td><b>5.3 · Test values of the categories</b></td><td>The test values of the categories over the individuals, with the same formula as PCA. It does not appear in CA, which has no individuals.</td></tr>
+      <tr><td><b>5.4 · Draft for the results section</b></td><td>Data of the analysis, retained axes and whether the criteria agreed, what each axis opposes, significant categories and, in MFA, the range of RV between groups.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b5-afdm.png" alt="Interpretation of a FAMD of iris">
+      <span class="marca" style="left:96%;top:15%">1</span>
+      <span class="marca" style="left:56.3%;top:53%">2</span>
+      <span class="marca" style="left:3%;top:84.5%">3</span>
+      <span class="marca" style="left:49.5%;top:95.1%">4</span>
+    </div>
+    <figcaption><b>Figure 7.8.</b> The interpretation of a FAMD of iris with the species active. <b>1</b> The suggested name for Dim1, editable. <b>2</b> Setosa, with v = −11.43 on Dim1. <b>3</b> The draft: its first line falls outside the grey box because of a style of the app. <b>4</b> The step to the report.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · the threshold changes meaning</div>
+    <p>With these methods the <span class="ui">Interpretable loading threshold</span> becomes a contribution threshold: threshold × 100 / number of columns. In the FAMD of iris there are 7 columns (4 quantitative and 3 categories), so 0.40 amounts to 5.7 %, a good deal less than the mean contribution, 100/7 = 14.3 %. That is why elements with a modest contribution appear, such as Sepal.Width with 6.1 % on Dim1. To keep only what is above the mean, raise the threshold to 0.70 or read the contributions on card 2.5.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · what there is not with these methods</div>
+    <p>There is no group comparison —the picker on card 5.1 is ignored—, no dimension description by correlation, no extreme individuals, no goodness of fit and no downloads in this block. If you reach Block 5 through the step bar, the group picker may keep the qualitative variables of an earlier file; arriving with the <span class="ui">Go to interpretation →</span> button of Block 4 updates it.</p>
+  </div>
+
+  <!-- 7.7 -->
+  <h2 id="s7-7"><span class="num">7.7</span>Step by step</h2>
+  <p>The interpretation of the integrated project, carrying on from the case of chapter 6: 144 plots, twelve variables, four components with varimax and the rotated solution on the maps. The figures are the ones from the app.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Integrated project · interpretation of four rotated components</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>On card 5.1 leave the threshold at 0.40, choose <code>Treatment</code> and press <span class="ui">Interpret components →</span>. RMSR = 0.0291, in green; 8 of 66 residuals go above 0.05; 4 of 7 categories characterise some axis.</li>
+      <li>Replace the suggestions with <b>Growth</b>, <b>Nutrition</b>, <b>Water status</b> and <b>Phenology</b>. The third suggestion, “Conductance_mmol + Water_potential_MPa against Leaf_temp_C”, confirms that RPC3 is a contrast: well-hydrated, cool leaves against hot leaves.</li>
+      <li>On card 5.3, supplementary yield correlates 0.809 with Growth (p &lt; 0.0001) and 0.647 with Nutrition. It is the only correlation in the table that is not circular.</li>
+      <li>The test values (figure 7.3) order the treatments: irrigation + fertilisation characterises the positive side of Growth (5.11), Nutrition (3.41) and Water status (4.39); the control, the negative side of all three; fertilisation raises Nutrition (3.25) but lowers Water status (−4.11); irrigation does the opposite (−2.52 and 2.08).</li>
+      <li>The ANOVA separates the treatments on Growth (η² = 0.211), Nutrition (0.237) and Water status (0.242), all large effects, and not on Phenology (F = 1.86, p = 0.14). With <code>Block</code>, no component separates the groups.</li>
+      <li>In the goodness of fit, the largest residuals are temperature–water potential (0.09), temperature–conductance (0.08) and flowering–maturity (−0.09): relations a little stronger than the axes reproduce, but with no pattern that calls for another component. Try retaining 3 in Block 2 and repeating the chain: RMSR = 0.105, in red.</li>
+      <li>The extremes confirm the names: PAR005 and PAR058 are on the negative side of Growth and of Nutrition, the same plots that pulled on the plane in chapter 6.</li>
+      <li>Copy the draft and correct the retention criterion: here it was six of the eight criteria, not just Horn and the elbow.</li>
+    </ol>
+  </div>
+
+  <p><b>Reading.</b> The treatments do not act on a single dimension. Fertilisation improves nutrition at the cost of water status; irrigation, the opposite; only the combination improves all three axes and shifts the plots towards growth, which is what is most associated with yield. No treatment changes phenology. That reading, dimension by dimension, is what PCA adds to an ANOVA variable by variable.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>The draft, corrected</div>
+    <p>“A principal component analysis was carried out on the correlation matrix of 12 variables measured on 144 plots (KMO = 0.78; Bartlett's test of sphericity: χ²(66) = 1353.7, p &lt; 0.001). Four components were retained, on which the parallel analysis, the broken stick and Velicer's MAP agreed, together explaining 87.2 % of the variance. A varimax rotation with Kaiser normalisation was applied to them and the loadings were interpreted at |r| ≥ 0.40. The rotated components were interpreted as growth (28.6 %), nutrition (21.8 %), water status (21.6 %) and phenology (15.2 %). The solution reproduces the correlation matrix with an RMSR of 0.029. Yield, projected as a supplementary variable, correlated with growth (r = 0.81) and nutrition (r = 0.65). The treatments differed on the first three components (η² from 0.21 to 0.24), but not on phenology (F(3, 140) = 1.86, p = 0.14).”</p>
+  </div>
+
+  <p style="margin-top:0.3in">With the components interpreted, the next chapter presents the optional clustering of the individuals on the components (Block 5b).</p>
+</section>
+
+</body>
+</html>

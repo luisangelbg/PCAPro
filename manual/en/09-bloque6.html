@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Chapter 9 · Block 6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  figure.mini .marco { width: 58%; margin: 0 auto; }
+  figure.mini figcaption { margin-left: 21%; margin-right: 21%; }
+  .arbol { font-family: var(--mono); font-size: 8.4pt; line-height: 1.5; white-space: pre; background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.1in 0.16in; margin: 0.06in 0 0.16in; color: var(--marino); overflow: hidden; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b6" data-pestana="B6" data-orden="9" style="--acento: var(--b6)">
+  <div class="cap-apertura">
+    <div class="cap-num">9</div>
+    <div class="cap-etiqueta">Chapter nine · Block 6</div>
+    <h1>Report</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">The last block gathers everything that has been computed into a self-contained HTML report, which also prints to PDF, and into a ZIP package with the figures, the tables in CSV and the citation of the program. This chapter explains what each piece holds, what to check before using it and how to write the methods section.</p>
+    <div class="cap-franja"><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span><span class="k6"></span></div>
+    <ul class="cap-contenido">
+      <li><b>9.1</b>The status of the analysis</li>
+      <li><b>9.2</b>The report and its sections</li>
+      <li><b>9.3</b>The ZIP package</li>
+      <li><b>9.4</b>Writing the methods and citing</li>
+    </ul>
+  </div>
+
+  <!-- 9.1 -->
+  <h2 id="s9-1"><span class="num">9.1</span>The status of the analysis</h2>
+  <p class="lead">The report recomputes nothing: it collects what you already did in the earlier blocks, with the decisions you took and the figures exactly as you left them. That is why it is worth reaching this block with the analysis finished.</p>
+  <p>Block 6 is unlocked by interpreting in Block 5 or clustering in Block 5b, and having extracted in Block 2 is enough to generate a report. It has a theory card and four cards: <span class="ui">6.1 · Status of the analysis</span>, <span class="ui">6.2 · Report settings</span>, <span class="ui">6.3 · Preview</span> and <span class="ui">6.4 · How to cite PCAPro</span>.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-b6-estado.png" alt="Card 6.1 with the status of the analysis of the integrated project"></div>
+    <figcaption><b>Figure 9.1.</b> The <span class="ui">6.1 · Status of the analysis</span> card with the integrated project: the six blocks that were run, each with its summary, and the list of the 26 figures that will go into the report.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 9.1.</b> What each line of the status sums up.</caption>
+    <thead><tr><th style="width:30%">Block</th><th>With PCA</th><th style="width:34%">With other methods</th></tr></thead>
+    <tbody>
+      <tr><td>Block 1 · Data and assumptions</td><td>Observations × active variables.</td><td>The same.</td></tr>
+      <tr><td>Block 2</td><td>“4 of 12 components”.</td><td>With the abbreviation of the method: “2 of 6 axes”.</td></tr>
+      <tr><td>Block 3 · Rotation</td><td>The method, or “not applied”.</td><td>“does not apply to this method”, with ✔.</td></tr>
+      <tr><td>Block 4 · Factor maps</td><td>Rotated or unrotated solution.</td><td>The inertia of the 1–2 plane.</td></tr>
+      <tr><td>Block 5 · Interpretation</td><td>The RMSR.</td><td>How many axes were described.</td></tr>
+      <tr><td>Block 5b · Clustering</td><td colspan="2">Clusters and axes used, or “optional, not run”.</td></tr>
+    </tbody>
+  </table>
+
+  <p>Below, the available figures are listed: all those mounted on visible cards of the blocks, in the order of the app. Those on hidden cards —for example, the PCA ones after running another method— do not go in. If you change something in another block, press <span class="ui">↻ Refresh status</span>; the status is also refreshed when the block is opened from the step bar or with the <span class="ui">Go to the report →</span> button of Block 5 in PCA. If you arrive from the clustering or from another method, press <span class="ui">↻ Refresh status</span> before generating the report.</p>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · sections that switch off</div>
+    <p>The sections of blocks that were not run are unticked and dimmed on card 6.2: with other methods, the <b>Rotation</b> one; with no clustering, the <b>Clustering</b> one. In version 1.1, if you then run that block and refresh the status, the checkbox becomes available again but <b>stays unticked</b>: tick it by hand before generating the report.</p>
+  </div>
+
+  <!-- 9.2 -->
+  <h2 id="s9-2"><span class="num">9.2</span>The report and its sections</h2>
+  <p>The <span class="ui">6.2 · Report settings</span> card defines the title, the authors, the sections and the figures.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-b6-config.png" alt="Card 6.2 with the report settings"></div>
+    <figcaption><b>Figure 9.2.</b> Card <span class="ui">6.2</span> with a title of its own, the eleven sections ticked, the figures embedded and the four output buttons.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 9.2.</b> The options of card 6.2.</caption>
+    <thead><tr><th style="width:30%">Option</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Title</span> · <span class="ui">Author or authors</span></td><td>They head the cover page. With no title, the name of the method is used; the author is optional.</td></tr>
+      <tr><td><span class="ui">Sections to include</span></td><td>Eleven checkboxes (table 9.3). The citation of the program is always added at the end.</td></tr>
+      <tr><td><span class="ui">Embed the figures in the report</span></td><td>It inserts each figure as SVG inside the HTML, with the editing you gave it. Without it, the report carries only text and tables.</td></tr>
+      <tr><td><span class="ui">Figure format inside the ZIP</span> · <span class="ui">Raster resolution</span></td><td>They affect only the ZIP package (section 9.3).</td></tr>
+    </tbody>
+  </table>
+
+  <table class="compacta">
+    <caption><b>Table 9.3.</b> The sections of the report.</caption>
+    <thead><tr><th style="width:26%">Section</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><b>Summary</b></td><td>Indicators: observations, variables, components, variance, KMO, Bartlett and RMSR; with other methods, individuals, columns, axes, inertia and, in CA, the χ².</td></tr>
+      <tr><td><b>Methods</b></td><td>A paragraph written with your parameters (section 9.4).</td></tr>
+      <tr><td><b>Data preparation and assumptions</b></td><td>Descriptive statistics with the MSA, a table checking the assumptions with “Yes”, “No”, “Marginal” or “Review”, and the figures of Block 1.</td></tr>
+      <tr><td><b>Extraction</b></td><td>Eigenvalues, the number proposed by each criterion, the decision taken and the figures of Block 2.</td></tr>
+      <tr><td><b>Rotation</b></td><td>Method, simple structure, rotated loading matrix (or pattern matrix) with the loadings above the threshold in bold, variance before and after, Φ if it is oblique, and the figures.</td></tr>
+      <tr><td><b>Factor representation</b></td><td>Coordinates, cos² and contributions, supplementary elements and centroids, and the figures of Block 4.</td></tr>
+      <tr><td><b>Interpretation</b></td><td>The reading of each component with its name, the test values, the group comparison, the RMSR, the figures and the results draft of Block 5.</td></tr>
+      <tr><td><b>Clustering (HCPC)</b></td><td>The draft of 5b, the criteria, the composition, the descriptors, paragons and specifics, and its figures.</td></tr>
+      <tr><td><b>Limitations and warnings</b></td><td>A list generated from the problems detected: n:p ratio &lt; 5, KMO &lt; 0.60, Bartlett not significant, redundant pairs, outliers, skewness, RMSR ≥ 0.08, descriptive contrasts, silhouette &lt; 0.25 and cluster criteria that disagree.</td></tr>
+      <tr><td><b>Methodological references</b></td><td>Fourteen fixed references: Pearson, Hotelling, Kaiser, Horn, Cattell, Velicer, Jennrich, Ward, Husson and colleagues, among others.</td></tr>
+      <tr><td><b>Appendix with the configuration</b></td><td>The parameters of the analysis: file, rows, variables, missing data, transformation, scaling, components, parallel analysis, rotation and threshold.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">The tables and figures are numbered on their own in the order in which they appear. The figure captions use the title each figure has in its editor, so a good title in the editor is a good caption in the report.</p>
+
+  <h3>The four buttons</h3>
+  <table class="compacta">
+    <caption><b>Table 9.4.</b> The outputs of the report.</caption>
+    <thead><tr><th style="width:34%">Button</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Generate preview</span></td><td>It shows the report on card 6.3 and says how many sections and figures it included.</td></tr>
+      <tr><td><span class="ui">⬇ HTML report</span></td><td>It downloads a single <code>…_PCA_report.html</code> file, with no dependencies: it opens in any browser and can be sent by email.</td></tr>
+      <tr><td><span class="ui">🖨 Print / save as PDF</span></td><td>It opens the report in a new window and launches printing. Choose “Save as PDF”. If the browser blocks pop-up windows, the app says so: download the HTML and print it from there.</td></tr>
+      <tr><td><span class="ui">⬇ Download the full package (ZIP)</span></td><td>It generates the package of section 9.3.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco"><img src="../img/en/app-b6-vista.png" alt="Preview of the report with cover page, summary and methods"></div>
+    <figcaption><b>Figure 9.3.</b> The <span class="ui">6.3 · Preview</span> card: it is the real document, with the cover page —title, file, dimensions, date—, the indicators of the summary and the beginning of the methods. It scrolls inside its own frame.</figcaption>
+  </figure>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · the report is a snapshot of the moment</div>
+    <p>The report is built from the state of the app when the button is pressed. If you go back to a block and change something, generate the preview again before downloading. And remember that recomputing a block regenerates its figures with the default values (section 6.6): make the final edits to the figures just before generating the report.</p>
+  </div>
+
+  <!-- 9.3 -->
+  <h2 id="s9-3"><span class="num">9.3</span>The ZIP package</h2>
+  <p><span class="ui">⬇ Download the full package (ZIP)</span> generates, in the browser itself, a <code>…_PCA_complete.zip</code> file with this structure. The button shows the progress figure by figure and, when it finishes, a message says how many files and megabytes it holds.</p>
+
+  <div class="arbol">integrated_project_agronomy_PCA_complete.zip
+├── PCA_report.html           the same report as in section 9.2
+├── CITATION.bib              the citation in BibTeX
+├── README.txt                contents of the package and summary of the analysis
+├── figures/
+│   ├── 01_…_missing.svg       numbered in the order of the app
+│   ├── 01_…_missing.png
+│   └── …
+└── tables/
+    ├── 01_prepared_matrix.csv
+    ├── 02_correlations.csv
+    └── …</div>
+
+  <table class="compacta">
+    <caption><b>Table 9.5.</b> The figures of the package.</caption>
+    <thead><tr><th style="width:34%">Format</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Both: SVG and PNG</span> (default)</td><td>Each figure twice: vector and bitmap.</td></tr>
+      <tr><td>PNG, JPG or WEBP</td><td>Bitmap only, at the chosen resolution (2× to 12×), with a white background.</td></tr>
+      <tr><td>SVG</td><td>Vector only; the resolution does not apply. It is the lightest package.</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <caption><b>Table 9.6.</b> The CSV tables of the package, according to what was run.</caption>
+    <thead><tr><th style="width:10%">No.</th><th style="width:36%">PCA</th><th>CA, MCA, FAMD and MFA</th></tr></thead>
+    <tbody>
+      <tr><td>01–03</td><td colspan="2">Prepared matrix (with supplementary and qualitative variables), correlations and variable summary with MSA.</td></tr>
+      <tr><td>04</td><td>Eigenvalues with random p95 and broken stick.</td><td>Eigenvalues and inertia (in MCA, with Greenacre's %).</td></tr>
+      <tr><td>05–06</td><td>Unrotated loadings and scores.</td><td>Coordinates, cos² and contributions of columns and of rows.</td></tr>
+      <tr><td>07–09</td><td>Rotated loadings; structure and Φ if it is oblique.</td><td>Belonging to the method: χ² cells (CA), Cramér's V (MCA), r² and η² (FAMD), group inertia, RV and partial points (MFA).</td></tr>
+      <tr><td>10–11</td><td>Coordinates, cos² and contributions of variables and individuals.</td><td>—</td></tr>
+      <tr><td>12–14</td><td>Dimension description, test values and residuals.</td><td>Axis description and test values.</td></tr>
+      <tr><td>20–23</td><td colspan="2">If there was clustering: assignment, criteria by number of clusters, description and paragons.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">The CSV files go in UTF-8 with BOM and comma separated, so that Excel recognises the accents. With the integrated project and the six blocks, the package holds 16 tables, 26 figures in SVG and PNG, the report, the citation and the README: 71 files.</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · which resolution do I choose for the package?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:44%">If the package is for…</th><th>then</th></tr></thead>
+      <tbody>
+        <tr><td>Archiving the analysis or sharing it with co-authors</td><td>SVG and PNG at 4×, the default options.</td></tr>
+        <tr><td>Sending the figures to a journal</td><td>SVG, or PNG at 8×. Check the weight first: with many figures, 8× and 12× can reach hundreds of MB.</td></tr>
+        <tr><td>An email or a presentation</td><td>PNG at 2×, or just the HTML report.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">The ZIP is stored without compression so as not to depend on external libraries: if it weighs too much, compress it afterwards with your operating system.</p>
+  </div>
+
+  <!-- 9.4 -->
+  <h2 id="s9-4"><span class="num">9.4</span>Writing the methods and citing</h2>
+  <p>The <b>Methods</b> section of the report is a paragraph with your parameters. With PCA it describes the sample and the variables, the treatment of missing data, the transformation and the scaling, KMO and Bartlett, the retention criteria, the rotation, the threshold and, if there was one, the clustering. With the other methods it describes the table, the coding, the inertia and the criteria used.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · what to correct in the methods paragraph</div>
+    <ul>
+      <li><b>The retention criteria.</b> With PCA, the paragraph always says that the number was decided by “combining” Horn, Kaiser, the broken stick, the MAP and the scree plot, even if those criteria disagreed. Write down which ones support the number you chose.</li>
+      <li><b>The preprocessing sentence.</b> “No prior transformation and z standardisation were applied” is awkward: rewrite it as “The variables were standardised (z), with no prior transformation”.</li>
+      <li><b>The name of the methods.</b> With other methods the paragraph starts with a capital letter in mid-sentence (“a Factor analysis of mixed data”), says “1 qualitative variables” and writes “scree elbow (cattell)” in lower case.</li>
+      <li><b>The appendix.</b> It shows the internal codes: <code>listwise</code>, <code>none</code>, <code>z</code>. Translate them if you publish the appendix.</li>
+    </ul>
+  </div>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>A complete methods paragraph</div>
+    <p>“A total of 144 plots and 12 quantitative variables were analysed by principal component analysis; the 6 plots with missing data were deleted. The variables were standardised (z), with no prior transformation. The adequacy of the data was verified with the KMO index (0.783) and Bartlett's test of sphericity (χ²(66) = 1353.7, p &lt; 0.0001). Four components were retained, a number on which Horn's parallel analysis (500 permutations, 95th percentile), the broken stick and Velicer's MAP agreed, and they were rotated with varimax and Kaiser normalisation; the loadings were interpreted at |r| ≥ 0.40. Yield was projected as a supplementary variable. A Ward hierarchical clustering consolidated by k-means was applied to the four components (Husson, Josse and Pagès, 2010). The analyses were carried out in PCAPro, version 1.1.0 (Barrera-Guzmán, 2026).”</p>
+  </div>
+
+  <h3>What the text should not say</h3>
+  <table class="compacta">
+    <caption><b>Table 9.7.</b> Common mistakes when writing up a factor analysis.</caption>
+    <thead><tr><th style="width:44%">Instead of…</th><th>write…</th></tr></thead>
+    <tbody>
+      <tr><td>“The factors explain…”, in a PCA</td><td>“The components…”: factor analysis is a different model.</td></tr>
+      <tr><td>“The PCA showed that the treatments differ”</td><td>“The treatments were placed in different areas of the plane”, and the test you used (MANOVA, PERMANOVA).</td></tr>
+      <tr><td>“PC1 explains height”</td><td>“Height is associated with PC1 (r = 0.92)”.</td></tr>
+      <tr><td>Percentages of each component with an oblique rotation</td><td>The joint variance and the pattern loadings (section 5.2).</td></tr>
+      <tr><td>Clusters with p values as proof that they exist</td><td>The silhouette, the agreement of the rules and the fact that test values describe (section 8.5).</td></tr>
+      <tr><td>Nothing about the preprocessing</td><td>Missing data, transformation and scaling: they change the result.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Citing PCAPro</h3>
+  <p>The <span class="ui">6.4 · How to cite PCAPro</span> card shows the reference with the <span class="ui">⧉ Copy the reference</span> and <span class="ui">⧉ Copy the BibTeX</span> buttons. It is the same one that appears at the end of every report and in the <code>CITATION.bib</code> file of the package. The reference uses the concept DOI, which always points to the most recent version; if your journal asks for the exact version, use the version DOI (section 2.4).</p>
+
+  <div class="caja dato">
+    <div class="dato-cifra">0</div>
+    <div class="dato-txt"><div class="caja-t">Data sent outside the machine</div>The report and the package are generated in your browser: <b>no data leaves your computer</b>, and the foot of the report states as much. You can work with confidential data offline.</div>
+  </div>
+
+  <p style="margin-top:0.3in">The report closes the tour of the blocks. The appendices gather the file formats, the decision rules, the glossary, the troubleshooting, the verification of the computations and the references.</p>
+</section>
+
+</body>
+</html>

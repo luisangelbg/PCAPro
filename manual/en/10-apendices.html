@@ -1,0 +1,866 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Appendices</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<!-- reparte el contenido en hojas tamaño carta, con encabezados y números de página -->
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  .caja-t .sec-ref { margin-left: auto; letter-spacing: 0.08em; font-size: 7.4pt; opacity: 0.85; }
+  /* archivos y código */
+  .pre-t { font-family: var(--sans); font-size: 8.5pt; color: var(--gris); margin: 0.12in 0 0; letter-spacing: 0.02em; }
+  .pre-t b { color: var(--negro); font-weight: 500; }
+  pre.archivo { font-family: var(--mono); font-size: 7.9pt; line-height: 1.38; color: var(--negro); background: #f6f8fc; border: 1px solid var(--linea); border-left: 3px solid var(--acento); border-radius: 0 4px 4px 0; padding: 0.07in 0.12in; margin: 0.05in 0 0.18in; white-space: pre-wrap; word-break: break-all; break-inside: avoid; }
+  pre.archivo .com { color: var(--gris); }
+  /* índice de reglas */
+  ul.indice-reglas { list-style: none; padding: 0; margin: 0.12in 0 0.2in; display: grid; grid-template-columns: 1fr 1fr; column-gap: 0.35in; font-family: var(--sans); font-size: 8.8pt; }
+  ul.indice-reglas li { margin: 0; padding: 0.035in 0; border-top: 1px solid var(--linea); break-inside: avoid; }
+  ul.indice-reglas li b { display: inline-block; min-width: 2.7em; color: var(--negro); font-weight: 500; }
+  ul.indice-reglas li.grupo { grid-column: 1 / -1; border-top: 0; padding-top: 0.12in; font-weight: 500; color: var(--negro); }
+  ul.indice-reglas li.grupo .chip { margin-right: 0.55em; }
+  h3.ap-cap { font-size: 13pt; }
+  h3.ap-cap .chip { font-size: 8.5pt; margin-right: 0.55em; position: relative; top: -0.12em; }
+  /* glosario */
+  tr.letra td { background: #eef1f6 !important; font-family: var(--serif); font-size: 12.5pt; font-weight: 600; color: var(--negro); }
+  td.termino b { font-family: var(--serif); font-size: 10.5pt; }
+  td.sec { white-space: nowrap; color: var(--gris); }
+  /* referencias */
+  ul.refs { list-style: none; padding: 0; margin: 0.1in 0 0.16in; font-size: 9.4pt; line-height: 1.32; }
+  ul.refs li { padding-left: 1.5em; text-indent: -1.5em; margin-bottom: 0.26em; break-inside: avoid; text-align: left; hyphens: manual; }
+  ul.refs .doi { font-family: var(--sans); font-size: 0.8em; color: var(--gris); overflow-wrap: anywhere; }
+  ul.refs .m { color: var(--marino); font-size: 0.85em; }
+  td.ok { color: #2f9e44; font-weight: 500; }
+  td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="apendices" data-pestana="A" data-orden="10" style="--acento: var(--bx)">
+  <div class="cap-apertura">
+    <div class="cap-num">A–F</div>
+    <div class="cap-etiqueta">Appendices · reference material</div>
+    <h1 data-corto="Appendices">Appendices</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">The appendices are not read straight through: they are consulted. Here are the exact rules with which the app reads and writes each file, the decision rules of the manual gathered together, a glossary of abbreviations, symbols and terms, the solutions to the most common problems, how the computations were checked against R and the full references of the methods.</p>
+    <div class="cap-franja"><span class="kx"></span><span class="kx" style="opacity:.75"></span><span class="kx" style="opacity:.5"></span><span class="kx" style="opacity:.3"></span></div>
+    <ul class="cap-contenido">
+      <li><b>A</b>File formats</li>
+      <li><b>B</b>Summary of decision rules</li>
+      <li><b>C</b>Glossary</li>
+      <li><b>D</b>Troubleshooting</li>
+      <li><b>E</b>Verification of the computations</li>
+      <li><b>F</b>References</li>
+    </ul>
+  </div>
+
+  <!-- ====================================================================== A -->
+  <h2 id="ap-a"><span class="num">A</span>File formats</h2>
+  <p class="lead">Chapter 3 explains how to lay the data out (tables 3.1 to 3.4). This appendix gathers the exact rules: how the app reads a file, how it turns a text into a number and what each file it downloads holds.</p>
+
+  <h3>A.1 Which files it reads</h3>
+  <table class="compacta">
+    <caption><b>Table A.1.</b> The two types of file that card 1.1 accepts.</caption>
+    <thead><tr><th style="width:20%">File</th><th style="width:40%">How it reads it</th><th>What is worth knowing</th></tr></thead>
+    <tbody>
+      <tr><td><b>Delimited text</b><br><code>.csv .tsv .txt</code></td><td>By the extension. It is read as UTF-8 text and split into columns with the rules of section A.2.</td><td>It is always read offline. It is the safest format for exchanging data between programs.</td></tr>
+      <tr><td><b>Excel workbook</b><br><code>.xlsx .xls .xlsm</code></td><td>Everything that does not end in <code>.csv</code>, <code>.tsv</code> or <code>.txt</code> goes to the SheetJS spreadsheet reader (version 0.18.5). The first sheet is read; if there are several, <span class="ui">Workbook sheet</span> appears.</td><td>The reader is downloaded from the internet when the app opens: with no connection, save the sheet as CSV. The numbers in numeric cells arrive as numbers and do not depend on the decimal separator; dates arrive as text.</td></tr>
+    </tbody>
+  </table>
+  <p>In both cases the <b>first non-empty row</b> gives the column names (with no leading or trailing spaces) and completely empty rows are discarded. A column with no name is called <code>V</code> plus its position: <code>V3</code> if it is the third. A row with fewer cells than the header is completed with missing values.</p>
+
+  <h3>A.2 How a text is split into columns</h3>
+  <ul>
+    <li><b>Separator.</b> With <span class="ui">Column separator (CSV)</span> on <span class="ui">Detect automatically</span>, the app counts in the <b>first line</b> —the one with the names— how many times the comma, the semicolon, the tab and the vertical bar appear, and uses the most frequent. If they tie, the first in that order wins. A name such as <code>Weight (g; dry)</code> adds a semicolon to the count.</li>
+    <li><b>Quotation marks.</b> A field between double quotation marks may contain the separator and line breaks; two quotation marks in a row inside it amount to one. A stray quotation mark in the middle of a cell opens a quoted section that lasts until the next quotation mark, and it can join lines together.</li>
+    <li><b>Encoding.</b> UTF-8, with or without the initial mark (BOM), which is removed. Windows carriage returns are ignored.</li>
+    <li><b>When the pickers apply.</b> Both separators are read at the moment of loading. If you change the decimal separator afterwards, press <span class="ui">Restore automatic detection</span> so that the table of variables is typed again; if you change the column one, drag the file onto the dotted area once more.</li>
+  </ul>
+
+  <h3>A.3 How a text is turned into a number</h3>
+  <p>Each cell is cleaned before being converted: the spaces —including the non-breaking space— and a trailing <code>%</code> are removed, without dividing by 100. What is left must be a number with an optional <code>+</code> or <code>-</code> sign, digits, a decimal point and, if need be, an exponent (<code>3e-4</code>). Table A.2 shows what each option of <span class="ui">Decimal separator</span> does with the cases that usually cause doubt; the figures are the ones the app returns.</p>
+  <table class="compacta">
+    <caption><b>Table A.2.</b> The same text read with the three options of the decimal separator. In red, readings that change the value with no warning.</caption>
+    <thead><tr><th style="width:18%">Text in the cell</th><th style="width:22%">Detect automatically</th><th style="width:18%">Point (12.34)</th><th style="width:18%">Comma (12,34)</th><th>Comment</th></tr></thead>
+    <tbody>
+      <tr><td><code>12.5</code></td><td class="num">12.5</td><td class="num">12.5</td><td class="num" style="color:#c92a2a">125</td><td>With <b>Comma</b> the points are deleted as thousands separators.</td></tr>
+      <tr><td><code>12,5</code></td><td class="num">12.5</td><td class="num" style="color:#c92a2a">125</td><td class="num">12.5</td><td>With <b>Point</b> the commas are deleted.</td></tr>
+      <tr><td><code>0,5</code></td><td class="num">0.5</td><td class="num" style="color:#c92a2a">5</td><td class="num">0.5</td><td></td></tr>
+      <tr><td><code>1,234</code></td><td class="num">1.234</td><td class="num">1234</td><td class="num">1.234</td><td>Ambiguous: the detection reads it as a decimal.</td></tr>
+      <tr><td><code>1.234,5</code></td><td class="num" style="color:#c92a2a">1.2345</td><td class="num" style="color:#c92a2a">1.2345</td><td class="num">1234.5</td><td>Thousands with a point and decimals with a comma: choose <b>Comma</b>.</td></tr>
+      <tr><td><code>1,234.5</code></td><td class="num">1234.5</td><td class="num">1234.5</td><td class="num" style="color:#c92a2a">1.2345</td><td>Thousands with a comma and decimals with a point.</td></tr>
+      <tr><td><code>12,3456</code></td><td class="num" style="color:#c92a2a">123456</td><td class="num" style="color:#c92a2a">123456</td><td class="num">12.3456</td><td>The detection accepts only one to three decimals after the comma.</td></tr>
+      <tr><td><code>45%</code> · <code>1 234</code></td><td class="num">45 · 1234</td><td class="num">45 · 1234</td><td class="num">45 · 1234</td><td>The % does not divide; the space does not separate.</td></tr>
+      <tr><td><code>12.5 kg</code> · <code>−3</code></td><td colspan="3" style="text-align:center">not a number</td><td>Units inside the cell, or the typographic minus sign (−) instead of the hyphen (-).</td></tr>
+    </tbody>
+  </table>
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · a decimal error is not always visible</div>
+    <p>A text that is not a number shows: the column stops being numeric or the warning about non-numeric values appears. By contrast, <code>0,5</code> read as 5 is still a valid number and the column enters the analysis on a scale ten times larger. After loading a file with decimal commas, check the minimum and the maximum of each variable on card 1.2; with Excel workbooks there is no need, unless the numbers are stored as text.</p>
+  </div>
+  <p>The missing-value texts are those of table 3.2, regardless of case: empty cell, <code>NA</code>, <code>N/A</code>, <code>NaN</code>, <code>null</code>, <code>nulo</code>, <code>.</code>, <code>-</code>, <code>--</code>, <code>?</code>, <code>ND</code>, <code>S/D</code>, <code>SD</code>, <code>missing</code>, <code>faltante</code> and the Excel errors <code>#N/A</code>, <code>#¡DIV/0!</code>, <code>#VALUE!</code> and <code>#VALOR!</code>. A column is numeric if at least 85&nbsp;% of its present values convert into a number and there are three or more; table 3.4 gives the rest of the typing.</p>
+
+  <h3>A.4 The example files</h3>
+  <table class="compacta">
+    <caption><b>Table A.3.</b> The data that come with the app. Those in <code>datos/</code> are comma-separated CSV files with a decimal point; all except <code>iris.csv</code> carry the initial UTF-8 mark.</caption>
+    <thead><tr><th style="width:36%">File</th><th style="width:15%">Size</th><th>Contents and where it is used</th></tr></thead>
+    <tbody>
+      <tr><td><code>iris.csv</code></td><td>150 × 5</td><td>Fisher's four floral measurements (1936) and the species. The <span class="ui">Real example: iris (150 × 4)</span> button; sections 4.6, 6.3 and 8.6.</td></tr>
+      <tr><td><code>practice1_soils.csv</code></td><td>90 × 8</td><td>Six soil properties, site and identifier. Section 3.8.</td></tr>
+      <tr><td><code>practice2_seeds.csv</code></td><td>120 × 11</td><td>Nine seed traits, species and identifier. Sections 3.8 and 4.6.</td></tr>
+      <tr><td><code>practice3_scales.csv</code></td><td>100 × 9</td><td>Seven variables on widely differing scales. Section 3.8.</td></tr>
+      <tr><td><code>practice4_no_structure.csv</code></td><td>80 × 8</td><td>Six almost independent variables: the negative control. Sections 3.8 and 8.6.</td></tr>
+      <tr><td><code>integrated_project_agronomy.csv</code></td><td>150 × 16</td><td>Twelve plant variables, treatment, block and yield. Chapters 4, 6, 7, 8 and 9.</td></tr>
+      <tr><td><i>Simulated example</i> (not a file)</td><td>120 × 11</td><td>Leaf morphometry generated by the app from three latent factors, with a fixed seed, two empty cells and one <code>NA</code>. The <span class="ui">Simulated example: leaf morphometry (120 × 9)</span> button; chapter 5.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>A.5 The files the app downloads</h3>
+  <p>Every table is written the same way: <b>comma-separated CSV</b>, <b>UTF-8 with the initial mark</b> —so that Excel shows the accents properly—, lines ending in CRLF, and double quotation marks around any field containing a comma, a semicolon, quotation marks or line breaks. The numbers go with a <b>decimal point and all their digits</b>, unrounded, except the correlation matrix of Block 1, which carries six decimal places. The name begins with that of the data file without its extension, with no accents and with underscores instead of spaces and signs: <code>integrated_project_agronomy_loadings.csv</code>.</p>
+  <table class="compacta">
+    <caption><b>Table A.4.</b> The downloads of each block. The names of the individual tables do not change with the language; those of Block 6 do (section 2.3).</caption>
+    <thead><tr><th style="width:13%">Block</th><th style="width:42%">File (after the name of the data)</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td><span class="chip k1">B1</span></td><td><code>_prepared_matrix.csv</code> · <code>_correlations.csv</code> · <code>_variable_summary.csv</code> · <code>_block1_report.txt</code></td><td>Card 1.8, section 3.6. The matrix already transformed and scaled, with the supplementary and qualitative variables at the end. The report is plain text with the diagnostics and the recommendations.</td></tr>
+      <tr><td><span class="chip k2">B2</span></td><td><code>_eigenvalues.csv</code> · <code>_loadings.csv</code> · <code>_scores.csv</code></td><td>Table 4.8. With PCA only. The <code>Retained</code> column says <code>yes</code> or <code>no</code>.</td></tr>
+      <tr><td><span class="chip k3">B3</span></td><td><code>_loadings_&lt;method&gt;.csv</code> · <code>_structure_&lt;method&gt;.csv</code> · <code>_component_correlation.csv</code> · <code>_scores_&lt;method&gt;.csv</code></td><td>Table 5.8. The method goes with its internal code: <code>varimax</code>, <code>promax</code>, <code>oblimin</code>…</td></tr>
+      <tr><td><span class="chip k4">B4</span></td><td><code>_individuals.csv</code> · <code>_variables.csv</code> · <code>_supplementary.csv</code></td><td>Table 6.9. Coordinates, cos² and contributions.</td></tr>
+      <tr><td><span class="chip k5">B5</span></td><td><code>_dimension_description.csv</code> · <code>_test_values.csv</code> · <code>_residuals.csv</code></td><td>Table 7.7. With PCA only.</td></tr>
+      <tr><td><span class="chip k5b">B5b</span></td><td><code>_hcpc_assignment.csv</code> · <code>_hcpc_description.csv</code></td><td>Table 8.7. These two are written differently: with no UTF-8 mark, with LF line breaks, coordinates with six decimal places and the name of the data with its accents and spaces.</td></tr>
+      <tr><td>Figures</td><td><code>&lt;figure&gt;.svg</code> · <code>.png</code> · <code>.jpg</code> · <code>.webp</code></td><td>Table 6.13. Editable vector SVG; bitmaps from 2× to 12× the base size, with a white background or, in PNG, transparent.</td></tr>
+      <tr><td><span class="chip k6">B6</span></td><td><code>_PCA_report.html</code> · <code>_PCA_complete.zip</code></td><td>Tables 9.4 to 9.6. The HTML is self-contained: it carries the figures inside.</td></tr>
+    </tbody>
+  </table>
+
+  <p class="pre-t"><b>Structure of the ZIP package</b> · integrated project with PCA, varimax and clustering (section 9.3)</p>
+  <pre class="archivo">integrated_project_agronomy_PCA_complete.zip
+├── PCA_report.html       <span class="com">the report; it prints to PDF from the browser</span>
+├── CITATION.bib          <span class="com">the PCAPro reference in BibTeX</span>
+├── README.txt            <span class="com">contents of the package and summary of the analysis</span>
+├── figures/              <span class="com">numbered in the order of the app</span>
+│   ├── 01_&lt;figure&gt;.svg    <span class="com">by default, SVG and PNG at 4×</span>
+│   └── 01_&lt;figure&gt;.png  …
+└── tables/
+    ├── 01_prepared_matrix.csv … 14_residuals.csv
+    │                     <span class="com">with other methods, fewer tables and different content</span>
+    └── 20_clusters_assignment.csv … 23_clusters_paragons.csv
+                          <span class="com">only if clustering was run</span></pre>
+  <p>With the language in Spanish, the folders and files of the package are called <code>figuras/</code>, <code>tablas/</code>, <code>informe_ACP.html</code> and <code>LEEME.txt</code>, and the ZIP ends in <code>_ACP_completo.zip</code>; the tables keep their number.</p>
+
+  <!-- ====================================================================== B -->
+  <h2 id="ap-b" data-nueva-hoja><span class="num">B</span>Summary of decision rules</h2>
+  <p class="lead">The decision rules of the chapters, gathered in the order in which they appear, each with the section it comes from. They serve as a checklist during an analysis; the full reasoning is in the section cited.</p>
+
+  <!-- reglas: inicio · generado con: perl herramientas/reunir-reglas.pl en -->
+  <ul class="indice-reglas">
+    <li class="grupo"><span class="chip k0">1</span>Introduction to PCAPro</li>
+    <li><b>1.8</b>How many individuals are needed?</li>
+    <li><b>1.9</b>The KMO index</li>
+    <li class="grupo"><span class="chip ki">H</span>Home, theory and how to cite</li>
+    <li><b>2.3</b>Which language do I work in?</li>
+    <li><b>2.4</b>What to cite besides the program</li>
+    <li class="grupo"><span class="chip k1">B1</span>Data and assumptions</li>
+    <li><b>3.3</b>Active, supplementary or out?</li>
+    <li><b>3.4</b>How do I scale?</li>
+    <li class="grupo"><span class="chip k2">B2</span>Extraction</li>
+    <li><b>4.2</b>Which criterion do I follow?</li>
+    <li><b>4.4</b>Which loading threshold do I use?</li>
+    <li class="grupo"><span class="chip k3">B3</span>Rotation</li>
+    <li><b>5.1</b>Do I rotate or not?</li>
+    <li><b>5.2</b>Orthogonal or oblique?</li>
+    <li class="grupo"><span class="chip k4">B4</span>Factor maps</li>
+    <li><b>6.2</b>Can I read this element on the plane?</li>
+    <li><b>6.3</b>What is read on a biplot?</li>
+    <li><b>6.6</b>How do I export for publication?</li>
+    <li class="grupo"><span class="chip k5">B5</span>Interpretation</li>
+    <li><b>7.1</b>Is it a good name?</li>
+    <li><b>7.2</b>How do I read a test value?</li>
+    <li><b>7.4</b>Did I retain enough components?</li>
+    <li class="grupo"><span class="chip k5b">B5b</span>Clustering</li>
+    <li><b>8.3</b>How many clusters do I report?</li>
+    <li class="grupo"><span class="chip k6">B6</span>Report</li>
+    <li><b>9.3</b>Which resolution do I choose for the package?</li>
+  </ul>
+
+  <h3 class="ap-cap"><span class="chip k0">1</span>Introduction to PCAPro</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · how many individuals are needed?<span class="sec-ref">Section 1.8</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:26%">Criterion</th><th style="width:26%">Reference</th><th>What it says</th></tr></thead>
+    <tbody>
+      <tr><td><b>n:p ratio</b></td><td>Common consensus</td><td>Between 5 individuals per variable (minimum) and 20 (ideal); <b>10:1</b> is what is usually asked for.</td></tr>
+      <tr><td><b>Absolute number</b></td><td>Comrey and Lee</td><td>50 very poor, 100 poor, 200 fair, 300 good, 500 very good.</td></tr>
+      <tr><td><b>Strength of the structure</b></td><td>MacCallum and colleagues, 1999</td><td>With high communalities (&gt; 0.60) and three or four marker variables per component, 60 to 100 individuals may be enough; with low communalities (&lt; 0.40) more than 300 may be needed.</td></tr>
+      <tr><td><b>For interpreting</b></td><td>Rule of thumb</td><td>At least three variables with a high loading on each component you retain.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">The modern rule is the third: how strong the structure is matters more than the raw number of rows. The Block 1 diagnostics compute the n:p ratio of your data and grade it.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · the KMO index<span class="sec-ref">Section 1.9</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:24%">KMO</th><th style="width:30%">Kaiser's grade</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td><b>≥ 0.90</b></td><td>Marvellous</td><td>Go ahead.</td></tr>
+      <tr><td><b>0.80 – 0.89</b></td><td>Meritorious</td><td>Go ahead.</td></tr>
+      <tr><td><b>0.70 – 0.79</b></td><td>Middling</td><td>Go ahead.</td></tr>
+      <tr><td><b>0.60 – 0.69</b></td><td>Mediocre</td><td>With reservations: state it when reporting.</td></tr>
+      <tr><td><b>0.50 – 0.59</b></td><td>Miserable</td><td>Review the variables with a low MSA.</td></tr>
+      <tr><td><b>&lt; 0.50</b></td><td>Unacceptable</td><td>Do not run the analysis with those variables.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">The same computation applied to each variable gives its MSA. Variables with MSA &lt; 0.50 are removed one at a time, recomputing after each removal, because taking one out changes those of the rest.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip ki">H</span>Home, theory and how to cite</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · which language do I work in?<span class="sec-ref">Section 2.3</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:36%">If you are going to…</th><th>then…</th></tr></thead>
+    <tbody>
+      <tr><td><b>Publish in Spanish</b> or teach a class</td><td>Choose Spanish before loading the data and leave it there.</td></tr>
+      <tr><td><b>Publish in English</b></td><td>Choose English before loading the data: the figures will come out with their titles and axes already in English, and so will the report.</td></tr>
+      <tr><td><b>Switch halfway through the analysis</b></td><td>Run the blocks again from the first one you want in the other language, in order, and edit the figures <b>afterwards</b>: running a block again erases the changes made to its figures.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">File names change with the language too: the report downloads as <code>…_informe_ACP.html</code> or <code>…_PCA_report.html</code>, and the tables in the ZIP go in <code>tablas/</code> or in <code>tables/</code>.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · what to cite besides the program<span class="sec-ref">Section 2.4</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:42%">If your analysis used…</th><th>cite also</th></tr></thead>
+    <tbody>
+      <tr><td>Any PCA</td><td>Pearson (1901) and Hotelling (1933), or a reference text such as Jolliffe (2002).</td></tr>
+      <tr><td>Parallel analysis to retain components</td><td>Horn (1965).</td></tr>
+      <tr><td>The MAP criterion</td><td>Velicer (1976).</td></tr>
+      <tr><td>Varimax or promax rotation</td><td>Kaiser (1958); Hendrickson and White (1964).</td></tr>
+      <tr><td>A test of sphericity</td><td>Bartlett (1950).</td></tr>
+      <tr><td>Clustering on the axes</td><td>Ward (1963); Husson, Josse and Pagès (2010).</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">There is no need to look the full details up: the <b>Methodological references</b> section of the report carries them, and appendix F gathers them together.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k1">B1</span>Data and assumptions</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · active, supplementary or out?<span class="sec-ref">Section 3.3</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">If the variable…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td><b>Describes</b> the individuals from the same question as the others</td><td>Active.</td></tr>
+      <tr><td>Is the <b>response</b> you want to explain with the structure (yield, mortality)</td><td>Supplementary quantitative: that way you do not manufacture the relationship you want to find.</td></tr>
+      <tr><td>Is a <b>design factor</b> (treatment, block, site)</td><td>Qualitative / group, and outside the axes (section 1.4).</td></tr>
+      <tr><td>Is a <b>sum, ratio or percentage</b> of other active variables (area = length × width)</td><td>Keep either the original variables or the derived one, not both.</td></tr>
+      <tr><td>Measures <b>another theme</b> (climate among plant variables)</td><td>Supplementary, or else a multiple factor analysis with groups.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">The preparation button is enabled with two active variables, but a PCA with fewer than three rarely has anything to summarise. The n:p ratio indicator turns green from 10 individuals per variable, amber between 5 and 10, and red below 5.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · how do I scale?<span class="sec-ref">Section 3.4</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:46%">If your active variables…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td>Are in <b>different units</b> (%, ppm, cm, g)</td><td><b>z standardisation.</b> That is the case in almost every agronomic and ecological study.</td></tr>
+      <tr><td>Share <b>unit and scale</b> and you want to keep them</td><td>Unscaled. The app considers this defensible, in amber, if the largest standard deviation is no more than 4 times the smallest; above that it marks it in red.</td></tr>
+      <tr><td>Have <b>real outliers</b> you do not want to remove</td><td>Robust, and compare with z.</td></tr>
+      <tr><td>Are <b>intensities or spectra</b> with dominant peaks</td><td>Pareto.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">If in doubt, standardise. A PCA on correlations is rarely a mistake; one on covariances with mixed units almost always is. Section 3.8 shows the case with figures.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k2">B2</span>Extraction</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · which criterion do I follow?<span class="sec-ref">Section 4.2</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">If…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td>Horn, broken stick and MAP <b>agree</b></td><td>That is the number. The other criteria only confirm it.</td></tr>
+      <tr><td>Horn gives <b>more</b> than the broken stick and the MAP</td><td>Stay within the range between the two and choose by interpretability (section 4.3).</td></tr>
+      <tr><td>Only Kaiser or Jolliffe ask for one more axis</td><td>Do not add it because of them: they are the ones that overestimate most.</td></tr>
+      <tr><td>The PCA is on <b>covariances</b></td><td>Ignore Kaiser and Jolliffe; the mean rule is their equivalent, but Horn by permutation is still valid.</td></tr>
+      <tr><td>An axis meets the numbers but <b>cannot be named</b></td><td>Do not retain it: the interpretability criterion prevails.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">The parallel analysis uses random numbers: on repeating the extraction the 95th percentile changes by a few hundredths (1.569, 1.578 and 1.555 for PC1 of the seeds in three runs). If a λ falls within 0.02 of its percentile, Horn's vote may change from run to run; raise it to 1000 repetitions before deciding.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · which loading threshold do I use?<span class="sec-ref">Section 4.4</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">If your sample has…</th><th>highlight from</th></tr></thead>
+    <tbody>
+      <tr><td>n ≥ 300</td><td>0.30 to 0.40</td></tr>
+      <tr><td>100 ≤ n &lt; 300</td><td>0.40 (the default value)</td></tr>
+      <tr><td>n &lt; 100</td><td>0.55, as the size recommendation of Block 1 asks</td></tr>
+      <tr><td>You want only what is very clear, for a summary</td><td>0.70: the variable shares half its variance with the axis</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">A loading of 0.40 amounts to 16 % of variance shared with the component; one of 0.70, to 49 %.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k3">B3</span>Rotation</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · do I rotate or not?<span class="sec-ref">Section 5.1</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:46%">If your aim is to…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td><b>Interpret and name</b> the dimensions</td><td>Rotate. That is what rotation exists for.</td></tr>
+      <tr><td>Use the scores in <b>another analysis</b> (regression, clustering)</td><td>Probably not: the unrotated components are orthogonal and ordered, exactly what that analysis needs.</td></tr>
+      <tr><td>You have <b>a single component</b> retained</td><td>It cannot be done: the app asks for at least two and says so.</td></tr>
+      <tr><td>The unrotated solution <b>is already simple</b></td><td>Rotate anyway to check; if it does not improve, report it unrotated (section 5.3).</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">Rotating principal components is accepted practice —SPSS, SAS and <code>psych::principal</code> offer it— as long as it is stated. The theory card of the block includes the usual wording for the methods section.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · orthogonal or oblique?<span class="sec-ref">Section 5.2</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:46%">Apply an oblique rotation first (promax) and look at the largest |Φ| off the diagonal. If it is…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td>below 0.15</td><td>The axes came out almost orthogonal on their own: go back to <b>varimax</b>, which is more parsimonious.</td></tr>
+      <tr><td>between 0.15 and 0.32</td><td>The oblique one is justified, but the orthogonal one will give almost the same: compare and choose the clearer.</td></tr>
+      <tr><td>0.32 or more</td><td>The components share more than 10 % of variance: use the <b>oblique</b> one and interpret the pattern.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">These are the same cut-offs used by the automatic note under the Φ table. With the leaf morphometry the largest |Φ| is 0.244 with two components and 0.309 with three: the two rotations tell the same story.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k4">B4</span>Factor maps</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · can I read this element on the plane?<span class="sec-ref">Section 6.2</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:30%">cos² on the 1–2 plane</th><th style="width:22%">Label in the app</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>≥ 0.70</td><td>very good</td><td>Its position is reliable.</td></tr>
+      <tr><td>0.50 to 0.70</td><td>acceptable</td><td>Read it, with care over the details.</td></tr>
+      <tr><td>0.30 to 0.50</td><td>poor</td><td>Only the general direction.</td></tr>
+      <tr><td>&lt; 0.30</td><td>not interpretable</td><td>It is badly projected: its information is on other axes. Look for another plane.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">A short vector is not an unimportant variable: it is a variable this plane does not show. An individual with a high contribution and a low cos² is suspicious: it is usually an outlier dragging the axis.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · what is read on a biplot?<span class="sec-ref">Section 6.3</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:50%">Yes</th><th>No</th></tr></thead>
+    <tbody>
+      <tr><td>The projection of an individual onto the direction of an arrow: far along its direction, high values on that variable.</td><td>The absolute length of an arrow compared with the distance between points.</td></tr>
+      <tr><td>Groups of individuals in the direction of a group of variables: they are characterised by them.</td><td>The distance between a point and the tip of an arrow.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · how do I export for publication?<span class="sec-ref">Section 6.6</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:46%">If the journal…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td>Accepts vectors (PDF, EPS, SVG)</td><td><b>SVG</b>: it scales without losing sharpness and it can be edited in Inkscape or Illustrator.</td></tr>
+      <tr><td>Asks for a bitmap</td><td>PNG at <b>8×</b> (~600 dpi); 4× as a minimum.</td></tr>
+      <tr><td>Prints in black and white, or you want accessibility</td><td>The <b>Okabe–Ito</b> or <b>Greyscale</b> palette, and Cividis for continuous scales.</td></tr>
+      <tr><td>The figure goes in a presentation with a coloured background</td><td>PNG with a transparent background, or the Dark theme.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">Always put the percentage on the axes, state whether the solution is rotated and say in the caption which ellipse you used. The sign of an axis is arbitrary: if you invert it to read it better, say so.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k5">B5</span>Interpretation</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · is it a good name?<span class="sec-ref">Section 7.1</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:46%">Question</th><th>If the answer is no…</th></tr></thead>
+    <tbody>
+      <tr><td>Does it sum up <b>all</b> the marker variables, not just the first?</td><td>Look for a more general term, or check whether two themes are mixed.</td></tr>
+      <tr><td>If it is a contrast, does it say what lies at <b>each end</b>?</td><td>Use the form “A against B”, or a gradient name: “blade thickness”.</td></tr>
+      <tr><td>Do the <b>supplementary</b> variables and the extreme individuals confirm it?</td><td>The name describes the loadings, but not the system: think again.</td></tr>
+      <tr><td>Would a reader understand it without seeing the table?</td><td>Avoid column names: “Growth”, not “Height_cm, Biomass_g”.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">The sign of an axis is arbitrary. Name the axis by its positive end and, if you invert the sign in one figure to read it better, do so in all of them and say so.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · how do I read a test value?<span class="sec-ref">Section 7.2</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:30%">|v|</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>&lt; 1.96</td><td>The category is not distinguishable from the centre on that axis (in grey).</td></tr>
+      <tr><td>≥ 1.96 (*)</td><td>It characterises the axis with p &lt; 0.05; the sign says on which side.</td></tr>
+      <tr><td>≥ 2.58 (**)</td><td>p &lt; 0.01.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">Order by |v|: the categories with the highest value are the ones that best characterise the axis. With a large n almost any small difference goes above 1.96: look also at the distance of the centroid on the map.</p>
+  </div>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · did I retain enough components?<span class="sec-ref">Section 7.4</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:30%">RMSR</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td>&lt; 0.05</td><td>Good fit: the solution reproduces the structure.</td></tr>
+      <tr><td>0.05 to 0.08</td><td>Acceptable.</td></tr>
+      <tr><td>&gt; 0.08</td><td>Structure is being lost: consider retaining one more component in Block 2.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">A complement: that fewer than 10 % of the pairs have a residual above 0.05. One particular pair with a large residual points to a relationship that no axis takes up. With the integrated project, 4 components give RMSR = 0.029 and 8 of 66 pairs; with 3, RMSR = 0.105 and 19 of 66: the fourth component is needed.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k5b">B5b</span>Clustering</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · how many clusters do I report?<span class="sec-ref">Section 8.3</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">If…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td>The three rules agree and the silhouette is ≥ 0.50</td><td>That number is a property of the data: report it as such.</td></tr>
+      <tr><td>They disagree, but one option makes sense in your discipline</td><td>Choose it in <span class="ui">Number of clusters</span> and say that it was a decision, with the numbers of each rule.</td></tr>
+      <tr><td>The silhouette of the best option is &lt; 0.25</td><td>There are no clusters to report: the cloud is continuous.</td></tr>
+      <tr><td>The jump chooses 2 and the other rules a high number with a low silhouette</td><td>Distrust the high number: it is usually the continuous cloud cut into slices (case 3 of section 8.6).</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">You do not cut at the tallest bar of the figure, but where the bars stop being tall: the last number that still “buys” inertia.</p>
+  </div>
+
+  <h3 class="ap-cap"><span class="chip k6">B6</span>Report</h3>
+
+  <div class="caja regla">
+  <div class="caja-t"><span class="ico">✓</span>Decision rule · which resolution do I choose for the package?<span class="sec-ref">Section 9.3</span></div>
+  <table class="compacta">
+    <thead><tr><th style="width:44%">If the package is for…</th><th>then</th></tr></thead>
+    <tbody>
+      <tr><td>Archiving the analysis or sharing it with co-authors</td><td>SVG and PNG at 4×, the default options.</td></tr>
+      <tr><td>Sending the figures to a journal</td><td>SVG, or PNG at 8×. Check the weight first: with many figures, 8× and 12× can reach hundreds of MB.</td></tr>
+      <tr><td>An email or a presentation</td><td>PNG at 2×, or just the HTML report.</td></tr>
+    </tbody>
+  </table>
+  <p class="regla-pie">The ZIP is stored without compression so as not to depend on external libraries: if it weighs too much, compress it afterwards with your operating system.</p>
+  </div>
+<!-- reglas: fin -->
+
+  <h3 data-nueva-hoja>Common mistakes and the rule that prevents them</h3>
+  <p>Topic 12 of the Block 1 theory, <span class="ui">Common mistakes that ruin a PCA</span>, points to this appendix. Table B.1 links each mistake with the part of the manual that prevents it.</p>
+  <table class="compacta">
+    <caption><b>Table B.1.</b> The mistakes of topic 12 and where they are avoided.</caption>
+    <thead><tr><th style="width:40%">Mistake</th><th>How the app or the manual prevents it</th><th style="width:11%">Section</th></tr></thead>
+    <tbody>
+      <tr><td>Putting in variables derived from others: area = length × width, percentages that add up to 100.</td><td>The diagnostics flag the near-zero determinant and the singular matrix; remove the derived variable or one of the parts.</td><td>3.5, 3.8</td></tr>
+      <tr><td>Not standardising with different units.</td><td>The scales point of the list of recommendations and the “how do I scale?” rule.</td><td>3.4, 3.6</td></tr>
+      <tr><td>Interpreting small loadings.</td><td>Setting the threshold before looking and sticking to it.</td><td>4.4, 5.4</td></tr>
+      <tr><td>Retaining components by Kaiser alone.</td><td>Eight criteria and a weighted consensus in which Horn weighs most.</td><td>4.2, 4.3</td></tr>
+      <tr><td>Interpreting a 1–2 plane that explains little, without saying so.</td><td>The plane inertia indicator and the cos² of each element.</td><td>6.2</td></tr>
+      <tr><td>Forgetting that the sign of an axis is arbitrary.</td><td>Naming the axis by its two poles.</td><td>7.1</td></tr>
+      <tr><td>Confusing the closeness of individuals with that of variables on a biplot.</td><td>The “what is read on a biplot?” rule.</td><td>6.3</td></tr>
+      <tr><td>Using PCA as a hypothesis test or as a discriminant method.</td><td>Comparing groups with supplementary variables, without circularity.</td><td>7.3, 8.5</td></tr>
+      <tr><td>Not reporting the preprocessing.</td><td>The appendix of the report and the corrected methods paragraph.</td><td>9.2, 9.4</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ====================================================================== C -->
+  <h2 id="ap-c" data-nueva-hoja><span class="num">C</span>Glossary</h2>
+  <p class="lead">The abbreviations and symbols that appear in the app and in the manual, and the technical terms with the section where they are explained in more detail.</p>
+
+  <h3>C.1 Abbreviations and symbols</h3>
+  <div class="dos">
+    <table class="compacta" style="margin:0">
+      <thead><tr><th style="width:24%">Abbreviation</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><b>PCA</b></td><td>Principal component analysis (ACP in Spanish).</td></tr>
+        <tr><td><b>CA</b></td><td>Simple correspondence analysis (AC).</td></tr>
+        <tr><td><b>MCA</b></td><td>Multiple correspondence analysis (ACM).</td></tr>
+        <tr><td><b>FAMD</b></td><td>Factor analysis of mixed data (AFDM).</td></tr>
+        <tr><td><b>MFA</b></td><td>Multiple factor analysis (AFM).</td></tr>
+        <tr><td><b>EFA</b></td><td>Exploratory (common) factor analysis; PCAPro does not do it.</td></tr>
+        <tr><td><b>HCPC</b></td><td>Hierarchical clustering on principal components.</td></tr>
+        <tr><td><b>PC1, PC2…</b></td><td>Principal components of the PCA.</td></tr>
+        <tr><td><b>RPC1…</b></td><td>Rotated components (Block 3).</td></tr>
+        <tr><td><b>Dim1, Dim2…</b></td><td>Axes of the other methods.</td></tr>
+        <tr><td><b>KMO</b></td><td>Kaiser-Meyer-Olkin index.</td></tr>
+        <tr><td><b>MSA</b></td><td>Measure of sampling adequacy of one variable.</td></tr>
+        <tr><td><b>MAP</b></td><td>Velicer's minimum average partial criterion.</td></tr>
+        <tr><td><b>RMSR</b></td><td>Root mean square residual.</td></tr>
+        <tr><td><b>RV, Lg</b></td><td>Coefficients of relation between the groups of the MFA.</td></tr>
+        <tr><td><b>SE</b></td><td>Standard error.</td></tr>
+        <tr><td><b>BOM</b></td><td>Initial mark of a UTF-8 file.</td></tr>
+        <tr><td><b>dpi</b></td><td>Dots per inch of an image.</td></tr>
+      </tbody>
+    </table>
+    <table class="compacta" style="margin:0">
+      <thead><tr><th style="width:20%">Symbol</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><b><i>n</i></b></td><td>Number of individuals (rows analysed).</td></tr>
+        <tr><td><b><i>p</i></b></td><td>Number of active variables.</td></tr>
+        <tr><td><b><i>k</i></b></td><td>Components or axes retained.</td></tr>
+        <tr><td><b><i>q</i></b></td><td>Number of clusters in the clustering.</td></tr>
+        <tr><td><b><i>Q</i>, <i>J</i></b></td><td>Qualitative variables and categories in total (MCA, FAMD).</td></tr>
+        <tr><td><b>λ</b></td><td>Eigenvalue: variance or inertia of an axis.</td></tr>
+        <tr><td><b><i>h</i>²</b></td><td>Communality of a variable.</td></tr>
+        <tr><td><b>cos²</b></td><td>Quality of representation.</td></tr>
+        <tr><td><b>ctr</b></td><td>Contribution to an axis, in %.</td></tr>
+        <tr><td><b>Φ</b></td><td>Correlations between oblique components.</td></tr>
+        <tr><td><b>δ, κ</b></td><td>Parameters of oblimin and of promax.</td></tr>
+        <tr><td><b><i>v</i></b></td><td>Test value.</td></tr>
+        <tr><td><b>χ²</b></td><td>Chi-square (Bartlett, CA).</td></tr>
+        <tr><td><b>η², ω²</b></td><td>Proportion of variance explained by a factor.</td></tr>
+        <tr><td><b><i>r</i>, <i>r</i>²</b></td><td>Pearson correlation and its square.</td></tr>
+        <tr><td><b><i>V</i></b></td><td>Cramér's V between two qualitative variables.</td></tr>
+        <tr><td><b><i>s</i></b></td><td>Mean silhouette of a partition.</td></tr>
+        <tr><td><b>D²</b></td><td>Squared Mahalanobis distance.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>C.2 Terms</h3>
+  <table class="compacta">
+    <caption><b>Table C.1.</b> Terms in alphabetical order.</caption>
+    <thead><tr><th style="width:23%">Term</th><th>Definition</th><th style="width:8%">Section</th></tr></thead>
+    <tbody>
+      <tr class="letra"><td colspan="3">A</td></tr>
+      <tr><td class="termino"><b>Active element</b></td><td>Variable or individual that takes part in the computation of the axes.</td><td class="sec">3.3</td></tr>
+      <tr><td class="termino"><b>Benzécri and Greenacre adjustment</b></td><td>Correction of the inertia percentages of the MCA, which without it underestimate what each axis explains.</td><td class="sec">4.5</td></tr>
+      <tr><td class="termino"><b>Biplot</b></td><td>Individuals and variables on the same plane; the individuals are read by distances and the variables by angles.</td><td class="sec">6.3</td></tr>
+      <tr><td class="termino"><b>Broken stick</b></td><td>The share-out of variance that chance would give when breaking a segment into <i>p</i> pieces; the components that exceed it are retained.</td><td class="sec">4.2</td></tr>
+      <tr class="letra"><td colspan="3">C</td></tr>
+      <tr><td class="termino"><b>Centroid</b></td><td>Mean point of the individuals of a category; that is how a supplementary qualitative variable is projected.</td><td class="sec">6.4</td></tr>
+      <tr><td class="termino"><b>Communality</b></td><td>The part of the variance of a variable reproduced by the <i>k</i> retained components: the sum of its squared loadings.</td><td class="sec">4.1</td></tr>
+      <tr><td class="termino"><b>Consensus</b></td><td>The number of components the app recommends: the mode of the criteria, weighted by their reliability.</td><td class="sec">4.3</td></tr>
+      <tr><td class="termino"><b>Consolidation</b></td><td>Reassignment of each individual to the nearest centre after cutting the tree (k-means).</td><td class="sec">8.4</td></tr>
+      <tr><td class="termino"><b>Contingency table</b></td><td>Counts of two crossed qualitative variables; it is the input of the CA.</td><td class="sec">4.5</td></tr>
+      <tr><td class="termino"><b>Contribution</b></td><td>Percentage of the variance of an axis an element provides; those of all the active elements add up to 100.</td><td class="sec">6.2</td></tr>
+      <tr><td class="termino"><b>Correlation circle</b></td><td>Map of the variables with radius 1; a long arrow is well represented on the plane.</td><td class="sec">6.3</td></tr>
+      <tr><td class="termino"><b>cos²</b></td><td>Fraction of the distance from the centre of an element that is left on an axis or plane; close to 1, well represented.</td><td class="sec">6.2</td></tr>
+      <tr class="letra"><td colspan="3">D</td></tr>
+      <tr><td class="termino"><b>Dendrogram</b></td><td>Tree of the fusions of the clustering; the height of each union is the inertia that is lost.</td><td class="sec">8.2</td></tr>
+      <tr><td class="termino"><b>Dimension description</b></td><td>List of the variables and categories significantly associated with each axis.</td><td class="sec">7.2</td></tr>
+      <tr class="letra"><td colspan="3">E</td></tr>
+      <tr><td class="termino"><b>Eigenvalue</b></td><td>Variance (or inertia) a component or axis captures.</td><td class="sec">4.1</td></tr>
+      <tr><td class="termino"><b>Eigenvector</b></td><td>Direction of a component; its elements are the coefficients of each variable.</td><td class="sec">4.1</td></tr>
+      <tr><td class="termino"><b>Elbow</b></td><td>Point of the scree plot where the fall of the λ flattens out (Cattell's criterion).</td><td class="sec">4.2</td></tr>
+      <tr><td class="termino"><b>Concentration and confidence ellipse</b></td><td>The first encloses most of the individuals of a group; the second, the likely position of its mean.</td><td class="sec">6.4</td></tr>
+      <tr class="letra"><td colspan="3">G · H</td></tr>
+      <tr><td class="termino"><b>Group (MFA)</b></td><td>Set of variables that measure one same aspect; the MFA balances their weight.</td><td class="sec">4.5</td></tr>
+      <tr><td class="termino"><b>Hofmann complexity</b></td><td>Effective number of components a variable loads on; it is 1 with a perfect simple structure.</td><td class="sec">5.3</td></tr>
+      <tr class="letra"><td colspan="3">I · L</td></tr>
+      <tr><td class="termino"><b>Inertia</b></td><td>Total spread of a cloud of weighted points; in PCA on correlations it is worth <i>p</i>.</td><td class="sec">4.5</td></tr>
+      <tr><td class="termino"><b>Between- and within-cluster inertia</b></td><td>The parts of the inertia that separate the clusters and that remain inside them; their ratio measures the quality of the partition.</td><td class="sec">8.1</td></tr>
+      <tr><td class="termino"><b>Loading</b></td><td>Correlation between a variable and a component in PCA on correlations.</td><td class="sec">4.1</td></tr>
+      <tr><td class="termino"><b>Loading threshold</b></td><td>Absolute value from which a loading is interpreted.</td><td class="sec">5.4</td></tr>
+      <tr class="letra"><td colspan="3">M · O</td></tr>
+      <tr><td class="termino"><b>Multivariate outlier</b></td><td>Individual whose Mahalanobis distance exceeds the 99.9th percentile of the χ² with <i>p</i> degrees of freedom.</td><td class="sec">3.5</td></tr>
+      <tr><td class="termino"><b>Orthogonal and oblique rotation</b></td><td>Turn of the retained axes to come closer to the simple structure; the oblique one allows them to correlate.</td><td class="sec">5.2</td></tr>
+      <tr class="letra"><td colspan="3">P</td></tr>
+      <tr><td class="termino"><b>Paragon</b></td><td>Individual closest to the centre of its cluster: the most representative one.</td><td class="sec">8.4</td></tr>
+      <tr><td class="termino"><b>Parallel analysis</b></td><td>Horn's criterion: retain the components whose λ exceeds the 95th percentile of the λ of data without structure of the same size.</td><td class="sec">4.2</td></tr>
+      <tr><td class="termino"><b>Partial points</b></td><td>Position of an individual as seen from a single group of the MFA; the overall point is their barycentre.</td><td class="sec">6.5</td></tr>
+      <tr><td class="termino"><b>Pattern matrix</b></td><td>Regression weights of each variable on the rotated components; with oblique rotations it can exceed 1.</td><td class="sec">5.2</td></tr>
+      <tr class="letra"><td colspan="3">R</td></tr>
+      <tr><td class="termino"><b>Residual</b></td><td>Difference between the observed correlation and the one the <i>k</i> components reproduce.</td><td class="sec">7.4</td></tr>
+      <tr><td class="termino"><b>Role of a variable</b></td><td>Active, supplementary quantitative, qualitative, identifier or excluded.</td><td class="sec">3.3</td></tr>
+      <tr class="letra"><td colspan="3">S</td></tr>
+      <tr><td class="termino"><b>Sampling adequacy</b></td><td>The degree to which the correlations between variables are due to common factors and not to isolated pairs; it is measured with the overall KMO and the MSA of each variable.</td><td class="sec">3.5</td></tr>
+      <tr><td class="termino"><b>Scaling</b></td><td>Change of units before the analysis: z standardisation, Pareto, VAST, range, robust, centre only or unscaled.</td><td class="sec">3.4</td></tr>
+      <tr><td class="termino"><b>Score</b></td><td>Coordinate of an individual on a component.</td><td class="sec">4.1</td></tr>
+      <tr><td class="termino"><b>Scree plot</b></td><td>The eigenvalues in decreasing order.</td><td class="sec">4.2</td></tr>
+      <tr><td class="termino"><b>Silhouette</b></td><td>It compares, for each individual, the distance to its own cluster with that of the neighbouring cluster; it runs from −1 to 1.</td><td class="sec">8.3</td></tr>
+      <tr><td class="termino"><b>Simple structure</b></td><td>Solution in which each variable loads strongly on a single component and almost zero on the others (Thurstone).</td><td class="sec">5.3</td></tr>
+      <tr><td class="termino"><b>Sphericity, test of</b></td><td>Bartlett's test that the correlation matrix is the identity; rejecting it is the minimum condition for summarising.</td><td class="sec">3.5</td></tr>
+      <tr><td class="termino"><b>Structure matrix</b></td><td>Correlations between variables and rotated components; with an orthogonal rotation it coincides with the pattern.</td><td class="sec">5.2</td></tr>
+      <tr><td class="termino"><b>Supplementary element</b></td><td>Variable or individual projected onto the axes without taking part in their computation.</td><td class="sec">6.4</td></tr>
+      <tr class="letra"><td colspan="3">T · W</td></tr>
+      <tr><td class="termino"><b>Test value</b></td><td>Difference between the mean of a category on an axis and the overall mean, in units of standard error; |<i>v</i>| ≥ 1.96 is flagged.</td><td class="sec">7.2</td></tr>
+      <tr><td class="termino"><b>Transformation</b></td><td>Change in the shape of a variable before scaling: logarithm, square root or inverse.</td><td class="sec">3.4</td></tr>
+      <tr><td class="termino"><b>Ward's criterion</b></td><td>At every step it joins the two clusters whose fusion increases the within-cluster inertia least.</td><td class="sec">8.2</td></tr>
+      <tr><td class="termino"><b>Weighted mode</b></td><td>Vote of the criteria with weights: Horn 3, broken stick and MAP 2, the rest 1; ties go to the smaller number.</td><td class="sec">4.3</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ====================================================================== D -->
+  <h2 id="ap-d" data-nueva-hoja><span class="num">D</span>Troubleshooting</h2>
+  <p class="lead">The messages of the app, grouped by the moment at which they appear, with their cause and what is worth doing. At the end, the known behaviours of version 1.1 that the manual points out in each chapter.</p>
+
+  <h3>D.1 When opening the app and loading the data</h3>
+  <table class="compacta">
+    <caption><b>Table D.1.</b> Reading problems.</caption>
+    <thead><tr><th style="width:32%">Message or symptom</th><th style="width:30%">Cause</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td>“The example could not be loaded (…)”</td><td>The app was opened with a double click: the browser does not allow files to be read from the folder on its own.</td><td>Load <code>datos/iris.csv</code> with the file picker, or open the app with <code>servidor.ps1</code> (table 1.4).</td></tr>
+      <tr><td>“The Excel file could not be read: …”</td><td>With no connection the spreadsheet reader is not downloaded; or the workbook is damaged or password protected.</td><td>Save the sheet as <i>CSV UTF-8 (comma delimited)</i> and load that file.</td></tr>
+      <tr><td>“The CSV could not be read: …”</td><td>The file is empty or it is not text.</td><td>Open it in a text editor; if it cannot be read, export it again from the program of origin.</td></tr>
+      <tr><td>“The sheet is empty.”</td><td>The first sheet of the workbook has no data.</td><td>Choose another in <span class="ui">Workbook sheet</span>.</td></tr>
+      <tr><td>Everything ends up in a single column</td><td>The separator detected in the first line is not the one of the file.</td><td>Choose the separator in <span class="ui">Column separator (CSV)</span> and drag the file in again.</td></tr>
+      <tr><td>Accents replaced by <code>Ã©</code> or <code>�</code></td><td>The CSV is not in UTF-8 (typical of “CSV comma delimited” in Excel).</td><td>Save it as <i>CSV UTF-8</i>.</td></tr>
+      <tr><td>“Fewer than 2 active numeric variables were detected…”</td><td>The wrong decimal separator, units in the cells or columns marked as a group.</td><td>Check table A.2; mark the measurement columns as <span class="ui">Active</span> by hand.</td></tr>
+      <tr><td>A variable with values 10 or 1000 times larger</td><td>A decimal comma read with <span class="ui">Point (12.34)</span>, or <code>1.234,5</code> with automatic detection.</td><td>Choose <span class="ui">Comma (12,34)</span> and press <span class="ui">Restore automatic detection</span>.</td></tr>
+      <tr><td>A numeric column comes out as an identifier or a group</td><td>A 1, 2, 3 code looks like a group (the “group code?” warning); a numeric key 1…<i>n</i> looks like a measurement.</td><td>Correct the role on card 1.2 (section 3.3).</td></tr>
+      <tr><td>Cells that empty themselves</td><td>The text is a missing-value code: <code>SD</code>, <code>ND</code>, <code>-</code>…</td><td>Rename those values before loading.</td></tr>
+      <tr><td>“Fewer than 3 complete rows remain…”</td><td>With <span class="ui">Delete incomplete rows</span>, almost every row has some missing value.</td><td>Impute by mean or median, or take out the variable with the most missing values.</td></tr>
+      <tr><td>“The transformation requested requires positive values; they were shifted…”</td><td>Zeros or negatives in a variable with a logarithm or a root.</td><td>A warning, not an error: report the constant added or choose another transformation.</td></tr>
+      <tr><td>“Error in the computation: …”</td><td>A combination of data and options the computation does not admit.</td><td>Check the roles and the missing values; the text after the colon indicates the cause.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>D.2 During the analysis</h3>
+  <table class="compacta">
+    <caption><b>Table D.2.</b> Messages from blocks 2 to 5b and from the recommender.</caption>
+    <thead><tr><th style="width:36%">Message or symptom</th><th>Cause and what to do</th><th style="width:9%">Section</th></tr></thead>
+    <tbody>
+      <tr><td>A button of the step bar does not respond</td><td>The blocks unlock in order: the previous one has to be run first.</td><td>2.1</td></tr>
+      <tr><td>“MCA needs at least two qualitative variables.” · “FAMD needs at least one qualitative variable…” · “Choose two different variables for rows and columns.”</td><td>Qualitative variables with the right role are missing for the method chosen on card 1.9.</td><td>3.7</td></tr>
+      <tr><td>“MFA needs at least two groups.” · “The group ‘X’ has a single variable…”</td><td>Assign each variable to a group, with at least two variables per group.</td><td>3.7</td></tr>
+      <tr><td>“The variable ‘X’ is constant.” · “The contingency table is empty.”</td><td>A quantitative variable with no variation or two qualitative ones with no data in common, in FAMD, MFA or CA.</td><td>4.5</td></tr>
+      <tr><td>Horn's 95th percentile changes on repeating</td><td>Normal: it uses resampling. Raise the iterations if the decision depends on the last digit.</td><td>4.2</td></tr>
+      <tr><td>The signs do not match another program</td><td>Normal: the sign of an axis is arbitrary. Compare absolute values, or invert the whole axis.</td><td>7.1</td></tr>
+      <tr><td>“Extract the components in Block 2 first.” · “The rotation needs at least 2 components…”</td><td>Go back to Block 2 and extract, with <i>k</i> ≥ 2.</td><td>5.1</td></tr>
+      <tr><td>“The algorithm did not reach the tolerance in … iterations.”</td><td>It is usually due to nearly redundant variables or to too many components. Try another rotation or lower <i>k</i>.</td><td>5.2</td></tr>
+      <tr><td>“The correlation matrix is singular…”</td><td>There is a variable that is an exact combination of others: with no inverse there are no oblique scores. Remove it.</td><td>3.5, 5.2</td></tr>
+      <tr><td>“The factor maps need at least 2 retained components.”</td><td>A single component does not form a plane: raise <i>k</i> in Block 2.</td><td>6.1</td></tr>
+      <tr><td>“There are no supplementary elements defined.” · “There are no categorical variables defined.”</td><td>Assign those roles on card 1.2 and prepare the matrix again.</td><td>3.3</td></tr>
+      <tr><td>“Build the factor maps in Block 4 first.”</td><td>Block 5 uses the coordinates of Block 4.</td><td>7.1</td></tr>
+      <tr><td>“There is no factor solution to cluster yet.” · “Number of clusters out of range.”</td><td>Run a method before 5b; the number of clusters runs from 2 to the maximum on the card.</td><td>8.1</td></tr>
+      <tr><td>“There are … individuals: the Ward tree may take a while…”</td><td>A warning with more than 900 individuals; wait a few seconds.</td><td>8.2</td></tr>
+    </tbody>
+  </table>
+
+  <h3>D.3 Figures, report and package</h3>
+  <table class="compacta">
+    <caption><b>Table D.3.</b> Problems when exporting.</caption>
+    <thead><tr><th style="width:36%">Message or symptom</th><th>Cause and what to do</th><th style="width:9%">Section</th></tr></thead>
+    <tbody>
+      <tr><td>“Could not export: …”</td><td>The browser could not turn the figure into an image, for instance for lack of memory at a very high scale. Lower the scale or download the SVG.</td><td>6.6</td></tr>
+      <tr><td>“Could not copy automatically…”</td><td>The browser did not grant access to the clipboard. Select the text and copy it by hand.</td><td>7.5</td></tr>
+      <tr><td>“You need to have extracted the components at least (Block 2)…”</td><td>The report needs the extraction as a minimum.</td><td>9.1</td></tr>
+      <tr><td>“The browser blocked the pop-up window…”</td><td>Printing to PDF opens a new window. Allow pop-up windows for the site, or download the HTML and print it.</td><td>9.2</td></tr>
+      <tr><td>“The package could not be generated: …”</td><td>Not enough memory with many figures at 8× or 12×. Lower the resolution or choose SVG only.</td><td>9.3</td></tr>
+      <tr><td>Figures missing from the report</td><td>Only those on visible cards go in. Press <span class="ui">↻ Refresh</span> on card 6.1 after changing something.</td><td>9.1</td></tr>
+      <tr><td>The analysis disappeared</td><td>The page was reloaded: the app only saves the language. Download the package before closing.</td><td>1.5</td></tr>
+    </tbody>
+  </table>
+
+  <h3>D.4 Known behaviours of version 1.1</h3>
+  <p>Details of the interface and of the generated text that do not alter the computations, but that are worth checking before publishing.</p>
+  <table class="compacta">
+    <caption><b>Table D.4.</b> What happens and how to work around it.</caption>
+    <thead><tr><th style="width:40%">What happens</th><th>How to work around it</th><th style="width:9%">Section</th></tr></thead>
+    <tbody>
+      <tr><td>The decimal detection reads <code>1.234,5</code> as 1.2345 and <code>12,3456</code> as 123456.</td><td>With thousands, or more than three decimals after the comma, choose <span class="ui">Comma (12,34)</span>.</td><td>A.3</td></tr>
+      <tr><td>The list of criteria of Block 2 is not redrawn when the number of components changes.</td><td>Go by the criteria figure and the indicators, which do update.</td><td>4.3</td></tr>
+      <tr><td>With other methods, Block 2 has no downloads and no button towards the rotation, and the scree plot does not move the band of retained axes.</td><td>Move to Block 4 with the step bar; the tables are in the ZIP package.</td><td>4.5</td></tr>
+      <tr><td>With an oblique rotation, the percentages per component add up to more than the real variance.</td><td>Report the joint variance of Block 2 and, for each component, its loadings.</td><td>5.2</td></tr>
+      <tr><td>With the rotated solution, the scores correlate and the cos² of a supplementary variable can exceed 1.</td><td>Report the cos² of the supplementary variables with the unrotated solution.</td><td>6.4</td></tr>
+      <tr><td>The draft of Block 5 always cites Horn and the scree plot.</td><td>Correct the sentence with the criteria you actually used.</td><td>7.5</td></tr>
+      <tr><td>With other methods, the first line of the draft falls outside the box, and the group picker may keep the qualitative variables of another file.</td><td>Enter Block 5 with <span class="ui">Go to interpretation →</span> from Block 4.</td><td>7.6</td></tr>
+      <tr><td>On opening Block 5b with the step bar, the settings are left empty and clustering gives an error.</td><td>Enter with <span class="ui">Cluster the individuals (HCPC) →</span>, at the end of Block 5.</td><td>8.1</td></tr>
+      <tr><td>With a number of clusters other than the consensus, the draft and the indicator still say that the rules agree.</td><td>Correct the sentence: “the three rules indicated 2 clusters; 3 were retained because…”.</td><td>8.4</td></tr>
+      <tr><td>A section of the report unticked because its block had not been run stays unticked after running it.</td><td>Tick it by hand on card 6.2.</td><td>9.1</td></tr>
+      <tr><td>The methods paragraph says “combining” every criterion; with other methods it has wording errors; the appendix shows internal codes (<code>listwise</code>, <code>none</code>, <code>z</code>).</td><td>Rewrite the paragraph with the guidance of section 9.4 and translate the codes.</td><td>9.4</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ====================================================================== E -->
+  <h2 id="ap-e" data-nueva-hoja><span class="num">E</span>Verification of the computations</h2>
+  <p class="lead">A statistical program deserves trust when its results agree with those of independent implementations. PCAPro comes with a battery of tests that anyone can run, and this appendix additionally compares its results with those of R.</p>
+
+  <h3>E.1 The battery of tests</h3>
+  <p>The <code>tests/</code> folder holds <b>120 tests grouped into 19 suites</b>. Each expected value is of one of two kinds: a <b>figure published</b> by another implementation —R and its packages, or a classic example from the literature— or an <b>algebraic property</b> that must hold with any data, such as the contributions to an axis adding up to 100. No expected value was copied from an earlier run of PCAPro: comparing the program with itself would prove nothing.</p>
+
+  <figure class="chica">
+    <div class="marco"><img src="../img/en/app-pruebas.png" alt="PCAPro test page with the 120 tests passed"></div>
+    <figcaption><b>Figure E.1.</b> The <code>tests/index.html</code> page when it finishes: the green box with the 120 tests passed and the time, and below it each suite with its tests. A failed test would appear flagged, with the message that explains the difference.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table E.1.</b> The 19 test suites, in the order of the page.</caption>
+    <thead><tr><th style="width:30%">Suite</th><th style="width:6%">Tests</th><th>What it checks and against what</th></tr></thead>
+    <tbody>
+      <tr><td>Descriptive statistics</td><td class="num">5</td><td>Mean, variance, quartiles, skewness, kurtosis and correlations with vectors of known result.</td></tr>
+      <tr><td>Linear algebra</td><td class="num">5</td><td>Inverse, determinant, singular matrix and Jacobi decomposition: the sum of the λ is the trace and the vectors are orthonormal.</td></tr>
+      <tr><td>Probability distributions</td><td class="num">6</td><td>Tails of χ², <i>t</i>, <i>F</i> and normal, and the test of a correlation, against R's <code>pchisq</code>, <code>pt</code>, <code>pf</code> and <code>cor.test</code>.</td></tr>
+      <tr><td>Sampling adequacy (iris)</td><td class="num">3</td><td>KMO and MSA against <code>psych::KMO</code>; Bartlett against <code>psych::cortest.bartlett</code>; Mahalanobis distances.</td></tr>
+      <tr><td>Extraction (iris)</td><td class="num">7</td><td>Eigenvalues and scores against <code>prcomp</code>; loadings against <code>psych::principal</code>; broken stick and MAP.</td></tr>
+      <tr><td>Rotation</td><td class="num">10</td><td>Varimax recovers a simple structure turned on purpose; invariant communalities; coherent pattern, structure and Φ; quartimin = oblimin with δ = 0.</td></tr>
+      <tr><td>Coordinates and quality</td><td class="num">5</td><td>cos² and contributions add up to what they should; ellipses and hull.</td></tr>
+      <tr><td>Group comparison</td><td class="num">3</td><td>The ANOVA of an example that can be computed by hand, and Kruskal-Wallis.</td></tr>
+      <tr><td>Correspondence analysis</td><td class="num">11</td><td>Principal inertias of Greenacre's smoking example (1984): 0.074759, 0.010017 and 0.000414; χ² = 16.4417 with <i>n</i> = 193. Row and column coordinates, cos² and contributions against <code>FactoMineR::CA</code>; transition formula and projection of supplementary rows.</td></tr>
+      <tr><td>Multiple correspondence</td><td class="num">7</td><td>The exact identity with two variables, λ = (1 ± √λ<sub>CA</sub>)/2, which also gives the standard coordinates of the CA; each category is the quasi-barycentre of its individuals; the Benzécri adjustment recovers the percentages of the CA.</td></tr>
+      <tr><td>Generalised SVD core</td><td class="num">3</td><td>With uniform weights it reproduces the PCA; reconstruction and orthonormality.</td></tr>
+      <tr><td>Mixed data (FAMD)</td><td class="num">7</td><td>Quantitative only: it is the PCA; qualitative only: it is the MCA; total inertia <i>p</i> + <i>J</i> − <i>Q</i>. With iris, coordinates, cos² and contributions against <code>FactoMineR::FAMD</code>; what is reported is what is drawn.</td></tr>
+      <tr><td>Multiple factor (MFA)</td><td class="num">5</td><td>No group contributes more than 1 to the first axis; duplicating a group doubles the λ; RV symmetric in [0, 1].</td></tr>
+      <tr><td>Clustering (HCPC)</td><td class="num">10</td><td>Increasing Ward heights; the inertia decomposes; the consolidation does not worsen it; with iris it finds the two real clusters.</td></tr>
+      <tr><td>Dendrogram</td><td class="num">6</td><td>A tree of 2<i>n</i> − 1 nodes, with no inversions, with contiguous clusters and the cut line in its place.</td></tr>
+      <tr><td>Method recommender</td><td class="num">11</td><td>Scenarios with an answer known by construction; every warning carries a figure.</td></tr>
+      <tr><td>File reading</td><td class="num">6</td><td>Quotation marks, semicolon separator, empty lines, CRLF, typing and missing-value codes.</td></tr>
+      <tr><td>Export</td><td class="num">3</td><td>CRC32 against its canonical value, the ZIP opens and verifies, quotation marks in the CSV.</td></tr>
+      <tr><td>Figures</td><td class="num">7</td><td>Well-formed SVG, font scales, colour contrast and complete palettes.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>E.2 How to run them</h3>
+  <ol class="pasos">
+    <li><b>In the browser.</b> With the app served by <code>servidor.ps1</code>, open <code>http://localhost:8790/tests/index.html</code>. The tests run on their own in a few seconds and the box at the top says how many passed.</li>
+    <li><b>On the command line, with a headless browser.</b> With Node.js and Playwright installed and the server running, <code>node tests/run-tests.mjs</code> opens the same page, waits for the result and exits with code 1 if any test fails. It is the check the continuous integration of the repository runs on every change, together with the next step.</li>
+    <li><b>Without a browser.</b> <code>node lib/reproduce-iris.js</code> loads the same numerical engine of the app as a Node module, repeats the PCA of iris and compares 15 values with R. It needs neither a server nor Playwright.</li>
+  </ol>
+
+  <p class="pre-t"><b>Output of</b> <code>node lib/reproduce-iris.js</code> · extract</p>
+  <pre class="archivo">iris: 150 observations × 4 active variables
+
+  value                                 PCAPro     reference
+  ✔ λ1 (R: prcomp)                    2.918498      2.918498
+  ✔ λ2 (R: prcomp)                    0.914030      0.914030
+  ✔ λ3 (R: prcomp)                    0.146757      0.146757
+  ✔ λ4 (R: prcomp)                    0.020715      0.020715
+  ✔ overall KMO (R: psych::KMO)       0.540077      0.540000
+  ✔ MSA Sepal.Width                   0.269575      0.270000
+  ✔ Bartlett χ²                     706.959243    706.959300
+  ✔ |loading| Petal.Length on PC1     0.991555      0.991600
+  …
+Every value agrees with independent implementations.</pre>
+  <p>The tolerance of each comparison is the precision with which R publishes the reference: 10<sup>−5</sup> for the eigenvalues, which R prints with six decimal places, and 10<sup>−3</sup> for the KMO and the loadings, which are printed with three or four. To demand more would be to demand agreement with a rounding.</p>
+
+  <h3>E.3 Reproducing the results in R</h3>
+  <p>The code below, with the packages <b>psych</b>, <b>FactoMineR</b> and <b>GPArotation</b>, gives the reference values of iris and of the smoking table. It was run with R 4.4.2, and table E.2 compares its output with that of PCAPro 1.1.0.</p>
+  <div>
+  <p class="pre-t"><b>R script</b></p>
+  <pre class="archivo">X   &lt;- iris[, 1:4]
+pca &lt;- prcomp(X, scale. = TRUE)
+pca$sdev^2                         <span class="com"># eigenvalues</span>
+cor(X, pca$x)[, 1]                 <span class="com"># loadings on PC1</span>
+head(pca$x[, 1], 3)                <span class="com"># scores of the first three individuals</span>
+
+library(psych)
+KMO(X)                             <span class="com"># overall KMO and MSA</span>
+cortest.bartlett(cor(X), n = 150)  <span class="com"># test of sphericity</span>
+
+library(FactoMineR)
+res &lt;- PCA(X, graph = FALSE)
+res$var$contrib[, 1:2]; res$var$cos2[, 1:2]
+
+library(GPArotation)
+L &lt;- cor(X, pca$x)[, 1:2]
+GPForth(L, method = "varimax", normalize = TRUE)$loadings</pre>
+  </div>
+
+  <div>
+  <p class="pre-t"><b>R script</b> · correspondence analysis of the smoking data (Greenacre, 1984)</p>
+  <pre class="archivo">library(FactoMineR)
+smoke &lt;- matrix(c(4, 2, 3, 2,   4, 3, 7, 4,   25, 10, 12, 4,
+                  18, 24, 33, 13,   10, 6, 7, 2), nrow = 5, byrow = TRUE,
+  dimnames = list(c("SM", "JM", "SE", "JE", "SC"),
+                  c("none", "light", "medium", "heavy")))
+ca &lt;- CA(as.data.frame(smoke), graph = FALSE)
+ca$row$coord[, 1]                  <span class="com"># rows on Dim1</span>
+ca$col$coord[, 1]                  <span class="com"># columns on Dim1</span></pre>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Table E.2.</b> PCAPro against R with iris (PCA on correlations) and with the smoking table (CA). The signs of the axes may differ; absolute values are compared.</caption>
+    <thead><tr><th style="width:38%">Result</th><th style="width:22%">R</th><th style="width:22%">PCAPro</th><th></th></tr></thead>
+    <tbody>
+      <tr><td>λ1 · λ2 · λ3 · λ4 (<code>prcomp</code>)</td><td class="num">2.918498 · 0.914030 · 0.146757 · 0.020715</td><td class="num">equal to 6 decimal places</td><td class="ok">✔</td></tr>
+      <tr><td>Loadings on PC1 (<code>cor</code>)</td><td class="num">.8902 · −.4601 · .9916 · .9650</td><td class="num">.8902 · −.4601 · .9916 · .9650</td><td class="ok">✔</td></tr>
+      <tr><td>Scores of individuals 1–3 on PC1</td><td class="num">−2.257141 · −2.074013 · −2.356335</td><td class="num">−2.257141 · −2.074013 · −2.356335</td><td class="ok">✔</td></tr>
+      <tr><td>Overall KMO · MSA (<code>psych</code>)</td><td class="num">.540077 · .584060 · .269575 · .530748 · .634207</td><td class="num">equal to 6 decimal places</td><td class="ok">✔</td></tr>
+      <tr><td>Bartlett: χ² · df · determinant</td><td class="num">706.9592 · 6 · 0.0081096</td><td class="num">706.9592 · 6 · 0.0081096</td><td class="ok">✔</td></tr>
+      <tr><td>Contributions to Dim1 (<code>FactoMineR</code>)</td><td class="num">27.15 · 7.25 · 33.69 · 31.91</td><td class="num">27.15 · 7.25 · 33.69 · 31.91</td><td class="ok">✔</td></tr>
+      <tr><td>Varimax with <i>k</i> = 2, first column (<code>GPArotation</code>)</td><td class="num">.9594 · −.1425 · .9436 · .9319</td><td class="num">.9594 · −.1425 · .9436 · .9319</td><td class="ok">✔</td></tr>
+      <tr><td>CA of the smoking data: coordinates of SM, JM, SE on Dim1 (<code>FactoMineR::CA</code>)</td><td class="num">|.0658| · |.2590| · |.3806|</td><td class="num">|.0658| · |.2590| · |.3806|</td><td class="ok">✔</td></tr>
+      <tr><td>CA of the smoking data: coordinates of none, light, medium, heavy on Dim1 (<code>FactoMineR::CA</code>)</td><td class="num">|.3933| · |.0995| · |.1963| · |.2938|</td><td class="num">|.3933| · |.0995| · |.1963| · |.2938|</td><td class="ok">✔</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · correction made after version 1.1.0</div>
+    <p>In PCAPro 1.1.0 the coordinates of the columns of the CA, and those of the categories of the MCA, came out multiplied by the mass of each column: with the smoking data, <i>none</i> ended up at |.1243| instead of |.3933|, and the map brought the columns closer to the origin. In FAMD, card 2.5, the report and the ZIP package gave for each category a coordinate and a cos² that were not those of the point drawn on the map: with iris, <i>setosa</i> at −0.765 instead of −2.606. Eigenvalues, rows and individuals and contributions were correct in all three methods. This is fixed by the version published on GitHub on 16 September 2026, which gives the last row of table E.2; the nine tests added with it already count in table E.1. With results from 1.1.0, repeat the analysis; in CA and MCA it is enough to divide each column coordinate by its mass, the proportion of that column in the total.</p>
+  </div>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · four differences of convention that are not errors</div>
+    <ul style="margin:0">
+      <li><b>Coordinates of the individuals in FactoMineR.</b> <code>PCA()</code> standardises by dividing by <i>n</i> and not by <i>n</i> − 1, so its coordinates are those of PCAPro and <code>prcomp</code> multiplied by √(<i>n</i>/(<i>n</i> − 1)): −2.2647 instead of −2.2571 with iris. Eigenvalues, loadings, cos² and contributions agree.</li>
+      <li><b><code>stats::varimax</code>.</b> It stops with a loose tolerance and gives .9593 · −.1446 · .9442 · .9324. PCAPro carries on to the maximum of the criterion, like <code>GPArotation</code>.</li>
+      <li><b>Number of clusters in <code>HCPC</code>.</b> FactoMineR suggests a cut with at least three clusters by default (<code>min = 3</code>) and with iris proposes 50/53/47; PCAPro considers from two upwards and its rules choose two (section 8.6). Even with three clusters, the partitions may not match, because they depend on how many axes are used.</li>
+      <li><b>Parallel analysis.</b> It depends on random numbers in any program: the 95th percentile varies in the last digit from run to run and from program to program.</li>
+    </ul>
+  </div>
+
+  <!-- ====================================================================== F -->
+  <h2 id="ap-f" data-nueva-hoja><span class="num">F</span>References</h2>
+  <p class="lead">The sources of the methods PCAPro implements and of the rules cited in the manual. Those marked with <span class="m">◆</span> appear in the <b>Methodological references</b> section of the report (section 9.2).</p>
+
+  <h3>F.1 Methods</h3>
+  <ul class="refs">
+    <li>Anderson, T. W. (1963). Asymptotic theory for principal component analysis. <i>The Annals of Mathematical Statistics</i>, 34(1), 122–148. <span class="doi">doi:10.1214/aoms/1177704248</span></li>
+    <li><span class="m">◆</span> Bartlett, M. S. (1950). Tests of significance in factor analysis. <i>British Journal of Statistical Psychology</i>, 3(2), 77–85. <span class="doi">doi:10.1111/j.2044-8317.1950.tb00285.x</span></li>
+    <li>Benzécri, J.-P. (1979). Sur le calcul des taux d’inertie dans l’analyse d’un questionnaire. <i>Les Cahiers de l’Analyse des Données</i>, 4(3), 377–378.</li>
+    <li>Bernaards, C. A. and Jennrich, R. I. (2005). Gradient projection algorithms and software for arbitrary rotation criteria in factor analysis. <i>Educational and Psychological Measurement</i>, 65(5), 676–696. <span class="doi">doi:10.1177/0013164404272507</span></li>
+    <li>Carroll, J. B. (1953). An analytical solution for approximating simple structure in factor analysis. <i>Psychometrika</i>, 18(1), 23–38. <span class="doi">doi:10.1007/BF02289025</span></li>
+    <li><span class="m">◆</span> Cattell, R. B. (1966). The scree test for the number of factors. <i>Multivariate Behavioral Research</i>, 1(2), 245–276. <span class="doi">doi:10.1207/s15327906mbr0102_10</span></li>
+    <li>Crawford, C. B. and Ferguson, G. A. (1970). A general rotation criterion and its use in orthogonal rotation. <i>Psychometrika</i>, 35(3), 321–332. <span class="doi">doi:10.1007/BF02310792</span></li>
+    <li>Cramér, H. (1946). <i>Mathematical Methods of Statistics</i>. Princeton University Press.</li>
+    <li>Escofier, B. and Pagès, J. (1994). Multiple factor analysis (AFMULT package). <i>Computational Statistics &amp; Data Analysis</i>, 18(1), 121–140. <span class="doi">doi:10.1016/0167-9473(94)90135-X</span></li>
+    <li>Frontier, S. (1976). Étude de la décroissance des valeurs propres dans une analyse en composantes principales: comparaison avec le modèle du bâton brisé. <i>Journal of Experimental Marine Biology and Ecology</i>, 25(1), 67–75. <span class="doi">doi:10.1016/0022-0981(76)90076-9</span></li>
+    <li>Gabriel, K. R. (1971). The biplot graphic display of matrices with application to principal component analysis. <i>Biometrika</i>, 58(3), 453–467. <span class="doi">doi:10.1093/biomet/58.3.453</span></li>
+    <li>Glorfeld, L. W. (1995). An improvement on Horn’s parallel analysis methodology for selecting the correct number of factors to retain. <i>Educational and Psychological Measurement</i>, 55(3), 377–393. <span class="doi">doi:10.1177/0013164495055003002</span></li>
+    <li>Greenacre, M. J. (1984). <i>Theory and Applications of Correspondence Analysis</i>. Academic Press.</li>
+    <li>Greenacre, M. (2017). <i>Correspondence Analysis in Practice</i> (3rd ed.). Chapman &amp; Hall/CRC.</li>
+    <li><span class="m">◆</span> Hendrickson, A. E. and White, P. O. (1964). Promax: a quick method for rotation to oblique simple structure. <i>British Journal of Statistical Psychology</i>, 17(1), 65–70. <span class="doi">doi:10.1111/j.2044-8317.1964.tb00244.x</span></li>
+    <li>Hofmann, R. J. (1978). Complexity and simplicity as objective indices descriptive of factor solutions. <i>Multivariate Behavioral Research</i>, 13(2), 247–250. <span class="doi">doi:10.1207/s15327906mbr1302_9</span></li>
+    <li><span class="m">◆</span> Horn, J. L. (1965). A rationale and test for the number of factors in factor analysis. <i>Psychometrika</i>, 30(2), 179–185. <span class="doi">doi:10.1007/BF02289447</span></li>
+    <li><span class="m">◆</span> Hotelling, H. (1933). Analysis of a complex of statistical variables into principal components. <i>Journal of Educational Psychology</i>, 24(6), 417–441. <span class="doi">doi:10.1037/h0071325</span></li>
+    <li><span class="m">◆</span> Husson, F., Josse, J. and Pagès, J. (2010). <i>Principal component methods – hierarchical clustering – partitional clustering: why would we need to choose for visualizing data?</i> Technical report, Agrocampus Ouest.</li>
+    <li><span class="m">◆</span> Jennrich, R. I. (2001). A simple general procedure for orthogonal rotation. <i>Psychometrika</i>, 66(2), 289–306. <span class="doi">doi:10.1007/BF02294840</span></li>
+    <li><span class="m">◆</span> Jennrich, R. I. (2002). A simple general method for oblique rotation. <i>Psychometrika</i>, 67(1), 7–20. <span class="doi">doi:10.1007/BF02294706</span></li>
+    <li>Jennrich, R. I. and Sampson, P. F. (1966). Rotation for simple loadings. <i>Psychometrika</i>, 31(3), 313–323. <span class="doi">doi:10.1007/BF02289465</span></li>
+    <li>Jolliffe, I. T. (1972). Discarding variables in a principal component analysis. I: Artificial data. <i>Journal of the Royal Statistical Society, Series C (Applied Statistics)</i>, 21(2), 160–173. <span class="doi">doi:10.2307/2346488</span></li>
+    <li><span class="m">◆</span> Jolliffe, I. T. (2002). <i>Principal Component Analysis</i> (2nd ed.). Springer. <span class="doi">doi:10.1007/b98835</span></li>
+    <li>Jolliffe, I. T. and Cadima, J. (2016). Principal component analysis: a review and recent developments. <i>Philosophical Transactions of the Royal Society A</i>, 374(2065), 20150202. <span class="doi">doi:10.1098/rsta.2015.0202</span></li>
+    <li><span class="m">◆</span> Kaiser, H. F. (1958). The varimax criterion for analytic rotation in factor analysis. <i>Psychometrika</i>, 23(3), 187–200. <span class="doi">doi:10.1007/BF02289233</span></li>
+    <li>Kaiser, H. F. (1960). The application of electronic computers to factor analysis. <i>Educational and Psychological Measurement</i>, 20(1), 141–151. <span class="doi">doi:10.1177/001316446002000116</span></li>
+    <li>Kaiser, H. F. (1974). An index of factorial simplicity. <i>Psychometrika</i>, 39(1), 31–36. <span class="doi">doi:10.1007/BF02291575</span></li>
+    <li>Kruskal, W. H. and Wallis, W. A. (1952). Use of ranks in one-criterion variance analysis. <i>Journal of the American Statistical Association</i>, 47(260), 583–621. <span class="doi">doi:10.1080/01621459.1952.10483441</span></li>
+    <li><span class="m">◆</span> Lebart, L., Morineau, A. and Piron, M. (1995). <i>Statistique exploratoire multidimensionnelle</i>. Dunod.</li>
+    <li>MacCallum, R. C., Widaman, K. F., Zhang, S. and Hong, S. (1999). Sample size in factor analysis. <i>Psychological Methods</i>, 4(1), 84–99. <span class="doi">doi:10.1037/1082-989X.4.1.84</span></li>
+    <li>Mahalanobis, P. C. (1936). On the generalised distance in statistics. <i>Proceedings of the National Institute of Sciences of India</i>, 2(1), 49–55.</li>
+    <li>Pagès, J. (2004). Analyse factorielle de données mixtes. <i>Revue de Statistique Appliquée</i>, 52(4), 93–111.</li>
+    <li><span class="m">◆</span> Pearson, K. (1901). On lines and planes of closest fit to systems of points in space. <i>The London, Edinburgh, and Dublin Philosophical Magazine and Journal of Science</i>, 2(11), 559–572. <span class="doi">doi:10.1080/14786440109462720</span></li>
+    <li>Robert, P. and Escoufier, Y. (1976). A unifying tool for linear multivariate statistical methods: the RV-coefficient. <i>Journal of the Royal Statistical Society, Series C (Applied Statistics)</i>, 25(3), 257–265. <span class="doi">doi:10.2307/2347233</span></li>
+    <li>Rousseeuw, P. J. (1987). Silhouettes: a graphical aid to the interpretation and validation of cluster analysis. <i>Journal of Computational and Applied Mathematics</i>, 20, 53–65. <span class="doi">doi:10.1016/0377-0427(87)90125-7</span></li>
+    <li>Thurstone, L. L. (1947). <i>Multiple-Factor Analysis</i>. University of Chicago Press.</li>
+    <li><span class="m">◆</span> Velicer, W. F. (1976). Determining the number of components from the matrix of partial correlations. <i>Psychometrika</i>, 41(3), 321–327. <span class="doi">doi:10.1007/BF02293557</span></li>
+    <li>Velicer, W. F., Eaton, C. A. and Fava, J. L. (2000). Construct explication through factor or component analysis: a review and evaluation of alternative procedures for determining the number of factors or components. In R. D. Goffin and E. Helmes (Eds.), <i>Problems and Solutions in Human Assessment</i> (pp. 41–71). Kluwer.</li>
+    <li><span class="m">◆</span> Ward, J. H. (1963). Hierarchical grouping to optimize an objective function. <i>Journal of the American Statistical Association</i>, 58(301), 236–244. <span class="doi">doi:10.1080/01621459.1963.10500845</span></li>
+  </ul>
+
+  <h3>F.2 Data, software and guides</h3>
+  <ul class="refs">
+    <li>Barrera-Guzmán, L. Á. (2026). <i>PCAPro: an offline, browser-based platform for guided principal component analysis</i> (version 1.1.0) [software]. Zenodo. <span class="doi">doi:10.5281/zenodo.22649709</span></li>
+    <li>Fisher, R. A. (1936). The use of multiple measurements in taxonomic problems. <i>Annals of Eugenics</i>, 7(2), 179–188. <span class="doi">doi:10.1111/j.1469-1809.1936.tb02137.x</span></li>
+    <li>Greenacre, M., Groenen, P. J. F., Hastie, T., D’Enza, A. I., Markos, A. and Tuzhilina, E. (2022). Principal component analysis. <i>Nature Reviews Methods Primers</i>, 2, 100. <span class="doi">doi:10.1038/s43586-022-00184-w</span></li>
+    <li><span class="m">◆</span> Kassambara, A. (2017). <i>Practical Guide to Principal Component Methods in R</i>. STHDA.</li>
+    <li>Lê, S., Josse, J. and Husson, F. (2008). FactoMineR: an R package for multivariate analysis. <i>Journal of Statistical Software</i>, 25(1), 1–18. <span class="doi">doi:10.18637/jss.v025.i01</span></li>
+    <li>R Core Team (2026). <i>R: A Language and Environment for Statistical Computing</i>. R Foundation for Statistical Computing, Vienna.</li>
+    <li>Revelle, W. (2024). <i>psych: Procedures for Psychological, Psychometric, and Personality Research</i> [R package]. Northwestern University.</li>
+  </ul>
+</section>
+
+</body>
+</html>

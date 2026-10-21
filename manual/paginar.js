@@ -77,8 +77,14 @@
         /* a group heading (one cell across the table) travels with the rows it introduces */
         const esGrupo = f => f.cells.length === 1 && f.cells[0].colSpan > 1;
         while (cuerpoTabla.rows.length > 2 && esGrupo(cuerpoTabla.rows[cuerpoTabla.rows.length - 1])) tb.insertBefore(cuerpoTabla.rows[cuerpoTabla.rows.length - 1], tb.firstChild);
-        /* a table over three or more sheets keeps a single "(continuación)" */
-        if (cap) { const c2 = cap.cloneNode(true); c2.innerHTML = cap.innerHTML.replace(/ <i>\(continuación\)<\/i>$/, '') + ' <i>(continuación)</i>'; resto.insertBefore(c2, resto.firstChild); }
+        /* a table over three or more sheets keeps a single "(continued)";
+           the word follows the language of the document */
+        const sigue = document.documentElement.lang === 'en' ? 'continued' : 'continuación';
+        if (cap) {
+          const c2 = cap.cloneNode(true);
+          c2.innerHTML = cap.innerHTML.replace(/ <i>\((?:continuación|continued)\)<\/i>$/, '') + ' <i>(' + sigue + ')</i>';
+          resto.insertBefore(c2, resto.firstChild);
+        }
         return resto;
       }
       if ((el.tagName === 'UL' || el.tagName === 'OL') && el.children.length > 1) {

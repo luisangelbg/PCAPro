@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PCAPro · User’s Manual · Chapter 6 · Block 4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../interior.css">
+<script src="../paginar.js"></script>
+<style>
+  figure.chica .marco { width: 70%; margin: 0 auto; }
+  figure.chica figcaption { margin-left: 15%; margin-right: 15%; }
+  .formula { font-family: var(--mono); font-size: 9.6pt; text-align: center; color: var(--marino); background: #f6f8fc; border: 1px solid var(--linea); border-radius: 6px; padding: 0.08in 0.16in; margin: 0.08in 0 0.16in; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<section class="capitulo" id="cap-b4" data-pestana="B4" data-orden="6" style="--acento: var(--b4)">
+  <div class="cap-apertura">
+    <div class="cap-num">6</div>
+    <div class="cap-etiqueta">Chapter six · Block 4</div>
+    <h1>Factor maps</h1>
+    <div class="cap-regla"></div>
+    <p class="cap-resumen">How to build and read the maps: the correlation circle, the map of individuals and the biplot, with the two measures that keep you from misreading them —cos² and contributions—, the group ellipses and the supplementary elements. It includes the maps belonging to CA, MCA, FAMD and MFA, and the editor that every figure of the app shares.</p>
+    <div class="cap-franja"><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span><span class="k4"></span></div>
+    <ul class="cap-contenido">
+      <li><b>6.1</b>The two clouds: individuals and variables</li>
+      <li><b>6.2</b>cos² and contributions</li>
+      <li><b>6.3</b>Circle, map of individuals and biplot</li>
+      <li><b>6.4</b>Ellipses and supplementary elements</li>
+      <li><b>6.5</b>The maps of CA, MCA, FAMD and MFA</li>
+      <li><b>6.6</b>The figure editor</li>
+      <li><b>6.7</b>Step by step</li>
+    </ul>
+  </div>
+
+  <!-- 6.1 -->
+  <h2 id="s6-1"><span class="num">6.1</span>The two clouds: individuals and variables</h2>
+  <p class="lead">A PCA produces two representations of the same analysis, and each one is read with different rules. Confusing them —reading distances between arrows or angles between points— is the most common mistake when interpreting a factor map.</p>
+
+  <table>
+    <caption><b>Table 6.1.</b> The two clouds.</caption>
+    <thead><tr><th style="width:18%"></th><th>Cloud of individuals</th><th>Cloud of variables</th></tr></thead>
+    <tbody>
+      <tr><td><b>What is drawn</b></td><td>One point per observation.</td><td>One vector per variable.</td></tr>
+      <tr><td><b>Coordinate</b></td><td>The score on the axis.</td><td>The loading: the correlation with the axis.</td></tr>
+      <tr><td><b>What is read</b></td><td><b>Distances</b>: two nearby individuals have similar profiles.</td><td><b>Angles</b> from the origin, and the <b>length</b> of the vector.</td></tr>
+      <tr><td><b>Scale</b></td><td>That of the scores; it changes from one axis to another.</td><td>Always between −1 and 1 with a correlation matrix.</td></tr>
+      <tr><td><b>Figure in the app</b></td><td>Map of individuals.</td><td>Correlation circle.</td></tr>
+    </tbody>
+  </table>
+
+  <p>Block 4 is unlocked on the step bar when a rotation is applied in Block 3 —<span class="ui">Unrotated (for comparison)</span> counts too— and it needs at least two retained components. It has a theory card with six topics and the <span class="ui">4.1 · Build the maps</span> card, with two options. Pressing <span class="ui">Build factor maps →</span> brings up seven result cards and unlocks Block 5 and the clustering (5b).</p>
+
+  <table class="compacta">
+    <caption><b>Table 6.2.</b> The options of card 4.1.</caption>
+    <thead><tr><th style="width:28%">Option</th><th>Values</th><th style="width:34%">Note</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Solution to display</span></td><td><span class="ui">Unrotated (original components)</span>, by default, or <span class="ui">Rotated (the one from Block 3)</span>.</td><td>If there is no rotation, or it was “Unrotated”, the original one is used. Changing it requires building the maps again.</td></tr>
+      <tr><td><span class="ui">Grouping variable</span></td><td><span class="ui">No grouping</span> or any qualitative column from Block 1, with its number of levels.</td><td>It colours individuals and draws ellipses. Changing it redraws the figures at once.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-config.png" alt="Cards 4.1 and 4.2 of the integrated project with the rotated solution">
+      <span class="marca" style="left:20.5%;top:14.6%">1</span>
+      <span class="marca" style="left:68%;top:14.6%">2</span>
+      <span class="marca" style="left:26.5%;top:40%">3</span>
+      <span class="marca" style="left:32%;top:72.5%">4</span>
+      <span class="marca" style="left:47.8%;top:72.5%">5</span>
+      <span class="marca" style="left:63.6%;top:80.4%">6</span>
+      <span class="marca" style="left:79.3%;top:80.4%">7</span>
+    </div>
+    <figcaption><b>Figure 6.1.</b> Cards <span class="ui">4.1</span> and <span class="ui">4.2 · Summary of the factor plane</span> with <code>integrated_project_agronomy.csv</code>, varimax rotation and grouping by treatment.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>The solution: unrotated or rotated.</li>
+    <li><span class="n">2</span>The qualitative variable that colours the maps.</li>
+    <li><span class="n">3</span>Builds the maps.</li>
+    <li><span class="n">4</span>Variance of the 1–2 plane, in amber.</li>
+    <li><span class="n">5</span>Variables with cos² ≥ 0.5 on the plane.</li>
+    <li><span class="n">6</span>Individuals well placed on the plane.</li>
+    <li><span class="n">7</span>Supplementary variables projected.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Table 6.3.</b> The indicators of card 4.2.</caption>
+    <thead><tr><th style="width:30%">Indicator</th><th>What it counts</th><th style="width:30%">Colour</th></tr></thead>
+    <tbody>
+      <tr><td><b>Solution</b></td><td>Unrotated or rotated, with the method.</td><td>—</td></tr>
+      <tr><td><b>Plane 1–2</b></td><td>Variance of the first two axes of the chosen solution.</td><td>green ≥ 60 % · amber ≥ 45 % · red</td></tr>
+      <tr><td><b>Well-represented variables</b></td><td>Active variables with cos² ≥ 0.5 on the 1–2 plane.</td><td>green ≥ 70 % · amber</td></tr>
+      <tr><td><b>Individuals with cos² ≥ 0.5</b></td><td>Individuals well placed on the 1–2 plane.</td><td>green ≥ 60 % · amber</td></tr>
+      <tr><td><b>Supp. quantitative</b></td><td>How many are projected onto the circle.</td><td>—</td></tr>
+      <tr><td><b>Group variables</b></td><td>Qualitative variables available for colouring.</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- 6.2 -->
+  <h2 id="s6-2"><span class="num">6.2</span>cos² and contributions</h2>
+  <p>A flat map shows what fits on two axes and hides the rest. Two measures say what can be read on it: the <b>cos²</b>, how well an element is represented, and the <b>contribution</b>, how much it weighed in building the axis.</p>
+
+  <div class="formula">cos²(i, k) = coord²(i, k) / d²(i, centroid)<br>contribution(i, k) = 100 · coord²(i, k) / Σ<sub>i</sub> coord²(i, k)</div>
+
+  <table>
+    <caption><b>Table 6.4.</b> How the app computes them.</caption>
+    <thead><tr><th style="width:16%">Element</th><th>cos²</th><th>Contribution</th><th style="width:20%">Reference</th></tr></thead>
+    <tbody>
+      <tr><td><b>Variables</b></td><td>The squared coordinate. With correlations, cos² = loading²; its sum over all the axes is 1.</td><td>cos² divided by the variance of the axis, in %. It adds up to 100 per axis.</td><td>100/p</td></tr>
+      <tr><td><b>Individuals</b></td><td>Squared coordinate divided by the squared distance to the centre in the full space, with <b>all</b> the components, not only the retained ones.</td><td>Squared coordinate divided by the sum of squared coordinates of the axis, in %.</td><td>100/n</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · can I read this element on the plane?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:30%">cos² on the 1–2 plane</th><th style="width:22%">Label in the app</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td>≥ 0.70</td><td>very good</td><td>Its position is reliable.</td></tr>
+        <tr><td>0.50 to 0.70</td><td>acceptable</td><td>Read it, with care over the details.</td></tr>
+        <tr><td>0.30 to 0.50</td><td>poor</td><td>Only the general direction.</td></tr>
+        <tr><td>&lt; 0.30</td><td>not interpretable</td><td>It is badly projected: its information is on other axes. Look for another plane.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">A short vector is not an unimportant variable: it is a variable this plane does not show. An individual with a high contribution and a low cos² is suspicious: it is usually an outlier dragging the axis.</p>
+  </div>
+
+  <h3>Where they appear</h3>
+  <table class="compacta">
+    <caption><b>Table 6.5.</b> cos² and contributions in Block 4.</caption>
+    <thead><tr><th style="width:34%">Place</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td>Table under the circle (4.3)</td><td>Coordinates of each variable on every retained axis, cos² of the 1–2 plane, contribution to the plane and the quality label, ordered by cos².</td></tr>
+      <tr><td><b>Most influential individuals</b> (4.4)</td><td>The 12 individuals that contribute most to the 1–2 plane, with coordinates, cos² and contribution. The note gives the expected value, 200/n %.</td></tr>
+      <tr><td><b>Contributions</b> figure (4.6)</td><td>Bars of variables or individuals, per axis or per plane, with the red line of the expected value.</td></tr>
+      <tr><td><b>Quality of representation (cos²)</b> figure (4.6)</td><td>Heat map of variables × axes.</td></tr>
+      <tr><td>Colour of the vectors and points</td><td>The circle colours by cos² by default; the map of individuals can do so from the editor.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · two ways of adding up the plane</div>
+    <p>In the tables, <b>Plane contrib. (%)</b> is the <b>sum</b> of the contributions to the two axes, so the column adds up to 200 and its reference is 200/p or 200/n. In the contributions figure, the <span class="ui">Plane 1–2</span> option <b>weights</b> each axis by its variance, adds up to 100 and its reference is 100/p. With iris, Sepal.Width shows 92.5 in the table (7.3 on PC1 + 85.3 on PC2). The two order things the same way when the axes weigh alike; if they do not, compare only within each one.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-contrib.png" alt="Contribution and cos² figures of the integrated project">
+      <span class="marca" style="left:43.2%;top:34.5%">1</span>
+      <span class="marca" style="left:85.5%;top:10.2%">2</span>
+      <span class="marca" style="left:31.2%;top:19.1%">3</span>
+      <span class="marca" style="left:75.5%;top:88.6%">4</span>
+      <span class="marca" style="left:84%;top:68.1%">5</span>
+    </div>
+    <figcaption><b>Figure 6.2.</b> The <span class="ui">4.6 · Contributions and quality</span> card with the integrated project and varimax. <b>1</b> The line of the expected value, 100/12 = 8.33 %. <b>2</b> The four growth variables define RPC1, with 24 % each. <b>3</b> The rest, in grey, hardly contribute. <b>4</b> On the cos² map, each variable shines on a single axis: the signature of a clean rotation. <b>5</b> The colour scale runs from 0 to 1.</figcaption>
+  </figure>
+
+  <!-- 6.3 -->
+  <h2 id="s6-3"><span class="num">6.3</span>Circle, map of individuals and biplot</h2>
+
+  <h3>The correlation circle</h3>
+  <div class="caja teoria">
+    <div class="caja-t"><span class="ico">θ</span>How it is read</div>
+    <ul>
+      <li>Vectors in the <b>same direction</b>: positively correlated variables.</li>
+      <li><b>Opposite</b> vectors: negative correlation.</li>
+      <li><b>Perpendicular</b> vectors: no correlation <i>on this plane</i>.</li>
+      <li><b>Long</b> vectors, close to the unit circle: well represented. The inner dotted circle marks 0.71, that is, cos² = 0.5.</li>
+    </ul>
+    <p>The rules only hold for long vectors. The angle between two short vectors says nothing.</p>
+  </div>
+
+  <figure class="chica">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-circulo.png" alt="Correlation circle of the integrated project with the supplementary yield variable">
+      <span class="marca" style="left:30.5%;top:24.5%">1</span>
+      <span class="marca" style="left:81.3%;top:34.2%">2</span>
+      <span class="marca" style="left:89.4%;top:35.6%">3</span>
+      <span class="marca" style="left:84.2%;top:49.2%">4</span>
+      <span class="marca" style="left:32.3%;top:53.8%">5</span>
+      <span class="marca" style="left:37.1%;top:71.3%">6</span>
+    </div>
+    <figcaption><b>Figure 6.3.</b> The <span class="ui">4.3 · Correlation circle</span> card with the integrated project and varimax.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Legend: the supplementary variables are drawn with a dashed line.</li>
+    <li><span class="n">2</span>Yield_kg_ha, supplementary.</li>
+    <li><span class="n">3</span>cos² scale: pale vectors are not to be read.</li>
+    <li><span class="n">4</span>Growth: four vectors together on RPC1.</li>
+    <li><span class="n">5</span>Water and phenology, almost at the origin.</li>
+    <li><span class="n">6</span>The inner circle, cos² = 0.5.</li>
+  </ul>
+
+  <h3>The map of individuals</h3>
+  <p>The <span class="ui">4.4 · Map of individuals</span> card draws one point per observation. With no grouping variable the points go in one colour; with one, each group has its colour, its ellipse and its centroid, a diamond with the name of the group. The axes do <b>not</b> have the same scale by default: the axis with less variance is stretched. To read distances rigorously, tick <span class="ui">Same scale on both axes</span> in the editor.</p>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-individuos.png" alt="Map of individuals of iris with concentration ellipses by species">
+      <span class="marca" style="left:18.5%;top:42.6%">1</span>
+      <span class="marca" style="left:60.7%;top:46.3%">2</span>
+      <span class="marca" style="left:94%;top:22.7%">3</span>
+      <span class="marca" style="left:50%;top:61%">4</span>
+      <span class="marca" style="left:28.3%;top:73.9%">5</span>
+      <span class="marca" style="left:52.3%;top:86.3%">6</span>
+    </div>
+    <figcaption><b>Figure 6.4.</b> The map of individuals of iris, unrotated and grouped by species. <b>1</b> Setosa, separated from the other two along PC1. <b>2</b> The centroid of virginica. <b>3</b> The type and level of the ellipse appear under the legend. <b>4</b> Versicolor and virginica overlap. <b>5</b> One individual outside the 95 % ellipse. <b>6</b> Each axis with its percentage.</figcaption>
+  </figure>
+
+  <h3>The biplot</h3>
+  <p>The <span class="ui">4.5 · Biplot</span> card superimposes individuals and variables. Individuals and variables live on different scales, so the arrows are multiplied by a factor set in <span class="ui">Arrow scale</span> (0.2 to 1.6; 0.8 by default). That factor has no statistical meaning.</p>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · what is read on a biplot?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:50%">Yes</th><th>No</th></tr></thead>
+      <tbody>
+        <tr><td>The projection of an individual onto the direction of an arrow: far along its direction, high values on that variable.</td><td>The absolute length of an arrow compared with the distance between points.</td></tr>
+        <tr><td>Groups of individuals in the direction of a group of variables: they are characterised by them.</td><td>The distance between a point and the tip of an arrow.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-biplot.png" alt="Biplot of the integrated project grouped by treatment">
+      <span class="marca" style="left:60%;top:21.9%">1</span>
+      <span class="marca" style="left:71.3%;top:37%">2</span>
+      <span class="marca" style="left:19.7%;top:61.6%">3</span>
+      <span class="marca" style="left:32.5%;top:50.2%">4</span>
+      <span class="marca" style="left:89.5%;top:13.9%">5</span>
+    </div>
+    <figcaption><b>Figure 6.5.</b> The biplot of the integrated project with varimax, grouped by treatment. <b>1</b> The nutrition arrows. <b>2</b> The ellipse of irrigation + fertilisation, shifted towards high growth and nutrition. <b>3</b> That of the control, towards low values of both. <b>4</b> The short arrows of water and phenology: they are not to be read on this plane. <b>5</b> The group legend.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 6.6.</b> Options belonging to each figure of Block 4, besides the shared ones (section 6.6).</caption>
+    <thead><tr><th style="width:22%">Figure</th><th>Options</th></tr></thead>
+    <tbody>
+      <tr><td><b>Circle</b></td><td>Colour by cos², contribution or variable; hide cos² below a value; only the best N; show supplementary variables and their colour; unit circle and 0.71 circle.</td></tr>
+      <tr><td><b>Individuals</b></td><td>Colour by group, cos² or contribution; hull by group and level; fill and border of the ellipse; centroids and their label; size according to cos²; labels: none, all that fit or the N that contribute most; same scale on both axes.</td></tr>
+      <tr><td><b>Biplot</b></td><td>Scale, colour and thickness of the arrows; variable names; hull by group.</td></tr>
+      <tr><td><b>Contributions</b></td><td>Variables or individuals; axis or 1–2 plane; only the largest N; reference line; colours above and below the threshold.</td></tr>
+      <tr><td><b>cos²</b></td><td>Continuous palette; sort by the first N axes; scale from 0 to 1 or fitted to the maximum.</td></tr>
+    </tbody>
+  </table>
+
+  <p>Every map lets you choose the <span class="ui">Horizontal axis</span> and the <span class="ui">Vertical axis</span> among the retained components. The 1–2 plane is not compulsory: if a variable comes out short on it, the 1–3 or the 3–4 plane may show it.</p>
+
+  <!-- 6.4 -->
+  <h2 id="s6-4"><span class="num">6.4</span>Ellipses and supplementary elements</h2>
+  <p>The group hulls are chosen in the editor of the map of individuals and of the biplot. They answer different questions.</p>
+
+  <table>
+    <caption><b>Table 6.7.</b> The three hulls.</caption>
+    <thead><tr><th style="width:22%">Hull</th><th>What it encloses and how it is computed</th><th style="width:30%">Use it to</th></tr></thead>
+    <tbody>
+      <tr><td><b>Concentration ellipse</b> (default)</td><td>Roughly 90, 95 or 99 % of the <b>individuals</b> of the group: the covariance of the group on the plane with the radius of χ² with 2 df. Its size does not depend on n.</td><td>Describe the spread and the real overlap.</td></tr>
+      <tr><td><b>Confidence ellipse of the mean</b></td><td>The region where the <b>centroid</b> lies: the same ellipse with the radius divided by √n.</td><td>Suggest that the centroids differ. With a large n it becomes tiny.</td></tr>
+      <tr><td><b>Convex hull</b></td><td>The smallest polygon that contains every point. It assumes no distribution.</td><td>Non-elliptical groups or groups with few individuals.</td></tr>
+    </tbody>
+  </table>
+  <p class="small">A group needs at least three individuals for its ellipse. The level (90, 95 or 99 %) applies to both ellipses and is written under the legend.</p>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · an ellipse is not a test</div>
+    <p>Two mean ellipses that do not touch suggest that the centroids differ, but that is not a statistical test: for that you need a MANOVA, a PERMANOVA or a discriminant analysis. And PCA does not try to separate groups, because it ignores the grouping variable; if your aim is to discriminate, the tool is another one. State in the figure caption the type of ellipse and its level.</p>
+  </div>
+
+  <h3>Supplementary elements</h3>
+  <p>The columns you marked in Block 1 as <b>supplementary quantitative</b> or <b>qualitative</b> took no part in the axes, but they are projected onto them. They appear on the <span class="ui">4.7 · Supplementary elements</span> card, which is only shown if there is any.</p>
+
+  <table class="compacta">
+    <caption><b>Table 6.8.</b> How they are projected.</caption>
+    <thead><tr><th style="width:24%">Type</th><th>Coordinate</th><th style="width:34%">Where they are seen</th></tr></thead>
+    <tbody>
+      <tr><td><b>Quantitative</b></td><td>Its Pearson correlation with the coordinates of the individuals on each axis, using the non-empty values (at least 3). The table gives the valid n and the cos² of the plane.</td><td>A dashed vector on the circle (its own colour, editable).</td></tr>
+      <tr><td><b>Category</b></td><td>The centroid: the mean of the coordinates of the individuals in that category.</td><td>Diamonds on the map of individuals, when grouping by that variable.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · supplementary elements with the rotated solution</div>
+    <p>With the rotated solution, the app turns the scores of the individuals with the same matrix as the loadings. Since the original components have different variances, the rotated scores can end up <b>correlated</b> even though the rotation is orthogonal: in the integrated project, RPC1 and RPC2 correlate 0.258. That is why, in that solution, the plane cos² of a supplementary variable can exceed 1 —yield shows 1.073— and its vector comes out of the circle. Read each correlation separately and, if you are going to report the cos² of a supplementary variable, use the unrotated solution.</p>
+  </div>
+
+  <table class="compacta">
+    <caption><b>Table 6.9.</b> The downloads of card 4.8, in CSV.</caption>
+    <thead><tr><th style="width:44%">Button</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">⬇ Individuals: coordinates, cos² and contributions (CSV)</span></td><td>Per individual, with their qualitative variables, on every retained axis.</td></tr>
+      <tr><td><span class="ui">⬇ Variables: coordinates, cos² and contributions (CSV)</span></td><td>Per active variable, on every retained axis.</td></tr>
+      <tr><td><span class="ui">⬇ Supplementary elements (CSV)</span></td><td>Correlations of the quantitative variables and centroids of the categories.</td></tr>
+    </tbody>
+  </table>
+  <p>The <span class="ui">Go to interpretation →</span> button leads to Block 5. If you extract again or change the number of components, the maps are erased and have to be built once more; if you repeat the rotation, press <span class="ui">Build factor maps →</span> again so that the maps use the new one.</p>
+
+  <!-- 6.5 -->
+  <h2 id="s6-5"><span class="num">6.5</span>The maps of CA, MCA, FAMD and MFA</h2>
+  <p>With a method other than PCA, Block 4 is unlocked when the method is run in Block 2 and card 4.1 keeps its button, but its two options are not used: there is no rotation, and the group variable is chosen in the editor of the map of individuals (<span class="ui">Group variable</span>). The results are different.</p>
+
+  <table>
+    <caption><b>Table 6.10.</b> The cards of Block 4 according to the method.</caption>
+    <thead><tr><th style="width:10%">Method</th><th>Cards, besides 4.1 · Summary of the plane</th></tr></thead>
+    <tbody>
+      <tr><td><b>CA</b></td><td><b>4.2 · Symmetric map: rows and columns</b>, in principal coordinates. The <span class="ui">Asymmetric view (columns in standard coordinates)</span> option lets the row–column relation be read rigorously. There is no map of individuals: CA analyses a table.</td></tr>
+      <tr><td><b>MCA</b></td><td><b>4.2 · Map of categories</b>, each one at the barycentre of its individuals and coloured by its variable; <b>4.3 · Map of individuals</b>.</td></tr>
+      <tr><td><b>FAMD</b></td><td><b>4.2 · Correlation circle (quantitative)</b>; <b>4.3 · Map of variables: quantitative and qualitative together</b>, with r² and η²; <b>4.4 · Map of categories</b>; <b>4.5 · Map of individuals</b>.</td></tr>
+      <tr><td><b>MFA</b></td><td><b>4.2 · Map of the groups</b>, by their inertia on each axis; <b>4.3 · Correlation circle by group</b>, with every variable; <b>4.4 · Map of individuals</b>; <b>4.5 · Partial points</b>.</td></tr>
+    </tbody>
+  </table>
+
+  <figure class="media">
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-afdm.png" alt="Map of variables of the FAMD of iris">
+      <span class="marca" style="left:73%;top:30.8%">1</span>
+      <span class="marca" style="left:65.5%;top:76%">2</span>
+      <span class="marca" style="left:50%;top:40.3%">3</span>
+      <span class="marca" style="left:44.5%;top:47.1%">4</span>
+    </div>
+    <figcaption><b>Figure 6.6.</b> The map of variables of a FAMD of iris with the species active. <b>1</b> Species: η² = 0.964 on Dim1 and 0.746 on Dim2, the only variable that is strong on both axes. <b>2</b> Petal.Width (r² = 0.939 and 0.013) with no name: its label did not fit next to that of Petal.Length. <b>3</b> The reference diagonal. <b>4</b> Sepal.Width, the one that defines Dim2 among the quantitative variables.</figcaption>
+  </figure>
+
+  <table class="compacta">
+    <caption><b>Table 6.11.</b> How to read the maps belonging to each method.</caption>
+    <thead><tr><th style="width:22%">Map</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr><td><b>Symmetric, CA</b></td><td>Distances between rows, or between columns, are read directly; the distance from a row to a column only gives an orientation.</td></tr>
+      <tr><td><b>Categories</b> (MCA, FAMD)</td><td>Two nearby categories appear together on the same individuals. Rare categories end up far from the centre: look at their cos² before reading them.</td></tr>
+      <tr><td><b>Variables</b> (FAMD)</td><td>Quantitative by r² and qualitative by η², in [0, 1]. The variables at the top right weigh on both axes.</td></tr>
+      <tr><td><b>Groups</b> (MFA)</td><td>A group close to (1, 0) is described almost entirely by axis 1; two nearby groups tell the same story.</td></tr>
+      <tr><td><b>Partial points</b> (MFA)</td><td>Each individual as seen from each group; the diamond is the overall position. Open lines: the groups disagree about that individual. By default it shows the 8 that contribute most.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja nota">
+    <div class="caja-t"><span class="ico">i</span>Note · details of these maps</div>
+    <p>With these methods Block 4 offers no downloads: the coordinates are on card 2.5 of Block 2. The axes are called Dim1, Dim2… In MFA, the circle colours the vectors by contribution, not by group: to tell groups apart use the map of the groups or the partial points. The button at the end is <span class="ui">Go to interpretation →</span>.</p>
+  </div>
+
+  <!-- 6.6 -->
+  <h2 id="s6-6"><span class="num">6.6</span>The figure editor</h2>
+  <p>Every figure of the app —those of this block and those of all the others— shares the same editor. It opens with <span class="ui">⚙ Edit figure (colours, titles, font size)</span> below each figure, and every change redraws the figure at once.</p>
+
+  <table>
+    <caption><b>Table 6.12.</b> The controls that recur across the figures.</caption>
+    <thead><tr><th style="width:24%">Group</th><th>Controls</th></tr></thead>
+    <tbody>
+      <tr><td><b>Text</b></td><td>Title, subtitle and axis titles. An empty axis title uses the automatic one, with the percentage.</td></tr>
+      <tr><td><b>Group palettes</b></td><td>PCAPro (violet), Nature (NPG), Lancet, Clinical Oncology, NEJM, classic D3, Soft, Okabe–Ito (colour-blind safe), Botanical and Greyscale.</td></tr>
+      <tr><td><b>Continuous palettes</b></td><td>Viridis, Magma, Inferno, Plasma, Cividis (colour-blind safe), Red–Yellow–Blue, Red–Blue, Spectral, Blue–White–Red, Greens and Heat.</td></tr>
+      <tr><td><b>Font</b></td><td>Four sliders, present in every figure: <span class="ui">Font: everything</span> (0.6 to 2.6) and, separately, titles, axes and ticks, and labels and legend (0.6 to 3). If an enlarged text runs out of the frame, the canvas grows on its own.</td></tr>
+      <tr><td><b>Appearance</b></td><td>Theme (Light, Paper, Dark, Minimal), typeface (Helvetica / Arial, Serif, Segoe UI, Monospaced), size in pixels, frame, legend and axes at zero.</td></tr>
+    </tbody>
+  </table>
+
+  <figure>
+    <div class="marco" style="position:relative">
+      <img src="../img/en/app-b4-editor.png" alt="The editor of the map of individuals, open">
+      <span class="marca" style="left:30.8%;top:3.2%">1</span>
+      <span class="marca" style="left:74.7%;top:14.2%">2</span>
+      <span class="marca" style="left:16.5%;top:35.2%">3</span>
+      <span class="marca" style="left:38%;top:33.8%">4</span>
+      <span class="marca" style="left:9.5%;top:57.2%">5</span>
+      <span class="marca" style="left:73%;top:54.5%">6</span>
+      <span class="marca" style="left:6.3%;top:86.5%">7</span>
+      <span class="marca" style="left:95.5%;top:94.3%">8</span>
+    </div>
+    <figcaption><b>Figure 6.7.</b> The editor of the map of individuals, open.</figcaption>
+  </figure>
+  <ul class="leyenda-marcas">
+    <li><span class="n">1</span>Opens and closes the editor.</li>
+    <li><span class="n">2</span>The axes of the map.</li>
+    <li><span class="n">3</span>The type of hull.</li>
+    <li><span class="n">4</span>Its confidence level.</li>
+    <li><span class="n">5</span>Which individuals carry a name.</li>
+    <li><span class="n">6</span>Same scale on both axes.</li>
+    <li><span class="n">7</span>The four font sizes.</li>
+    <li><span class="n">8</span>The final size of the image.</li>
+  </ul>
+
+  <table class="compacta">
+    <caption><b>Table 6.13.</b> The export bar, under each figure.</caption>
+    <thead><tr><th style="width:22%">Control</th><th>Options</th></tr></thead>
+    <tbody>
+      <tr><td><span class="ui">Format</span></td><td>PNG (bitmap), SVG (vector, editable), JPG and WEBP.</td></tr>
+      <tr><td><span class="ui">Resolution</span></td><td>Screen 2× (~150 dpi), High 4× (~300 dpi, by default), Very high 6×, Publication 8× (~600 dpi) and Maximum 12× (~900 dpi). It does not apply to SVG.</td></tr>
+      <tr><td>Background</td><td>White or transparent; transparent works with PNG only.</td></tr>
+      <tr><td><span class="ui">⬇ Download figure</span></td><td>Downloads with the name of the data file and of the figure. Next to it you can read the final size in pixels.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="caja regla">
+    <div class="caja-t"><span class="ico">✓</span>Decision rule · how do I export for publication?</div>
+    <table class="compacta">
+      <thead><tr><th style="width:46%">If the journal…</th><th>then</th></tr></thead>
+      <tbody>
+        <tr><td>Accepts vectors (PDF, EPS, SVG)</td><td><b>SVG</b>: it scales without losing sharpness and it can be edited in Inkscape or Illustrator.</td></tr>
+        <tr><td>Asks for a bitmap</td><td>PNG at <b>8×</b> (~600 dpi); 4× as a minimum.</td></tr>
+        <tr><td>Prints in black and white, or you want accessibility</td><td>The <b>Okabe–Ito</b> or <b>Greyscale</b> palette, and Cividis for continuous scales.</td></tr>
+        <tr><td>The figure goes in a presentation with a coloured background</td><td>PNG with a transparent background, or the Dark theme.</td></tr>
+      </tbody>
+    </table>
+    <p class="regla-pie">Always put the percentage on the axes, state whether the solution is rotated and say in the caption which ellipse you used. The sign of an axis is arbitrary: if you invert it to read it better, say so.</p>
+  </div>
+
+  <div class="caja importante">
+    <div class="caja-t"><span class="ico">!</span>Important · the changes are not kept when you recompute</div>
+    <p>The Block 6 report includes the figures exactly as you left them. But if you build the maps again, change the language and regenerate, or recompute an earlier block, the figures are created afresh with the default values and <b>the edited titles and colours are lost</b>. Edit the figures at the end, when the analysis is no longer going to change.</p>
+  </div>
+
+  <!-- 6.7 -->
+  <h2 id="s6-7"><span class="num">6.7</span>Step by step</h2>
+  <p>A complete analysis with the file <code>integrated_project_agronomy.csv</code>: 150 plots of a trial with four treatments —control, irrigation, fertilisation and irrigation with fertilisation— in three blocks, and thirteen plant variables. The question is which dimensions summarise the response of the plants and how the treatments are laid out on them. The figures are the ones from the app.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>Integrated project · 144 complete plots, twelve variables, z scaling</div>
+    <ol class="pasos" style="margin-bottom:0">
+      <li>In Block 1 leave <code>Plot</code> as the identifier and <code>Treatment</code> and <code>Block</code> as qualitative variables, and untick <code>Yield_kg_ha</code>: it becomes supplementary, because it is the response we want to explain. On preparing, 144 of the 150 rows remain and KMO = 0.783.</li>
+      <li>In Block 2, six of the eight criteria —Horn, Kaiser, broken stick, MAP, 80 % and Jolliffe— agree on <b>4</b> components, explaining 87.2 %.</li>
+      <li>In Block 3, varimax leaves 12 of 12 variables clean and a complexity of 1.05: <b>RPC1 growth</b> (height, diameter, leaf area and biomass, from 0.91 to 0.92), <b>RPC2 nutrition</b> (chlorophyll, leaf P and leaf N, from 0.92 to 0.93), <b>RPC3 water</b> (conductance 0.929, water potential 0.917, leaf temperature −0.907) and <b>RPC4 phenology</b> (days to maturity 0.947 and to flowering 0.938).</li>
+      <li>In Block 4 choose <span class="ui">Rotated (the one from Block 3)</span> and group by <code>Treatment</code>. The RPC1–RPC2 plane takes up 50.4 % (28.6 + 21.8), in amber; 7 of 12 variables and 63 of 144 plots are well represented on it.</li>
+      <li>The circle (figure 6.3) shows two perpendicular bundles: growth and nutrition are independent. Water and phenology are left at the origin: they are not to be read here. In the editor choose <span class="ui">Horizontal axis</span> RPC3 and <span class="ui">Vertical axis</span> RPC4 to see them.</li>
+      <li>Yield, supplementary, correlates 0.809 with RPC1 and 0.647 with RPC2: it rises with growth and with nutrition.</li>
+      <li>The centroids of table 4.7 order the treatments: control (−0.87, −0.94), irrigation (−0.49, −0.59), fertilisation (0.01, 0.77) and irrigation + fertilisation (1.36, 0.80). Fertilisation moves nutrition; only the combination moves growth as well. On RPC3, irrigation is at 0.48 and fertilisation at −0.97.</li>
+      <li>The centroids of <code>Block</code> all stay within 0.31 of the origin: the block does not order the plots.</li>
+      <li>The concentration ellipses of the biplot (figure 6.5) overlap a great deal: the differences between centroids are real on average, but a single plot is not assigned to its treatment by its position.</li>
+      <li>In <b>Most influential individuals</b>, PAR005 and PAR058 contribute 8.21 % and 7.97 % to the plane, when 1.39 % is what is expected. They have cos² of 0.86 and 0.96: they are well represented, so they are extreme plots, not projection errors. Their recording is worth checking.</li>
+    </ol>
+  </div>
+
+  <p><b>Reading.</b> The trial is summed up in four independent dimensions, and the 1–2 plane shows the two that matter most for yield. Fertilisation acts on nutrition and irrigation on water status, but only their combination shifts the plots towards high growth, which is where yield points. To state that the treatments differ a test is needed —a MANOVA or a PERMANOVA on the scores—; the maps show where and in which dimension.</p>
+
+  <div class="caja ejemplo">
+    <div class="caja-t"><span class="ico">▸</span>How to describe the figure</div>
+    <p>“Figure 3. Biplot of the plane formed by the first two rotated components (varimax), explaining 50.4 % of the variance (28.6 % and 21.8 %). The points are plots coloured by treatment, with 95 % concentration ellipses; the arrows, the active variables. Yield, projected as a supplementary variable, correlated 0.81 with the first component and 0.65 with the second.”</p>
+  </div>
+
+  <p style="margin-top:0.3in">With the maps built, the next chapter enters Block 5: the reading of each axis and the draft of the results section.</p>
+</section>
+
+</body>
+</html>
