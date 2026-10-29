@@ -14,7 +14,9 @@ Todo el cálculo ocurre **en tu navegador**, en JavaScript puro (sin Python, sin
 sin espera de carga). Ningún dato sale de tu computadora.
 
 **Manual de usuario:** [PDF](manual/PCAPro%20User%27s%20Manual.pdf) ·
-[HTML](https://luisangelbg.github.io/PCAPro/manual/es/manual-completo.html)
+[HTML](https://luisangelbg.github.io/PCAPro/manual/es/manual-completo.html)  
+**Manual en inglés:** [PDF](manual/en/PCAPro%20User%27s%20Manual%20%28English%29.pdf) ·
+[HTML](https://luisangelbg.github.io/PCAPro/manual/en/manual-completo.html)
 
 ## Cómo abrir
 

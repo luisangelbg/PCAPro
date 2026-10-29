@@ -36,7 +36,8 @@ manual/
     09-bloque6.html    capítulo 9 · Bloque 6: estado del análisis (qué resume y cuándo se actualiza), configuración y las once secciones del informe, vista previa, HTML, impresión a PDF, paquete ZIP (figuras, tablas 01–23, CITATION.bib, LEEME) y cómo corregir el párrafo de métodos y citar
     10-apendices.html  apéndices A–F: formatos de archivo (lectura de CSV y Excel, conversión decimal con casos que cambian el valor, archivos de ejemplo, todas las descargas y el ZIP), las 18 reglas de decisión reunidas por el guion y los errores del tema 12, glosario (siglas, símbolos y términos con su sección), solución de problemas (mensajes de la app y comportamientos conocidos de la v1.1), verificación de los cálculos (120 pruebas en 19 conjuntos, cómo ejecutarlas, guiones de R para iris y el tabaquismo, comparación con R 4.4.2 —con las columnas del AC— y la corrección posterior a la 1.1.0 del AC, el ACM y el AFDM) y referencias
     manual-completo.html  documento unido, generado por unir-manual.pl: no se edita a mano
-  en/                  versión en inglés (pendiente)
+  en/                  versión en inglés: las mismas partes, su manual-completo.html y
+                       «PCAPro User's Manual (English).pdf», el manual inglés completo (174 hojas)
 ```
 
 ## Ver una parte
@@ -112,3 +113,12 @@ apuntan a `img/en/`.
   de Fisher. Los archivos de práctica sí cambian de nombre, porque existen traducidos en `datos/en/`.
 - Para comprobar una parte: `perl herramientas/unir-manual.pl en` y luego imprimir, igual que en
   español. El PDF se hace **solo al final**, con todas las partes terminadas.
+
+### Capturas del manual inglés
+
+Se tomaron con la app de hoy en inglés y tema claro, con los datos de `datos/en/`, y cada una se
+recorta al borde de su tarjeta: la receta empieza por `lang:en;tema:light;hide:.lnav-float` y en
+`marks:` se puede nombrar una tarjeta por su número de sección (`sec=3.1`), que es igual en los dos
+idiomas. Las marcas numeradas se colocan a partir de la posición que devuelve `marks:`, convertida
+al recorte. El PDF inglés se obtiene igual que el español, con `unir-manual.pl en`, y se guarda en
+`en/PCAPro User's Manual (English).pdf`.

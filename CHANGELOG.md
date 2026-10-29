@@ -37,7 +37,24 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   background it always had. In a background tab the counter writes the final figure straight away,
   since the browser freezes animation frames there.
 
+- **The user manual in English.** `manual/en/` holds the same parts as the Spanish manual, with the
+  same markup, and `manual/en/PCAPro User's Manual (English).pdf` the complete manual (174 pages).
+  Its 51 screenshots were taken again with the app of today in English, loading the practice files
+  of `datos/en/`; the numbered marks on each one were placed again from the position of the element
+  they point to, and the text was brought into line wherever today's screens differ from those of
+  September (the block bar now on the left, the padlocks, the «Alerts» column). The running header
+  of `paginar.js` follows the language of the document. The Spanish manual is unchanged.
+
 ### Fixed
+
+- **Text drawn inside the figures stayed in Spanish with the interface in English.** Axis titles,
+  legends, notes and annotations written directly in the drawing code (`plots1.js` to `plots5.js`,
+  plus the redistribution subtitle of Block 3 and the level count of the grouping selector in
+  Block 4) did not go through the translation; neither did the «Copy paragraph» buttons of the
+  results drafts, nor two default labels of the figures («Puntuación», «carga») that had no entry
+  in the dictionary. A pass through the whole app in English — PCA with varimax and promax, FAMD
+  and MFA — now finds no Spanish text in the page or in the figures. The «How to cite» dialog
+  rebuilds the reference each time it opens, so it follows a language change made afterwards.
 
 - **The language switch showed one button instead of the suite's ES | EN pill.** The pass that
   shows or hides the theory blocks written once per language selected them with `[data-lang]`, and
