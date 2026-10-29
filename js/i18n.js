@@ -579,6 +579,9 @@ I18N.en = {
   'Elipse de confianza de la media': 'Confidence ellipse of the mean',
   'Elipse de la media': 'Ellipse of the mean',
   'Envolvente convexa': 'Convex hull', 'Ninguna': 'None',
+  /* las mismas, en minúscula, al pie de la leyenda de los mapas */
+  'envolvente convexa': 'convex hull', 'elipse de la media': 'ellipse of the mean',
+  'elipse de concentración': 'concentration ellipse',
   'Todas las que quepan': 'As many as fit',
   'Solo las N que más contribuyen': 'Only the N largest contributors',
   'Diagrama de cajas': 'Box plot', 'Media e IC 95 %': 'Mean and 95 % CI',
@@ -1030,7 +1033,9 @@ I18N.en = {
   'Calidad de representación de las variables (cos²)': 'Quality of representation of the variables (cos²)',
   'Proporción de la varianza de cada variable recogida por cada eje':
     'Share of each variable’s variance captured by each axis',
-  'Sin rotar': 'Unrotated', 'Rotada': 'Rotated', '(oblicua)': '(oblique)',
+  'Sin rotar': 'Unrotated', 'Rotada': 'Rotated', 'sin rotar': 'unrotated', 'rotada': 'rotated', '(oblicua)': '(oblique)',
+  /* textos por defecto de figuras (los traduce Fig.mount al montar) */
+  'Puntuación': 'Score', 'carga': 'loading',
 
   'Descripción de la dimensión': 'Dimension description',
   'Variables que describen el eje': 'Variables that describe the axis',

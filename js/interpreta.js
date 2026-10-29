@@ -155,7 +155,7 @@ Interp.render = function (P) {
       <p class="hint">${tt('Redacción automática con tus propios números. Revísala y adáptala antes de usarla.')}</p>
       <blockquote id="interpNarr" class="cite-ref"></blockquote>
       <div class="btn-row">
-        <button class="btn btn-secondary btn-sm" id="copyInterpNarr" data-i18n="⧉ Copiar párrafo">⧉ Copiar párrafo</button>
+        <button class="btn btn-secondary btn-sm" id="copyInterpNarr" data-i18n="⧉ Copiar párrafo">${tt('⧉ Copiar párrafo')}</button>
         <button class="btn btn-secondary btn-sm" id="goClusterI">${tt('Agrupar los individuos (HCPC) →')}</button>
         <button class="btn btn-primary btn-sm" id="goStep6i">${tt('Ir al informe →')}</button>
       </div>

@@ -372,8 +372,8 @@ function renderFigures3() {
     defaults: {
       title: 'Redistribución de la varianza por la rotación',
       subtitle: R.oblique
-        ? 'Con rotación oblicua las sumas de cuadrados no son aditivas'
-        : `El total se conserva: ${fmtPct(P.cum[P.k - 1], 1)} antes y después`,
+        ? TT('Con rotación oblicua las sumas de cuadrados no son aditivas', 'With an oblique rotation the sums of squares are not additive')
+        : TT(`El total se conserva: ${fmtPct(P.cum[P.k - 1], 1)} antes y después`, `The total is preserved: ${fmtPct(P.cum[P.k - 1], 1)} before and after`),
       theme: 'claro', font: 'sans', colorBefore: '#98a1b3', colorAfter: '#5b3fd6',
       showValues: true, outline: false, legend: true, xlab: '', ylab: '',
       width: 780, height: 420, titleSize: 17,

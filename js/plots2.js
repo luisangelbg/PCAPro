@@ -95,7 +95,8 @@
         stroke: cfg.highlightColor || '#5b3fd6', 'stroke-width': 1.4, 'stroke-dasharray': '6 4',
       }));
       svg.appendChild(F.text(m.left + band * data.k - 6, m.top + 13,
-        `${data.k} componente${data.k > 1 ? 's' : ''} retenido${data.k > 1 ? 's' : ''}`,
+        TT(`${data.k} componente${data.k > 1 ? 's' : ''} retenido${data.k > 1 ? 's' : ''}`,
+          `${data.k} component${data.k > 1 ? 's' : ''} retained`),
         { size: 11, fill: cfg.highlightColor || '#5b3fd6', anchor: 'end', weight: '600', font, halo: t.bg }));
     }
 
@@ -124,7 +125,7 @@
 
     /* referencias */
     const leg = [];
-    if (cfg.showBars) leg.push({ label: mode === 'eigen' ? 'Valor propio (λ)' : '% de varianza', color: cfg.gradientBars ? F.color(cfg.palette, 0) : cfg.barColor, type: 'box', opacity: 0.9 });
+    if (cfg.showBars) leg.push({ label: mode === 'eigen' ? TT('Valor propio (λ)', 'Eigenvalue (λ)') : TT('% de varianza', '% of variance'), color: cfg.gradientBars ? F.color(cfg.palette, 0) : cfg.barColor, type: 'box', opacity: 0.9 });
     if (cfg.showKaiser && data.isCorr) {
       svg.appendChild(F.el('line', { x1: m.left, y1: y(kaiser), x2: m.left + pw, y2: y(kaiser), stroke: cfg.kaiserColor, 'stroke-width': 1.5, 'stroke-dasharray': '7 4' }));
       leg.push({ label: 'Kaiser (λ = 1)', color: cfg.kaiserColor, type: 'dash' });
@@ -132,11 +133,11 @@
     if (cfg.showHorn && hornP) {
       svg.appendChild(F.el('polyline', { points: hornP.map((v, i) => `${x(i)},${y(v)}`).join(' '), fill: 'none', stroke: cfg.hornColor, 'stroke-width': 1.8, 'stroke-dasharray': '6 3' }));
       hornP.forEach((v, i) => svg.appendChild(F.el('circle', { cx: x(i), cy: y(v), r: 2.6, fill: cfg.hornColor })));
-      leg.push({ label: 'Análisis paralelo (p95)', color: cfg.hornColor, type: 'dash', point: true });
+      leg.push({ label: TT('Análisis paralelo (p95)', 'Parallel analysis (p95)'), color: cfg.hornColor, type: 'dash', point: true });
     }
     if (cfg.showBstick && bs) {
       svg.appendChild(F.el('polyline', { points: bs.map((v, i) => `${x(i)},${y(v)}`).join(' '), fill: 'none', stroke: cfg.bstickColor, 'stroke-width': 1.6, 'stroke-dasharray': '2 3' }));
-      leg.push({ label: 'Bastón roto', color: cfg.bstickColor, type: 'dash' });
+      leg.push({ label: TT('Bastón roto', 'Broken stick'), color: cfg.bstickColor, type: 'dash' });
     }
 
     /* etiquetas de valor */
@@ -154,9 +155,9 @@
       if (p > 25 && i % Math.ceil(p / 25) !== 0) return;
       svg.appendChild(F.text(x(i), y(0) + 17, String(i + 1), { role: 'tick', size: 11, fill: t.muted, anchor: 'middle', font }));
     });
-    svg.appendChild(F.text(m.left + pw / 2, h - 14, cfg.xlab || 'Componente principal',
+    svg.appendChild(F.text(m.left + pw / 2, h - 14, cfg.xlab || TT('Componente principal', 'Principal component'),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
-    svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || (mode === 'eigen' ? 'Valor propio (λ)' : 'Porcentaje de varianza explicada (%)'),
+    svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || (mode === 'eigen' ? TT('Valor propio (λ)', 'Eigenvalue (λ)') : TT('Porcentaje de varianza explicada (%)', 'Percentage of explained variance (%)')),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
 
     if (cfg.legend !== false && leg.length) {
@@ -227,9 +228,9 @@
       if (p > 25 && (i - 1) % Math.ceil(p / 25) !== 0) continue;
       svg.appendChild(F.text(x(i), y(0) + 17, String(i), { role: 'tick', size: 11, fill: t.muted, anchor: 'middle', font }));
     }
-    svg.appendChild(F.text(m.left + pw / 2, h - 14, cfg.xlab || 'Número de componentes retenidos',
+    svg.appendChild(F.text(m.left + pw / 2, h - 14, cfg.xlab || TT('Número de componentes retenidos', 'Number of components retained'),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
-    svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || 'Varianza acumulada explicada',
+    svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || TT('Varianza acumulada explicada', 'Cumulative explained variance'),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
     return svg;
   }
@@ -259,7 +260,7 @@
         x1: x(data.chosen), y1: m.top - 10, x2: x(data.chosen), y2: m.top + items.length * rowH + 4,
         stroke: cfg.chosenColor || '#5b3fd6', 'stroke-width': 1.8, 'stroke-dasharray': '6 4',
       }));
-      svg.appendChild(F.text(x(data.chosen), m.top - 16, 'tu elección: ' + data.chosen,
+      svg.appendChild(F.text(x(data.chosen), m.top - 16, TT('tu elección: ', 'your choice: ') + data.chosen,
         { size: 11.5, fill: cfg.chosenColor || '#5b3fd6', anchor: 'middle', weight: '600', font }));
     }
 
@@ -269,13 +270,13 @@
       svg.appendChild(F.el('line', { x1: x(0), y1: y, x2: x(it.k), y2: y, stroke: c, 'stroke-width': +cfg.stemWidth || 3, opacity: 0.55, 'stroke-linecap': 'round' }));
       svg.appendChild(F.el('circle', { cx: x(it.k), cy: y, r: +cfg.dotSize || 8, fill: c, stroke: t.bg, 'stroke-width': 1.5 }));
       svg.appendChild(F.text(x(it.k), y, String(it.k), { size: 10.5, fill: '#ffffff', anchor: 'middle', baseline: 'middle', weight: '700', font }));
-      svg.appendChild(F.text(m.left - 12, y, it.name, { size: 12, fill: t.fg, anchor: 'end', baseline: 'middle', font }));
-      if (cfg.showNotes && it.note) svg.appendChild(F.text(m.left + pw + 12, y, it.note,
+      svg.appendChild(F.text(m.left - 12, y, tt(it.name), { size: 12, fill: t.fg, anchor: 'end', baseline: 'middle', font }));
+      if (cfg.showNotes && it.note) svg.appendChild(F.text(m.left + pw + 12, y, tt(it.note),
         { size: 10.5, fill: t.muted, baseline: 'middle', font }));
     });
 
     svg.appendChild(F.el('line', { x1: m.left, y1: m.top + items.length * rowH, x2: m.left + pw, y2: m.top + items.length * rowH, stroke: t.axis }));
-    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || 'Número de componentes recomendado',
+    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || TT('Número de componentes recomendado', 'Recommended number of components'),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
     return svg;
   }
@@ -305,7 +306,7 @@
       const dn = data.horn.mean.map((v, i) => `${x(i + 1)},${y(v)}`).reverse();
       svg.appendChild(F.el('polygon', { points: [...up, ...dn].join(' '), fill: cfg.hornColor, opacity: 0.16 }));
     }
-    [['mean', 'Media aleatoria', '4 3'], ['p95', 'Percentil 95 aleatorio', '7 3']].forEach(([key, lab, dash]) => {
+    [['mean', TT('Media aleatoria', 'Random mean'), '4 3'], ['p95', TT('Percentil 95 aleatorio', 'Random 95th percentile'), '7 3']].forEach(([key, lab, dash]) => {
       if (key === 'mean' && !cfg.showMean) return;
       svg.appendChild(F.el('polyline', {
         points: data.horn[key].map((v, i) => `${x(i + 1)},${y(v)}`).join(' '),
@@ -330,14 +331,14 @@
       if (p > 25 && (i - 1) % Math.ceil(p / 25) !== 0) continue;
       svg.appendChild(F.text(x(i), y(0) + 17, String(i), { role: 'tick', size: 11, fill: t.muted, anchor: 'middle', font }));
     }
-    svg.appendChild(F.text(m.left + pw / 2, h - 14, cfg.xlab || 'Componente principal', { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
-    svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || 'Valor propio (λ)', { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
+    svg.appendChild(F.text(m.left + pw / 2, h - 14, cfg.xlab || TT('Componente principal', 'Principal component'), { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
+    svg.appendChild(F.text(18, m.top + ph / 2, cfg.ylab || TT('Valor propio (λ)', 'Eigenvalue (λ)'), { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
 
     const leg = [
-      { label: 'Datos observados', color: cfg.lineColor, type: 'line', width: 2.6, point: true },
-      { label: 'Percentil 95 aleatorio', color: cfg.hornColor, type: 'dash' },
+      { label: TT('Datos observados', 'Observed data'), color: cfg.lineColor, type: 'line', width: 2.6, point: true },
+      { label: TT('Percentil 95 aleatorio', 'Random 95th percentile'), color: cfg.hornColor, type: 'dash' },
     ];
-    if (cfg.showMean) leg.push({ label: 'Media aleatoria', color: cfg.hornColor, type: 'dash' });
+    if (cfg.showMean) leg.push({ label: TT('Media aleatoria', 'Random mean'), color: cfg.hornColor, type: 'dash' });
     if (cfg.legend !== false) {
       plotArea(svg, m.left, m.top, pw, ph);
       legend(svg, leg, m.left + pw - 200, m.top + 20, t, font);

@@ -25,6 +25,12 @@
     if (cfg.subtitle) svg.appendChild(F.text(w / 2, cfg.title ? 49 : 30, cfg.subtitle,
       { role: 'subtitle', size: 11.5, fill: t.muted, anchor: 'middle', font }));
   }
+  /* rótulo de la figura que rodea a cada grupo, al pie de la leyenda */
+  function shapeLabel(cfg) {
+    if (cfg.shape === 'envolvente') return tt('envolvente convexa');
+    const n = Math.round((+cfg.level || 0.95) * 100);
+    return tt(cfg.shape === 'media' ? 'elipse de la media' : 'elipse de concentración') + ` ${n} %`;
+  }
   /* ejes cartesianos con rejilla, líneas en cero y rótulos */
   function axes(svg, cfg, t, font, m, pw, ph, x, y, xlab, ylab, h, w) {
     const tx = F.ticks(x.domain[0], x.domain[1], 7), ty = F.ticks(y.domain[0], y.domain[1], 7);
@@ -220,7 +226,7 @@
       const tag = !metric;
       const lg = svg.appendChild(F.g(tag ? { 'data-role': 'legend' } : {}));
       lg.appendChild(F.el('line', { x1: m.left + 8, y1: m.top + 14, x2: m.left + 28, y2: m.top + 14, stroke: cfg.suppColor, 'stroke-dasharray': '6 3', 'stroke-width': 1.6, 'data-li': tag ? 0 : null }));
-      const tx = lg.appendChild(F.text(m.left + 33, m.top + 14, 'suplementaria', { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }));
+      const tx = lg.appendChild(F.text(m.left + 33, m.top + 14, TT('suplementaria', 'supplementary'), { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }));
       if (tag) li(tx, 0);
     }
     return svg;
@@ -346,18 +352,12 @@
       if (groups && shapes.length) {
         let { lg, ly } = groupLegend(svg, cfg, t, font, m.left + size + 18, ly0, groups, true);
         ly += 6 * F.fs('label');
-        lg.appendChild(F.text(m.left + size + 18, ly, cfg.shape === 'envolvente' ? 'envolvente convexa'
-          : cfg.shape === 'media' ? `elipse de la media ${Math.round((+cfg.level || 0.95) * 100)} %`
-            : `elipse de concentración ${Math.round((+cfg.level || 0.95) * 100)} %`,
-          { size: 9.5, fill: t.muted, font }));
+        lg.appendChild(F.text(m.left + size + 18, ly, shapeLabel(cfg), { size: 9.5, fill: t.muted, font }));
       } else if (!metric && groups) {
         let { lg, ly } = groupLegend(svg, cfg, t, font, m.left + size + 18, ly0, groups, true);
         if (cfg.shape !== 'ninguna') {
           ly += 6 * F.fs('label');
-          lg.appendChild(F.text(m.left + size + 18, ly, cfg.shape === 'envolvente' ? 'envolvente convexa'
-            : cfg.shape === 'media' ? `elipse de la media ${Math.round((+cfg.level || 0.95) * 100)} %`
-              : `elipse de concentración ${Math.round((+cfg.level || 0.95) * 100)} %`,
-            { size: 9.5, fill: t.muted, font }));
+          lg.appendChild(F.text(m.left + size + 18, ly, shapeLabel(cfg), { size: 9.5, fill: t.muted, font }));
         }
       }
     }
@@ -496,11 +496,12 @@
         x1: x(data.expected), y1: m.top - 8, x2: x(data.expected), y2: m.top + p * rowH + 4,
         stroke: cfg.expectedColor, 'stroke-width': 1.6, 'stroke-dasharray': '6 4',
       }));
-      svg.appendChild(F.text(x(data.expected), m.top - 14, `esperado si todas aportaran igual (${data.expected.toFixed(2)} %)`,
+      svg.appendChild(F.text(x(data.expected), m.top - 14, TT(`esperado si todas aportaran igual (${data.expected.toFixed(2)} %)`,
+        `expected if all contributed equally (${data.expected.toFixed(2)} %)`),
         { size: 10.5, fill: cfg.expectedColor, anchor: 'middle', font, halo: t.bg }));
     }
     svg.appendChild(F.el('line', { x1: m.left, y1: m.top + p * rowH, x2: m.left + pw, y2: m.top + p * rowH, stroke: t.axis }));
-    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || `Contribución a ${data.dimLabel} (%)`,
+    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || TT(`Contribución a ${data.dimLabel} (%)`, `Contribution to ${data.dimLabel} (%)`),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
     return svg;
   }

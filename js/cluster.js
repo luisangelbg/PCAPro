@@ -247,7 +247,7 @@ Clu.render = function () {
       <p class="hint">${tt('Redacción automática con tus propios números. Revísala y adáptala antes de usarla.')}</p>
       <blockquote id="cluNarr" class="cite-ref"></blockquote>
       <div class="btn-row" style="margin-top:8px">
-        <button class="btn btn-secondary btn-sm" id="copyCluNarr" data-i18n="⧉ Copiar párrafo">⧉ Copiar párrafo</button>
+        <button class="btn btn-secondary btn-sm" id="copyCluNarr" data-i18n="⧉ Copiar párrafo">${tt('⧉ Copiar párrafo')}</button>
         <button class="btn btn-secondary btn-sm" id="dlCluAsign">${tt('⬇ Asignación de grupos (CSV)')}</button>
         <button class="btn btn-secondary btn-sm" id="dlCluDesc">${tt('⬇ Descripción de los grupos (CSV)')}</button>
         <button class="btn btn-primary btn-sm" id="goStep6c">${tt('Ir al informe →')}</button>

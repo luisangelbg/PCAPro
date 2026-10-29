@@ -1001,7 +1001,8 @@ function initCiteDialog() {
   const dlg = el('citeDialog'), btn = el('citeBtn');
   if (!dlg || !btn || typeof Rep === 'undefined') return;
   el('citeDialogRef').innerHTML = Rep.CITATION.apa;
-  btn.addEventListener('click', () => dlg.showModal());
+  /* la cita sigue al conmutador: se rehace cada vez que se abre */
+  btn.addEventListener('click', () => { el('citeDialogRef').innerHTML = Rep.CITATION.apa; dlg.showModal(); });
   el('closeCiteDlg').addEventListener('click', () => dlg.close());
   el('copyCiteDlg').addEventListener('click',
     () => copyToClipboard('copyCiteDlg', el('citeDialogRef').textContent));

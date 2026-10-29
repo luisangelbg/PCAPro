@@ -90,7 +90,7 @@
       svg.appendChild(F.el('line', { x1: x, y1: yb + 4, x2: x, y2: yb + 9, stroke: t.axis }));
       svg.appendChild(F.text(x, yb + 22, String(v), { role: 'tick', size: 10.5, fill: t.muted, anchor: 'middle', font }));
     });
-    svg.appendChild(F.text(m.left + plotW / 2, h - 8, cfg.xlab || 'Observación (fila del archivo)',
+    svg.appendChild(F.text(m.left + plotW / 2, h - 8, cfg.xlab || TT('Observación (fila del archivo)', 'Observation (row in the file)'),
       { role: 'axis', size: 12, fill: t.fg, anchor: 'middle', font }));
 
     // leyenda
@@ -98,9 +98,9 @@
     const lx = m.left, ly = m.top - 14;
     const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
     lg.appendChild(F.el('rect', { x: lx, y: ly - 9, width: 11, height: 11, fill: cfg.colorPresent, 'data-li': 0 }));
-    lg.appendChild(li(F.text(lx + 16, ly, 'dato presente', { size: 11, fill: t.muted, baseline: 'middle', font }), 0));
+    lg.appendChild(li(F.text(lx + 16, ly, TT('dato presente', 'value present'), { size: 11, fill: t.muted, baseline: 'middle', font }), 0));
     lg.appendChild(F.el('rect', { x: lx + 120, y: ly - 9, width: 11, height: 11, fill: cfg.colorMissing, 'data-li': 1 }));
-    lg.appendChild(li(F.text(lx + 136, ly, 'dato faltante', { size: 11, fill: t.muted, baseline: 'middle', font }), 1));
+    lg.appendChild(li(F.text(lx + 136, ly, TT('dato faltante', 'missing value'), { size: 11, fill: t.muted, baseline: 'middle', font }), 1));
     return svg;
   }
 
@@ -112,7 +112,7 @@
     const vars = data.vars;
     const metric = cfg.metric || 'sd';
     const vals = vars.map((_, i) => metric === 'sd' ? data.sd[i] : metric === 'mean' ? Math.abs(data.mean[i]) : data.cv[i]);
-    const label = metric === 'sd' ? 'Desviación estándar' : metric === 'mean' ? 'Media (valor absoluto)' : 'Coeficiente de variación (%)';
+    const label = metric === 'sd' ? TT('Desviación estándar', 'Standard deviation') : metric === 'mean' ? TT('Media (valor absoluto)', 'Mean (absolute value)') : TT('Coeficiente de variación (%)', 'Coefficient of variation (%)');
     const useLog = cfg.logScale && vals.every(v => v > 0);
 
     const order = vars.map((v, i) => i);
@@ -166,7 +166,7 @@
     });
 
     svg.appendChild(F.el('line', { x1: m.left, y1: m.top + vars.length * rowH, x2: m.left + plotW, y2: m.top + vars.length * rowH, stroke: t.axis }));
-    svg.appendChild(F.text(m.left + plotW / 2, h - 10, cfg.xlab || (label + (useLog ? ' — escala logarítmica' : '')),
+    svg.appendChild(F.text(m.left + plotW / 2, h - 10, cfg.xlab || (label + (useLog ? TT(' — escala logarítmica', ' — logarithmic scale') : '')),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
     return svg;
   }
@@ -362,7 +362,7 @@
 
     svg.appendChild(F.el('line', { x1: m.left, y1: m.top + 360, x2: m.left + p * bw, y2: m.top + 360, stroke: t.axis }));
     svg.appendChild(F.el('line', { x1: m.left, y1: m.top, x2: m.left, y2: m.top + 360, stroke: t.axis }));
-    svg.appendChild(F.text(16, m.top + 180, cfg.ylab || 'Valor', { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
+    svg.appendChild(F.text(16, m.top + 180, cfg.ylab || TT('Valor', 'Value'), { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
     return svg;
   }
 

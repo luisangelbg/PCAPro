@@ -104,7 +104,7 @@
       svg.appendChild(F.text(cx + m.left, cy + 16, comp.label, { size: 13, weight: '600', fill: t.fg, font }));
       if (cfg.showTest && comp.test) svg.appendChild(F.text(x0 + G * bw, cy + 16, comp.test,
         { size: 10.5, fill: t.muted, anchor: 'end', font }));
-      svg.appendChild(F.text(cx + 16, cy + m.top + ph / 2, cfg.ylab || 'Puntuación',
+      svg.appendChild(F.text(cx + 16, cy + m.top + ph / 2, cfg.ylab || TT('Puntuación', 'Score'),
         { role: 'axis', size: 11.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
     });
     return svg;
@@ -220,9 +220,9 @@
     });
 
     svg.appendChild(F.el('line', { x1: x(0), y1: m.top - 6, x2: x(0), y2: m.top + p * rowH, stroke: t.axis }));
-    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || `Correlación con ${data.dimLabel}  (n = ${data.n})`,
+    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || TT(`Correlación con ${data.dimLabel}  (n = ${data.n})`, `Correlation with ${data.dimLabel}  (n = ${data.n})`),
       { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
-    if (data.items.some(i => i.supp)) svg.appendChild(F.text(m.left, h - 30, '† variable suplementaria',
+    if (data.items.some(i => i.supp)) svg.appendChild(F.text(m.left, h - 30, TT('† variable suplementaria', '† supplementary variable'),
       { size: 9.5, fill: t.muted, font }));
     return svg;
   }
@@ -271,7 +271,8 @@
         { size: Math.min(12, cell * 0.46), fill: t.fg, anchor: 'start', baseline: 'middle', font, rotate: -90 }));
     });
     svg.appendChild(F.text(m.left, h - 12,
-      `RMSR = ${data.rmsr.toFixed(4)} · residuos |r| > 0.05: ${data.big} de ${p * (p - 1) / 2}`,
+      TT(`RMSR = ${data.rmsr.toFixed(4)} · residuos |r| > 0.05: ${data.big} de ${p * (p - 1) / 2}`,
+        `RMSR = ${data.rmsr.toFixed(4)} · residuals |r| > 0.05: ${data.big} of ${p * (p - 1) / 2}`),
       { size: 11, fill: t.fg, font }));
 
     if (cfg.legend !== false) {
@@ -286,7 +287,7 @@
       cb.appendChild(F.el('rect', { x: bx, y: by, width: bwd, height: bh, fill: `url(#${id})`, stroke: t.axis, 'stroke-width': 0.6 }));
       [[`+${lim}`, by], ['0', by + bh / 2], [`−${lim}`, by + bh]].forEach(([s, yy]) =>
         cb.appendChild(F.text(bx + bwd + 5, yy, s, { size: 10, fill: t.muted, baseline: 'middle', font })));
-      cb.appendChild(F.text(bx + bwd / 2, by - 12, 'residuo', { size: 10.5, fill: t.fg, anchor: 'middle', font }));
+      cb.appendChild(F.text(bx + bwd / 2, by - 12, TT('residuo', 'residual'), { size: 10.5, fill: t.fg, anchor: 'middle', font }));
     }
     return svg;
   }

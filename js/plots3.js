@@ -231,7 +231,7 @@
       plotArea(svg, m.left, m.top, size, size);
       const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
       lg.appendChild(F.el('line', { x1: m.left + 6, y1: m.top + 12, x2: m.left + 24, y2: m.top + 12, stroke: cfg.unrotColor, 'stroke-dasharray': '4 3', 'stroke-width': 1.4, 'data-li': 0 }));
-      lg.appendChild(li(F.text(m.left + 29, m.top + 12, 'sin rotar', { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }), 0));
+      lg.appendChild(li(F.text(m.left + 29, m.top + 12, tt('sin rotar'), { size: 10.5, fill: t.muted, baseline: 'middle', font, halo: t.bg }), 0));
     }
     return svg;
   }
@@ -262,7 +262,7 @@
     const bw = band * 0.34;
     for (let j = 0; j < k; j++) {
       const cx = m.left + band * (j + 0.5);
-      [[before[j], -bw / 2 - 2, cfg.colorBefore, 'sin rotar'], [after[j], bw / 2 + 2, cfg.colorAfter, 'rotada']]
+      [[before[j], -bw / 2 - 2, cfg.colorBefore, tt('sin rotar')], [after[j], bw / 2 + 2, cfg.colorAfter, tt('rotada')]]
         .forEach(([v, off, col]) => {
           svg.appendChild(F.el('rect', {
             x: cx + off - bw / 2, y: y(v), width: bw, height: Math.max(0, y(0) - y(v)),
@@ -276,13 +276,13 @@
 
     svg.appendChild(F.el('line', { x1: m.left, y1: y(0), x2: m.left + pw, y2: y(0), stroke: t.axis }));
     svg.appendChild(F.el('line', { x1: m.left, y1: m.top, x2: m.left, y2: y(0), stroke: t.axis }));
-    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || 'Componente', { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
-    svg.appendChild(F.text(16, m.top + ph / 2, cfg.ylab || '% de la varianza total', { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
+    svg.appendChild(F.text(m.left + pw / 2, h - 12, cfg.xlab || TT('Componente', 'Component'), { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font }));
+    svg.appendChild(F.text(16, m.top + ph / 2, cfg.ylab || TT('% de la varianza total', '% of total variance'), { role: 'axis', size: 12.5, fill: t.fg, anchor: 'middle', font, rotate: -90 }));
 
     if (cfg.legend !== false) {
       plotArea(svg, m.left, m.top, pw, ph);
       const lg = svg.appendChild(F.g({ 'data-role': 'legend' }));
-      [[cfg.colorBefore, 'Sin rotar', 0], [cfg.colorAfter, 'Rotada', 108]].forEach(([c, lab, off], i) => {
+      [[cfg.colorBefore, tt('Sin rotar'), 0], [cfg.colorAfter, tt('Rotada'), 108]].forEach(([c, lab, off], i) => {
         lg.appendChild(F.el('rect', { x: m.left + off, y: m.top - 18, width: 12, height: 11, fill: c, 'data-li': i }));
         lg.appendChild(li(F.text(m.left + off + 17, m.top - 12, lab, { size: 11, fill: t.fg, baseline: 'middle', font }), i));
       });

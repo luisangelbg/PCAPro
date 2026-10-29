@@ -73,7 +73,7 @@ function renderBlock4() {
   const prev = sel.value;
   sel.innerHTML = '';
   sel.appendChild(mk('option', { value: '' }, tt('Sin agrupar')));
-  G.suppCat.forEach(s => sel.appendChild(mk('option', { value: s.name }, s.name + ` (${s.levels.length} niveles)`)));
+  G.suppCat.forEach(s => sel.appendChild(mk('option', { value: s.name }, s.name + TT(` (${s.levels.length} niveles)`, ` (${s.levels.length} levels)`))));
   if (prev && [...sel.options].some(o => o.value === prev)) sel.value = prev;
 
   /* --- mosaicos --- */
